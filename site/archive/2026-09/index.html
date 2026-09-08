@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2026-09 论文归档</title>
+  <style>
+    :root {
+      --ink:#16211b; --muted:#5d6a62; --paper:#f3efe6; --card:#fffdfa;
+      --green:#1f5c42; --green-soft:#e8f0e9; --line:#d8d2c5; --accent:#b44d2f;
+      --shadow:0 16px 42px rgba(34,42,36,.07);
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; color:var(--ink); background:var(--paper); font:16px/1.7 system-ui,-apple-system,"Noto Sans SC",sans-serif; }
+    button,input,select { font:inherit; }
+    button { color:inherit; }
+    a { color:var(--green); }
+    [hidden] { display:none !important; }
+    main { width:min(1440px,94vw); margin:0 auto; padding:34px 0 96px; }
+
+    .page-header { border-bottom:1px solid var(--line); padding-bottom:30px; }
+    .masthead { display:flex; justify-content:space-between; gap:20px; align-items:center; color:var(--muted); font-size:.83rem; letter-spacing:.03em; }
+    .masthead nav { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px 16px; }
+    .masthead nav a { color:var(--muted); text-decoration:none; }
+    .masthead nav a:hover { color:var(--green); text-decoration:underline; }
+    h1 { max-width:1100px; margin:42px 0 20px; font:700 clamp(2.35rem,6vw,5.3rem)/1.04 Georgia,"Noto Serif SC",serif; overflow-wrap:anywhere; }
+    .lede { max-width:920px; color:var(--muted); font-size:1.08rem; }
+    .stats { display:grid; grid-template-columns:repeat(5,minmax(120px,1fr)); gap:12px; margin-top:30px; }
+    .stat { padding:14px 16px; border:1px solid var(--line); background:rgba(255,255,255,.45); }
+    .stat strong { display:block; color:var(--green); font-size:1.6rem; line-height:1.2; }
+
+    .gallery-intro { display:flex; justify-content:space-between; gap:30px; align-items:end; margin:50px 0 20px; }
+    .eyebrow { margin:0 0 5px; color:var(--accent); font-size:.78rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    .gallery-intro h2 { margin:0; font:700 clamp(1.8rem,3vw,2.8rem)/1.15 Georgia,"Noto Serif SC",serif; }
+    .gallery-intro > p { max-width:620px; margin:0; color:var(--muted); }
+
+    .portal-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,245px),1fr)); gap:14px; }
+    .portal-card { min-height:178px; display:flex; flex-direction:column; padding:20px; color:var(--ink); border:1px solid var(--line); background:var(--card); text-decoration:none; box-shadow:var(--shadow); transition:.18s ease; }
+    .portal-card:hover { transform:translateY(-3px); border-color:var(--green); }
+    .portal-card strong { font:700 1.28rem/1.35 Georgia,"Noto Serif SC",serif; }
+    .portal-card p { margin:10px 0 18px; color:var(--muted); font-size:.9rem; }
+    .portal-card span { margin-top:auto; color:var(--green); font-weight:800; font-size:.84rem; }
+    .portal-section { margin-top:58px; padding-top:34px; border-top:1px solid var(--line); }
+    .portal-section h2 { margin:0 0 8px; font:700 2rem/1.2 Georgia,"Noto Serif SC",serif; }
+    .portal-section > p { margin:0 0 20px; color:var(--muted); }
+    .portal-subtitle { margin:28px 0 12px; font-size:1rem; }
+
+    .topic-shelves { display:grid; grid-template-columns:repeat(auto-fit,minmax(185px,1fr)); gap:10px; margin-bottom:18px; }
+    .topic-filter { min-height:96px; padding:14px 16px; text-align:left; border:1px solid var(--line); background:rgba(255,253,250,.7); cursor:pointer; transition:.18s ease; }
+    .topic-filter:hover { transform:translateY(-2px); border-color:var(--green); }
+    .topic-filter[aria-pressed="true"] { color:#fff; border-color:var(--green); background:var(--green); box-shadow:0 8px 18px rgba(31,92,66,.18); }
+    .topic-filter strong { display:block; line-height:1.35; }
+    .topic-filter span { display:block; margin-top:6px; color:var(--muted); font-size:.82rem; }
+    .topic-filter[aria-pressed="true"] span { color:rgba(255,255,255,.78); }
+
+    .explorer-controls { position:sticky; top:0; z-index:20; display:grid; grid-template-columns:minmax(220px,2fr) repeat(4,minmax(125px,1fr)) auto; gap:10px; padding:14px; border:1px solid var(--line); background:rgba(243,239,230,.95); box-shadow:0 10px 25px rgba(34,42,36,.06); backdrop-filter:blur(12px); }
+    .control { display:grid; gap:4px; color:var(--muted); font-size:.76rem; font-weight:700; }
+    .control input,.control select { width:100%; min-height:42px; padding:8px 10px; color:var(--ink); border:1px solid var(--line); border-radius:0; background:var(--card); }
+    .explorer-actions { display:flex; gap:6px; align-items:end; }
+    .explorer-actions button { min-height:42px; padding:8px 12px; border:1px solid var(--line); background:var(--card); cursor:pointer; white-space:nowrap; }
+    .explorer-actions button:hover { border-color:var(--green); color:var(--green); }
+    .explorer-status { display:flex; justify-content:space-between; gap:20px; align-items:center; margin:18px 0 10px; color:var(--muted); }
+    .explorer-status strong { color:var(--green); font-size:1.2rem; }
+    .active-tag { color:var(--green); font-weight:800; }
+    .noscript-notice,.empty-state { padding:20px; border:1px solid var(--line); background:var(--card); }
+
+    .tier-section { margin-top:36px; }
+    .tier-heading { display:flex; justify-content:space-between; align-items:end; gap:20px; margin-bottom:14px; border-bottom:1px solid var(--line); }
+    .tier-heading h2 { margin:0 0 8px; font-size:1.45rem; }
+    .tier-heading p { margin:0 0 8px; color:var(--muted); }
+    .paper-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr)); gap:18px; align-items:start; }
+
+    .paper-card { min-width:0; overflow:hidden; border:1px solid var(--line); background:var(--card); box-shadow:var(--shadow); }
+    .paper-card__cover { position:relative; height:230px; display:grid; place-items:center; overflow:hidden; border-bottom:1px solid var(--line); background:#f7f7f2; }
+    .paper-card__cover > img { width:100%; height:100%; display:block; object-fit:contain; background:#fff; }
+    .paper-card__cover-caption { position:absolute; left:0; right:0; bottom:0; max-height:58px; overflow:hidden; margin:0; padding:9px 12px; color:#fff; background:linear-gradient(transparent,rgba(12,20,16,.88)); font-size:.76rem; line-height:1.35; }
+    .paper-card__placeholder { width:100%; height:100%; display:flex; flex-direction:column; justify-content:space-between; padding:22px; color:var(--green); background:linear-gradient(145deg,#edf3ed,#faf7ef 62%,#e8eee8); }
+    .paper-card__placeholder span { font-weight:800; }
+    .paper-card__placeholder strong { font:700 1.45rem/1.2 Georgia,serif; overflow-wrap:anywhere; }
+    .paper-card__placeholder small { color:var(--muted); }
+    .paper-card__body { display:flex; flex-direction:column; min-height:520px; padding:22px; }
+    .paper-card--compact .paper-card__body { min-height:285px; }
+    .paper-card__rubric { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:12px; color:var(--muted); font-size:.74rem; }
+    .paper-card__rubric span { padding:2px 7px; border:1px solid var(--line); }
+    .paper-card__rubric .topic-badge { color:var(--green); border-color:var(--green); font-weight:800; }
+    .paper-card h3 { margin:0 0 8px; font-size:1.3rem; line-height:1.38; }
+    .paper-card h3 a { color:var(--ink); text-decoration:none; }
+    .paper-card h3 a:hover { color:var(--green); text-decoration:underline; }
+    .original-title { display:-webkit-box; overflow:hidden; margin:0 0 8px; color:var(--muted); font:italic .88rem/1.45 Georgia,serif; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
+    .authors { overflow:hidden; margin:0 0 18px; color:var(--muted); font-size:.82rem; text-overflow:ellipsis; white-space:nowrap; }
+    .paper-card__takeaway { padding:14px; border-left:3px solid var(--green); background:var(--green-soft); }
+    .paper-card__takeaway p { margin:0; }
+    .paper-card__takeaway p:last-child { display:-webkit-box; overflow:hidden; -webkit-box-orient:vertical; -webkit-line-clamp:4; }
+    .field-label { margin-bottom:4px !important; color:var(--green); font-size:.75rem; font-weight:800; letter-spacing:.08em; }
+    .paper-card__recommendation { display:-webkit-box; overflow:hidden; margin:14px 0; color:var(--muted); font-size:.9rem; -webkit-box-orient:vertical; -webkit-line-clamp:3; }
+    .paper-card__recommendation strong { color:var(--ink); }
+    .paper-tags { display:flex; flex-wrap:wrap; gap:6px; margin:0 0 16px; padding:0; list-style:none; }
+    .paper-tags a { display:block; padding:3px 8px; color:var(--green); background:#edf3ed; font-size:.75rem; text-decoration:none; }
+    .paper-tags a:hover { text-decoration:underline; }
+
+    .paper-details { margin-top:auto; border-top:1px solid var(--line); }
+    .paper-details summary { display:flex; justify-content:space-between; gap:12px; align-items:center; padding:14px 0 0; color:var(--green); font-weight:800; cursor:pointer; list-style:none; }
+    .paper-details summary::-webkit-details-marker { display:none; }
+    .summary-close { display:none; }
+    .paper-details[open] .summary-open { display:none; }
+    .paper-details[open] .summary-close { display:inline; }
+    .paper-details[open] .summary-arrow { transform:rotate(180deg); }
+    .summary-arrow { transition:transform .2s ease; }
+    .paper-details__meta { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 18px; margin:22px 0; padding:16px; background:#f6f3ec; font-size:.9rem; }
+    .paper-details__meta p { margin:0; }
+    .paper-links { display:flex; flex-wrap:wrap; gap:14px; }
+    .research-note { display:grid; grid-template-columns:minmax(150px,210px) minmax(0,1fr); gap:10px 20px; margin:22px 0 0; }
+    .research-note dt { color:var(--muted); font-weight:800; }
+    .research-note dd { min-width:0; margin:0; }
+    .research-note ul { margin:0; padding-left:1.25rem; }
+    blockquote { margin:10px 0; padding:10px 14px; border-left:3px solid var(--green); background:#f2f5ef; }
+    .paper-figures { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr)); gap:14px; margin:22px 0 8px; }
+    .paper-figure { margin:0; border:1px solid var(--line); background:#f7f7f2; }
+    .paper-figure__media { min-height:180px; display:grid; place-items:center; background:#fff; overflow:hidden; }
+    .paper-figure img { display:block; width:100%; max-height:480px; object-fit:contain; }
+    .paper-figure figcaption { padding:11px 13px; color:var(--muted); font-size:.84rem; line-height:1.5; }
+    .figure-source { display:block; margin-top:5px; font-size:.8rem; }
+    .figure-error { padding:26px; color:var(--muted); text-align:center; }
+    .copyright,.analysis-scope { color:var(--muted); font-size:.78rem; }
+    .analysis-scope { margin-top:22px; padding-top:12px; border-top:1px solid var(--line); }
+    .detail-layout { margin-top:42px; }
+    .detail-layout .paper-card { width:min(1120px,100%); margin:0 auto; }
+    .detail-layout .paper-card__cover { height:min(520px,55vw); }
+    .detail-layout .paper-card__body { min-height:0; padding:clamp(24px,4vw,44px); }
+
+    .paper-card:has(.paper-details[open]) { grid-column:1/-1; }
+    .paper-card:has(.paper-details[open]) .paper-card__cover { display:none; }
+    .paper-card:has(.paper-details[open]) .paper-card__body { width:min(1120px,100%); min-height:0; margin:0 auto; padding:clamp(24px,4vw,44px); }
+    .paper-card:has(.paper-details[open]) .paper-card__takeaway p:last-child,
+    .paper-card:has(.paper-details[open]) .paper-card__recommendation { display:block; overflow:visible; }
+
+    @media (max-width:1100px) {
+      .stats { grid-template-columns:repeat(3,1fr); }
+      .explorer-controls { grid-template-columns:repeat(3,1fr); }
+      .control--query { grid-column:span 2; }
+    }
+    @media (max-width:760px) {
+      main { width:min(94vw,680px); padding-top:24px; }
+      .masthead,.gallery-intro,.explorer-status { align-items:flex-start; flex-direction:column; }
+      .masthead nav { justify-content:flex-start; }
+      h1 { margin-top:28px; font-size:clamp(1.85rem,9vw,2.5rem); }
+      .stats { grid-template-columns:repeat(2,1fr); }
+      .topic-shelves { display:flex; overflow-x:auto; padding-bottom:6px; scroll-snap-type:x proximity; }
+      .topic-filter { min-width:190px; scroll-snap-align:start; }
+      .explorer-controls { position:static; grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .control--query,.explorer-actions { grid-column:1/-1; }
+      .explorer-actions { flex-wrap:wrap; }
+      .paper-details__meta,.research-note { grid-template-columns:1fr; }
+      .research-note dt { margin-top:10px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header class="page-header">
+    <div class="masthead">
+      <span>PAPERDAILY · 智能优化与生产调度 · 2026-09-08 17:06</span>
+      <nav aria-label="站点导航">
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/">今日</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/daily/">每日日报</a>
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/library/">长期论文库</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/topics/">主题</a>
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/">标签</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/archive/">发表归档</a>
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/search/">搜索</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/feed.xml">订阅</a>
+      </nav>
+    </div>
+    <h1>2026-09 论文归档</h1>
+<p class="lede">按论文首次发表时间归档，与每日日报运行日期分开。</p>    <div class="stats" aria-label="长期档案统计">
+      <div class="stat"><strong>12</strong>当前页面论文</div>
+      <div class="stat"><strong>21</strong>长期论文</div>
+      <div class="stat"><strong>8</strong>稳定主题</div>
+      <div class="stat"><strong>10</strong>固定标签</div>
+      <div class="stat"><strong>12</strong>已有配图</div>
+    </div>
+  </header>
+
+  <section class="gallery-intro" aria-labelledby="gallery-title">
+    <div><p class="eyebrow">论文画廊</p><h2 id="gallery-title">2026-09 全部论文</h2></div>
+    <p>同一论文仅展示当前首选版本。</p>
+  </section>
+
+  <section data-explorer>
+    <div class="topic-shelves" role="group" aria-label="按研究主题筛选">
+      <button class="topic-filter" type="button" data-topic-choice="" aria-pressed="true"><strong>全部研究</strong><span>12 篇</span></button>
+      <button class="topic-filter" type="button" data-topic-choice="scheduling" aria-pressed="false" title="车间、流水线、装配与生产运输协同的调度建模和求解。"><strong>生产调度</strong><span>1 篇 · 车间、流水线、装配与生产运输协同的调度建模和求解。</span></button>
+      <button class="topic-filter" type="button" data-topic-choice="evolutionary-optimization" aria-pressed="false" title="进化计算、群智能、约束多目标、多任务与昂贵优化。"><strong>进化与智能优化</strong><span>2 篇 · 进化计算、群智能、约束多目标、多任务与昂贵优化。</span></button>
+      <button class="topic-filter" type="button" data-topic-choice="neural-optimization" aria-pressed="false" title="图表示、神经求解器、生成式优化与学习辅助搜索。"><strong>神经组合优化</strong><span>1 篇 · 图表示、神经求解器、生成式优化与学习辅助搜索。</span></button>
+      <button class="topic-filter" type="button" data-topic-choice="reinforcement-learning" aria-pressed="false" title="构造式策略、局部改进、调度规则和求解器策略学习。"><strong>强化学习求解</strong><span>1 篇 · 构造式策略、局部改进、调度规则和求解器策略学习。</span></button>
+      <button class="topic-filter" type="button" data-topic-choice="agents-ai4or" aria-pressed="false" title="多智能体协同、大模型启发式生成、运筹建模与工具调用。"><strong>智能体与自动建模</strong><span>4 篇 · 多智能体协同、大模型启发式生成、运筹建模与工具调用。</span></button>
+      <button class="topic-filter" type="button" data-topic-choice="routing-resources" aria-pressed="false" title="路径规划、车辆路径、项目调度与资源配置。"><strong>路径与资源优化</strong><span>2 篇 · 路径规划、车辆路径、项目调度与资源配置。</span></button>
+      <button class="topic-filter" type="button" data-topic-choice="frontier" aria-pressed="false" title="与研究主线有明确联系的相邻方法与问题。"><strong>前沿探索</strong><span>1 篇 · 与研究主线有明确联系的相邻方法与问题。</span></button>
+    </div>
+
+    <form class="explorer-controls" data-filter-form aria-label="筛选论文">
+      <label class="control control--query"><span>关键词</span><input type="search" name="q" maxlength="200" autocomplete="off" placeholder="标题、作者、方法、标签……" data-filter-query></label>
+      <label class="control"><span>编辑层级</span><select name="tier" data-filter-tier><option value="">全部层级</option><option value="deep_read">今日必读</option><option value="browse">值得浏览</option><option value="explore">探索发现</option></select></label>
+      <label class="control"><span>证据范围</span><select name="scope" data-filter-scope><option value="">全部范围</option><option value="full_text">正文节选</option><option value="abstract">摘要级</option></select></label>
+      <label class="control"><span>最低相关性</span><select name="score" data-filter-score><option value="0">全部</option><option value="8">8 分以上</option><option value="9">9 分以上</option></select></label>
+      <label class="control"><span>论文配图</span><select name="figure" data-filter-figure><option value="">全部</option><option value="yes">已有原图</option><option value="no">暂无原图</option></select></label>
+      <div class="explorer-actions"><button type="button" data-expand-visible>展开结果</button><button type="button" data-collapse-visible>全部收起</button><button type="reset">重置</button></div>
+    </form>
+    <noscript><p class="noscript-notice">筛选功能需要启用 JavaScript；未启用时仍会显示全部论文。</p></noscript>
+    <div class="explorer-status"><p>当前显示 <strong data-result-count aria-live="polite">12</strong> 篇论文 <span class="active-tag" data-active-tag></span></p><p>标签有稳定永久网址，也可在当前画廊内继续筛选。</p></div>
+
+      <section class="tier-section" data-tier-section="deep_read">
+        <header class="tier-heading"><h2>今日必读</h2><p><span data-tier-count>5</span> 篇</p></header>
+        <div class="paper-grid"><article
+  class="paper-card paper-card--compact"
+  data-paper-card
+  data-paper-id="arxiv:2609.04161:v1"
+  data-topic="scheduling"
+>
+
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">生产调度</span>
+      <span>正文节选</span>
+      <span>相关性 7/10</span>
+      <span>v1</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2609.04161/">冲突图约束下作业车间调度最小化完工时间</a></h3>
+    <p class="original-title" lang="en">Minimizing the makespan in job shop scheduling under conflict graph constraints</p>
+    <p class="authors">Nour Elhouda Tellache · Abdenour Azerine</p>
+
+
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/job-shop/" data-tag-filter="job-shop">作业车间</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/mathematical-programming/" data-tag-filter="mathematical-programming">数学规划</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/benchmark/" data-tag-filter="benchmark">基准与泛化</a></li>
+    </ul>
+
+  </div>
+</article><article
+  class="paper-card paper-card--compact"
+  data-paper-card
+  data-paper-id="arxiv:2609.03754:v1"
+  data-topic="agents-ai4or"
+>
+
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">智能体与自动建模</span>
+      <span>正文节选</span>
+      <span>相关性 8/10</span>
+      <span>v1</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2609.03754/">资源受限项目调度问题的自动化优先级规则设计：一种大语言模型引导的基于种群的搜索方法</a></h3>
+    <p class="original-title" lang="en">Automated Priority Rule Design for the Resource-Constrained Project Scheduling Problem: A Large Language Model-Guided Population-Based Search</p>
+    <p class="authors">Jingyu Luo · Mario Vanhoucke · Jos\&#39;e Coelho</p>
+
+
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/llm/" data-tag-filter="llm">大模型辅助优化</a></li>
+    </ul>
+
+  </div>
+</article><article
+  class="paper-card paper-card--compact"
+  data-paper-card
+  data-paper-id="arxiv:2609.03147:v1"
+  data-topic="neural-optimization"
+>
+
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">神经组合优化</span>
+      <span>正文节选</span>
+      <span>相关性 6/10</span>
+      <span>v1</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2609.03147/">可行但非安全：学习型无蜂窝ISAC关联中的约束违反与报告信道攻击</a></h3>
+    <p class="original-title" lang="en">Feasible but Not Safe: Constraint Violations and Report-Channel Attacks in Learned Cell-Free ISAC Association</p>
+    <p class="authors">Mehdi Zafari · Iman Mohammadi · A. Lee Swindlehurst</p>
+
+
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/graph-neural/" data-tag-filter="graph-neural">图神经网络</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/mathematical-programming/" data-tag-filter="mathematical-programming">数学规划</a></li>
+    </ul>
+
+  </div>
+</article><article
+  class="paper-card paper-card--compact"
+  data-paper-card
+  data-paper-id="arxiv:2609.02353:v1"
+  data-topic="routing-resources"
+>
+
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">路径与资源优化</span>
+      <span>正文节选</span>
+      <span>相关性 7/10</span>
+      <span>v1</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2609.02353/">面向路由优化的耦合启发式组件的LLM驱动联合进化</a></h3>
+    <p class="original-title" lang="en">LLM-Driven Joint Evolution of Coupled Heuristics Components for Routing Optimization</p>
+    <p class="authors">Juntao Wei · Yangming Zhou · Zhibin Jiang · Shan Jiang</p>
+
+
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/llm/" data-tag-filter="llm">大模型辅助优化</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/evolutionary/" data-tag-filter="evolutionary">进化与群智能</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/benchmark/" data-tag-filter="benchmark">基准与泛化</a></li>
+    </ul>
+
+  </div>
+</article><article
+  class="paper-card paper-card--compact"
+  data-paper-card
+  data-paper-id="arxiv:2609.01933:v2"
+  data-topic="reinforcement-learning"
+>
+
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">强化学习求解</span>
+      <span>正文节选</span>
+      <span>相关性 8/10</span>
+      <span>v2</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2609.01933/">OR-Transformer：将实时决策扩展至1000个物品规模</a></h3>
+    <p class="original-title" lang="en">OR-Transformer: Scaling Real-Time Decision-Making to 1,000 Items</p>
+    <p class="authors">Shuze Daniel Liu · David Simchi-Levi · Claire Chen · Chutong Gao · Shangtong Zhang</p>
+
+
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/reinforcement-learning/" data-tag-filter="reinforcement-learning">强化学习</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/mathematical-programming/" data-tag-filter="mathematical-programming">数学规划</a></li>
+    </ul>
+
+  </div>
+</article></div>
+      </section>
+      <section class="tier-section" data-tier-section="browse">
+        <header class="tier-heading"><h2>值得浏览</h2><p><span data-tier-count>5</span> 篇</p></header>
+        <div class="paper-grid"><article
+  class="paper-card paper-card--compact"
+  data-paper-card
+  data-paper-id="arxiv:2609.05258:v1"
+  data-topic="agents-ai4or"
+>
+
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">智能体与自动建模</span>
+      <span>摘要级</span>
+      <span>相关性 6/10</span>
+      <span>v1</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2609.05258/">先问再优化：面向交互式优化的动态预建模澄清</a></h3>
+    <p class="original-title" lang="en">Ask Before You Optimize: Dynamic Pre-Formulation Clarification for Interactive Optimization</p>
+    <p class="authors">Sihan Ge · Yichen Lin · Chenyu Zhou · Jianghao Lin · Tao Yao · Dongdong Ge</p>
+
+
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/llm/" data-tag-filter="llm">大模型辅助优化</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/benchmark/" data-tag-filter="benchmark">基准与泛化</a></li>
+    </ul>
+
+  </div>
+</article><article
+  class="paper-card paper-card--compact"
+  data-paper-card
+  data-paper-id="arxiv:2609.02993:v1"
+  data-topic="agents-ai4or"
+>
+
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">智能体与自动建模</span>
+      <span>摘要级</span>
+      <span>相关性 6/10</span>
+      <span>v1</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2609.02993/">有限库输入扭曲核的无遗憾贝叶斯优化</a></h3>
+    <p class="original-title" lang="en">No-Regret Bayesian Optimization with Finite-Library Input-Warped Kernels</p>
+    <p class="authors">Edvin Ketabati Augustinsson · Robert A. Bridges</p>
+
+
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/agents/" data-tag-filter="agents">多智能体</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/benchmark/" data-tag-filter="benchmark">基准与泛化</a></li>
+    </ul>
+
+  </div>
+</article><article
+  class="paper-card paper-card--compact"
+  data-paper-card
+  data-paper-id="arxiv:2609.01807:v2"
+  data-topic="agents-ai4or"
+>
+
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">智能体与自动建模</span>
+      <span>摘要级</span>
+      <span>相关性 6/10</span>
+      <span>v2</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2609.01807/">SPD：用于生成式重排序的单遍解码</a></h3>
+    <p class="original-title" lang="en">SPD: Single Pass Decoding for Generative Reranking</p>
+    <p class="authors">Emil Laftchiev · Prachi Agrawal · Moe Kayali · Bixing Yan · Qi Xu · Zijie Lei · Chen Qiu · Zhi Hua · Ke Li · Luke Simon</p>
+
+
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/llm/" data-tag-filter="llm">大模型辅助优化</a></li>
+    </ul>
+
+  </div>
+</article><article
+  class="paper-card paper-card--compact"
+  data-paper-card
+  data-paper-id="arxiv:2609.01493:v2"
+  data-topic="evolutionary-optimization"
+>
+
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">进化与智能优化</span>
+      <span>摘要级</span>
+      <span>相关性 6/10</span>
+      <span>v2</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2609.01493/">重新思考离线数据驱动优化中的可学习性</a></h3>
+    <p class="original-title" lang="en">Rethinking Learnability in Offline Data-driven Optimization</p>
+    <p class="authors">Chao Qian · Chen-Guang Wang · Rong-Xi Tan · Ke Xue</p>
+
+
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/dynamic-robust/" data-tag-filter="dynamic-robust">动态与鲁棒</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/evolutionary/" data-tag-filter="evolutionary">进化与群智能</a></li>
+    </ul>
+
+  </div>
+</article><article
+  class="paper-card paper-card--compact"
+  data-paper-card
+  data-paper-id="arxiv:2609.01248:v1"
+  data-topic="frontier"
+>
+
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">前沿探索</span>
+      <span>摘要级</span>
+      <span>相关性 7/10</span>
+      <span>v1</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2609.01248/">面向随机机组组合的后端无关MWIS内核：中性原子硬件验证</a></h3>
+    <p class="original-title" lang="en">A Backend-Agnostic MWIS Kernel for Stochastic Unit Commitment with Neutral-Atom Hardware Validation</p>
+    <p class="authors">Jiying Chen · Min Lin · Jingwei Wen · Zhihong Zhang · Chuixiong Wu</p>
+
+
+    <ul class="paper-tags" aria-label="研究标签">
+    </ul>
+
+  </div>
+</article></div>
+      </section>
+      <section class="tier-section" data-tier-section="explore">
+        <header class="tier-heading"><h2>探索发现</h2><p><span data-tier-count>2</span> 篇</p></header>
+        <div class="paper-grid"><article
+  class="paper-card paper-card--compact"
+  data-paper-card
+  data-paper-id="arxiv:2609.04593:v1"
+  data-topic="routing-resources"
+>
+
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">路径与资源优化</span>
+      <span>摘要级</span>
+      <span>相关性 6/10</span>
+      <span>v1</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2609.04593/">基于GNN引导的图粗化与自适应QUBO惩罚的带时间窗容量车辆路径问题量子退火求解</a></h3>
+    <p class="original-title" lang="en">GNN-Guided Graph Coarsening and Adaptive QUBO Penalties for the Capacitated Vehicle Routing Problem with Time Windows on a Quantum Annealer</p>
+    <p class="authors">Youssef Kamel Rezk · Pawe{\l} Gora</p>
+
+
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/graph-neural/" data-tag-filter="graph-neural">图神经网络</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/benchmark/" data-tag-filter="benchmark">基准与泛化</a></li>
+    </ul>
+
+  </div>
+</article><article
+  class="paper-card paper-card--compact"
+  data-paper-card
+  data-paper-id="arxiv:2609.02722:v1"
+  data-topic="evolutionary-optimization"
+>
+
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">进化与智能优化</span>
+      <span>摘要级</span>
+      <span>相关性 6/10</span>
+      <span>v1</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2609.02722/">随机多目标优化的样本均值近似的自适应投影梯度算法</a></h3>
+    <p class="original-title" lang="en">An Adaptive Projected-Gradient Algorithm for Sample-Average Approximations of Stochastic Multi-Objective Optimization</p>
+    <p class="authors">Yiyang Li · Lei Wang · Xiaojun Chen</p>
+
+
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/multi-objective/" data-tag-filter="multi-objective">约束多目标</a></li>
+    </ul>
+
+  </div>
+</article></div>
+      </section>
+    <p class="empty-state" data-no-results hidden>没有符合当前条件的论文，请放宽主题、标签、层级或相关性条件。</p>
+    <script type="application/json" data-paper-json>[{"id":"arxiv:2609.05258:v1","topic":"agents-ai4or","tier":"browse","scope":"abstract","score":6,"hasFigure":true,"tags":["llm","benchmark"],"searchText":"智能体与自动建模 利用大语言模型进行优化建模前的需求澄清 大语言模型 交互式优化 需求澄清 基准测试 运筹学 ask before you optimize: dynamic pre-formulation clarification for interactive optimization 先问再优化:面向交互式优化的动态预建模澄清 sihan ge yichen lin chenyu zhou jianghao lin tao yao dongdong ge large language models (llms) are increasingly used to formulate optimization models from natural-language problem descriptions, yet realistic operations research (or) requests are often incomplete: missing objectives, constraints, or business rules can change the resulting mathematical program. existing evaluations largely assume a complete specification and therefore overlook whether an agent knows when clarification is needed before modeling. we introduce or-clarify, a benchmark for pre-formulation clarification. each task presents a partial public problem description, withholds structured hidden slots, and evaluates agents through bounded interaction with a simulated user. the benchmark supports both openended and choice-based clarification, and measures slot recovery, stopping behavior, silent assumptions, and interaction cost. we further propose interactive optimization (interopt), a two-stage framework that identifies unresolved formulation-critical gaps and uses them to guide whether to ask the next question or to stop. in our choice-based experiments, interopt substantially outperforms all baselines in exact slot recovery; in the open-ended setting, it remains competitive with strong prior methods. together, or-clarify and interopt reframe or assistance as a selective completeness decision: clarify when needed, stop when ready, and quantify what remains missing. 研究问题为在优化建模前,如何判断并执行必要的需求澄清。决策对象为大语言模型驱动的智能体,其目标是在有限交互中获取完整且正确的优化模型规格,关键约束是公共问题描述不完整,隐藏了结构化槽位,且交互次数有限。信息假设为存在一个模拟用户,可以回答澄清问题;环境是动态的,智能体需决定是继续提问还是停止。 大语言模型常被用于从自然语言问题描述中构建优化模型,但现实中的运筹学请求往往不完整,缺少目标、约束或业务规则会改变最终的数学模型。现有评估大多假设规格完整,忽略了智能体在建模前是否知道何时需要澄清,因此需要新的基准和方法来研究这一关键能力。 将优化的辅助从'一次性建模'重新定义为'选择性完备性决策',即智能体应主动识别建模前遗漏的关键信息,并在必要时提问,在信息足够时停止,同时量化剩余缺失,从而提高最终模型的可靠性。 作者构建了基准or-clarify,每个任务提供部分公共问题描述,隐藏结构化槽位,通过模拟用户限制交互来评估智能体。他们提出两阶段框架interopt,先识别出未被解决的公式关键差距,再利用这些差距指导下一步行动(提问或停止)。分析侧重于将澄清过程分解为槽位恢复和停止决策,并引入多种度量指标。 构建or-clarify基准:包含部分问题描述和隐藏槽位,支持开放式和基于选择的澄清,模拟用户交互 提出interopt两阶段框架:第一阶段识别公式关键差距,第二阶段基于差距决定是否提出下一个问题或停止 度量指标包括槽位恢复、停止行为、隐含假设和交互成本 基于选择的实验中,interopt在精确槽位恢复上大幅优于所有基线 在开放式设定中,interopt与强大的先前方法保持竞争力 该论文与智能优化和ai4or相关,因为它涉及使用大语言模型自动生成优化模型,这是自动建模方向的一个关键问题。然而,它侧重于建模前的澄清,而非直接针对调度或约束求解。推测:该方法可迁移到生产调度中,当用户描述不完整时,智能体需澄清工件、机器、目标等关键信息,但需要将槽位设计为调度相关的规格,并研究交互效率。 对于关注llm智能体用于自动建模的研究者,该论文提供了一个系统化的基准和方法,强调需求澄清的重要性,这在实际应用中非常关键。它启发我们在优化问题自动求解中考虑不完备描述的场景,并设计交互式机制,有助于提高自动建模的实用性。"},{"id":"arxiv:2609.04593:v1","topic":"routing-resources","tier":"explore","scope":"abstract","score":6,"hasFigure":false,"tags":["graph-neural","benchmark"],"searchText":"路径与资源优化 量子退火求解cvrptw的qubo问题规模缩减与惩罚系数调整 量子退火 qubo 图粗化 图神经网络 车辆路径问题 带时间窗 自适应惩罚校准 gnn-guided graph coarsening and adaptive qubo penalties for the capacitated vehicle routing problem with time windows on a quantum annealer 基于gnn引导的图粗化与自适应qubo惩罚的带时间窗容量车辆路径问题量子退火求解 youssef kamel rezk pawe{\\l} gora graph coarsening reduces the large quadratic unconstrained binary optimization (qubo) formulations arising when vehicle-routing problems are solved by quantum annealing. nearby customers with compatible time windows are merged into super-nodes, the reduced problem is solved, and the solution is expanded to the original graph. for the capacitated vehicle routing problem with time windows (cvrptw), existing coarsening heuristics require family-specific tuning and remain unreliable on random instances. we address these limitations on the solomon benchmark using simulated annealing and a d-wave advantage2 processor. we first introduce adaptive penalty calibration. uniform penalty scaling has little effect, whereas controlling the internal coefficient range substantially improves raw samples. removing non-binding constraints, normalising binding ones, and scaling the remaining penalties reduces mean raw constraint violations from 33.0 to 0.06 at the same solver budget (p=3.7e-11, n=56). a variable-count-preserving control attributes this gain to conditioning rather than problem size. second, we replace the hand-tuned merge score with a graph neural network (gnn) using one configuration across all families. at n=10, it achieves 100% feasibility across all solomon families, including r-type (100% vs. 80% for the tuned heuristic). across n=10,...,100, feasibility is 83% vs. 69%, with the gnn better or tied on 85/90 instance-size pairs. at n=80,100, the difference is significant (p=0.002; 25/25 pairs), while the qubo remains approximately 5-6 times smaller. finally, hardware experiments reproduce the conditioning effect at fixed logical variable count: feasible samples increase from 0.02% to 39% across 13 instances. classical repair with local search remains a reference bound for end-to-end solution cost. 本文研究静态的带时间窗容量车辆路径问题(cvrptw),决策对象为客户分组与路径顺序,目标是最小化总行驶成本或满足约束,关键约束包括车辆容量和时间窗。使用量子退火和模拟退火求解,将问题建模为qubo。环境为静态的确定性实例,基准为solomon。动态性和信息假设材料未说明。 量子退火求解车辆路径问题时,随着客户数量增加qubo规模过大,难以直接求解。已有的图粗化启发式依赖特定实例族且泛化性差,随机实例上不可靠。作者旨在通过自适应惩罚校准和gnn引导的图粗化,提高求解可行性并缩减问题规模,使量子退火更实用。 核心洞察在于:qubo惩罚项的内部系数范围而非整体缩放是影响原始样本可行性的关键因素;通过剔除无效约束、归一化有效约束并缩放剩余惩罚,可显著减少约束违反而无需增加求解预算。同时,gnn可以学习统一的合并评分策略,替代需要手工调整的启发式,在不同实例族上具有更好的泛化能力。 作者通过将问题分解为qubo建模、图粗化缩减、惩罚校准、求解与展开等阶段进行分析。图粗化通过合并兼容的客户节点减少变量数;惩罚校准通过统计约束的绑定情况,调整系数范围来改善条件数,从而提升原始样本的可行性;gnn则从图结构学习节点合并的优劣评分,实现自动化粗化。分析中使用了统计检验(如p值)验证改进的显著性,并通过控制变量(保持变量数不变)分离了条件数和问题规模的影响。 将cvrptw建模为qubo,变量表示客户是否被某辆车服务等 自适应惩罚校准:移除无效约束,归一化绑定约束,调整剩余惩罚的系数范围 gnn引导的图粗化:训练gnn学习节点合并评分,将客户节点合并为超级节点,减少变量数 通过模拟退火或d-wave advantage2求解缩减后的qubo,再将解展开到原始图 与手工调整的粗化启发式进行对比,评估不同客户数(n=10至100)下的可行性和问题缩减比 在solomon基准上进行实验,使用模拟退火和d-wave advantage2处理器 惩罚校准实验:统一惩罚缩放效果有限,而调整内部系数范围显著改善原始样本,平均原始约束违反从33.0降至0.06(p=3.7e-11, n=56),且该增益归因于条件改善而非问题规模 gnn引导粗化实验:n=10时,所有solomon族实现100%可行性(r型100% vs 80%),n=10至100时整体可行性83% vs 69%,gnn在85/90实例-规模对上优于或打平;n=80,100时差异显著(p=0.002; 25/25对),qubo规模约小5-6倍 硬件实验:固定逻辑变量数时,可行样本从0.02%提升至39%(13个实例) 以经典修复结合局部搜索作为端到端解成本的参考基线 论文研究车辆路径问题,与生产调度同属组合优化领域,其qubo建模和量子退火求解方法与神经引导的图粗化技术对智能优化方法有借鉴意义。推测:该自适应惩罚校准和gnn引导分解的思想可能迁移到柔性作业车间调度等约束优化问题中,用于改善学习辅助搜索或分解策略,但需要qubo建模支持,且量子硬件依赖限制了实用性。 论文展示了将图神经网络嵌入组合优化求解流程的典型方式,既有原理分析又有严谨的统计验证,对从事学习辅助搜索的研究者有方法论参考价值。其惩罚系数自适应策略对任何基于学习的约束优化方法均有启发,且实验设计和公平性控制值得借鉴。"},{"id":"arxiv:2609.04161:v1","topic":"scheduling","tier":"deep_read","scope":"full_text","score":7,"hasFigure":false,"tags":["job-shop","mathematical-programming","benchmark"],"searchText":"生产调度 带冲突图约束的作业车间调度问题 作业车间调度 冲突图 完工时间 计算复杂性 混合整数线性规划 遗传算法 下界 minimizing the makespan in job shop scheduling under conflict graph constraints 冲突图约束下作业车间调度最小化完工时间 nour elhouda tellache abdenour azerine we study the job shop scheduling problem with a conflict graph (jsc), in which adjacent jobs in the conflict graph cannot be processed simultaneously on different machines, with the objective of minimizing the makespan. the problem models settings where jobs share additional resources while retaining their individual machine routings. we first investigate its computational complexity and establish a polynomial equivalence between jsc and a variant of the resource-constrained job shop problem with unit-capacity resources. although the general problem on two machines is np-hard, we identify a polynomially solvable special case. for the general problem, we develop precedence-based and time-indexed mixed-integer linear formulations, along with lower bounds on the makespan. we also propose a genetic algorithm using permutation-with-repetition encoding and active, non-delay, and hybrid schedule evaluation procedures. computational experiments on instances derived from the lawrence and taillard benchmarks, as well as randomly generated generalized job shop instances, are conducted to evaluate the performance of the proposed formulations, lower bounds, and genetic algorithm. 研究作业车间调度问题,其中作业由一系列操作组成,每个操作需在指定机器上处理,目标是最小化完工时间。关键约束是相邻作业不能同时在不同机器上处理,用冲突图表示。此外,每台机器一次只能处理一个操作,每个作业一次只能在一台机器上处理,作业的操作顺序预定义且连续操作需在不同机器上进行。环境是静态的,所有信息已知。 在许多实际应用中,作业可能共享额外资源,因此某些作业不能同时处理,这种冲突约束用图来表示,形成带冲突图的作业车间调度问题。现有研究缺乏对该问题的系统分析,因此需要研究其计算复杂性和求解方法。 该研究通过揭示jsc问题与具有单位容量资源的资源受限作业车间调度变体之间的多项式等价性,将问题置于更广泛的资源约束调度框架下,从而利用已有复杂性结果和求解技术。同时发现两机一般情况是np难的,但识别出多项式可解的特例,表明冲突图结构对复杂度有显著影响。 作者通过分析问题的计算复杂性,建立与资源受限作业车间调度问题的等价性来利用已知结果。对于一般情况,提出基于优先级的和基于时间索引的混合整数线性规划模型,以及完工时间的下界。针对求解方法,设计了采用带重复排列编码的遗传算法,并引入主动调度、非延迟调度和混合调度评估程序,以扩大搜索空间并提高找到最优解的可能性。 开发基于优先级的混合整数线性规划模型和基于时间索引的模型来描述问题 推导完工时间的下界 设计遗传算法,使用带重复排列的编码表示操作序列 使用主动调度、非延迟调度和混合调度评估程序评估生成的调度方案 计算实验在从lawrence和taillard基准派生的实例以及随机生成的广义作业车间实例上进行,评估数学模型、下界和遗传算法的性能,但没有报告具体的数值结果。 本文研究的作业车间调度是生产调度的核心领域,且考虑冲突图约束,扩展了传统问题模型。方法上结合了数学规划和遗传算法,属于学习辅助搜索的范畴,但未使用神经网络或强化学习。遗传算法中的调度解码机制(主动、非延迟、混合)与智能优化中的可行调度生成方法密切相关。 本文为带冲突图约束的作业车间调度提供了复杂性分析和求解方法,可启发生产调度中考虑资源冲突或共享限制的问题建模与求解,其下界和遗传算法设计对相关研究具有参考价值。"},{"id":"arxiv:2609.03754:v1","topic":"agents-ai4or","tier":"deep_read","scope":"full_text","score":8,"hasFigure":true,"tags":["llm"],"searchText":"智能体与自动建模 利用大语言模型自动设计调度优先级规则 rcpsp 优先级规则 大语言模型 自动启发式设计 基于种群的搜索 automated priority rule design for the resource-constrained project scheduling problem: a large language model-guided population-based search 资源受限项目调度问题的自动化优先级规则设计:一种大语言模型引导的基于种群的搜索方法 jingyu luo mario vanhoucke jos\\'e coelho the objective of the resource-constrained project scheduling problem (rcpsp) is to minimize makespan while satisfying precedence and renewable-resource constraints. priority-rule heuristics construct feasible schedules with low computational cost and explicit decision logic, making them widely used in practice and an attractive alternative to more computationally intensive methods. however, no traditional rule performs consistently well across projects, and researchers have therefore investigated automated priority-rule design. genetic programming (gp) hyper-heuristics have been the predominant approach to this task, but evolving a high-performing rule may require evaluating many candidate rules on the training projects. recent advances in large language models (llms) make it possible to generate and iteratively revise priority rules using performance feedback. this paper presents an llm-guided population-based framework for automated priority-rule design. during the offline search, an llm generates and revises candidate rules, while schedule quality on training projects determines candidate fitness and guides subsequent revisions. at the end of the search, the best rule is returned and applied directly to unseen projects without further search or llm calls. experiments show that the llm-designed rules outperform traditional single rules across the test sets and outperform gp-designed rules obtained under comparable search effort, while remaining competitive with rules obtained from a substantially larger gp search. on large projects, selected llm-designed rules outperform all considered traditional rules and two genetic algorithm configurations on highly parallel projects. an ablation study examines how changes to the main search components affect performance, while rule analyses describe the structure and decision behavior of the llm-designed rules. 本研究针对资源受限项目调度问题(rcpsp),目标是最小化项目完成时间(makespan),需满足活动间的时序约束和可再生资源约束。决策对象是调度活动的优先级规则(可执行的优先级函数),用于构建可行调度。环境是静态确定的,规则设计在离线训练项目上进行,最终规则直接应用于未见过的项目。 优先级规则启发式方法计算成本低、决策逻辑透明,在实践中广泛使用,但不存在对所有项目都有效的传统规则。自动设计规则的传统方法(如遗传规划)需要评估大量候选规则,成本高;而大语言模型能够生成并迭代改进规则,但用于标准rcpsp的离线规则设计尚缺乏系统研究。 利用大语言模型的先验知识生成候选规则,并通过训练项目上的调度质量反馈进行迭代修订,可以在有限的搜索预算内找到高性能的可复用优先级规则,无需对每个实例进行搜索。 作者将问题建模为基于种群的搜索过程,候选规则以统一格式表示,利用调度质量作为适应度,指导llm进行结构化的规则修订。通过保留精英规则和参考规则,维持种群多样性。 llm生成初始种群:给定调度输入和函数格式,生成多条候选规则 适应度评估:将候选规则应用于训练项目,构建调度并计算makespan作为适应度 迭代修订:根据适应度反馈,llm对规则进行修改,形成下一代种群,保留部分优秀规则 最终输出:搜索结束后返回最优规则,无需再调用llm即可应用于新项目 实验比较llm设计的规则与传统规则和gp设计的规则,结果显示llm规则在测试集上优于传统规则和同等搜索努力的gp规则,与更大规模gp搜索的规则竞争力相当 在大规模高并行项目上,选定的llm规则优于所有传统规则和两种ga配置(当每实例评估预算为1,000和5,000时),但差于50,000评估预算的ga 消融研究探讨了主要搜索组件的影响,规则分析描述了llm设计规则的结构和决策行为 本研究与智能优化和调度领域紧密相关,展示了如何将llm作为搜索机制自动设计可复用的调度优先级规则。这与生产调度中的学习辅助搜索和自动设计方向相似。推测:该方法可迁移到其他调度问题(如流水车间调度)的规则设计,但需要重新定义调度输入、规则格式,并评估计算成本。 论文展示了一种新颖的llm引导搜索用于自动规则设计,对生成调度启发式方法具有重要价值,其离线设计、复用规则的思想有助于减少在线计算成本,值得研究者参考。"},{"id":"arxiv:2609.03147:v1","topic":"neural-optimization","tier":"deep_read","scope":"full_text","score":6,"hasFigure":false,"tags":["graph-neural","mathematical-programming"],"searchText":"神经组合优化 学习型调度器(gnn)在无蜂窝isac系统中的约束可行性与安全性分析 图神经网络 学习优化 约束可行性 安全 无蜂窝isac 无线调度 feasible but not safe: constraint violations and report-channel attacks in learned cell-free isac association 可行但非安全:学习型无蜂窝isac关联中的约束违反与报告信道攻击 mehdi zafari iman mohammadi a. lee swindlehurst learning-based schedulers have been proposed to provide real-time user, target, and access point (ap) association in distributed cell-free integrated sensing and communication systems. in a typical approach, a graph neural network (gnn), trained on labels from a mixed-integer linear program, maps lightweight per-ap statistics to decisions on ap clustering, user and target scheduling, and mode selection in one forward pass. such solutions assume that hard constraints, enforced only as soft training penalties, hold at inference, and that the self-reported statistics are truthful. using our assent algorithm as an example, we find that despite high $f_1$ scores, many solutions violate at least one hard constraint, demonstrating that high prediction accuracy does not ensure joint feasibility. projecting the gnn output onto a feasible solution restores constraint satisfaction with low utility loss, even with a simple greedy repair procedure. we further show that feasibility alone does not guarantee robustness to false data injection attacks. a single malicious ap that reports false information cannot substantially increase its user associations, but can greatly increase the rate of infeasible solutions. the effect of such attacks depends on the type of information being falsified. misreporting information that affects the objective can largely be mitigated through feasibility projection, whereas falsifying information that affects the constraints cannot. the latter can, however, be detected using a low-complexity cross-ap consistency check. these results show that learned isac schedulers should be evaluated using constraint-aware feasibility metrics in addition to conventional accuracy measures. 研究问题为分布式无蜂窝isac系统中的用户、目标和接入点(ap)的关联调度,决策对象为ap聚类、用户与目标调度和模式选择。目标为实现实时关联,约束包括rf链预算、半双工限制、干扰限制和前传约束。信息假设为ap自报的统计量是可信的(但研究后期攻击模型否定此假设),环境是动态的,需要按资源块进行决策。 学习型调度器通过gnn在单次前向传播中输出关联决策,以绕过milp求解的计算瓶颈。但硬约束仅在训练中作为软惩罚,导致推理时可能违反约束;且系统依赖ap上报的统计量,易受错误数据注入攻击。本文旨在实证审计这些脆弱性,强调约束感知的评估指标和安全性。 高预测精度(如f1分数)不能保证联合可行性,可行性与安全性是独立的属性。可行性投影能恢复约束满足但可能被攻击者利用:若攻击影响目标函数则投影可缓解,若影响约束则投影反而会放大攻击效果。因此,评估学习型调度器需要约束感知的可行性度量,并考虑报告信道安全的威胁。 作者通过实证审计分析了学习型调度器的脆弱性。他们以assent算法为例,评估gnn输出解集的可行性,发现高f1分数掩盖了大量不可行解。他们提出可行性投影(如贪心修复)可恢复可行性且效用损失低。进一步,他们研究了虚假数据注入攻击,并区分了针对目标函数和针对约束的攻击,通过跨ap一致性检查检测约束伪造。 使用gnn作为学习型调度器,输入为轻量级ap统计量,输出为聚类、调度和模式决策。 训练时使用milp标签,约束作为软惩罚;推理时输出可能不可行。 可行性投影:采用贪心修复过程将gnn输出投影到可行解。 针对fdi攻击:分析误报目标函数或约束参数的影响,并提出低复杂度跨ap一致性检查以检测攻击。 在assent系统上评估,网络规模为8个ap、10个用户、4个目标。 高f1分数下约有70%-74%的解违反硬约束。 可行性投影恢复可行性且效用损失\u003c0.1%。 一致性检查检测攻击的概率约99.5%(范围99%-100%),误报率约1%,且将残余不可行率从12%降至4%。 论文核心是评估学习型调度器的约束可行性和安全性。与智能优化和生产调度关系为:它研究了学习(gnn)辅助求解中硬约束处理的核心问题,以及可行性投影机制。对生产调度,可推测类似风险:基于学习的调度器可能因软约束处理产生不可行解,且数据不确定性可能影响约束满足。迁移需考虑生产调度中的约束特性(如资源、时间窗)和报告可信度。 该研究展示了学习型调度器在约束可行性与安全性的实证分析,为ai4or研究者提供范式:高精度不保证可行性,需要约束感知评估。其可行性投影和攻击分析可启发智能优化方法中的鲁棒性和真实性设计。"},{"id":"arxiv:2609.02993:v1","topic":"agents-ai4or","tier":"browse","scope":"abstract","score":6,"hasFigure":true,"tags":["agents","benchmark"],"searchText":"智能体与自动建模 贝叶斯优化中的输入扭曲内核选择与理论保证 贝叶斯优化 高斯过程 输入扭曲 无遗憾 核学习 超参数优化 no-regret bayesian optimization with finite-library input-warped kernels 有限库输入扭曲核的无遗憾贝叶斯优化 edvin ketabati augustinsson robert a. bridges gaussian-process bayesian optimization (gp-bo) excels at black-box optimization of costly functions, e.g., hyperparameter optimization (hpo) and multi-agent system (mas) design. convergence-rate guarantees exist for select methods, notably gp upper confidence bound (gp-ucb), but require a fixed kernel. critically, the kernel encodes how input proximity affects objective value similarity. when raw coordinates poorly match this geometry - as with log-scaled hyperparameters or localized peaks - input warping can greatly improve sample efficiency, yet known gp-ucb proofs require a fixed kernel. we propose finite-library input-warped bayesian optimization (fliwbo), which selects warps from a finite library of smooth input maps by any history-dependent rule. it adapts the input geometry to accelerate learning while retaining high-probability convergence guarantees under mild hypotheses, with an explicit $\\sqrt(n_\\varepsilon)$ library-size cost. controlled diagnostics show that finite-library warping repairs planted geometry mismatches and identify fliwbo failure cases. across four repeated benchmarks - warped synthetic objectives, a confidence-fence trap, and fashion-mnist hpo - fliwbo-ucb beats raw-coordinate gp-ucb under misspecified geometry, escapes traps that defeat even oracle-warp expected improvement, and recovers much of the gain from manual log scaling, while leading the tested methods that admit a matching regret guarantee. a 20-dimensional mas design study further shows feasibility under costly noisy evaluations. code for experiments is available: https://github.com/edvin-ketabati/bogp-paper-experiments. 研究问题为在代价高昂的黑盒函数优化中,当原始输入坐标与目标函数几何不匹配时,如何通过输入扭曲提高样本效率。决策对象为输入扭曲映射的选择,目标是最小化累积遗憾或提高优化收敛性。关键约束是保留高概率收敛保证,并且扭曲映射从有限库中选取。信息假设为高斯过程先验,且目标函数平滑。环境是静态的,即目标函数固定,但评估代价高且可能存在噪声(如在多智能体系统设计中)。 高斯过程贝叶斯优化(gp-bo)在代价高昂的黑盒函数优化中表现优异,但标准的gp-ucb理论要求固定内核。然而,固定内核无法适应输入坐标与目标函数几何不匹配的情况,例如超参数呈对数尺度或存在局部峰值时,输入扭曲能显著提升样本效率。然而,已知的gp-ucb证明均要求固定内核,阻碍了动态选择扭曲映射。因此,作者提出一种方法,允许在有限库中动态选择扭曲映射,同时保留高概率收敛保证。 核心贡献在于证明了即使通过历史依赖规则从有限库中选择扭曲映射,也能保留无遗憾收敛保证,其代价是库大小的平方根因子。关键在于有限库假设和光滑映射,使得理论分析可行,同时动态选择输入几何适应数据,加速学习而不牺牲理论保证。 作者从理论角度分析有限库扭曲的后悔界,引入库大小平方根代价,并利用光滑性假设证明高概率收敛。实验设计上,通过构造几何失配的合成目标、置信陷阱以及fashion-mnist超参数优化,对比原始坐标gp-ucb,展示fliwbo修复几何失配并逃逸陷阱的能力。同时,在20维mas设计研究验证了在昂贵噪声评估下的可行性。 提出有限库输入扭曲贝叶斯优化(fliwbo),从有限个光滑输入映射的库中动态选择扭曲映射。 采用任意历史依赖规则选择扭曲,例如ucb策略,但保持理论分析。 结合高斯过程回归,以扭曲输入进行代理建模,并设计获取函数(如ucb)。 在每次迭代中,基于历史数据选择一个扭曲映射,然后应用标准gp-ucb更新。 在扭曲合成目标上,fliwbo-ucb在几何错误设定下优于原始坐标gp-ucb。 在置信围栏陷阱中,fliwbo-ucb能逃逸陷阱,甚至击败oracle扭曲期望改进。 在fashion-mnist hpo上,fliwbo-ucb恢复了手动对数缩放的许多优势,并领先具有匹配遗憾保证的测试方法。 在20维mas设计研究中,展示了在昂贵噪声评估下的可行性。实验细节和数字未在摘要中给出。 论文涉及贝叶斯优化,属于人工智能驱动优化方法,但其核心是核学习和输入扭曲,与生产调度中的约束优化、离散决策和组合优化问题关联较弱。然而,其动态适应输入空间的能力可能启发调度问题中特征表示的自动学习,特别是当调度目标与调度参数关系复杂时。推测迁移到生产调度需解决离散状态和约束可行性问题,但可作为相邻学习方法的参考。 该论文展示了在保持理论保证的同时动态调整模型几何的能力,对于ai4or研究者理解如何平衡学习灵活性和最优性保证有借鉴意义。其理论分析技巧(如有限库代价)可能迁移到参数化调度策略的学习中,但需验证离散环境下的适用性。"},{"id":"arxiv:2609.02722:v1","topic":"evolutionary-optimization","tier":"explore","scope":"abstract","score":6,"hasFigure":true,"tags":["multi-objective"],"searchText":"进化与智能优化 随机多目标优化的自适应投影梯度算法及其样本复杂度分析 多目标优化 随机优化 投影梯度 样本均值近似 帕累托平稳性 an adaptive projected-gradient algorithm for sample-average approximations of stochastic multi-objective optimization 随机多目标优化的样本均值近似的自适应投影梯度算法 yiyang li lei wang xiaojun chen we consider stochastic multi-objective optimization over a nonempty closed convex set, where every objective is an expectation and only sample-gradient information is available. we develop a line-search-free and function-value-free adaptive projected-gradient algorithm for the sample-average approximation (saa) problem. each iteration computes a feasible regularized multi-gradient step and updates the regularization parameter from the projected step length. a normal-cone-based certificate yields descent estimates and an explicit complexity bound for the pareto-stationarity residual of the saa problem. the consistency of saa gradients then transfers vanishing saa residuals to pareto stationarity for the population problem, while an additional concentration argument gives a finite-sample residual bound on compact sets. experiments on synthetic problems, classification, portfolio selection, multi-task learning, and robot control illustrate the practical performance of our algorithm. 研究问题为在非空闭凸集上的随机多目标优化,每个目标函数是期望形式,且仅可获得样本梯度信息。目标是寻找帕累托平稳点。决策变量属于闭凸集,约束为集合约束,没有其他显式约束。信息假设为仅有样本梯度,无函数值。环境为静态,涉及批量样本的均值近似。 实际中的多目标优化问题常涉及随机性或噪声,目标函数为期望形式,难以获得精确梯度和函数值。现有方法可能依赖于函数值或线搜索,而许多应用只有样本梯度,因此需要一种无需线搜索和函数值的自适应投影梯度算法,同时需要理论保证收敛性和样本复杂度。 关键洞察在于利用法锥证书来估计下降量,并自适应调整正则化参数,使得算法在无函数值和线搜索的情况下仍能保证帕累托平稳性残差的收敛率,并通过saa梯度的相合性将残差转移至总体问题的帕累托平稳性,从而桥接有限样本与总体优化。 作者未明确阐述,但推测:利用多梯度聚合思想构造下降方向,正则化参数根据投影步长自适应更新,使用基于法锥的证书确保下降性,结合saa梯度的相合性建立样本复杂度。材料未说明更详细的分解或问题结构利用。 初始化可行点与正则化参数。 每轮迭代计算一个可行的正则化多梯度步,即结合各目标样本梯度信息构造方向,并投影到可行集。 基于投影步长更新正则化参数,实现自适应。 利用法锥证书估计帕累托平稳性残差,并得出复杂度界。 证明saa梯度相合性,将有限样本残差转化为总体问题的帕累托平稳性,并给出紧集上的有限样本残差界。 在合成问题、分类、投资组合选择、多任务学习和机器人控制上进行了实验,展示了算法的实用性。但摘要未提供具体数值结果或基线对比。 论文研究随机多目标优化,属于多目标约束优化的理论算法,但问题是连续凸集上的随机优化,与智能优化中的多目标进化算法、神经网络辅助求解的离散组合优化不同。其投影梯度框架和saa分析可启发处理随机目标的生产调度问题中的多目标松弛,但迁移需满足梯度可用且决策空间为连续凸集等条件,推测较难直接用于组合调度。 尽管不直接研究调度问题,但其处理多目标随机优化和样本梯度的方法论严谨,复杂度分析清晰,对于关注多目标约束优化和随机环境下决策优化的研究者有参考价值,可借鉴其自适应正则化思想和样本复杂度证明技巧。"},{"id":"arxiv:2609.02353:v1","topic":"routing-resources","tier":"deep_read","scope":"full_text","score":7,"hasFigure":true,"tags":["llm","evolutionary","benchmark"],"searchText":"路径与资源优化 基于大语言模型的自动算法设计,联合进化相互依赖的启发式组件以改进引导局部搜索(gls) 自动算法设计 大语言模型 进化计算 引导局部搜索 路由优化 tsp cvrp llm-driven joint evolution of coupled heuristics components for routing optimization 面向路由优化的耦合启发式组件的llm驱动联合进化 juntao wei yangming zhou zhibin jiang shan jiang heuristic design for combinatorial optimization remains heavily reliant on expert knowledge, while existing large language model (llm)-enhanced evolutionary methods typically evolve isolated algorithmic components, even when one determines the search state on which another operates. this paper proposes llm-driven heuristic components joint generation (llm-hcjg), a population-based framework that jointly generates and co-evolves interdependent heuristic components under a shared design blueprint. applied to guided local search (gls), llm-hcjg couples solution initialization with penalty construction and embeds the generated pair into an enhanced online search mechanism. the resulting form is further transferred from the traveling salesman problem (tsp) to the capacitated vehicle routing problem (cvrp). theoretical analysis establishes the non-separable state-transition effects between the two components and the advantage in generation consistency. across synthetic instances and 41 public tsplib/cvrplib benchmarks, llm-hcjg attains consistently low optimality gaps, including best or tied-best results on 28 of 29 tsplib instances and all 12 cvrplib instances. ablation and structural analyses further indicate that these gains are associated with cross-component compatibility and alignment rather than isolated-component recombination. these results support effective cross-instance transfer within the evaluated routing settings under limited-sample, modest-cost training. 本文针对组合优化中的路由问题(tsp和cvrp),决策对象是生成改进的gls启发式算法,包括解初始化和惩罚构造两个相互依赖的组件。目标是自动设计高质量启发式策略。关键约束是生成的组件需嵌入gls框架并保证可行性。信息假设:静态、确定性的路由实例,材料未说明动态或不确定性。环境为离线的进化搜索过程,生成后的算法在实例上测试。 传统启发式设计依赖专家知识,而现有的llm增强进化方法通常孤立地进化算法组件,忽略了组件间的相互依赖关系(例如一个组件的输出决定另一个组件的搜索状态),导致整体性能受限。本文旨在通过联合生成和共同进化相互依赖的组件,提高自动设计启发式的效果,并实现跨实例的泛化。 核心洞察是启发式算法的组件之间存在非可分离的相互作用,联合生成和共同进化能够更好地保证组件间的兼容性和一致性,从而对gls的搜索方向产生结构性影响,而非仅仅局部改进。这种整体性设计比起孤立进化单个组件更能发挥llm的全局设计能力。 作者通过理论分析揭示了耦合组件的状态转移非可分离性,说明组件之间的交互效应不能通过单独优化每个组件来获得。作者将问题分解为两个相互关联的子问题:解初始化和惩罚构造,并通过联合生成策略确保它们在共享设计蓝图下兼容。实验通过消融研究验证跨组件兼容性和对齐优于独立组件重组。 提出llm-hcjg框架,这是一个基于种群的进化方法,利用llm作为变体生成器,在共同的蓝图下联合生成和共同进化三个耦合组件:解决方案初始化、惩罚构造以及增强的在线搜索机制(包括精英偏离、初始解重用、动态改进和定期恢复等固定机制)。 llm-hcjg将gls与所生成组件对结合,嵌入了增强的在线搜索机制,以利用耦合组件的协同效应,从而重塑gls的搜索方向。 在进化过程中,每个个体由组件对表示,通过llm提示驱动生成,并通过适应度评估(在训练实例上的性能)进行选择,实现共同进化。 生成的最终算法从tsp迁移到cvrp,展示了跨问题类型的泛化能力。 作者在合成实例(20、50、100节点)和公共基准(tsplib中的29个实例和cvrplib中的12个实例)上测试,报告低的最优性差距。 在tsplib上,llm-hcjg在28/29个实例上达到最佳或并列最佳;在cvrplib上,所有12个实例均达到最佳或并列最佳。 训练仅使用每个适应度评估5个训练实例,显示低成本训练。 消融和结构分析表明,性能提升与跨组件兼容性相关,而不仅是独立组件重组。 统计测试:引导95%置信区间高于零,配对wilcoxon符号秩检验p\u003c0.05,确认显著差异。 该论文关注自动算法设计,方法是利用llm和进化计算生成针对路由优化的启发式,这与智能优化和ai4or直接相关,尤其是将学习与搜索结合来设计求解算法。在柔性作业车间调度或生产物流中,迁移的启发式设计思路可以应用于调度规则或元启发式的自适应组件参数调整,但与具体生产调度(如作业车间、流水车间)尚无直接应用。 本文提出了一个新颖的联合启发式组件进化框架,强调了组件间协同优化的重要性,这对于研究生产调度中的动态调度策略或分布式制造中的协同优化有直接启发。其理论分析和验证方法也值得借鉴。"},{"id":"arxiv:2609.01933:v2","topic":"reinforcement-learning","tier":"deep_read","scope":"full_text","score":8,"hasFigure":false,"tags":["reinforcement-learning","mathematical-programming"],"searchText":"强化学习求解 基于深度强化学习的随机联合补货问题 深度强化学习 transformer 联合补货 库存管理 路径梯度 大规模决策 or-transformer: scaling real-time decision-making to 1,000 items or-transformer:将实时决策扩展至1000个物品规模 shuze daniel liu david simchi-levi claire chen chutong gao shangtong zhang modern supply chain operations can require coordinating replenishment across thousands of heterogeneous items under correlated stochastic demand, heterogeneous lead times, and shared fixed ordering costs, yielding observation spaces exceeding $10^4$ dimensions. at this scale, rolling-horizon stochastic mixed-integer linear programs (milps) become prohibitively slow, while standard reinforcement learning (rl) methods face increasingly challenging credit assignment in high-dimensional action spaces. we introduce or-transformer, a deep reinforcement learning framework for joint replenishment under stochastic demand, with an item-permutation-equivariant transformer architecture and pathwise-gradient training through the inventory dynamics. across problem sizes up to 1,024 inventory items, or-transformer increasingly outperforms learning-based and rolling-horizon milp baselines as scale grows. it also reduces online decision-making time by over 4 million times relative to milp solvers, enabling real-time, large-scale deep rl in supply chain operations. 研究随机联合补货问题(jrp),涉及n个异质物品,每个物品有持有成本、缺货成本、提前期和最大订购量,每次联合订货有共享固定成本;需求跨物品相关,且受观测的共同随机因子影响;目标是最小化折扣总成本。决策在每个时间步进行,决定是否下订单和每个物品的订货量;约束包括订货量上下界和缺货可积压。信息假设为基于当前库存、在途订单和公共因子的状态,环境是动态的随机环境,问题规模可达1024个物品,观测空间超过1e4维度。 现代供应链运营需要协调数千种异质物品的补货,滚动时域随机milp在如此规模下计算极其缓慢,而标准强化学习方法在高维动作空间中面临越来越棘手的信用分配问题。现有学习方法要么忽略共享固定成本耦合,要么在较小的动作维度下研究。 or-transformer利用物品排列等变transformer架构捕捉跨物品依赖,并通过库存动态的路径梯度直接传播到连续订货量,解决了高维动作空间下的信用分配困难。共享固定成本导致订货动作的稀疏性(零或正数),连续动作rl方法难以处理,但通过专门设计的架构和训练方法可有效应对。其性能随规模增大而提升,表明等变性结构和直接梯度传播对大尺度问题具有关键作用。 作者将问题形式化为带随机需求的联合补货问题,采用深度rl框架,利用可微分的库存模拟器计算路径梯度,直接对订货量进行梯度传播。架构上采用物品排列等变transformer,以捕捉物品间的依赖关系,并保持等变性以提高泛化和扩展性。该设计使梯度能跨时间步和动作维度有效传播,避免了传统策略梯度方法在高维动作空间中的高方差问题。 神经网络输入:状态包括各物品净库存、在途订单、公共因子及问题参数向量 输出:每个物品的订货量(连续值),并通过判定是否为正来决定是否触发联合固定成本 架构:物品排列等变transformer,处理整个物品集合以捕捉依赖 训练:通过库存动态的路径梯度直接训练连续订货量,实现端到端学习 策略执行:在滚动时域下,基于当前状态输出订单决策 对比基线包括多种学习算法(如mlp、transformer-ppo)和滚动时域milp(gurobi) 在最多1024个物品的规模上评估,or-transformer在成本上随着规模增长持续超越基线和milp 在1024物品下,or-transformer折扣成本约为0.35m,相对最优学习基线1.39m减少约75% 与允许每决策最长6小时优化的gurobi比较,or-transformer成本126.61±4.23k,gurobi成本156.58±4.93k,降低19.1% or-transformer总决策时间0.0432秒,远超gurobi的48小时49分钟,快约400万倍 消融实验显示mlp和transformer-ppo在较大规模(如64物品)失稳,而or-transformer稳定扩展 本文属于ai4or,利用深度强化学习优化联合补货问题,与生产调度中的资源分配和库存协同有相似之处。其等变transformer架构和路径梯度训练方法可能迁移到具有共享资源或批次决策的调度问题(例如相似机器的批量调度)。推测:若调度中存在多个作业共享设置成本或资源,该架构需适配到动作空间的特性(如离散事件触发),可能需结合动作筛选;若调度空间具有置换等变性,则架构可直接应用。 本文展示了深度rl在大规模运筹问题(库存管理)中的潜力,通过架构和训练方法创新解决了高维动作空间和稀疏奖励的难题。其等变性设计和路径梯度方法对类似的大规模决策问题有借鉴价值,与强调可扩展性和实时性的调度优化研究紧密相关。"},{"id":"arxiv:2609.01807:v2","topic":"agents-ai4or","tier":"browse","scope":"abstract","score":6,"hasFigure":false,"tags":["llm"],"searchText":"智能体与自动建模 利用组合优化加速大型语言模型的生成式排序解码 生成式排序 解码策略 匈牙利算法 二部图匹配 lora微调 大语言模型 o(1)解码 spd: single pass decoding for generative reranking spd:用于生成式重排序的单遍解码 emil laftchiev prachi agrawal moe kayali bixing yan qi xu zijie lei chen qiu zhi hua ke li luke simon large language models (llms) achieve state-of-the-art generative ranking quality, but the ranking they produce must be decoded, and autoregressive decoding spends one sequential forward pass per emitted token. we observe that the only tokens a ranker must emit are the $n$ ordinal values naming the items in ranked order, and that this narrow, permutation-structured output format admits decoding strategies which are much more efficient than left-to-right generation. we introduce spd (single forward pass), a format-specialized decoding strategy that decodes all $n$ ordinals in $o(1)$ forward passes. spd reads an $n \\times k$ item-position score matrix off the llm's prefill hidden states with a lightweight self-attention head, then decodes the ordinals as the optimal bipartite assignment of that matrix via the hungarian algorithm, yielding a valid permutation by construction rather than by repair. through a systematic study of training signals and backbone adaptation, we show that lora-based fine-tuning combined with auto-regressive llm ranking distillation reaches 28 ms end-to-end inference, a speed-up of 64x while maintaining ranking quality on par with the teacher. we provide a complete ablation decomposing the contributions of architecture, training signal, and backbone adaptation. our framework connects generative ranking to combinatorial optimization, opening a path toward other $o(1)$-decode mechanisms for real-time ranking. 研究问题是如何高效解码大语言模型生成的排序结果。决策对象是待排序的n个物品的序数序列。目标是设计一种解码策略,使得生成排序仅需o(1)次前向传播,同时保持与自回归教师模型相当的排序质量。关键约束是解码必须产生有效的排列(即无重复且完整的序数序列),不允许通过修复产生。信息假设是llm的预填充隐藏状态包含足够的排序信息。环境是静态的,因为排序针对固定的一组物品。 大型语言模型在生成式排序中达到最先进质量,但其自回归解码每个输出词元需要一次顺序前向传播,导致推理延迟高。作者观察到排序器只需输出n个序数值,且其排列结构允许更高效的解码,因此希望利用这种格式特性打破自回归的顺序瓶颈,实现实时排序。 核心洞察在于生成式排序的输出空间是排列结构,而非任意文本;因此不必从左到右逐个生成序数,而是可以从llm的预填充隐藏状态中一次性提取所有物品的位置分数,将解码转化为一个组合优化问题(最优二部匹配)。通过匈牙利算法直接得到有效排列,避免了自回归的串行依赖,也不需要修复步骤,从而将前向传播次数从o(n)降至o(1)。 材料未详细说明作者如何从理论上分析问题,但摘要表明作者将生成式排序重新表述为物品与位置之间的二部匹配问题,利用匈牙利算法求解最优分配。这种表述利用了排列的约束结构,将解码从生成问题转化为优化问题。作者进一步通过系统研究训练信号和骨干适配,分解了架构、训练信号和骨干适配的贡献,以理解各因素对质量和速度的影响。 spd解码策略:设计为单遍前向传播(o(1)),读取llm预填充隐藏状态上的n×k物品-位置分数矩阵。 使用轻量级自注意力头从隐藏状态中提取分数矩阵。 将序数解码为矩阵的最优二部分配,采用匈牙利算法保证生成有效排列。 训练方法:采用lora微调llm骨干,并结合自回归llm排序蒸馏,以对齐教师模型的排序质量。 架构:结合轻量级解码头和骨干适配(如lora)实现端到端推理。 通过与教师模型对比,spd达到28毫秒端到端推理,速度提升64倍,同时排序质量与教师相当。 提供了完整消融研究,分解架构、训练信号和骨干适配的贡献,但具体数值未提及。 论文事实:本文属于ai4or方向,将生成式排序与组合优化联系,利用匈牙利算法进行o(1)解码,属于学习辅助搜索或优化结合llm的实例。推测:该方法可能迁移到生产调度中的排列问题,例如工件排序或作业排序,其中需要输出排列且可建模为二部匹配;但迁移条件是需要有预训练llm或类似序列模型产生分数矩阵,且问题结构需能映射为物品-位置二部图。此外,其高效的解码机制对未来实时调度中的llm辅助决策具有启发意义。 本文展示了如何针对特定输出结构设计专用解码策略,将生成模型的采样转化为组合优化求解,实现数量级的速度提升。对于研究学习辅助搜索的学者,该方法提供了一种将神经网络输出与匈牙利算法结合的新范式;对于生产调度,虽然问题不同,但其思想可启发将约束优化嵌入解码过程,值得关注其机制设计。"},{"id":"arxiv:2609.01493:v2","topic":"evolutionary-optimization","tier":"browse","scope":"abstract","score":6,"hasFigure":true,"tags":["dynamic-robust","evolutionary"],"searchText":"进化与智能优化 离线数据驱动优化中的可学习性理论与轨迹学习方法 离线优化 黑盒优化 可学习性 轨迹学习 扩散模型 rethinking learnability in offline data-driven optimization 重新思考离线数据驱动优化中的可学习性 chao qian chen-guang wang rong-xi tan ke xue black-box optimization (bbo) has broad applications, while traditional algorithms such as evolutionary algorithms and bayesian optimization face efficiency challenges as real-world bbo problems grow increasingly complex. data-driven optimization has been the most popular paradigm to improve the efficiency of bbo, by learning from data. offline data-driven optimization seeks high-quality solutions using only a fixed set of previous evaluations, attracting substantial attention because it requires no additional online evaluations. many offline optimization methods have been proposed, but a fundamental question remains unanswered: what learnability is sufficient for offline optimization? prior theoretical studies show that probably approximately correct (pac) learnability is insufficient, as the optimal region may remain poorly learned even when most regions are well learned. in this paper, we propose algorithm-dependent learnability, which requires accuracy only on the optimizer's trajectory. we prove that its value-query form is sufficient for representative discrete settings, including greedy and local search for submodular maximization, while its first-order analogue is sufficient for projected gradient descent on convex minimization. motivated by this notion, we formalize a trajectory-learning framework comprising trajectory construction, trajectory modeling, and candidate generation, and analyze existing trajectory-based methods under it. we further propose uncertainty-aware gradient-guided trajectory learning (ugtl), which constructs locally coherent improvement trajectories reflecting plausible search paths, models them with conditional diffusion, and selects a diverse candidate set. our experiments show that ugtl achieves the best average rank, 3.1/25, among 25 methods on design-bench tasks, and confirm that our trajectory construction plays a significant role in the improvement. 研究离线数据驱动优化问题,即仅利用一组固定的历史评估数据来寻找高质量解,不进行额外的在线评估。问题设定为黑盒优化,目标函数形式未知,但历史数据可用。关键约束是数据固定且有限,需保证解的质量。信息假设是仅基于离线数据,无在线查询。环境是静态的,因为数据固定。 传统黑盒优化算法(如进化算法和贝叶斯优化)在问题复杂度增加时效率低下,离线数据驱动优化作为一种无需在线评估的范式受到关注。然而,现有理论表明pac可学习性不足以保证离线优化成功,因为最优区域可能未被充分学习。因此,需要重新定义合适的可学习性概念,并基于此设计有效的离线优化方法。 核心洞察是离线优化的成功不需要在整个搜索空间上学习准确,而只需在优化器的轨迹上保持准确。据此提出的算法依赖可学习性(algorithm-dependent learnability)要求仅优化器轨迹上的准确性,这比全局可学习性弱但足以支持代表性离散和连续优化过程。基于此,轨迹学习框架将离线优化转化为学习优化器可能的搜索轨迹,并利用条件扩散模型生成高质量候选解,避免了全局建模的困难。 作者通过理论分析揭示离线优化的本质需求:不需要整个函数的学习,而只需在优化轨迹上准确。他们提出了算法依赖的可学习性概念,并证明了在若干代表性离散和连续设定下,该可学习性是充分的。基于此动机,他们形式化了轨迹学习框架,将问题分解为轨迹构建、轨迹建模和候选生成,并指出现有方法在该框架下的位置。进一步提出ugtl,利用条件扩散模型对局部连贯的改进轨迹建模,并通过多样性候选集生成提高性能。 提出算法依赖可学习性概念,并证明其价值查询形式在子模最大化的贪心和局部搜索中的充分性,以及一阶形式在凸最小化投影梯度下降中的充分性 形式化轨迹学习框架,包含轨迹构建(从离线数据中构造反映搜索路径的改进轨迹)、轨迹建模(用条件扩散模型学习轨迹分布)、候选生成(从轨迹中生成多样化解集) 实施ugtl方法,构造局部连贯的改善轨迹,利用条件扩散模型生成候选,并用不确定性和梯度指导选择 在design-bench任务上,ugtl在25种方法中获得最佳平均排名3.1/25 消融实验表明轨迹构建对性能提升有显著作用 该论文研究离线数据驱动优化,属于ai4or领域,与生产调度等优化问题有概念关联。其轨迹学习框架和算法依赖可学习性概念可能迁移到生产调度中基于历史调度数据的离线优化,但需要具体调整:生产调度问题通常有复杂约束,需要验证轨迹构建和条件扩散建模是否能处理约束可行性;推测其理论保证仅针对特定离散和凸连续设定,扩展到组合调度问题可能需要新的理论分析。方法本身不直接涉及神经网络求解特定调度,但轨迹建模可能借鉴深度学习,属于可迁移的学习辅助搜索机制。 该论文为离线数据驱动优化提供了新的理论视角,挑战了传统的可学习性概念,对理解何时离线学习有效有重要价值。其轨迹学习框架具有通用性,可启发生产调度中利用历史调度数据进行离线优化的方法设计。此外,ugtl在design-bench上的优秀表现和消融分析展示了方法的有效性,对于从事学习辅助搜索的研究者具有参考价值。"},{"id":"arxiv:2609.01248:v1","topic":"frontier","tier":"browse","scope":"abstract","score":7,"hasFigure":true,"tags":[],"searchText":"前沿探索 利用量子硬件(中性原子处理器)求解随机机组组合问题的离散决策层,通过最大权重独立集(mwis)表示,并保留经典计算层进行连续调度与可行性恢复。 随机机组组合 最大权重独立集 量子计算 中性原子 后端无关 可行性恢复 绿色氢调度 a backend-agnostic mwis kernel for stochastic unit commitment with neutral-atom hardware validation 面向随机机组组合的后端无关mwis内核:中性原子硬件验证 jiying chen min lin jingwei wen zhihong zhang chuixiong wu quantum hardware is beginning to address structured combinatorial optimisation, but two steps still block practical use: mapping real operational models onto hardware-compatible instances, and converting noisy hardware output back into feasible decisions. here we introduce a backend-agnostic computational interface that compiles the discrete decision layer of stochastic unit commitment into a move-based maximum-weight independent set (mwis) problem, while retaining continuous dispatch and feasibility recovery in the classical computational layer. we validate the approach in a green hydrogen scheduling setting and deploy it on the quera aquila neutral-atom quantum processor. this is the first end-to-end industrial scheduling workflow that connects real operational decisions to programmable neutral-atom hardware through a solver-agnostic mwis representation. across a 15-day hardware campaign on 50-node instances, hardware-generated solutions after classical refinement match or exceed the dispatch margins obtained from exact mwis on every day. when scaling to 144 nodes, encoding quality remains stable, while the probability that the full atom array survives, rather than graph embedding, emerges as the dominant bottleneck to further scaling. together, these results establish a hardware-compatible computational pathway toward larger problem scales, and lay the groundwork for exploring regimes in which exact classical optimisation may no longer scale efficiently. 研究设定:针对随机机组组合问题(如绿色氢调度场景),将问题的离散决策层编译为基于移动的mwis问题,在量子硬件上求解,同时保留经典计算层处理连续调度和可行性恢复。为静态环境,模型包含随机因素(随机机组组合),但摘要未明确信息假设。 量子硬件开始解决结构化组合优化问题,但实际应用仍面临两个障碍:将真实运行模型映射到硬件兼容实例,以及将噪声硬件输出转换为可行决策。现有方法缺乏端到端的工业调度工作流。 核心洞察是通过后端无关的mwis表示将实际运行决策与可编程中性原子硬件连接,同时将离散决策层和连续调度与可行性恢复分离,使得量子硬件输出经过经典细化后能达到或超越精确求解的效果,且编码质量在扩展到144节点时保持稳定,揭示了原子阵列存活概率而非图嵌入成为扩展的主要瓶颈。 作者将随机机组组合问题分解为离散决策层和连续调度层,离散层编译为基于移动的mwis问题,利用量子硬件求解,经典层进行连续调度和可行性恢复。通过后端无关的接口,使得编码质量在更大规模时保持稳定,并识别出硬件扩展的瓶颈。但摘要未详细说明如何利用问题结构进行具体分析。 定义后端无关的计算接口,将随机机组组合的离散决策层编译为基于移动的最大权重独立集(mwis)问题 在经典计算层保留连续调度和可行性恢复 在绿色氢调度环境中验证方法 在quera aquila中性原子量子处理器上部署 对硬件生成解进行经典细化 在15天的硬件活动上,50节点实例,硬件生成的解经经典细化后每天都能达到或超过精确mwis获得的调度裕度 扩展到144节点时,编码质量保持稳定,但原子阵列存活概率成为进一步扩展的主要瓶颈 本文直接涉及生产调度中的随机机组组合问题,但求解方法是量子硬件与mwis的结合,而非神经网络或强化学习。可作为量子优化在调度中的应用参考,但其与智能优化、生产调度的相关性一般。推测其调度方案或分解思想可迁移到其他调度问题,但需要经典计算与量子硬件的接口条件。 本文展示了一个端到端的工业调度工作流,首次将真实运行决策连接到可编程中性原子硬件,并通过mwis表示实现后端无关性。其问题分解(离散决策与连续调度分离)和可行性恢复策略对生产调度中的约束处理有启发,尽管方法基于量子硬件,但其对硬件扩展瓶颈的分析也值得关注。"}]</script>
+  </section>
+
+</main>
+<script>
+(() => {
+  const explorer = document.querySelector('[data-explorer]');
+  if (!explorer) return;
+  const source = explorer.querySelector('[data-paper-json]');
+  let records = [];
+  try { records = JSON.parse(source?.textContent || '[]'); } catch { return; }
+  const byId = new Map(records.map((record) => [record.id, record]));
+  const validTopics = new Set(records.map((record) => record.topic));
+  const validTags = new Set(records.flatMap((record) => record.tags || []));
+  const validTiers = new Set(['deep_read', 'browse', 'explore']);
+  const validScopes = new Set(['full_text', 'abstract']);
+  const validFigures = new Set(['yes', 'no']);
+  const validScores = new Set([0, 8, 9]);
+  const form = explorer.querySelector('[data-filter-form]');
+  const queryInput = explorer.querySelector('[data-filter-query]');
+  const tierInput = explorer.querySelector('[data-filter-tier]');
+  const scopeInput = explorer.querySelector('[data-filter-scope]');
+  const scoreInput = explorer.querySelector('[data-filter-score]');
+  const figureInput = explorer.querySelector('[data-filter-figure]');
+  const topicButtons = [...explorer.querySelectorAll('[data-topic-choice]')];
+  const normalize = (value) => value.normalize('NFKC').toLocaleLowerCase('zh-CN').replace(/\s+/gu, ' ').trim();
+  let state = { query:'', topic:'', tag:'', tier:'', scope:'', score:0, figure:'' };
+
+  const canonicalState = (candidate) => ({
+    query: candidate.query.trim().length <= 200 ? candidate.query.trim() : '',
+    topic: validTopics.has(candidate.topic) ? candidate.topic : '',
+    tag: validTags.has(candidate.tag) ? candidate.tag : '',
+    tier: validTiers.has(candidate.tier) ? candidate.tier : '',
+    scope: validScopes.has(candidate.scope) ? candidate.scope : '',
+    score: validScores.has(Number(candidate.score)) ? Number(candidate.score) : 0,
+    figure: validFigures.has(candidate.figure) ? candidate.figure : '',
+  });
+  const readUrl = () => {
+    const params = new URLSearchParams(location.search);
+    return canonicalState({ query:params.get('q') || '', topic:params.get('topic') || '', tag:params.get('tag') || '', tier:params.get('tier') || '', scope:params.get('scope') || '', score:params.get('score') || 0, figure:params.get('figure') || '' });
+  };
+  const writeUrl = () => {
+    const params = new URLSearchParams();
+    if (state.query) params.set('q', state.query);
+    if (state.topic) params.set('topic', state.topic);
+    if (state.tag) params.set('tag', state.tag);
+    if (state.tier) params.set('tier', state.tier);
+    if (state.scope) params.set('scope', state.scope);
+    if (state.score) params.set('score', String(state.score));
+    if (state.figure) params.set('figure', state.figure);
+    const query = params.toString();
+    history.replaceState(null, '', `${location.pathname}${query ? `?${query}` : ''}${location.hash}`);
+  };
+  const syncControls = () => {
+    queryInput.value = state.query; tierInput.value = state.tier; scopeInput.value = state.scope;
+    scoreInput.value = String(state.score); figureInput.value = state.figure;
+    topicButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.topicChoice === state.topic)));
+    const activeTag = explorer.querySelector('[data-active-tag]');
+    if (activeTag) {
+      const label = explorer.querySelector(`[data-tag-filter="${CSS.escape(state.tag)}"]`)?.textContent?.trim();
+      activeTag.textContent = state.tag ? `· 标签：${label || state.tag}` : '';
+    }
+  };
+  const render = () => {
+    state = canonicalState(state);
+    const query = normalize(state.query);
+    let visibleCount = 0;
+    explorer.querySelectorAll('[data-paper-card]').forEach((card) => {
+      const record = byId.get(card.dataset.paperId);
+      const visible = Boolean(record) && (!query || normalize(record.searchText).includes(query)) && (!state.topic || record.topic === state.topic) && (!state.tag || record.tags.includes(state.tag)) && (!state.tier || record.tier === state.tier) && (!state.scope || record.scope === state.scope) && record.score >= state.score && (!state.figure || (record.hasFigure ? 'yes' : 'no') === state.figure);
+      card.hidden = !visible;
+      if (visible) visibleCount += 1;
+    });
+    explorer.querySelectorAll('[data-tier-section]').forEach((section) => {
+      const count = [...section.querySelectorAll('[data-paper-card]')].filter((card) => !card.hidden).length;
+      section.hidden = count === 0;
+      const counter = section.querySelector('[data-tier-count]');
+      if (counter) counter.textContent = String(count);
+    });
+    explorer.querySelector('[data-result-count]').textContent = String(visibleCount);
+    explorer.querySelector('[data-no-results]').hidden = visibleCount !== 0;
+    syncControls(); writeUrl();
+  };
+
+  state = readUrl(); syncControls(); render();
+  form?.addEventListener('input', () => { state = { ...state, query:queryInput.value, tier:tierInput.value, scope:scopeInput.value, score:Number(scoreInput.value), figure:figureInput.value }; render(); });
+  form?.addEventListener('submit', (event) => event.preventDefault());
+  form?.addEventListener('reset', () => queueMicrotask(() => { state = canonicalState({ query:'', topic:'', tag:'', tier:'', scope:'', score:0, figure:'' }); render(); }));
+  topicButtons.forEach((button) => button.addEventListener('click', () => { state.topic = button.dataset.topicChoice || ''; render(); }));
+  explorer.querySelectorAll('[data-tag-filter]').forEach((link) => link.addEventListener('click', (event) => { event.preventDefault(); state.tag = link.dataset.tagFilter || ''; render(); form?.scrollIntoView({ behavior:'smooth', block:'start' }); }));
+  explorer.querySelector('[data-expand-visible]')?.addEventListener('click', () => { explorer.querySelectorAll('[data-paper-card]:not([hidden]) .paper-details').forEach((details) => { details.open = true; }); });
+  explorer.querySelector('[data-collapse-visible]')?.addEventListener('click', () => { explorer.querySelectorAll('.paper-details[open]').forEach((details) => { details.open = false; }); });
+})();
+
+document.querySelectorAll('[data-paper-figure]').forEach((image) => {
+  const fail = () => {
+    const original = image.dataset.originalUrl;
+    if (original && image.dataset.remoteFallback !== 'used' && image.src !== original) { image.dataset.remoteFallback = 'used'; image.src = original; return; }
+    image.hidden = true; image.parentElement?.querySelector('[data-figure-error]')?.removeAttribute('hidden');
+  };
+  image.addEventListener('error', fail);
+  if (image.complete && image.naturalWidth === 0) fail();
+});
+</script>
+</body>
+</html>

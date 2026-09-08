@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2026-02 论文归档</title>
+  <style>
+    :root {
+      --ink:#16211b; --muted:#5d6a62; --paper:#f3efe6; --card:#fffdfa;
+      --green:#1f5c42; --green-soft:#e8f0e9; --line:#d8d2c5; --accent:#b44d2f;
+      --shadow:0 16px 42px rgba(34,42,36,.07);
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; color:var(--ink); background:var(--paper); font:16px/1.7 system-ui,-apple-system,"Noto Sans SC",sans-serif; }
+    button,input,select { font:inherit; }
+    button { color:inherit; }
+    a { color:var(--green); }
+    [hidden] { display:none !important; }
+    main { width:min(1440px,94vw); margin:0 auto; padding:34px 0 96px; }
+
+    .page-header { border-bottom:1px solid var(--line); padding-bottom:30px; }
+    .masthead { display:flex; justify-content:space-between; gap:20px; align-items:center; color:var(--muted); font-size:.83rem; letter-spacing:.03em; }
+    .masthead nav { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px 16px; }
+    .masthead nav a { color:var(--muted); text-decoration:none; }
+    .masthead nav a:hover { color:var(--green); text-decoration:underline; }
+    h1 { max-width:1100px; margin:42px 0 20px; font:700 clamp(2.35rem,6vw,5.3rem)/1.04 Georgia,"Noto Serif SC",serif; overflow-wrap:anywhere; }
+    .lede { max-width:920px; color:var(--muted); font-size:1.08rem; }
+    .stats { display:grid; grid-template-columns:repeat(5,minmax(120px,1fr)); gap:12px; margin-top:30px; }
+    .stat { padding:14px 16px; border:1px solid var(--line); background:rgba(255,255,255,.45); }
+    .stat strong { display:block; color:var(--green); font-size:1.6rem; line-height:1.2; }
+
+    .gallery-intro { display:flex; justify-content:space-between; gap:30px; align-items:end; margin:50px 0 20px; }
+    .eyebrow { margin:0 0 5px; color:var(--accent); font-size:.78rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    .gallery-intro h2 { margin:0; font:700 clamp(1.8rem,3vw,2.8rem)/1.15 Georgia,"Noto Serif SC",serif; }
+    .gallery-intro > p { max-width:620px; margin:0; color:var(--muted); }
+
+    .portal-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,245px),1fr)); gap:14px; }
+    .portal-card { min-height:178px; display:flex; flex-direction:column; padding:20px; color:var(--ink); border:1px solid var(--line); background:var(--card); text-decoration:none; box-shadow:var(--shadow); transition:.18s ease; }
+    .portal-card:hover { transform:translateY(-3px); border-color:var(--green); }
+    .portal-card strong { font:700 1.28rem/1.35 Georgia,"Noto Serif SC",serif; }
+    .portal-card p { margin:10px 0 18px; color:var(--muted); font-size:.9rem; }
+    .portal-card span { margin-top:auto; color:var(--green); font-weight:800; font-size:.84rem; }
+    .portal-section { margin-top:58px; padding-top:34px; border-top:1px solid var(--line); }
+    .portal-section h2 { margin:0 0 8px; font:700 2rem/1.2 Georgia,"Noto Serif SC",serif; }
+    .portal-section > p { margin:0 0 20px; color:var(--muted); }
+    .portal-subtitle { margin:28px 0 12px; font-size:1rem; }
+
+    .topic-shelves { display:grid; grid-template-columns:repeat(auto-fit,minmax(185px,1fr)); gap:10px; margin-bottom:18px; }
+    .topic-filter { min-height:96px; padding:14px 16px; text-align:left; border:1px solid var(--line); background:rgba(255,253,250,.7); cursor:pointer; transition:.18s ease; }
+    .topic-filter:hover { transform:translateY(-2px); border-color:var(--green); }
+    .topic-filter[aria-pressed="true"] { color:#fff; border-color:var(--green); background:var(--green); box-shadow:0 8px 18px rgba(31,92,66,.18); }
+    .topic-filter strong { display:block; line-height:1.35; }
+    .topic-filter span { display:block; margin-top:6px; color:var(--muted); font-size:.82rem; }
+    .topic-filter[aria-pressed="true"] span { color:rgba(255,255,255,.78); }
+
+    .explorer-controls { position:sticky; top:0; z-index:20; display:grid; grid-template-columns:minmax(220px,2fr) repeat(4,minmax(125px,1fr)) auto; gap:10px; padding:14px; border:1px solid var(--line); background:rgba(243,239,230,.95); box-shadow:0 10px 25px rgba(34,42,36,.06); backdrop-filter:blur(12px); }
+    .control { display:grid; gap:4px; color:var(--muted); font-size:.76rem; font-weight:700; }
+    .control input,.control select { width:100%; min-height:42px; padding:8px 10px; color:var(--ink); border:1px solid var(--line); border-radius:0; background:var(--card); }
+    .explorer-actions { display:flex; gap:6px; align-items:end; }
+    .explorer-actions button { min-height:42px; padding:8px 12px; border:1px solid var(--line); background:var(--card); cursor:pointer; white-space:nowrap; }
+    .explorer-actions button:hover { border-color:var(--green); color:var(--green); }
+    .explorer-status { display:flex; justify-content:space-between; gap:20px; align-items:center; margin:18px 0 10px; color:var(--muted); }
+    .explorer-status strong { color:var(--green); font-size:1.2rem; }
+    .active-tag { color:var(--green); font-weight:800; }
+    .noscript-notice,.empty-state { padding:20px; border:1px solid var(--line); background:var(--card); }
+
+    .tier-section { margin-top:36px; }
+    .tier-heading { display:flex; justify-content:space-between; align-items:end; gap:20px; margin-bottom:14px; border-bottom:1px solid var(--line); }
+    .tier-heading h2 { margin:0 0 8px; font-size:1.45rem; }
+    .tier-heading p { margin:0 0 8px; color:var(--muted); }
+    .paper-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr)); gap:18px; align-items:start; }
+
+    .paper-card { min-width:0; overflow:hidden; border:1px solid var(--line); background:var(--card); box-shadow:var(--shadow); }
+    .paper-card__cover { position:relative; height:230px; display:grid; place-items:center; overflow:hidden; border-bottom:1px solid var(--line); background:#f7f7f2; }
+    .paper-card__cover > img { width:100%; height:100%; display:block; object-fit:contain; background:#fff; }
+    .paper-card__cover-caption { position:absolute; left:0; right:0; bottom:0; max-height:58px; overflow:hidden; margin:0; padding:9px 12px; color:#fff; background:linear-gradient(transparent,rgba(12,20,16,.88)); font-size:.76rem; line-height:1.35; }
+    .paper-card__placeholder { width:100%; height:100%; display:flex; flex-direction:column; justify-content:space-between; padding:22px; color:var(--green); background:linear-gradient(145deg,#edf3ed,#faf7ef 62%,#e8eee8); }
+    .paper-card__placeholder span { font-weight:800; }
+    .paper-card__placeholder strong { font:700 1.45rem/1.2 Georgia,serif; overflow-wrap:anywhere; }
+    .paper-card__placeholder small { color:var(--muted); }
+    .paper-card__body { display:flex; flex-direction:column; min-height:520px; padding:22px; }
+    .paper-card--compact .paper-card__body { min-height:285px; }
+    .paper-card__rubric { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:12px; color:var(--muted); font-size:.74rem; }
+    .paper-card__rubric span { padding:2px 7px; border:1px solid var(--line); }
+    .paper-card__rubric .topic-badge { color:var(--green); border-color:var(--green); font-weight:800; }
+    .paper-card h3 { margin:0 0 8px; font-size:1.3rem; line-height:1.38; }
+    .paper-card h3 a { color:var(--ink); text-decoration:none; }
+    .paper-card h3 a:hover { color:var(--green); text-decoration:underline; }
+    .original-title { display:-webkit-box; overflow:hidden; margin:0 0 8px; color:var(--muted); font:italic .88rem/1.45 Georgia,serif; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
+    .authors { overflow:hidden; margin:0 0 18px; color:var(--muted); font-size:.82rem; text-overflow:ellipsis; white-space:nowrap; }
+    .paper-card__takeaway { padding:14px; border-left:3px solid var(--green); background:var(--green-soft); }
+    .paper-card__takeaway p { margin:0; }
+    .paper-card__takeaway p:last-child { display:-webkit-box; overflow:hidden; -webkit-box-orient:vertical; -webkit-line-clamp:4; }
+    .field-label { margin-bottom:4px !important; color:var(--green); font-size:.75rem; font-weight:800; letter-spacing:.08em; }
+    .paper-card__recommendation { display:-webkit-box; overflow:hidden; margin:14px 0; color:var(--muted); font-size:.9rem; -webkit-box-orient:vertical; -webkit-line-clamp:3; }
+    .paper-card__recommendation strong { color:var(--ink); }
+    .paper-tags { display:flex; flex-wrap:wrap; gap:6px; margin:0 0 16px; padding:0; list-style:none; }
+    .paper-tags a { display:block; padding:3px 8px; color:var(--green); background:#edf3ed; font-size:.75rem; text-decoration:none; }
+    .paper-tags a:hover { text-decoration:underline; }
+
+    .paper-details { margin-top:auto; border-top:1px solid var(--line); }
+    .paper-details summary { display:flex; justify-content:space-between; gap:12px; align-items:center; padding:14px 0 0; color:var(--green); font-weight:800; cursor:pointer; list-style:none; }
+    .paper-details summary::-webkit-details-marker { display:none; }
+    .summary-close { display:none; }
+    .paper-details[open] .summary-open { display:none; }
+    .paper-details[open] .summary-close { display:inline; }
+    .paper-details[open] .summary-arrow { transform:rotate(180deg); }
+    .summary-arrow { transition:transform .2s ease; }
+    .paper-details__meta { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 18px; margin:22px 0; padding:16px; background:#f6f3ec; font-size:.9rem; }
+    .paper-details__meta p { margin:0; }
+    .paper-links { display:flex; flex-wrap:wrap; gap:14px; }
+    .research-note { display:grid; grid-template-columns:minmax(150px,210px) minmax(0,1fr); gap:10px 20px; margin:22px 0 0; }
+    .research-note dt { color:var(--muted); font-weight:800; }
+    .research-note dd { min-width:0; margin:0; }
+    .research-note ul { margin:0; padding-left:1.25rem; }
+    blockquote { margin:10px 0; padding:10px 14px; border-left:3px solid var(--green); background:#f2f5ef; }
+    .paper-figures { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr)); gap:14px; margin:22px 0 8px; }
+    .paper-figure { margin:0; border:1px solid var(--line); background:#f7f7f2; }
+    .paper-figure__media { min-height:180px; display:grid; place-items:center; background:#fff; overflow:hidden; }
+    .paper-figure img { display:block; width:100%; max-height:480px; object-fit:contain; }
+    .paper-figure figcaption { padding:11px 13px; color:var(--muted); font-size:.84rem; line-height:1.5; }
+    .figure-source { display:block; margin-top:5px; font-size:.8rem; }
+    .figure-error { padding:26px; color:var(--muted); text-align:center; }
+    .copyright,.analysis-scope { color:var(--muted); font-size:.78rem; }
+    .analysis-scope { margin-top:22px; padding-top:12px; border-top:1px solid var(--line); }
+    .detail-layout { margin-top:42px; }
+    .detail-layout .paper-card { width:min(1120px,100%); margin:0 auto; }
+    .detail-layout .paper-card__cover { height:min(520px,55vw); }
+    .detail-layout .paper-card__body { min-height:0; padding:clamp(24px,4vw,44px); }
+
+    .paper-card:has(.paper-details[open]) { grid-column:1/-1; }
+    .paper-card:has(.paper-details[open]) .paper-card__cover { display:none; }
+    .paper-card:has(.paper-details[open]) .paper-card__body { width:min(1120px,100%); min-height:0; margin:0 auto; padding:clamp(24px,4vw,44px); }
+    .paper-card:has(.paper-details[open]) .paper-card__takeaway p:last-child,
+    .paper-card:has(.paper-details[open]) .paper-card__recommendation { display:block; overflow:visible; }
+
+    @media (max-width:1100px) {
+      .stats { grid-template-columns:repeat(3,1fr); }
+      .explorer-controls { grid-template-columns:repeat(3,1fr); }
+      .control--query { grid-column:span 2; }
+    }
+    @media (max-width:760px) {
+      main { width:min(94vw,680px); padding-top:24px; }
+      .masthead,.gallery-intro,.explorer-status { align-items:flex-start; flex-direction:column; }
+      .masthead nav { justify-content:flex-start; }
+      h1 { margin-top:28px; font-size:clamp(1.85rem,9vw,2.5rem); }
+      .stats { grid-template-columns:repeat(2,1fr); }
+      .topic-shelves { display:flex; overflow-x:auto; padding-bottom:6px; scroll-snap-type:x proximity; }
+      .topic-filter { min-width:190px; scroll-snap-align:start; }
+      .explorer-controls { position:static; grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .control--query,.explorer-actions { grid-column:1/-1; }
+      .explorer-actions { flex-wrap:wrap; }
+      .paper-details__meta,.research-note { grid-template-columns:1fr; }
+      .research-note dt { margin-top:10px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header class="page-header">
+    <div class="masthead">
+      <span>PAPERDAILY · 智能优化与生产调度 · 2026-09-08 17:06</span>
+      <nav aria-label="站点导航">
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/">今日</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/daily/">每日日报</a>
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/library/">长期论文库</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/topics/">主题</a>
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/">标签</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/archive/">发表归档</a>
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/search/">搜索</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/feed.xml">订阅</a>
+      </nav>
+    </div>
+    <h1>2026-02 论文归档</h1>
+<p class="lede">按论文首次发表时间归档，与每日日报运行日期分开。</p>    <div class="stats" aria-label="长期档案统计">
+      <div class="stat"><strong>2</strong>当前页面论文</div>
+      <div class="stat"><strong>21</strong>长期论文</div>
+      <div class="stat"><strong>8</strong>稳定主题</div>
+      <div class="stat"><strong>10</strong>固定标签</div>
+      <div class="stat"><strong>12</strong>已有配图</div>
+    </div>
+  </header>
+
+  <section class="gallery-intro" aria-labelledby="gallery-title">
+    <div><p class="eyebrow">论文画廊</p><h2 id="gallery-title">2026-02 全部论文</h2></div>
+    <p>同一论文仅展示当前首选版本。</p>
+  </section>
+
+  <section data-explorer>
+    <div class="topic-shelves" role="group" aria-label="按研究主题筛选">
+      <button class="topic-filter" type="button" data-topic-choice="" aria-pressed="true"><strong>全部研究</strong><span>2 篇</span></button>
+      <button class="topic-filter" type="button" data-topic-choice="evolutionary-optimization" aria-pressed="false" title="进化计算、群智能、约束多目标、多任务与昂贵优化。"><strong>进化与智能优化</strong><span>2 篇 · 进化计算、群智能、约束多目标、多任务与昂贵优化。</span></button>
+    </div>
+
+    <form class="explorer-controls" data-filter-form aria-label="筛选论文">
+      <label class="control control--query"><span>关键词</span><input type="search" name="q" maxlength="200" autocomplete="off" placeholder="标题、作者、方法、标签……" data-filter-query></label>
+      <label class="control"><span>编辑层级</span><select name="tier" data-filter-tier><option value="">全部层级</option><option value="deep_read">今日必读</option><option value="browse">值得浏览</option><option value="explore">探索发现</option></select></label>
+      <label class="control"><span>证据范围</span><select name="scope" data-filter-scope><option value="">全部范围</option><option value="full_text">正文节选</option><option value="abstract">摘要级</option></select></label>
+      <label class="control"><span>最低相关性</span><select name="score" data-filter-score><option value="0">全部</option><option value="8">8 分以上</option><option value="9">9 分以上</option></select></label>
+      <label class="control"><span>论文配图</span><select name="figure" data-filter-figure><option value="">全部</option><option value="yes">已有原图</option><option value="no">暂无原图</option></select></label>
+      <div class="explorer-actions"><button type="button" data-expand-visible>展开结果</button><button type="button" data-collapse-visible>全部收起</button><button type="reset">重置</button></div>
+    </form>
+    <noscript><p class="noscript-notice">筛选功能需要启用 JavaScript；未启用时仍会显示全部论文。</p></noscript>
+    <div class="explorer-status"><p>当前显示 <strong data-result-count aria-live="polite">2</strong> 篇论文 <span class="active-tag" data-active-tag></span></p><p>标签有稳定永久网址，也可在当前画廊内继续筛选。</p></div>
+
+      <section class="tier-section" data-tier-section="deep_read">
+        <header class="tier-heading"><h2>今日必读</h2><p><span data-tier-count>2</span> 篇</p></header>
+        <div class="paper-grid"><article
+  class="paper-card paper-card--compact"
+  data-paper-card
+  data-paper-id="arxiv:2602.13769:v4"
+  data-topic="evolutionary-optimization"
+>
+
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">进化与智能优化</span>
+      <span>正文节选</span>
+      <span>相关性 8/10</span>
+      <span>v4</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2602.13769/">OR-Agent：桥接进化搜索与结构化研究实现启发式算法自动设计</a></h3>
+    <p class="original-title" lang="en">OR-Agent: Bridging Evolutionary Search and Structured Research for Automated Heuristic Design</p>
+    <p class="authors">Qi Liu · Ruochen Hao · Can Li · Wanjing Ma</p>
+
+
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/agents/" data-tag-filter="agents">多智能体</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/evolutionary/" data-tag-filter="evolutionary">进化与群智能</a></li>
+    </ul>
+
+  </div>
+</article><article
+  class="paper-card paper-card--compact"
+  data-paper-card
+  data-paper-id="arxiv:2602.13473:v3"
+  data-topic="evolutionary-optimization"
+>
+
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">进化与智能优化</span>
+      <span>正文节选</span>
+      <span>相关性 6/10</span>
+      <span>v3</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2602.13473/">NeuroWeaver：一种自主进化智能体，用于探索EEG分析流水线的程序化空间</a></h3>
+    <p class="original-title" lang="en">NeuroWeaver: An Autonomous Evolutionary Agent for Exploring the Programmatic Space of EEG Analysis Pipelines</p>
+    <p class="authors">Guoan Wang · Shihao Yang · Feng Liu</p>
+
+
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/multi-objective/" data-tag-filter="multi-objective">约束多目标</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/agents/" data-tag-filter="agents">多智能体</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/llm/" data-tag-filter="llm">大模型辅助优化</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/evolutionary/" data-tag-filter="evolutionary">进化与群智能</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/benchmark/" data-tag-filter="benchmark">基准与泛化</a></li>
+    </ul>
+
+  </div>
+</article></div>
+      </section>
+    <p class="empty-state" data-no-results hidden>没有符合当前条件的论文，请放宽主题、标签、层级或相关性条件。</p>
+    <script type="application/json" data-paper-json>[{"id":"arxiv:2602.13769:v4","topic":"evolutionary-optimization","tier":"deep_read","scope":"full_text","score":8,"hasFigure":true,"tags":["agents","evolutionary"],"searchText":"进化与智能优化 基于大语言模型多智能体的自动启发式设计 大语言模型 多智能体 进化搜索 树搜索 组合优化 自动启发式设计 or-agent: bridging evolutionary search and structured research for automated heuristic design or-agent:桥接进化搜索与结构化研究实现启发式算法自动设计 qi liu ruochen hao can li wanjing ma automating heuristic design in complex, experiment-driven domains requires more than iterative mutation of solution algorithms. current llm-based evolutionary methods often rely on stochastic mutation loops that lack long-term strategic planning and a formal mechanism to learn from historical failures, leading to inefficient exploration and redundant trials. to address this, we present or-agent, a multi-agent research framework designed for automated heuristic design in optimization problems with rich experimental environments. or-agent organizes heuristic search as tree-based workflow that explicitly models branching hypothesis generation and systematic backtracking. furthermore, to address the lack of adaptive learning in current agents, we introduce a hierarchical, optimization-inspired reflection system in which short-term reflections act as verbal gradients, long-term reflections as verbal momentum, and memory compression as semantic weight decay - collectively forming a principled mechanism for governing research dynamics. extensive experiments on classical combinatorial optimization problems (e.g., tsp, cvrp, bin packing) and simulation-based cooperative driving scenarios demonstrate that or-agent outperforms strong evolutionary search baselines. all code and experimental data are publicly available at https://github.com/qiliuchn/or-agent. 研究问题为自动设计优化问题的启发式算法,决策对象是启发式算法的代码实现,目标是在给定问题实例和评估协议下最大化算法性能。关键约束包括代码的可执行性和性能评估成本。信息假设为环境可通过仿真或基准实例评估,研究过程为多轮迭代的静态环境。动态性体现为多智能体协调进行的多轮搜索过程,但问题本身可能是静态或动态的(涉及模拟驾驶场景)。 现有基于llm的进化方法依赖随机变异循环,缺乏长期战略规划和从历史失败中学习的正式机制,导致探索效率低且重复试验。 or-agent通过将启发式搜索组织为树状工作流,显式建模假设生成的分支和系统回溯,并引入分层反思系统(短期反思作为语言梯度,长期反思作为语言动量,内存压缩作为语义权重衰减),为研究动力学提供了原则性机制,从而平衡探索与利用,提高搜索效率。 作者借鉴优化理论,设计了层次化反思系统,将优化术语映射到语言层面,形成引导搜索的信号;利用树结构组织研究过程,显式管理分支和回溯,并通过协调生成想法来增加多样性。 or-agent框架包含or agent、lead agent、idea agent、code agent、experiment agent,分别负责全局协调、管理研究流程、生成想法、实现代码、执行实验。 搜索过程从已有启发式数据库采样父代,通过llm驱动的想法生成和变异交叉操作产生新想法。 idea agent基于父代解决方案、当前研究流图和长期反思生成一组有区别的孩子想法,实现协调生成。 引入分层反思:短期反思作为语言梯度,长期反思作为语言动量,内存压缩作为语义权重衰减。 每个研究循环由lead agent决定扩展、回溯或终止,并更新启发式数据库和反思。 在经典组合优化问题(tsp, cvrp, bin packing)和模拟合作驾驶场景上进行实验,结果显示or-agent优于强进化搜索基线。具体数字未在摘要中提供。结论部分提及在十二个经典组合优化问题和复杂合作驾驶环境上取得最强整体性能,但具体数值未给出。 该论文涉及自动启发式设计,与智能优化和生产调度中的算法设计自动化密切相关。其框架可迁移到生产调度问题的启发式设计,推测需要提供针对调度问题的评估环境和领域知识。 该文献展示了如何结合llm多智能体、进化搜索和结构化研究流程来提升自动化算法设计的效率,对智能优化研究者在设计基于学习或搜索的调度求解器时有方法论上的参考价值。"},{"id":"arxiv:2602.13473:v3","topic":"evolutionary-optimization","tier":"deep_read","scope":"full_text","score":6,"hasFigure":true,"tags":["multi-objective","agents","llm","evolutionary","benchmark"],"searchText":"进化与智能优化 基于llm的自主进化智能体用于自动化机器学习流水线设计 llm智能体 进化优化 程序化搜索 脑电图分析 自动化机器学习 多目标优化 neuroweaver: an autonomous evolutionary agent for exploring the programmatic space of eeg analysis pipelines neuroweaver:一种自主进化智能体,用于探索eeg分析流水线的程序化空间 guoan wang shihao yang feng liu although foundation models have achieved remarkable success in general domains, applying them to electroencephalography (eeg) analysis is constrained by substantial data requirements and large parameter counts, which incur prohibitive computational costs and impede deployment in resource-constrained clinical environments. general-purpose automated machine learning frameworks are likewise ill-suited to this domain, since exploration within an unbounded programmatic space fails to incorporate essential neurophysiological priors and frequently yields neuroscientifically implausible solutions. we therefore propose neuroweaver, a unified autonomous evolutionary agent that generalizes across diverse eeg datasets and tasks by reformulating pipeline engineering as a discrete constrained optimization problem solved through large language model (llm)-driven generation of executable code. a domain-informed subspace initialization confines the search to a neuroscientifically plausible manifold, while a multi-objective evolutionary optimization dynamically balances performance, novelty, and efficiency via self-reflective refinement. across five heterogeneous benchmarks, neuroweaver synthesizes lightweight pipelines that outperform state-of-the-art task-specific methods on nearly all metrics and attain accuracy comparable to large-scale foundation models, even surpassing them on the hmc and workload benchmarks with only $0.18$m and $0.011$m parameters, respectively. 研究问题是为脑电图(eeg)分析自动设计端到端可执行流水线,决策对象是从原始多通道记录映射到任务预测的完整程序化脚本,目标是在测试集上最大化复合效用(包含性能、新颖性和效率)。关键约束是候选脚本必须可执行且逻辑一致,且受限于资源受限的临床环境和神经生理学先验。信息假设包括数据集异质性、任务特定性,以及大模型计算成本过高。环境是静态数据集上的离线优化,但搜索过程是动态演化的。 基础模型在eeg分析中受限于大量数据和参数,计算成本高昂,难以在资源受限临床环境部署。通用automl框架缺乏神经生理学先验,在无界编程空间中常产生不合理的解。因此需要一种能结合领域知识、以可接受计算代价自动设计轻量级流水线的方法。 将eeg流水线工程视为离散约束优化问题,通过llm生成可执行代码,并用领域知识初始化搜索子空间,使得搜索受限在神经科学上合理的流形内,从而提高效率和解的合理性。多目标进化优化动态平衡性能、新颖性和效率,实现自动化和轻量化。 作者将流水线设计转化为离散优化问题,通过定义程序化空间s和可执行脚本s,将求解分解为加载、预处理、模型、评估四阶段,用llm驱动生成代码。利用领域知识进行子空间初始化,限制搜索范围;通过多目标进化优化、自反式改进和复合奖励函数来引导搜索。作者利用问题结构(程序化流水线可分解为模块)、先验知识限制搜索空间,以及反馈信号(执行结果和性能指标)来指导搜索。 将eeg分析流水线工程定义为离散约束优化问题,每个候选脚本s包含load、preprocess、model、eval模块 用llm驱动生成可执行代码,初始化时通过领域信息子空间初始化(domain-informed subspace initialization)限制搜索空间 采用多目标进化优化(multi-objective evolutionary optimization)动态平衡性能、新颖性和效率,通过自反式精化(self-reflective refinement)进行调试和改进 奖励函数包括性能、新颖性、效率(考虑延迟)和鲁棒性(修复bug的奖励),不可执行的候选获得惩罚 框架使用多个llm(chatgpt-5.1为主,chatgpt-4.1用于自反精化,chatgpt-4o用于新颖性评分) 在五个eeg基准数据集(tuev, seed, hmc, workload, tusl)上评估,涵盖事件分类、情绪识别、睡眠分期、认知负荷分类等 与neurolm等基础模型比较,neuroweaver合成的流水线在几乎所有指标上优于特定任务方法,在hmc和workload上超过基础模型,仅用0.18m和0.011m参数 消融实验移除disi或moeo,两者性能均大幅下降,表明两个组件互补 论文事实:neuroweaver是一种自主进化智能体,将流水线设计视为离散约束优化,用llm生成代码,与运筹优化中的自动建模和搜索有相似之处。推测:该方法可迁移到生产调度等优化领域,将调度规则或策略编码为程序化方案,用领域知识初始化并进化搜索,但需适应调度问题的约束和状态动作空间。 该论文展示了如何将llm智能体与进化优化结合来处理约束优化问题,对研究ai4or的学者有借鉴意义,特别是如何进行领域知识注入和基于程序化空间的自动设计。"}]</script>
+  </section>
+
+</main>
+<script>
+(() => {
+  const explorer = document.querySelector('[data-explorer]');
+  if (!explorer) return;
+  const source = explorer.querySelector('[data-paper-json]');
+  let records = [];
+  try { records = JSON.parse(source?.textContent || '[]'); } catch { return; }
+  const byId = new Map(records.map((record) => [record.id, record]));
+  const validTopics = new Set(records.map((record) => record.topic));
+  const validTags = new Set(records.flatMap((record) => record.tags || []));
+  const validTiers = new Set(['deep_read', 'browse', 'explore']);
+  const validScopes = new Set(['full_text', 'abstract']);
+  const validFigures = new Set(['yes', 'no']);
+  const validScores = new Set([0, 8, 9]);
+  const form = explorer.querySelector('[data-filter-form]');
+  const queryInput = explorer.querySelector('[data-filter-query]');
+  const tierInput = explorer.querySelector('[data-filter-tier]');
+  const scopeInput = explorer.querySelector('[data-filter-scope]');
+  const scoreInput = explorer.querySelector('[data-filter-score]');
+  const figureInput = explorer.querySelector('[data-filter-figure]');
+  const topicButtons = [...explorer.querySelectorAll('[data-topic-choice]')];
+  const normalize = (value) => value.normalize('NFKC').toLocaleLowerCase('zh-CN').replace(/\s+/gu, ' ').trim();
+  let state = { query:'', topic:'', tag:'', tier:'', scope:'', score:0, figure:'' };
+
+  const canonicalState = (candidate) => ({
+    query: candidate.query.trim().length <= 200 ? candidate.query.trim() : '',
+    topic: validTopics.has(candidate.topic) ? candidate.topic : '',
+    tag: validTags.has(candidate.tag) ? candidate.tag : '',
+    tier: validTiers.has(candidate.tier) ? candidate.tier : '',
+    scope: validScopes.has(candidate.scope) ? candidate.scope : '',
+    score: validScores.has(Number(candidate.score)) ? Number(candidate.score) : 0,
+    figure: validFigures.has(candidate.figure) ? candidate.figure : '',
+  });
+  const readUrl = () => {
+    const params = new URLSearchParams(location.search);
+    return canonicalState({ query:params.get('q') || '', topic:params.get('topic') || '', tag:params.get('tag') || '', tier:params.get('tier') || '', scope:params.get('scope') || '', score:params.get('score') || 0, figure:params.get('figure') || '' });
+  };
+  const writeUrl = () => {
+    const params = new URLSearchParams();
+    if (state.query) params.set('q', state.query);
+    if (state.topic) params.set('topic', state.topic);
+    if (state.tag) params.set('tag', state.tag);
+    if (state.tier) params.set('tier', state.tier);
+    if (state.scope) params.set('scope', state.scope);
+    if (state.score) params.set('score', String(state.score));
+    if (state.figure) params.set('figure', state.figure);
+    const query = params.toString();
+    history.replaceState(null, '', `${location.pathname}${query ? `?${query}` : ''}${location.hash}`);
+  };
+  const syncControls = () => {
+    queryInput.value = state.query; tierInput.value = state.tier; scopeInput.value = state.scope;
+    scoreInput.value = String(state.score); figureInput.value = state.figure;
+    topicButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.topicChoice === state.topic)));
+    const activeTag = explorer.querySelector('[data-active-tag]');
+    if (activeTag) {
+      const label = explorer.querySelector(`[data-tag-filter="${CSS.escape(state.tag)}"]`)?.textContent?.trim();
+      activeTag.textContent = state.tag ? `· 标签：${label || state.tag}` : '';
+    }
+  };
+  const render = () => {
+    state = canonicalState(state);
+    const query = normalize(state.query);
+    let visibleCount = 0;
+    explorer.querySelectorAll('[data-paper-card]').forEach((card) => {
+      const record = byId.get(card.dataset.paperId);
+      const visible = Boolean(record) && (!query || normalize(record.searchText).includes(query)) && (!state.topic || record.topic === state.topic) && (!state.tag || record.tags.includes(state.tag)) && (!state.tier || record.tier === state.tier) && (!state.scope || record.scope === state.scope) && record.score >= state.score && (!state.figure || (record.hasFigure ? 'yes' : 'no') === state.figure);
+      card.hidden = !visible;
+      if (visible) visibleCount += 1;
+    });
+    explorer.querySelectorAll('[data-tier-section]').forEach((section) => {
+      const count = [...section.querySelectorAll('[data-paper-card]')].filter((card) => !card.hidden).length;
+      section.hidden = count === 0;
+      const counter = section.querySelector('[data-tier-count]');
+      if (counter) counter.textContent = String(count);
+    });
+    explorer.querySelector('[data-result-count]').textContent = String(visibleCount);
+    explorer.querySelector('[data-no-results]').hidden = visibleCount !== 0;
+    syncControls(); writeUrl();
+  };
+
+  state = readUrl(); syncControls(); render();
+  form?.addEventListener('input', () => { state = { ...state, query:queryInput.value, tier:tierInput.value, scope:scopeInput.value, score:Number(scoreInput.value), figure:figureInput.value }; render(); });
+  form?.addEventListener('submit', (event) => event.preventDefault());
+  form?.addEventListener('reset', () => queueMicrotask(() => { state = canonicalState({ query:'', topic:'', tag:'', tier:'', scope:'', score:0, figure:'' }); render(); }));
+  topicButtons.forEach((button) => button.addEventListener('click', () => { state.topic = button.dataset.topicChoice || ''; render(); }));
+  explorer.querySelectorAll('[data-tag-filter]').forEach((link) => link.addEventListener('click', (event) => { event.preventDefault(); state.tag = link.dataset.tagFilter || ''; render(); form?.scrollIntoView({ behavior:'smooth', block:'start' }); }));
+  explorer.querySelector('[data-expand-visible]')?.addEventListener('click', () => { explorer.querySelectorAll('[data-paper-card]:not([hidden]) .paper-details').forEach((details) => { details.open = true; }); });
+  explorer.querySelector('[data-collapse-visible]')?.addEventListener('click', () => { explorer.querySelectorAll('.paper-details[open]').forEach((details) => { details.open = false; }); });
+})();
+
+document.querySelectorAll('[data-paper-figure]').forEach((image) => {
+  const fail = () => {
+    const original = image.dataset.originalUrl;
+    if (original && image.dataset.remoteFallback !== 'used' && image.src !== original) { image.dataset.remoteFallback = 'used'; image.src = original; return; }
+    image.hidden = true; image.parentElement?.querySelector('[data-figure-error]')?.removeAttribute('hidden');
+  };
+  image.addEventListener('error', fail);
+  if (image.complete && image.naturalWidth === 0) fail();
+});
+</script>
+</body>
+</html>
