@@ -167,9 +167,7 @@ def test_notify_records_success_and_skips_same_day(monkeypatch, tmp_path: Path) 
     )
     assert _notify(tmp_path)["status"] == "sent"
     state = json.loads((tmp_path / "notifications.json").read_text(encoding="utf-8"))
-    assert state["editions"]["2026-08-30"]["paper_identities"] == [
-        "arxiv:2608.10000:v1"
-    ]
+    assert state["editions"]["2026-08-30"]["paper_identities"] == ["arxiv:2608.10000:v1"]
     assert _notify(tmp_path)["status"] == "skipped"
     assert len(messages) == 1
 
@@ -224,3 +222,25 @@ def test_dry_run_settings_do_not_require_auth_code(monkeypatch) -> None:
     monkeypatch.setenv("SITE_URL", "https://example.com/")
     monkeypatch.delenv("SMTP_AUTH_CODE", raising=False)
     assert MailSettings.from_env(require_auth=False).auth_code is None
+
+
+def test_empty_edition_can_recover_once(monkeypatch, tmp_path):
+    messages = []
+    monkeypatch.setattr(
+        emailing, "send_message", lambda message, settings: messages.append(message)
+    )
+    config = load_config(ROOT / "config/research.yaml")
+    empty = _report().model_copy(update={"papers": ()})
+    kwargs = dict(
+        settings=_settings(),
+        config=config.email,
+        title=config.output.title,
+        template_dir=ROOT / "src/auto_research_daily/templates",
+        state_path=tmp_path / "notifications.json",
+    )
+    assert notify_report(empty, **kwargs)["status"] == "sent"
+    assert notify_report(empty, **kwargs)["status"] == "skipped"
+    assert _notify(tmp_path)["status"] == "sent"
+    assert _notify(tmp_path)["status"] == "skipped"
+    assert len(messages) == 2
+    assert "修订 1" in str(messages[1]["Subject"])

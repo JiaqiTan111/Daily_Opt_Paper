@@ -62,18 +62,26 @@ def _load_fixture(path: Path) -> tuple[list[RawPaper], list[ZoteroDocument], dic
 def _fetch_live_sources(
     config: AppConfig,
     options: RunOptions,
-) -> tuple[list[RawPaper], list[ZoteroDocument]]:
+) -> tuple[list[RawPaper], list[ZoteroDocument], int]:
     papers: list[RawPaper] = []
     documents: list[ZoteroDocument] = []
+    effective_lookback = options.lookback_days or config.sources.arxiv.lookback_days
     if config.sources.arxiv.enabled:
         user_agent = os.getenv(
             "ARXIV_USER_AGENT",
             "auto-research-daily/0.1 (set ARXIV_USER_AGENT with a contact address)",
         )
         with ArxivSource(config.sources.arxiv, user_agent=user_agent) as source:
-            papers.extend(
-                source.fetch_recent(now=options.now, lookback_days=options.lookback_days)
-            )
+            papers.extend(source.fetch_recent(now=options.now, lookback_days=effective_lookback))
+            fallback = config.sources.arxiv.fallback_lookback_days
+            if not papers and effective_lookback < fallback:
+                LOGGER.warning(
+                    "近 %s 天无论文版本记录，扩大到 %s 天恢复检索", effective_lookback, fallback
+                )
+                effective_lookback = fallback
+                papers.extend(
+                    source.fetch_recent(now=options.now, lookback_days=effective_lookback)
+                )
 
     if config.sources.zotero.enabled:
         user_id = os.getenv("ZOTERO_USER_ID")
@@ -87,7 +95,7 @@ def _fetch_live_sources(
                 documents.extend(source.fetch_documents())
         else:
             LOGGER.warning("Zotero 凭据未配置，本次只使用静态研究画像排序")
-    return papers, documents
+    return papers, documents, effective_lookback
 
 
 def _fetch_full_texts(
@@ -146,14 +154,13 @@ def _assign_tiers(papers: list[AnalyzedPaper]) -> list[AnalyzedPaper]:
 
 def run_daily(config: AppConfig, options: RunOptions) -> RunReport:
     root = options.project_root.resolve()
-    generated_at = (options.now or datetime.now(UTC)).astimezone(
-        ZoneInfo(config.output.timezone)
-    )
+    generated_at = (options.now or datetime.now(UTC)).astimezone(ZoneInfo(config.output.timezone))
     fixture_full_texts: dict[str, str] = {}
+    effective_lookback = 0
     if options.offline_fixture:
         papers, documents, fixture_full_texts = _load_fixture(options.offline_fixture)
     else:
-        papers, documents = _fetch_live_sources(config, options)
+        papers, documents, effective_lookback = _fetch_live_sources(config, options)
 
     fetched_count = len(papers)
     papers = deduplicate_papers(papers)
@@ -168,9 +175,7 @@ def run_daily(config: AppConfig, options: RunOptions) -> RunReport:
     ranked = ranked[:max_analysis]
 
     deep_limit = (
-        options.deep_limit
-        if options.deep_limit is not None
-        else config.analysis.full_text_top_k
+        options.deep_limit if options.deep_limit is not None else config.analysis.full_text_top_k
     )
     full_texts = dict(fixture_full_texts)
     if not options.offline_fixture:
@@ -208,14 +213,10 @@ def run_daily(config: AppConfig, options: RunOptions) -> RunReport:
             raise RuntimeError("缺少 LLM_API_KEY；本地流程验证可显式使用 --no-llm")
         shared_model = os.getenv("LLM_MODEL")
         brief_model = (
-            os.getenv("LLM_BRIEF_MODEL")
-            or shared_model
-            or config.analysis.brief_model_default
+            os.getenv("LLM_BRIEF_MODEL") or shared_model or config.analysis.brief_model_default
         )
         deep_model = (
-            os.getenv("LLM_DEEP_MODEL")
-            or shared_model
-            or config.analysis.deep_model_default
+            os.getenv("LLM_DEEP_MODEL") or shared_model or config.analysis.deep_model_default
         )
         base_url = os.getenv("LLM_BASE_URL") or config.analysis.base_url_default
         with OpenAICompatibleAnalyzer(
@@ -273,6 +274,7 @@ def run_daily(config: AppConfig, options: RunOptions) -> RunReport:
         dry_run=options.dry_run,
         stats=RunStats(
             fetched=fetched_count,
+            source_lookback_days=effective_lookback,
             deduplicated=len(papers),
             preselected=len(ranked),
             cache_hits=cache_hits,
@@ -300,9 +302,7 @@ def run_daily(config: AppConfig, options: RunOptions) -> RunReport:
             data_dir=data_dir,
             site_dir=site_dir,
             template_dir=root / "src" / "auto_research_daily" / "templates",
-            site_url=(
-                os.getenv("SITE_URL") or "https://JiaqiTan111.github.io/Daily_Opt_Paper/"
-            ),
+            site_url=(os.getenv("SITE_URL") or "https://JiaqiTan111.github.io/Daily_Opt_Paper/"),
         )
         persist_analysis_cache(data_dir, cache)
         persist_report(report, data_dir)

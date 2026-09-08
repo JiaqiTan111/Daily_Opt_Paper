@@ -24,6 +24,7 @@ class ArxivSourceConfig(ConfigModel):
     enabled: bool = True
     categories: tuple[str, ...]
     lookback_days: int = Field(default=3, ge=1, le=31)
+    fallback_lookback_days: int = Field(default=7, ge=1, le=31)
     request_delay_seconds: float = Field(default=3.0, ge=0)
     timeout_seconds: float = Field(default=60.0, gt=0)
     retries: int = Field(default=4, ge=1, le=10)

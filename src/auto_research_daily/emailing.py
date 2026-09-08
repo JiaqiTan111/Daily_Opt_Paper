@@ -326,7 +326,10 @@ def notify_report(
     date_name = report.generated_at.strftime("%Y-%m-%d")
     existing = editions.get(date_name)
     if existing and not force:
-        return {"status": "skipped", "reason": "date_already_sent", "date": date_name}
+        # A source delay can produce an empty morning edition. Deliver the first
+        # substantive recovery once, while normal non-empty editions stay idempotent.
+        if existing.get("paper_identities") or not report.papers:
+            return {"status": "skipped", "reason": "date_already_sent", "date": date_name}
     papers = tuple(report.papers) if force else select_new_papers(report, state)
     if not papers and not config.send_empty:
         return {"status": "skipped", "reason": "no_new_papers", "date": date_name}

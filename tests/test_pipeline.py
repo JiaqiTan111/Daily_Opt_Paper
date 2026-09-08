@@ -64,9 +64,7 @@ def test_offline_pipeline_persists_and_reuses_cache(tmp_path: Path) -> None:
         panels=(
             FigurePanel(
                 original_url=f"https://arxiv.org/html/{identity}v{version}/overview.png",
-                cached_path=(
-                    f"figures/arxiv/{identity}/v{version}/fig1-panel1.png"
-                ),
+                cached_path=(f"figures/arxiv/{identity}/v{version}/fig1-panel1.png"),
             ),
         ),
         source_url=f"https://arxiv.org/html/{identity}v{version}#S1.F1",
@@ -90,7 +88,7 @@ def test_offline_pipeline_persists_and_reuses_cache(tmp_path: Path) -> None:
         ROOT / "src/auto_research_daily/templates",
         "https://example.github.io/auto-research-daily/",
     )
-    assert "loading=\"lazy\"" in html
+    assert 'loading="lazy"' in html
     assert "最新一期日报" in html
     assert "长期研究入口" in html
     assert html.count('class="paper-details"') == len(first.papers)
@@ -99,9 +97,7 @@ def test_offline_pipeline_persists_and_reuses_cache(tmp_path: Path) -> None:
     assert "data-filter-query" in html
     assert "data-tag-filter" in html
     assert "展开完整解读" in html
-    assert (
-        "https://example.github.io/auto-research-daily/figures/arxiv/" in html
-    )
+    assert "https://example.github.io/auto-research-daily/figures/arxiv/" in html
     assert "来源：论文官方 arXiv HTML" in html
 
 
@@ -126,3 +122,31 @@ def test_dry_run_does_not_write(tmp_path: Path) -> None:
     )
     assert report.dry_run is True
     assert not (tmp_path / "data").exists()
+
+
+def test_source_recovers_empty_short_window(monkeypatch):
+    import auto_research_daily.pipeline as pipeline
+
+    config = load_config(ROOT / "config/research.yaml")
+    sample, _, _ = pipeline._load_fixture(ROOT / "tests/fixtures/offline_daily.json")
+    calls = []
+
+    class DelayedSource:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            pass
+
+        def fetch_recent(self, *, now, lookback_days):
+            calls.append(lookback_days)
+            return sample if lookback_days == 7 else []
+
+    monkeypatch.setattr(pipeline, "ArxivSource", DelayedSource)
+    papers, _, effective = pipeline._fetch_live_sources(config, RunOptions(project_root=ROOT))
+    assert papers == sample
+    assert calls == [3, 7]
+    assert effective == 7

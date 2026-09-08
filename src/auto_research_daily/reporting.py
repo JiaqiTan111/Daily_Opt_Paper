@@ -96,6 +96,7 @@ def render_markdown(report: RunReport, title: str) -> str:
         "",
         "本报告先以主题、个人 Zotero 语料、时效性和探索性排序，再对少量高排名论文读取正文节选。",
         "“摘要级解读”不应被当作全文结论；证据不足的作者机构、实验或局限会明确标注。",
+        f"本次论文版本检索窗口：{report.stats.source_lookback_days} 天（离线样例记为 0）。",
         "",
         (
             "| 今日必读 | 值得浏览 | 探索发现 | 抓取 | 初筛 | 模型调用 | "

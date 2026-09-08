@@ -230,6 +230,7 @@ class AnalyzedPaper(StrictModel):
 
 
 class RunStats(StrictModel):
+    source_lookback_days: int = Field(default=0, ge=0, le=31)
     fetched: int = Field(ge=0)
     deduplicated: int = Field(ge=0)
     preselected: int = Field(ge=0)
