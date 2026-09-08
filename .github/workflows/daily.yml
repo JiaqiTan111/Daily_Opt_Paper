@@ -79,14 +79,17 @@ jobs:
               raise SystemExit
           state = json.loads(state_path.read_text(encoding="utf-8"))
           editions = state.get("editions", {})
-          print("true" if isinstance(editions, dict) and target_date in editions else "false")
+          snapshot = json.loads(Path(f"data/daily/{target_date}.json").read_text(encoding="utf-8"))
+          source_has_records = snapshot.get("stats", {}).get("fetched", 0) > 0
+          delivered = isinstance(editions, dict) and target_date in editions
+          print("true" if delivered and source_has_records else "false")
           PY
             )"
             if [[ "$notified" == "true" ]]; then
               should_run=false
               reason="daily_snapshot_and_email_already_recorded"
             else
-              reason="daily_snapshot_exists_but_email_is_unrecorded"
+              reason="daily_delivery_incomplete_or_source_empty"
             fi
           fi
           {

@@ -140,7 +140,7 @@ def _render_plain_text(
     lines = [
         f"{title}：{report.generated_at:%Y-%m-%d}",
         "",
-        f"今日新增推荐 {len(papers)} 篇，全文级解读 "
+        f"今日新增推荐 {len(papers)} 篇，正文节选解读 "
         f"{sum(item.tier == 'deep_read' for item in papers)} 篇。",
         f"完整日报：{daily_url}",
         "",
