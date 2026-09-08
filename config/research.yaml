@@ -1,0 +1,172 @@
+version: 1
+
+research_profile:
+  name: 智能优化、生产调度与人工智能驱动运筹优化
+  description: >-
+    研究智能优化、生产调度和人工智能驱动运筹优化（AI4OR），重点关注柔性作业车间、
+    流水车间、分布式制造、生产运输协同、动态扰动、能效和多目标约束优化。
+    方法关注神经网络、图神经网络、强化学习、多智能体、大模型智能体、自动建模、
+    学习辅助搜索、进化算法与数学规划的结合。重视算法机制、约束可行性、求解质量、
+    公平计算预算、泛化和可复现性，不因仅出现神经网络或智能体术语而推荐无关论文。
+  core_terms:
+    - job shop
+    - job-shop
+    - flow shop
+    - flowshop
+    - flow-shop
+    - production scheduling
+    - manufacturing scheduling
+    - distributed scheduling
+    - assembly scheduling
+    - dynamic scheduling
+    - integrated scheduling
+    - project scheduling
+    - resource-constrained
+    - combinatorial optimization
+    - combinatorial optimisation
+    - neural combinatorial
+    - operations research
+    - operational research
+    - mathematical optimization
+    - mixed integer
+    - mixed-integer
+    - integer programming
+    - constraint programming
+    - constraint satisfaction
+    - vehicle routing
+    - traveling salesman
+    - travelling salesman
+    - evolutionary algorithm
+    - evolutionary optimization
+    - evolutionary computation
+    - differential evolution
+    - multiobjective optimization
+    - multi-objective optimization
+    - multi-objective optimisation
+    - many-objective
+    - black-box optimization
+    - expensive optimization
+    - heuristic search
+    - hyper-heuristic
+    - algorithm configuration
+    - algorithm selection
+    - automated algorithm design
+    - learning to optimize
+    - learning to optimise
+    - learning to search
+    - optimization modeling
+    - optimisation modelling
+    - AI4OR
+  adjacent_terms:
+    - neural network
+    - graph neural
+    - reinforcement learning
+    - multi-agent
+    - multiagent
+    - agentic
+    - large language model
+    - deep Q
+    - policy optimization
+    - pointer network
+    - transformer
+    - diffusion model
+    - generative model
+    - meta-learning
+    - transfer learning
+    - knowledge transfer
+    - surrogate-assisted
+    - memetic algorithm
+    - swarm intelligence
+    - branch and bound
+    - branch-and-bound
+    - branch and cut
+    - local search
+    - neighborhood search
+    - neighbourhood search
+    - dispatching rule
+    - robust optimization
+    - stochastic optimization
+    - energy-efficient
+    - human-robot collaboration
+  negative_terms:
+    - medical image segmentation
+    - text-to-image generation
+    - protein folding
+    - financial trading
+  topic_axes:
+    problem: [job shop, flow shop, distributed manufacturing, routing, constrained optimization]
+    method: [neural network, reinforcement learning, multi-agent, LLM, evolutionary algorithm]
+    evidence: [feasibility, solution quality, runtime, generalization, reproducibility]
+
+sources:
+  arxiv:
+    enabled: true
+    categories: [cs.AI, cs.LG, cs.NE, cs.DS, cs.MA, cs.SY, cs.RO, cs.CL, math.OC, stat.ML]
+    lookback_days: 3
+    request_delay_seconds: 3.0
+    timeout_seconds: 60.0
+    retries: 4
+    max_records: 2500
+  zotero:
+    enabled: false
+    max_items: 500
+    include_collections: []
+    exclude_collections: []
+
+ranking:
+  candidate_pool: 120
+  publish_limit: 40
+  min_prefilter_score: 0.08
+  min_llm_relevance: 6
+  personal_weight: 0.45
+  topic_weight: 0.35
+  recency_weight: 0.10
+  exploration_weight: 0.10
+  diversity_lambda: 0.78
+
+analysis:
+  enabled: true
+  max_papers: 60
+  max_concurrency: 4
+  max_failure_ratio: 0.30
+  prompt_version: "optimization-analysis-v1"
+  brief_max_output_tokens: 2500
+  deep_max_output_tokens: 5000
+  full_text_top_k: 10
+  full_text_max_chars: 18000
+  brief_model_default: deepseek-v4-flash
+  deep_model_default: deepseek-v4-flash
+  brief_thinking: false
+  deep_thinking: false
+  brief_reasoning_effort: low
+  deep_reasoning_effort: low
+  base_url_default: https://api.deepseek.com
+
+email:
+  enabled: true
+  send_empty: true
+  top_detail_limit: 5
+  html_byte_limit: 61440
+  template_version: email-v1
+
+figures:
+  enabled: true
+  max_papers: 20
+  max_figures_per_paper: 2
+  request_delay_seconds: 0.35
+  timeout_seconds: 30
+  retries: 3
+  negative_cache_hours: 24
+  max_html_bytes: 5000000
+  max_image_bytes: 8000000
+  max_image_pixels: 25000000
+  max_total_images: 40
+  max_total_image_bytes: 60000000
+  max_elapsed_seconds: 120
+
+output:
+  data_dir: data
+  reports_dir: reports
+  site_dir: site
+  title: PaperDaily
+  timezone: Asia/Shanghai
