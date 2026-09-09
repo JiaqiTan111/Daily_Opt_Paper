@@ -19,6 +19,8 @@ from auto_research_daily.config import MailConfig
 from auto_research_daily.models import AnalyzedPaper, RunReport
 from auto_research_daily.storage import atomic_write_json, load_json
 
+DIGEST_TITLE = "智能优化与生产调度科研日报"
+
 TIER_LABELS = {
     "deep_read": "今日必读",
     "browse": "值得浏览",
@@ -194,6 +196,7 @@ def _render_html(
         daily_url=daily_url,
         detail_limit=detail_limit,
         tier_labels=TIER_LABELS,
+        digest_title=DIGEST_TITLE,
     )
 
 
@@ -201,7 +204,7 @@ def _subject(report: RunReport, papers: tuple[AnalyzedPaper, ...], *, revision: 
     deep_count = sum(item.tier == "deep_read" for item in papers)
     prefix = f"【修订 {revision}】" if revision else ""
     return (
-        f"{prefix}【具身智能科研日报】{report.generated_at:%Y-%m-%d}｜"
+        f"{prefix}【{DIGEST_TITLE}】{report.generated_at:%Y-%m-%d}｜"
         f"{deep_count} 篇必读，{len(papers)} 篇新增"
     )
 
@@ -263,7 +266,7 @@ def build_report_message(
 
 def build_test_message(settings: MailSettings) -> EmailMessage:
     message = EmailMessage()
-    message["Subject"] = "【测试】具身智能科研日报邮件通道已接通"
+    message["Subject"] = f"【测试】{DIGEST_TITLE}邮件通道已接通"
     message["From"] = settings.sender
     message["To"] = settings.recipient
     message["Date"] = format_datetime(datetime.now(UTC))

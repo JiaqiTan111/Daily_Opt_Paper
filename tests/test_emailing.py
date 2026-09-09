@@ -139,6 +139,14 @@ def test_email_is_escaped_and_links_daily_snapshot() -> None:
         fingerprint=fingerprint,
     )
     html = message.get_body(preferencelist=("html",)).get_content()
+    assert str(message["Subject"]) == (
+        "【智能优化与生产调度科研日报】2026-08-30｜0 篇必读，1 篇新增"
+    )
+    assert "智能优化与生产调度科研日报 · 2026-08-30" in html
+    assert config.output.title in html
+    assert str(emailing.build_test_message(_settings())["Subject"]) == (
+        "【测试】智能优化与生产调度科研日报邮件通道已接通"
+    )
     assert "Robot &lt;World&gt; Model" in html
     assert "daily/2026-08-30/" in html
     assert len(html.encode()) <= config.email.html_byte_limit
