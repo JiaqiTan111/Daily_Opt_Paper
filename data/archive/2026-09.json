@@ -446,7 +446,7 @@
         "html_url": "https://arxiv.org/html/2508.08005v5",
         "status": "not_found"
       },
-      "final_score": 0.5186644888055176,
+      "final_score": 0.4693146994974894,
       "provenance": {
         "analyzed_at": "2026-09-10T01:57:06.177065Z",
         "input_hash": "94724feabd277e64898f4ef9049e57a430ad3ad499e96881637156526556a18b",
@@ -476,17 +476,17 @@
           "url": "https://arxiv.org/abs/2508.08005",
           "version": 5
         },
-        "rank": 34,
+        "rank": 45,
         "score": {
-          "base_score": 0.45211725237366823,
-          "exploration": 0.37679179363074894,
+          "base_score": 0.36239036272270786,
+          "exploration": 0.054867615883079146,
           "matched_terms": [
             "algorithm selection",
             "graph neural"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.7761430409839399,
+          "recency": 0.6045693256513278,
           "topic": 0.38106001526871025
         }
       },
@@ -1392,6 +1392,158 @@
       },
       "tier": "browse"
     },
+    "arxiv:2608.18409:v2": {
+      "analysis": {
+        "analysis": "作者从调度问题的约束结构出发，指出其形式虽多但约束关系来自少数反复出现的类型：活动间优先级、一次处理一个活动的析取资源、在容量内允许并发的累积资源，以及每个活动的多种执行模式；据此设计只要求模型识别这些结构的领域特定语言，由确定性编译器处理后端编码，并以独立验证器直接对照源实例验证所报告调度，从而把失败面从“建模与搜索”缩小到“语义识别”。",
+        "challenges": [
+          "自然语言调度描述中约束、目标与过程仅隐式给出，模型需要推断底层数学问题",
+          "指数级搜索空间与复杂约束导致较小模型直接生成解时可行性低",
+          "生成求解器代码可能可执行且求解器可行，但对原问题不忠实",
+          "把语言理解与下游计算分离后，瓶颈转移到翻译保真度：遗漏约束、变量定义错误或目标失真会直接破坏解",
+          "严格输出格式要求可能进一步削弱推理能力"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文提出 SDDL，将自然语言调度问题翻译为紧凑的、与求解器对齐的表示，并把低层建模与搜索委托给确定性编译器和外部求解器。",
+            "location": "abstract",
+            "quote": "we introduce SDDL, a neuro-symbolic framework that translates natural-language scheduling problems into compact, solver-aligned representations of tasks, resources, constraints, and objectives, while delegating low-level modeling and search to a deterministic compiler and external solver."
+          },
+          {
+            "claim": "在 300 个实例的多家族调度问题子集上，SDDL 对每个受测资源受限模型都提升了经独立验证的可行性。",
+            "location": "abstract",
+            "quote": "On a 300-instance, multi-family subset of scheduling problems, SDDL improves independently verified feasibility for every resource-constrained model tested."
+          },
+          {
+            "claim": "两个最强 SDDL 配置的可行性为 55.3% 与 28.3%，直接生成基线为 23.7% 与 1.3%，求解器代码基线为 21.7% 与 7.0%，可行调度中位最优性差距为 0.0%。",
+            "location": "abstract",
+            "quote": "The two strongest SDDL configurations reach 55.3% and 28.3%, up from direct-generation baselines of 23.7% and 1.3% and solver-code baselines of 21.7% and 7.0%, with a 0.0% median optimality gap among feasible schedules."
+          },
+          {
+            "claim": "论文明确不评估前沿规模模型，并指出对调度之外组合领域的泛化未经实证检验。",
+            "location": "supplied_full_text",
+            "quote": "We do not evaluate SDDL on frontier-scale models, as our focus lies on seeking methods that improve performance for resource-constrained applications where the use of frontier scale sized models may not be possible."
+          },
+          {
+            "claim": "评估仅覆盖 JSSP/SM-RCPSP/MM-RCPSP 家族，离散形式及其度量的 LLM 翻译评估留待未来工作。",
+            "location": "supplied_full_text",
+            "quote": "Our evaluation also only covers JSSP/SM-RCPSP/MM-RCPSP scheduling families, with discrete formulations and their respective measures specified, compiler-verified, but with evaluation of their LLM-translation left to future work."
+          },
+          {
+            "claim": "实验使用固定、与实例无关的零样本提示、贪心解码且无示例。",
+            "location": "supplied_full_text",
+            "quote": "All conditions use fixed, instance-independent zero-shot prompts, greedy decoding (temperature 0), and no worked examples."
+          },
+          {
+            "claim": "SDDL 的约束结构基于少数反复出现的调度关系：活动间优先级、析取资源、累积资源以及多执行模式。",
+            "location": "supplied_full_text",
+            "quote": "their constraint structures are drawn from a few recurring relations: precedence between activities, disjunctive resources that process one activity at a time, cumulative resources that admit concurrency within a capacity, and multiple possible execution modes for each activity."
+          },
+          {
+            "claim": "作者指出直接生成求解器代码可能可执行且求解器可行，却不忠实于意图问题。",
+            "location": "supplied_full_text",
+            "quote": "We find that direct solver-code generation by resource-constrained models often fails as a formalization strategy, producing programs that may be executable and solver-feasible yet unfaithful to the intended problem."
+          }
+        ],
+        "experiments": [
+          "在 SCHEDBench 的 300 个实例、多家族子集上评估，覆盖 JSSP、单模式 RCPSP 与多模式 RCPSP",
+          "对每个受测资源受限模型，SDDL 都提升了经独立验证的可行性",
+          "两个最强 SDDL 配置的可行性达到 55.3% 与 28.3%",
+          "直接生成基线为 23.7% 与 1.3%；求解器代码基线为 21.7% 与 7.0%",
+          "在可行调度中位最优性差距为 0.0%",
+          "对比中 Direct 的中位差距为 395.8%（可行性 23.7%），Solver 的中位差距为 2.6%（可行性 21.7%）",
+          "实验使用公开基准实例、评估框架与验证器；SOLVER 与 SDDL 共享概念范围但形式化接口不同（开放式求解器代码对比封闭语言加确定性编译）",
+          "材料未说明训练开销、迭代修复或自纠正、前沿规模模型的评估、离散原型与 conflict、not_at 等约束的实际翻译评估"
+        ],
+        "first_affiliation": "Independent Researcher；University of California, Berkeley（Department of Electrical Engineering and Computer Sciences）",
+        "insight": "贡献有效的关键在于把模型的作用从“生成解或生成求解器代码”改为“识别并声明问题结构”：模型只需命名反复出现的调度关系（优先级、析取资源、累积资源、多模式），而把易错的底层建模决策与搜索交给确定性编译器和外部求解器；这样既缩小了语义误差面，又使形式化结果与求解器目标对齐，从而提升可独立验证的可行性。",
+        "limitations": [
+          "未在前沿规模模型上评估 SDDL，重点在资源受限应用",
+          "SDDL 对调度之外的组合领域的泛化尚未经过实证检验",
+          "评估仅覆盖 JSSP/SM-RCPSP/MM-RCPSP 家族；离散形式及其度量已规定并经编译器验证，但 LLM 翻译评估留待未来工作",
+          "评估只衡量单次、零样本、贪心解码下的形式化；未评估可能需要额外推理成本的迭代修复或自纠正",
+          "由于模型通过提供商 API 访问，temperature-0 解码并非逐位确定，每个实例仅评估一次，不确定性在实例间量化而非采样种子",
+          "“资源受限”仅指语言模型组件的参数数量（原文在限制部分被截断，后续内容材料未提供）"
+        ],
+        "method": [
+          "提出 SDDL（Scheduling Domain Definition Language），一种面向可执行、带目标的组合调度形式化的领域特定语言",
+          "模型只声明任务、资源、约束与目标等反复出现的调度结构，不生成解也不生成求解器代码",
+          "确定性编译器负责 SDDL 的下游编码与建模，外部求解器（OR-Tools CP-SAT 等）执行搜索",
+          "通过独立验证器将生成的调度直接对照源实例进行可行性验证",
+          "语言扩展方式为注册命名度量与复用同一声明形式，材料称扩展到离散时间表问题无需重新设计语言",
+          "实验条件使用固定、与实例无关的零样本提示、贪心解码（temperature 0）且无示例"
+        ],
+        "motivation": "组合调度问题搜索空间指数级增长，语言模型需要同时恢复问题语义、遵循表示约定并保持约束可行性；在资源受限场景下只能使用较小模型，直接生成解常出现流畅但不可行的输出，而生成求解器代码又可能可执行却与意图问题不一致，因此需要一个降低模型形式化负担的中间表示。",
+        "primary_topic": "大语言模型将自然语言调度问题形式化为领域特定语言，并交由确定性编译器与外部求解器完成建模与搜索",
+        "relation_to_research": "论文事实：该工作直接面向组合调度问题的自然语言形式化与可行性，评测覆盖 Job Shop 与单/多模式资源受限项目调度，属于生产调度相关的问题家族；其“模型输出结构声明、编译器与求解器负责建模与搜索”的机制与学习辅助搜索、自动建模和 AI4OR 的求解器委托思路一致。迁移设想（推测）：若要迁移到柔性作业车间、分布式制造或生产运输协同，需要 SDDL 或其同类 DSL 能表达机器选择、多工厂分配、运输时间与动态扰动等结构，并重新验证编译与求解器后端；若要用于动态扰动或在线重调度，需要引入迭代重形式化或滚动时域机制，而论文明确未评估自纠正，因此迁移可行性尚未验证。",
+        "relevance_score": 8,
+        "setting": "研究问题是将自然语言描述的调度问题转化为可执行形式并求解；决策对象是调度问题的任务、资源、约束与目标的表示，以及相应的调度方案（如 JSSP 中各步骤的开始时间）；目标是在满足优先级、析取资源、累积资源、非可再生预算与多模式选择等约束下优化 makespan；关键约束包括资源容量、非抢占、时间关系与工序顺序；信息假设是问题仅以自然语言给出，约束与目标隐式表达；环境为静态单次求解设定，材料未说明动态扰动或在线重调度。",
+        "tags": [
+          "神经符号方法",
+          "大语言模型",
+          "组合调度",
+          "领域特定语言",
+          "形式化抽象",
+          "资源受限模型",
+          "求解器委托",
+          "调度基准"
+        ],
+        "title_zh": "通过形式化抽象提升资源受限语言模型的自然语言组合优化准确率",
+        "uncertainty": "相关性评分为 8 而非 9-10，原因是论文虽直接研究调度问题的形式化与求解，但其焦点是自然语言到 DSL 的翻译与资源受限语言模型评测，而非柔性作业车间、生产运输协同、强化学习或多智能体求解机制本身；此外全文节选不完整，部分实验设置、模型清单与附录细节缺失，第一单位与通讯作者信息不足，限制部分的末尾被截断。",
+        "why_recommended": "对智能优化与生产调度方向的研究者而言，该文提供了一种降低大模型形式化负担、提升约束可行性的具体中间表示思路：把模型限制在识别调度结构而非生成解或代码，并把搜索交给确定性编译器与求解器；其独立验证的可行性与最优性差距评测设计，以及资源受限模型与更大前沿模型的对比，对关注学习辅助搜索、自动建模和约束可行性的研究具有直接参考价值。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-11T09:53:01.375200+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2608.18409v2",
+        "status": "not_found"
+      },
+      "final_score": 0.7535000513366883,
+      "provenance": {
+        "analyzed_at": "2026-09-11T01:54:01.321297Z",
+        "input_hash": "97a27875960d2bc4181f608e6ce4fbcb1e5841e23af7046bc5b5fe8c3877e76a",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Combinatorial scheduling poses a significant challenge for language models, requiring them to identify feasible solutions within exponentially large search spaces while satisfying complex constraints. This challenge is especially pronounced in resource-constrained settings, where larger language models are impractical and selection is limited to smaller models which often fail to preserve feasibility when scheduling directly from natural language. To address these limitations, we introduce SDDL, a neuro-symbolic framework that translates natural-language scheduling problems into compact, solver-aligned representations of tasks, resources, constraints, and objectives, while delegating low-level modeling and search to a deterministic compiler and external solver. On a 300-instance, multi-family subset of scheduling problems, SDDL improves independently verified feasibility for every resource-constrained model tested. The two strongest SDDL configurations reach 55.3% and 28.3%, up from direct-generation baselines of 23.7% and 1.3% and solver-code baselines of 21.7% and 7.0%, with a 0.0% median optimality gap among feasible schedules. By expressing problem structure rather than generating solutions or solver code, SDDL enables smaller models to approach the strongest evaluated direct- and solver-code configurations, including substantially larger frontier models.",
+          "authors": [
+            "Shrenil Shaun Sharma",
+            "Avi Sharma"
+          ],
+          "canonical_id": "2608.18409",
+          "categories": [
+            "cs.AI"
+          ],
+          "comment": "To appear, The 4th Annual Workshop on Mathematical Natural Language Processing (MathNLP2026) @EMNLP2026",
+          "pdf_url": "https://arxiv.org/pdf/2608.18409",
+          "published_at": "2026-08-19T00:36:43Z",
+          "source": "arxiv",
+          "title": "Improving Natural-Language Combinatorial-Optimization Accuracy in Resource-Constrained Language Models via Formal Abstractions",
+          "updated_at": "2026-09-09T21:58:43Z",
+          "url": "https://arxiv.org/abs/2608.18409",
+          "version": 2
+        },
+        "rank": 2,
+        "score": {
+          "base_score": 0.7154546387939786,
+          "exploration": 0.8258698396918248,
+          "matched_terms": [
+            "resource-constrained",
+            "combinatorial optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.747756290466304,
+          "topic": 0.6746783952025008
+        }
+      },
+      "tier": "deep_read"
+    },
     "arxiv:2608.23955:v2": {
       "analysis": {
         "analysis": "作者通过开发一个框架来测量尽力而为代码的运行行为，并通过案例研究来剖析实际应用中的表现，利用效率指标和服务质量（QoS）来衡量尽力而为策略在故障下的鲁棒性，从而系统探讨其影响和可行性。",
@@ -1596,7 +1748,7 @@
         "html_url": "https://arxiv.org/html/2608.27296v2",
         "status": "not_found"
       },
-      "final_score": 0.5851421694961232,
+      "final_score": 0.5024746299252437,
       "provenance": {
         "analyzed_at": "2026-09-10T01:56:40.475113Z",
         "input_hash": "4818eb3098fefa05bfd4c5e69b42460d57d2cfc08c7f5c3c1511c8a1f64e0e6f",
@@ -1624,20 +1776,20 @@
           "url": "https://arxiv.org/abs/2608.27296",
           "version": 2
         },
-        "rank": 24,
+        "rank": 49,
         "score": {
-          "base_score": 0.4911675809020421,
-          "exploration": 0.8817046723600954,
+          "base_score": 0.34086296350044315,
+          "exploration": 0.2080479368852673,
           "matched_terms": [
             "operations research"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.6922060762689825,
+          "recency": 0.5391874160350164,
           "topic": 0.32214598466632965
         }
       },
-      "tier": "explore"
+      "tier": "browse"
     },
     "arxiv:2609.01248:v1": {
       "analysis": {
@@ -3252,7 +3404,7 @@
         "why_recommended": "对于研究智能优化、生产调度和 AI4OR 的博士生，该论文提供了将大语言模型用于优化建模时一个常被忽略的前端问题：在建模前判断需求是否完整并选择性澄清。其基准设计与 InterOPT 框架中的“建模关键缺口识别—停止决策”机制，可能为生产调度等复杂优化问题的自动建模与交互式需求获取提供可借鉴的评估思路和算法组件，且相关性分数为 7，表明方法或系统结论具有可迁移价值。"
       },
       "figure_gallery": {
-        "checked_at": "2026-09-10T09:54:03.414461+08:00",
+        "checked_at": "2026-09-11T09:53:01.375200+08:00",
         "figures": [
           {
             "caption": "Motivation for pre-formulation clarification.",
@@ -3284,7 +3436,7 @@
         "html_url": "https://arxiv.org/html/2609.05258v2",
         "status": "available"
       },
-      "final_score": 0.5801370275793303,
+      "final_score": 0.5817220070028803,
       "provenance": {
         "analyzed_at": "2026-09-10T01:56:25.840210Z",
         "input_hash": "ad9ac79fb184b49cfd8134eb0b8fdeada3ac023e4e87d50728c5248486e737f7",
@@ -3317,16 +3469,16 @@
           "url": "https://arxiv.org/abs/2609.05258",
           "version": 2
         },
-        "rank": 23,
+        "rank": 21,
         "score": {
-          "base_score": 0.48206732287150955,
-          "exploration": 0.6000746127860791,
+          "base_score": 0.4849491036416005,
+          "exploration": 0.7555331782896536,
           "matched_terms": [
             "operations research"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.6315441503960881,
+          "recency": 0.4919353791280136,
           "topic": 0.4056432893174671
         }
       },
@@ -4841,6 +4993,149 @@
       },
       "tier": "browse"
     },
+    "arxiv:2609.09295:v1": {
+      "analysis": {
+        "analysis": "作者把FCNFP的组合困难归因于不连续目标与离散弧激活，选择用光滑非凸代理替代原目标以消除不连续性；通过IRLS将问题分解为一系列加权二次流子问题，并利用子问题牛顿系统的加权图拉普拉斯结构调用现代拉普拉斯求解器，从而借助问题结构与图表示降低求解成本；再通过目标驱动的扰动重启和锚点并集受限搜索，在支撑集层面联合IRLS与互补FCNFP启发式的结果。",
+        "challenges": [
+          "固定电荷与线性弧成本的联合目标不连续，难以直接做连续优化",
+          "精确MILP在大规模网络上求解困难",
+          "如何在连续松弛与离散弧激活之间恢复高质量支撑集",
+          "加权二次子问题序列的求解效率与数值稳定性"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文研究固定电荷网络流问题，其连续流量分配与离散弧激活耦合，精确MILP在大网络上求解困难",
+            "location": "abstract",
+            "quote": "The fixed-charge network flow problem (FCNFP) couples continuous flow allocation with discrete arc-activation decisions, making it a canonical but computationally challenging model for a variety of network design and resource allocation problems. Exact mixed-integer linear programming formulations capture the fixed-charge structure faithfully, but often become difficult to solve on large networks."
+          },
+          {
+            "claim": "方法基于IRLS，用光滑非凸Lasry--Lions代理替换不连续目标并求解加权二次流子问题",
+            "location": "abstract",
+            "quote": "We propose a scalable continuous-optimization algorithm for large-scale single-commodity FCNFP based on an iteratively reweighted least-squares (IRLS) framework. The method replaces the discontinuous fixed-charge and linear arc cost objective with a smooth nonconvex Lasry--Lions surrogate and solves a sequence of weighted quadratic flow subproblems."
+          },
+          {
+            "claim": "子问题用热启动对偶半光滑牛顿法，牛顿系统具有加权图拉普拉斯结构并可用现代拉普拉斯求解器",
+            "location": "abstract",
+            "quote": "Each subproblem is solved by a warm-started dual semismooth Newton method whose Newton systems have weighted graph-Laplacian structure, enabling the use of modern Laplacian solvers."
+          },
+          {
+            "claim": "提出扰动重启与锚点并集受限搜索以改进弧支撑集发现",
+            "location": "abstract",
+            "quote": "we also develop an algorithmic variant that incorporates objective-driven perturbation restarts and an anchor-union restricted search that jointly leverages supports discovered by IRLS and by complementary FCNFP heuristics."
+          },
+          {
+            "claim": "在410个实例上取得最佳目标质量，平均gap 1.316%，非MILP方法胜或平率90.0%",
+            "location": "abstract",
+            "quote": "Computational experiments on 410 benchmark, synthetic, and large-scale instances show that our method obtains the best objective quality among the evaluated scalable FCNFP algorithms, with a mean gap of $1.316\\%$ to a time-limited MILP reference and a win-or-tie rate of $90.0\\%$ among the non-MILP methods."
+          }
+        ],
+        "experiments": [
+          "在410个基准、合成与大规模实例上进行计算实验",
+          "与所评估的可扩展FCNFP算法相比取得最佳目标质量",
+          "相对时间受限的MILP参考，平均gap为1.316%",
+          "在非MILP方法中胜负或平局率为90.0%",
+          "训练开销、消融、泛化与公平计算预算的细节材料未说明"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "将不连续的固定电荷与线性弧成本目标替换为光滑非凸的Lasry--Lions代理，把组合难题转为一系列加权二次流子问题；其子问题的牛顿系统具有加权图拉普拉斯结构，可借助现代拉普拉斯求解器高效求解。进一步把连续优化得到的弧支撑集与互补启发式发现的支撑集通过锚点并集受限搜索结合，使连续优化服务于底层组合问题的支撑集发现，从而在规模与解质量之间取得折中。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "将不连续的固定电荷与线性弧成本目标替换为光滑非凸的Lasry--Lions代理",
+          "在IRLS框架下求解一系列加权二次流子问题以逼近原问题",
+          "每个子问题用热启动的对偶半光滑牛顿法求解，其牛顿系统具有加权图拉普拉斯结构，可用现代拉普拉斯求解器",
+          "提出算法变体：加入目标驱动的扰动重启",
+          "提出锚点并集受限搜索，联合IRLS与互补FCNFP启发式发现的弧支撑集"
+        ],
+        "motivation": "FCNFP是网络设计与资源分配的经典但计算困难的模型，精确混合整数线性规划虽忠实刻画固定电荷结构，但在大规模网络上往往难以求解，因此需要可扩展的连续优化算法来快速产出高质量可行解。",
+        "primary_topic": "固定电荷网络流的连续优化求解与支撑集发现",
+        "relation_to_research": "论文事实：本文针对固定电荷网络流这一混合整数网络设计问题，提出基于IRLS的连续优化与支撑集搜索结合的可扩展算法，并报告了相对时间受限MILP参考的平均gap与对非MILP方法的胜率。推测：其将不连续固定成本光滑化、把子问题化为图拉普拉斯系统并用拉普拉斯求解器加速、以及在支撑集层面联合连续优化与启发式的思路，可能迁移到柔性作业车间、分布式制造、生产运输协同等含固定启用成本或离散激活决策的调度问题，但迁移需要把机器/任务的启用决策与流/排序变量对应起来，并重新论证光滑代理与支撑集搜索在该组合结构下的有效性，且需在公平计算预算下与数学规划及元启发式基线对比验证。",
+        "relevance_score": 6,
+        "setting": "研究单商品固定电荷网络流问题（FCNFP），决策对象是连续弧流量分配与离散弧激活（固定电荷）的联合决策。目标为在满足流量守恒等网络约束下最小化由固定电荷与线性流成本构成的混合目标，属于混合整数非线性/线性结构。摘要提及大规模网络、精确MILP在大网络上求解困难，信息假设与静态或动态环境材料未说明。",
+        "tags": [
+          "固定电荷网络流",
+          "迭代重加权最小二乘",
+          "非凸连续优化",
+          "图拉普拉斯求解器",
+          "支撑集搜索",
+          "混合整数规划启发式"
+        ],
+        "title_zh": "基于迭代重加权最小二乘的支撑集发现方法求解固定电荷网络流问题",
+        "uncertainty": "仅有标题与摘要，缺少全文；方法的网络结构、训练或调参细节、实验基线清单、公平计算预算、消融与局限性均未在摘要中给出，因此对方法完整性与结果稳健性的判断存在不确定性；相关性评分主要基于其混合整数网络流与连续优化结合的方法可迁移性，而非直接面向生产调度。",
+        "why_recommended": "该工作展示了把不连续混合整数目标转化为光滑连续优化序列、并利用子问题的图拉普拉斯结构调用高效求解器的技术路线，同时强调在支撑集/离散决策层面与启发式联合搜索，对关注学习辅助搜索、数学规划与启发式结合、以及含固定成本的生产与运输调度问题具有方法层面的借鉴价值。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-11T09:53:01.375200+08:00",
+        "figures": [
+          {
+            "caption": "Lasry–Lions surrogate LL e λ , μ \\mathrm{LL}^{\\lambda,\\mu}_{e} for an edge with r e = 0.02 r_{e}=0.02 , b e = 1 b_{e}=1 , at three smoothing levels. x 1 , e x_{1,e} and x 2 , e x_{2,e} represent the transition points.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2609.09295/v1/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2609.09295v1/lasry_lions.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2609.09295v1#S3.F1"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2609.09295v1",
+        "status": "available"
+      },
+      "final_score": 0.5881256825199541,
+      "provenance": {
+        "analyzed_at": "2026-09-11T01:54:50.247132Z",
+        "input_hash": "7f7cac1a634ab7160a256591081b31f5d690dbc31f8068e01f69f8d49455a6ba",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "The fixed-charge network flow problem (FCNFP) couples continuous flow allocation with discrete arc-activation decisions, making it a canonical but computationally challenging model for a variety of network design and resource allocation problems. Exact mixed-integer linear programming formulations capture the fixed-charge structure faithfully, but often become difficult to solve on large networks. We propose a scalable continuous-optimization algorithm for large-scale single-commodity FCNFP based on an iteratively reweighted least-squares (IRLS) framework. The method replaces the discontinuous fixed-charge and linear arc cost objective with a smooth nonconvex Lasry--Lions surrogate and solves a sequence of weighted quadratic flow subproblems. Each subproblem is solved by a warm-started dual semismooth Newton method whose Newton systems have weighted graph-Laplacian structure, enabling the use of modern Laplacian solvers. To further improve the discovered arc supports of the challenging underlying combinatorial problem, we also develop an algorithmic variant that incorporates objective-driven perturbation restarts and an anchor-union restricted search that jointly leverages supports discovered by IRLS and by complementary FCNFP heuristics. Computational experiments on 410 benchmark, synthetic, and large-scale instances show that our method obtains the best objective quality among the evaluated scalable FCNFP algorithms, with a mean gap of $1.316\\%$ to a time-limited MILP reference and a win-or-tie rate of $90.0\\%$ among the non-MILP methods. The results indicate that combining smooth continuous optimization with support-level search is an effective strategy for producing high-quality feasible solutions to large-scale FCNFP.",
+          "authors": [
+            "Sindura Saraswathi",
+            "Christian K\\\"ummerle"
+          ],
+          "canonical_id": "2609.09295",
+          "categories": [
+            "math.OC",
+            "cs.AI",
+            "cs.LG",
+            "cs.NA",
+            "math.NA"
+          ],
+          "comment": "20 pages",
+          "pdf_url": "https://arxiv.org/pdf/2609.09295",
+          "published_at": "2026-09-08T18:00:10Z",
+          "source": "arxiv",
+          "title": "Support Discovery With Iteratively Reweighted Least Squares for Fixed-Charge Network Flow",
+          "updated_at": "2026-09-08T18:00:10Z",
+          "url": "https://arxiv.org/abs/2609.09295",
+          "version": 1
+        },
+        "rank": 13,
+        "score": {
+          "base_score": 0.5784103318544619,
+          "exploration": 0.5616918377724669,
+          "matched_terms": [
+            "mixed integer",
+            "mixed-integer"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.5587276691740486,
+          "topic": 0.5888106623580072
+        }
+      },
+      "tier": "browse"
+    },
     "arxiv:2609.09370:v1": {
       "analysis": {
         "analysis": "作者通过将张量分解代理模型的训练形式化为约束多项式优化问题（POP），并利用T-范数导出可微惩罚项，将逻辑约束转化为可微形式，从而使用梯度方法求解松弛问题。这种分析利用了离散搜索空间的张量表示结构与逻辑约束的符号形式。",
@@ -4917,7 +5212,7 @@
         "why_recommended": "推荐给关注约束优化和代理模型的研究者。该工作展示了如何将符号逻辑约束嵌入到基于张量分解的代理模型中，并使用可微惩罚进行端到端训练，这一思路可启发生产调度中复杂逻辑约束的处理。此外，它关注样本效率、可行性引导和可扩展性，与智能优化领域对约束可行性和计算预算的重视一致。"
       },
       "figure_gallery": {
-        "checked_at": "2026-09-10T09:54:03.414461+08:00",
+        "checked_at": "2026-09-11T09:53:01.375200+08:00",
         "figures": [
           {
             "caption": "Overview of CA-TD: CA-TD approximates the black-box objective on the feasible region, effectively guiding the search in SMBO.",
@@ -4936,7 +5231,7 @@
         "html_url": "https://arxiv.org/html/2609.09370v1",
         "status": "available"
       },
-      "final_score": 0.6047522624988603,
+      "final_score": 0.5789998484828547,
       "provenance": {
         "analyzed_at": "2026-09-10T01:55:19.229873Z",
         "input_hash": "d31e0ba7713355a480b1cbc4c9cbdd2f3194105e741e6ada6337e7733a6c5b2d",
@@ -4964,16 +5259,16 @@
           "url": "https://arxiv.org/abs/2609.09370",
           "version": 1
         },
-        "rank": 4,
+        "rank": 9,
         "score": {
-          "base_score": 0.608640477270655,
-          "exploration": 0.9123813785839897,
+          "base_score": 0.5618179063324629,
+          "exploration": 0.815227305869674,
           "matched_terms": [
             "black-box optimization"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.7254614239065673,
+          "recency": 0.5650913564608266,
           "topic": 0.4884799492851557
         }
       },
@@ -5070,7 +5365,7 @@
         "html_url": "https://arxiv.org/html/2609.09468v1",
         "status": "not_found"
       },
-      "final_score": 0.516304880224399,
+      "final_score": 0.5447142396460687,
       "provenance": {
         "analyzed_at": "2026-09-10T01:57:12.883714Z",
         "input_hash": "cd950f0cb9fa2d52f4b4b70f23d7d4344e78157f4709e8e17ad308b64b49ebbf",
@@ -5107,20 +5402,20 @@
           "url": "https://arxiv.org/abs/2609.09468",
           "version": 1
         },
-        "rank": 35,
+        "rank": 20,
         "score": {
-          "base_score": 0.4478270549534526,
-          "exploration": 0.40589105034994566,
+          "base_score": 0.4994804357201248,
+          "exploration": 0.8545434867689748,
           "matched_terms": [
             "black-box optimization"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.7444100628124453,
+          "recency": 0.5798512206101133,
           "topic": 0.37507076830902797
         }
       },
-      "tier": "browse"
+      "tier": "explore"
     },
     "arxiv:2609.09602:v1": {
       "analysis": {
@@ -5204,7 +5499,7 @@
         "html_url": "https://arxiv.org/html/2609.09602v1",
         "status": "not_found"
       },
-      "final_score": 0.545061381787056,
+      "final_score": 0.48100402393941777,
       "provenance": {
         "analyzed_at": "2026-09-10T01:56:46.506379Z",
         "input_hash": "d0c933348fd3deaea1326e0c4ef885c749ec6dc84ce2c6ea12acae319c045af0",
@@ -5232,20 +5527,20 @@
           "url": "https://arxiv.org/abs/2609.09602",
           "version": 1
         },
-        "rank": 30,
+        "rank": 48,
         "score": {
-          "base_score": 0.5001116032491926,
-          "exploration": 0.9770054359102909,
+          "base_score": 0.3836436798898504,
+          "exploration": 0.5085983649242382,
           "matched_terms": [
             "constraint programming"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.7788246376788086,
+          "recency": 0.6066581301884791,
           "topic": 0.2842239269375598
         }
       },
-      "tier": "explore"
+      "tier": "browse"
     },
     "arxiv:2609.09787:v1": {
       "analysis": {
@@ -5338,7 +5633,7 @@
         "why_recommended": "虽然该文并非直接的生产调度或强化学习论文，但其“把资源就绪状态建模为跨时段承诺变量”的建模洞见与生产调度中带启动时间/换模时间的调度问题同构，且其对“忽略准备时间会导致不可行调度”的消融式对比（B3-ZeroLeadTime服务率骤降）对任何做学习辅助搜索或启发式求解时忽视时序可行性约束的研究者都有警示价值；此外其将服务质量（延迟）约束转为容量上界约束的处理方式，可为多目标生产调度中服务质量与产能耦合的建模提供参考，因此可作为相邻方向（评分6）阅读。"
       },
       "figure_gallery": {
-        "checked_at": "2026-09-10T09:54:03.414461+08:00",
+        "checked_at": "2026-09-11T09:53:01.375200+08:00",
         "figures": [
           {
             "caption": "Spatial LLM inference workload shifting requires service-ready replicas at the destination and advance loading before demand arrives.",
@@ -5370,7 +5665,7 @@
         "html_url": "https://arxiv.org/html/2609.09787v1",
         "status": "available"
       },
-      "final_score": 0.6024702488471871,
+      "final_score": 0.6299205339393974,
       "provenance": {
         "analyzed_at": "2026-09-10T01:55:16.930017Z",
         "input_hash": "48509935e8dca27bd0d0511057e5b5cf955447ecf7f2c6732b07421272f9334d",
@@ -5406,8 +5701,8 @@
         },
         "rank": 3,
         "score": {
-          "base_score": 0.6044913615403401,
-          "exploration": 0.5287819429119721,
+          "base_score": 0.6544009707989044,
+          "exploration": 0.9841392140464119,
           "matched_terms": [
             "mixed integer",
             "mixed-integer",
@@ -5415,7 +5710,7 @@
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.8181258965388224,
+          "recency": 0.6372714763264863,
           "topic": 0.5650841854345929
         }
       },
@@ -5423,70 +5718,78 @@
     },
     "arxiv:2609.09957:v1": {
       "analysis": {
-        "analysis": "作者通过分析现有OR建模LLM训练范式的三个瓶颈（监督来源、信用分配、风格失配）来定位问题，并据此提出利用模型自身rollout执行后产生的solver artifact作为无评估器稠密监督来源；具体如何利用问题结构或分解材料未说明。",
+        "analysis": "作者观察到模型可以从自身 rollout 生成的求解器工件反馈中获得提升，据此将问题从依赖外部验证答案的监督范式转化为基于群体相对比较的自洽学习范式：通过执行多个候选程序并按其目标值聚类，选出占多数的工件作为伪参考，再用组相对优势加稠密自监督信号更新模型。摘要未说明更细的问题结构分解、下界推导或图表示分析。",
         "challenges": [
-          "无已验证答案或外部评估器时如何获得可信的监督信号",
-          "如何将稀疏的outcome级信用分配转化为可定位建模决策的稠密监督",
-          "如何避免使用部署时不可得的solver context造成训练与推理的风格失配",
-          "如何从多次rollout的求解器产物中稳健地构造伪参考"
+          "在缺乏人工或强模型验证答案时如何获得可扩展的监督信号",
+          "如何将粗粒度的结果奖励细化为对具体建模决策的信用分配，同时避免引入额外评估器",
+          "特权自蒸馏使用求解器上下文会导致部署时风格不匹配",
+          "求解器执行的数值工具有噪声或失败模式，如何从 rollout 中稳健地选出可信伪参考",
+          "对通用模型与已调优运筹模型同时保证改进的泛化性"
         ],
         "corresponding_authors": [
           "证据未提供"
         ],
         "evidence": [
           {
-            "claim": "论文针对LLM训练OR formulation时依赖已验证答案和外部评估器的问题",
+            "claim": "论文提出 SOLID 框架，实现无需已验证答案或外部评估器的运筹学语言模型自提升",
             "location": "abstract",
-            "quote": "First, training commonly relies on synthetic formulations validated by human experts or stronger models, constraining scalable supervision."
+            "quote": "we propose SOLID: Solver-Informed On-Policy LearnIng through Self-Distillation, a novel framework for self-improving OR language models without verified answers or external evaluators."
           },
           {
-            "claim": "论文提出利用自身rollout产生的solver artifact作为无评估器的稠密监督来源",
-            "location": "abstract",
-            "quote": "We find that a model can improve from solver-artifact feedback generated by its own rollouts, making self-distillation a practical, evaluator-free source of dense supervision."
-          },
-          {
-            "claim": "SOLID的核心机制是执行多次rollout、聚类目标值并选择多数组artifact作为伪参考",
+            "claim": "SOLID 执行多次 rollout 的候选程序，聚类其目标值并选择多数组工件作为伪参考",
             "location": "abstract",
             "quote": "SOLID executes candidate programs from multiple rollouts, clusters their objectives, and selects a majority-group artifact as a pseudo-reference."
           },
           {
-            "claim": "SOLID在多个OR基准上相比仅使用outcome的group-relative训练提升了求解准确率",
+            "claim": "模型使用组相对优势与稠密自监督信号进行更新",
+            "location": "abstract",
+            "quote": "The model then performs updates using group-relative advantages and dense self-supervision signals."
+          },
+          {
+            "claim": "在多个运筹学基准上，SOLID 相比仅结果奖励的组相对训练提升了通用与运筹调优模型的求解精度",
             "location": "abstract",
             "quote": "Across multiple OR benchmarks, SOLID improves solution accuracy for both general-purpose and OR-tuned models over outcome-only group-relative training."
+          },
+          {
+            "claim": "作者指出特权自蒸馏使用部署时不可得的求解器上下文会导致风格不匹配",
+            "location": "abstract",
+            "quote": "Third, privileged self-distillation can induce style mismatch by using solver context unavailable at deployment."
           }
         ],
         "experiments": [
-          "在多个OR基准上，SOLID对通用LLM和OR微调LLM均提升了求解准确率，优于仅使用outcome的group-relative训练；具体基线名称、实例规模、约束可行性、运行时间、训练开销、公平计算预算、泛化和消融结果摘要未提供，无法确认。"
+          "在多个运筹学基准上评估",
+          "SOLID 相比仅使用结果奖励的组相对训练（outcome-only group-relative training）提升了通用模型与运筹学调优模型的求解精度",
+          "摘要未提供具体基准名称、实例规模、约束可行性、运行时间、训练开销、消融数量或公平计算预算等细节"
         ],
         "first_affiliation": "证据未提供",
-        "insight": "核心洞察在于：模型自身rollout执行后产生的求解器产物（如目标值等可比较的执行结果）本身构成一种可自动获取的伪反馈信号。通过对多次rollout的目标值进行聚类，并选取多数组对应的产物作为伪参考，就能在不访问可信答案、不引入独立评估器的条件下构造稠密监督，同时借助组相对优势把信用分配给更接近多数一致解的建模决策，从而绕开已有人工验证或外接评估器的可扩展性瓶颈。",
+        "insight": "模型自身的多次 rollout 所对应的求解器输出（目标值）本身携带可用于区分建模质量差异的信号：如果某组 rollout 的程序在求解器上得到相近且占多数的目标值，该组的建模可被当作伪参考，从而在无需可信答案或额外评估器的情况下为每个决策步骤提供稠密监督；这种自洽性聚类把求解器工件转化为可用的信用分配依据，同时避免暴露部署时不存在的求解器上下文。",
         "limitations": [
           "材料未说明"
         ],
         "method": [
-          "SOLID框架：Solver-Informed On-Policy Learning through Self-Distillation，在无验证答案、无外部评估器条件下自改进OR语言模型",
-          "执行多次rollout生成的候选程序",
-          "对候选程序的目标值（objectives）进行聚类",
-          "选取多数组（majority-group）的artifact作为伪参考（pseudo-reference）",
-          "使用组相对优势（group-relative advantages）进行更新",
-          "结合稠密自监督信号进行训练"
+          "SOLID 框架：Solver-Informed On-Policy Learning through Self-Distillation，无需已验证答案或外部评估器地自提升运筹学语言模型",
+          "对同一问题执行多次 rollout，得到候选建模程序并调用求解器获取目标值工件",
+          "对 rollout 的目标值进行聚类，选择占多数的一组工件作为伪参考",
+          "利用组相对优势（group-relative advantages）进行策略更新",
+          "结合稠密自监督信号，在 on-policy 轨迹上进行自蒸馏式更新",
+          "训练时使用求解器工件反馈，但设计上避免依赖部署阶段不可得的求解器上下文"
         ],
-        "motivation": "现有LLM用于OR建模的训练存在三点局限：一是依赖人工专家或更强模型验证的合成formulation，难以扩展监督规模；二是信用分配粗糙或昂贵，outcome reward只给整条轨迹打分无法定位关键建模决策，而过程级监督需要额外评估器；三是priviledged self-distillation使用部署时不可得的求解器上下文，导致风格失配。作者希望寻找一种可扩展、无需外部评估器且不依赖验证答案的自改进监督信号，发现模型可以从自身rollout产生的求解器产物反馈中获益。",
-        "primary_topic": "面向运筹学建模的LLM自蒸馏训练框架（SOLID）",
-        "relation_to_research": "论文事实：SOLID直接研究LLM自动生成运筹学数学规划模型，属于AI4OR中自动建模方向，其核心机制是在无外部评估器条件下利用求解器产物进行自蒸馏；与强化学习、学习辅助求解思想相关。迁移设想（推测）：其‘多rollout→求解器产物聚类→多数伪参考→组相对优势+稠密自监督’的机制可被推测迁移到生产调度或柔性作业车间等约束优化问题的自动建模与求解器调用中，但需要满足条件：目标问题能通过执行候选程序得到可比较的目标值或可行性信号、多次采样能形成多数共识、且部署阶段不依赖额外求解器上下文；这些迁移效果在本摘要中并未验证。",
+        "motivation": "现有大语言模型可完成自然语言到运筹学公式的翻译，但后训练存在三方面局限：训练依赖人工专家或更强模型验证的合成公式，限制监督的可扩展性；信用分配要么粗粒度（结果奖励只给整条轨迹打分）要么代价高（过程级监督需要额外评估器）；特权自蒸馏因使用部署时不可得的求解器上下文而造成训练与部署的风格不匹配。作者希望利用模型自身 rollout 产生的求解器工件反馈，实现无需外部评估器的稠密监督。",
+        "primary_topic": "运筹学自然语言建模的大语言模型自蒸馏训练",
+        "relation_to_research": "论文属于 AI4OR 中的自动建模方向，用大语言模型将自然语言问题转化为运筹学公式，其求解器感知自蒸馏与组相对信用分配机制在方法论上与学习辅助搜索、强化学习训练优化求解器有相通之处。迁移到生产调度（如柔性作业车间、流水车间）需要模型具备将调度问题自然语言描述转换为规划/约束模型的表示能力（推测），并且需要求解器能在可接受时间内为每个候选模型返回可聚类比较的目标值（推测）；论文未涉及生产调度实例、动态扰动或分布式/能效多目标约束，因此直接迁移路径尚不明确。",
         "relevance_score": 7,
-        "setting": "研究问题是将自然语言描述自动翻译为运筹学（OR）数学规划模型，决策对象是LLM生成的建模程序（formulation program），目标是在没有已验证答案或外部评估器的条件下提升模型生成的OR模型准确率。关键约束包括：训练监督不能依赖人工或更强模型验证的合成答案，信用分配不能过粗或引入额外评估器，且不能使用部署时不可得的求解器上下文以免造成风格失配。信息假设是模型仅通过自身rollout执行后获得的求解器产物（artifact）作为反馈来源，环境为静态的离线训练设定，未说明是否涉及在线动态扰动。",
+        "setting": "该研究面向将自然语言描述的运筹学问题翻译为数学规划模型的任务，目标是训练在缺乏人工或强模型验证答案条件下具备建模能力的语言模型；决策对象是模型输出的运筹学建模程序/公式及其求解结果；关键信息假设是模型可访问求解器产生的工件（解目标值等）而非可信参考答案；环境为离线训练加部署推理，部署时不提供求解器上下文，材料未说明具体问题类型与约束规模。",
         "tags": [
           "运筹学建模",
           "大语言模型",
           "自蒸馏",
           "强化学习",
-          "无外部评估器",
-          "解器伪反馈"
+          "无监督训练",
+          "求解器反馈"
         ],
-        "title_zh": "超越已验证答案：面向运筹学语言模型自举的求解器信息自蒸馏",
-        "uncertainty": "仅依据标题与摘要，无法获取全文细节：实验设置、基线、实例规模、目标值比较方式、聚类算法、伪参考选择的具体实现以及局限性均不明确，因此对方法有效性和可迁移性的判断存在较大不确定性。",
-        "why_recommended": "对从事AI4OR、LLM自动建模与学习辅助求解的研究者，该工作提供了一种不依赖人工验证答案和外部评估器的自蒸馏范式，涉及无外部评估器的稠密信用分配与伪参考构造，与生产调度中‘自动建模+求解器反馈’的研究路线直接相关，其机制可启发如何在缺少标注最优解时利用求解器产物作为学习信号。"
+        "title_zh": "超越已验证答案：面向运筹学语言模型自举的求解器感知自蒸馏",
+        "uncertainty": "仅有标题与摘要，未提供全文，因此无法核实基准名称、实例规模、求解器类型、约束可行性处理、训练开销、消融设置、伪参考选择的稳健性以及求解器失败或超时的处理方式；作者声明与实验结论的具体证据强度和适用边界不明。",
+        "why_recommended": "该工作展示了不依赖已验证答案或额外评估器、仅用求解器工件作为弱监督来自提升建模能力的一条可扩展路径，其多数聚类伪参考、组相对优势与稠密自蒸馏的组合机制，对研究学习辅助搜索、自动建模以及用强化学习训练优化求解器的读者具有机制层面的参考价值；同时对关注公平监督预算与训练/部署一致性的研究有启示。"
       },
       "figure_gallery": {
         "checked_at": "2026-09-10T09:54:03.414461+08:00",
@@ -5521,10 +5824,10 @@
         "html_url": "https://arxiv.org/html/2609.09957v1",
         "status": "available"
       },
-      "final_score": 0.5946628091550827,
+      "final_score": 0.5958122596901313,
       "provenance": {
-        "analyzed_at": "2026-09-10T01:55:43.783027Z",
-        "input_hash": "380621b095cb5ecce4b9784645b1c235aa42a525d59186685aa76861849fbaeb",
+        "analyzed_at": "2026-09-11T01:54:51.066049Z",
+        "input_hash": "98ea6bba05a706fd49a6c66388884c5cb4c05dd2e75c0aed031ca2cb3c199049",
         "model": "deepseek-v4-flash",
         "prompt_version": "optimization-analysis-v1",
         "reading_scope": "abstract"
@@ -5541,7 +5844,8 @@
           ],
           "canonical_id": "2609.09957",
           "categories": [
-            "math.OC"
+            "math.OC",
+            "cs.AI"
           ],
           "comment": null,
           "pdf_url": "https://arxiv.org/pdf/2609.09957",
@@ -5552,23 +5856,715 @@
           "url": "https://arxiv.org/abs/2609.09957",
           "version": 1
         },
-        "rank": 11,
+        "rank": 15,
         "score": {
-          "base_score": 0.5084778348274231,
-          "exploration": 0.7712101359764418,
+          "base_score": 0.5105677448911478,
+          "exploration": 0.9699695299860697,
           "matched_terms": [
             "operations research",
             "reinforcement learning"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.8454085925380168,
-          "topic": 0.33714553229610517
+          "recency": 0.6585230759044106,
+          "topic": 0.33703714028880916
+        }
+      },
+      "tier": "explore"
+    },
+    "arxiv:2609.10629:v1": {
+      "analysis": {
+        "analysis": "作者通过构建端到端多智能体框架将QUBO生成分解为多个步骤，包括理解问题、选择二元编码变量和约束、定义惩罚项等。作者还构建QUBOBench基准，包含12个应用领域、100个组合优化问题，用于跨领域评估。分析指出迭代自修复是最重要组件，说明作者通过消融式分析识别各组件贡献。但材料未说明作者是否利用问题结构、分解下界或图表示等更具体的优化分析手段。",
+        "challenges": [
+          "自然语言描述到QUBO公式的翻译需要同时识别二元变量、约束、目标函数、惩罚项和惩罚权重，步骤多且易出错",
+          "QUBO公式的正确性验证需要确保自然语言规范、结构化公式、生成实现和小规模最优解相互一致",
+          "领域多样、问题类型广泛，单一直接生成调用难以覆盖",
+          "惩罚权重选择影响约束可行性，但材料未说明具体处理策略"
+        ],
+        "corresponding_authors": [
+          "Md Rizwan Parvez"
+        ],
+        "evidence": [
+          {
+            "claim": "论文提出端到端多智能体框架，自动从自然语言生成QUBO公式。",
+            "location": "abstract",
+            "quote": "we propose an end-to-end multi-agent framework that automatically generates QUBO formulations from natural-language problem descriptions, supported by structured or unstructured test cases."
+          },
+          {
+            "claim": "QUBOBench包含100个组合优化问题，覆盖12个应用领域。",
+            "location": "abstract",
+            "quote": "We also introduce QUBOBench, a benchmark containing 100 combinatorial optimization problems across 12 application domains, curated from peer-reviewed literature, competitions, and canonical NP-hard problems."
+          },
+          {
+            "claim": "框架在QUBOBench上达到68%准确率，比直接单次调用基线高22%。",
+            "location": "abstract",
+            "quote": "Experimental results show that our framework achieves 68% accuracy on QUBOBench, outperforming a direct single-call baseline by 22%."
+          },
+          {
+            "claim": "迭代自修复是性能提升的最重要组件。",
+            "location": "abstract",
+            "quote": "Further analysis identifies iterative self-repair as the most important component contributing to improved performance."
+          },
+          {
+            "claim": "QUBO公式生成需要识别二元变量、约束、目标函数、惩罚项和惩罚权重。",
+            "location": "abstract",
+            "quote": "translating natural-language problem descriptions into correct QUBO formulations remains difficult, requiring the identification of binary variables, constraints, objective functions, penalty terms, and suitable penalty weights."
+          }
+        ],
+        "experiments": [
+          "在QUBOBench上达到68%准确率",
+          "相比直接单次调用基线提升22%",
+          "进一步分析识别出迭代自修复是贡献性能提升的最重要组件",
+          "材料未说明基线具体设置、实例规模、约束可行性验证、解质量、运行时间、训练开销、公平计算预算、泛化和消融实验的完整细节"
+        ],
+        "first_affiliation": "Bangladesh University of Engineering and Technology",
+        "insight": "该工作的核心洞察在于：QUBO公式生成不是一次性翻译，而是一个需要识别变量编码、约束、目标与惩罚权重的多步骤结构化过程；通过多智能体分工与迭代自修复，可以在出现错误时反馈式重述问题，从而提升最终公式的正确性。摘要明确指出迭代自修复是性能提升的最重要组件，说明其有效性来自错误反馈闭环而非单一模型能力。",
+        "limitations": [
+          "作者明确指出现有LLM-QUBO工作验证有限，但本文自身局限未在材料中明确陈述"
+        ],
+        "method": [
+          "提出端到端多智能体框架，从自然语言问题描述自动生成QUBO公式",
+          "框架支持结构化或非结构化测试用例作为输入",
+          "生成过程涉及多个步骤：理解问题、选择二元编码变量和约束、定义惩罚项等",
+          "包含迭代自修复组件，在出现错误时进行反馈式重述或修正",
+          "构建QUBOBench基准，含100个组合优化问题、覆盖12个应用领域，来源包括同行评审文献、竞赛和经典NP-hard问题"
+        ],
+        "motivation": "QUBO是组合优化的核心公式，且与量子、混合量子-经典及量子启发式求解器兼容，但将自然语言问题描述翻译为正确QUBO公式困难、耗时且需要大量领域专业知识。现有LLM方法主要面向LP/MILP等求解器就绪公式，QUBO设定探索较少；AutoQUBO依赖形式化程序输入，LLM-QUBO主要关注MILP转QUBO且验证有限。因此需要端到端、反馈驱动的自动QUBO公式生成框架。",
+        "primary_topic": "大模型智能体自动建模：从自然语言生成QUBO公式",
+        "relation_to_research": "该论文直接研究从自然语言自动生成QUBO公式，属于大模型智能体驱动的自动建模与优化求解方向。迁移到生产调度领域时需要将自然语言调度问题描述自动转化为调度优化模型（如MILP、CP或QUBO），并验证约束可行性；其多智能体与迭代自修复机制可能可迁移到柔性作业车间、流水车间等调度问题的自动建模，但这是推测，需要额外的领域适配、约束验证和求解器接口。与强化学习或神经网络辅助搜索的直接关联较弱，主要价值在自动建模与智能体协作。",
+        "relevance_score": 6,
+        "setting": "研究问题是如何将自然语言描述的组合优化问题自动转化为QUBO（二次无约束二元优化）公式，决策对象为二元决策变量 x∈{0,1}^n 以及QUBO矩阵Q和常数偏移c，目标形式为 min E(x)=x^T Q x + c。关键约束是需要正确识别二元变量、约束、目标函数、惩罚项及合适的惩罚权重。信息假设是输入为自然语言问题描述，可附带结构化或非结构化测试用例。环境为静态（公式生成任务），材料未说明动态扰动或在线求解设定。",
+        "tags": [
+          "QUBO",
+          "大模型智能体",
+          "自动建模",
+          "组合优化",
+          "多智能体框架",
+          "基准测试"
+        ],
+        "title_zh": "从自然语言自动生成二次无约束二元优化（QUBO）公式",
+        "uncertainty": "全文节选不完整，方法细节、实验设置和消融实验的具体数据缺失，无法判断其框架各模块的完整设计、基线的公平性以及在不同问题规模下的表现。因此相关性评分可能因缺失信息而存在偏差。",
+        "why_recommended": "该论文涉及大模型智能体、自动建模和组合优化求解器的结合，与AI4OR方向相关。其多智能体框架、迭代自修复机制和QUBOBench基准对研究自动生成优化模型、约束验证和基准构建有参考价值。虽然不直接研究生产调度，但其从自然语言到形式化优化模型的端到端流程可迁移到调度问题自动建模，且强调迭代修复与一致性验证，对约束可行性研究有启示。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-11T09:53:01.375200+08:00",
+        "figures": [
+          {
+            "caption": "Per-domain distribution of problems in QUBOBench.",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2609.10629/v1/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2609.10629v1/piechart.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2609.10629v1#A2.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2609.10629v1",
+        "status": "available"
+      },
+      "final_score": 0.6066623788395435,
+      "provenance": {
+        "analyzed_at": "2026-09-11T01:54:10.252927Z",
+        "input_hash": "a0f2155d19b87edaebb344c27f20b5b4ccfbdc596c7fb1d39d493f41817085ac",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Quadratic Unconstrained Binary Optimization (QUBO) is a central formulation for combinatorial optimization and has gained increasing attention due to its compatibility with quantum, hybrid quantum-classical, and quantum-inspired solvers. However, translating natural-language problem descriptions into correct QUBO formulations remains difficult, requiring the identification of binary variables, constraints, objective functions, penalty terms, and suitable penalty weights. This process is time-consuming and often demands substantial domain expertise. To address this challenge, we propose an end-to-end multi-agent framework that automatically generates QUBO formulations from natural-language problem descriptions, supported by structured or unstructured test cases. To evaluate its performance, We also introduce QUBOBench, a benchmark containing 100 combinatorial optimization problems across 12 application domains, curated from peer-reviewed literature, competitions, and canonical NP-hard problems. Experimental results show that our framework achieves 68% accuracy on QUBOBench, outperforming a direct single-call baseline by 22%. Further analysis identifies iterative self-repair as the most important component contributing to improved performance. The data and code are open-sourced at https://quitttcat.github.io/QuantumQUBOAgent.",
+          "authors": [
+            "Niloy Kumar Mondal",
+            "Md Rizwan Parvez"
+          ],
+          "canonical_id": "2609.10629",
+          "categories": [
+            "cs.AI"
+          ],
+          "comment": "Accepted at the ICML 2026 Workshop on AI as a Tool for Mathematics, Computer Science, and Machine Learning (AI4Research)",
+          "pdf_url": "https://arxiv.org/pdf/2609.10629",
+          "published_at": "2026-09-09T05:44:59Z",
+          "source": "arxiv",
+          "title": "Automating Quadratic Unconstrained Binary Optimization (QUBO) Formulation Generation from Natural Language",
+          "updated_at": "2026-09-09T05:44:59Z",
+          "url": "https://arxiv.org/abs/2609.10629",
+          "version": 1
+        },
+        "rank": 7,
+        "score": {
+          "base_score": 0.6121134160718972,
+          "exploration": 0.8573599390558461,
+          "matched_terms": [
+            "combinatorial optimization",
+            "multi-agent"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.6314546866282735,
+          "topic": 0.5365169036318042
+        }
+      },
+      "tier": "deep_read"
+    },
+    "arxiv:2609.11452:v1": {
+      "analysis": {
+        "analysis": "作者通过实例级性能分析识别父代启发式的特定弱点，结合路径证据、求解器行为和程序上下文来定义有界修复目标，并采用匹配的父子评估来验证每次干预的故障恢复和附带退化。材料未进一步说明具体的分解、下界或图表示等分析技术。",
+        "challenges": [
+          "聚合评估掩盖实例级反复失败",
+          "在有界修复目标下准确定位父代特定弱点",
+          "在修复失败的同时避免对已表现良好行为的附带退化",
+          "跨不同启发式范式（构造性搜索、引导局部搜索、蚁群优化）的通用性验证"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "现有基于大语言模型的自动启发式设计方法可能因聚合评估而掩盖特定实例结构上的反复失败",
+            "location": "abstract",
+            "quote": "Recent large language model (LLM)-based automated heuristic design methods can generate effective routing rules, but aggregate evaluation may mask recurrent failures on particular instance structures."
+          },
+          {
+            "claim": "RouteRepair从实例级性能诊断父代特定弱点，并定向修改相应组件以保护已表现良好的行为",
+            "location": "abstract",
+            "quote": "RouteRepair, which diagnoses parent-specific weaknesses from instance-level performance and applies targeted modifications to the corresponding heuristic components while protecting behavior that already performs well."
+          },
+          {
+            "claim": "修复目标通过路径证据、求解器行为和程序上下文定义，并通过匹配的父子评估验证故障恢复与附带退化",
+            "location": "abstract",
+            "quote": "Routing evidence, solver behavior, and program context are combined to define bounded repair objectives, and each intervention is validated through matched parent-child evaluation of failure recovery and collateral degradation."
+          },
+          {
+            "claim": "实验覆盖TSP和CVRP上的构造性搜索、引导局部搜索和蚁群优化",
+            "location": "abstract",
+            "quote": "Experiments on the traveling salesman problem (TSP) and capacitated vehicle routing problem (CVRP) span constructive search, guided local search, and ant colony optimization."
+          },
+          {
+            "claim": "RouteRepair-GLS将TSP平均最优性差距从1.7476%降至0.7587%",
+            "location": "abstract",
+            "quote": "RouteRepair-GLS reduces the mean TSP optimality gap from 1.7476% to 0.7587%"
+          },
+          {
+            "claim": "构造性CVRP启发式相对savings启发式降低平均路径成本1.91%",
+            "location": "abstract",
+            "quote": "the constructive CVRP heuristic lowers average route cost by 1.91% relative to the savings heuristic"
+          },
+          {
+            "claim": "生成的ACO先验优于匹配的手工设计先验",
+            "location": "abstract",
+            "quote": "the generated ACO priors also outperform matched hand-designed priors"
+          }
+        ],
+        "experiments": [
+          "在旅行商问题（TSP）和带容量约束的车辆路径问题（CVRP）上评估，涵盖构造性搜索、引导局部搜索和蚁群优化",
+          "RouteRepair-GLS将TSP平均最优性差距从1.7476%降低到0.7587%",
+          "构造性CVRP启发式相对于savings启发式将平均路径成本降低1.91%",
+          "生成的ACO先验优于匹配的手工设计先验",
+          "结果表明故障感知、证据约束的细化可以提升困难实例上的路径启发式，同时保持已求解良好实例的性能"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "贡献的有效性在于将修复目标限定为有界且由证据约束，通过结合路径证据、求解器行为和程序上下文来定位与父代相关的具体弱点，并利用匹配的父子评估同时衡量故障恢复与附带退化，从而避免对已有效行为造成破坏。这种基于实例级失败诊断的定向修复机制，比全局重新设计或仅靠聚合指标优化更能针对性地提升困难实例上的启发式质量。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "利用大语言模型生成路径优化启发式，并支持实例级性能评估",
+          "从实例级性能中诊断父代特定的弱点",
+          "结合路径证据、求解器行为和程序上下文定义有界修复目标",
+          "对相应启发式组件进行定向修改，同时保护已表现良好的行为",
+          "通过匹配的父子评估验证每次干预的故障恢复和附带退化"
+        ],
+        "motivation": "现有基于大语言模型的自动启发式设计方法能生成有效的路径规则，但聚合评估可能掩盖在特定实例结构上的反复失败。作者希望从实例级性能出发诊断父代启发式的特定弱点，并定向修改相应组件，从而在困难实例上实现修复，同时不损害原本求解良好的情况。",
+        "primary_topic": "基于大语言模型的自动启发式设计与实例级故障修复，应用于路径优化",
+        "relation_to_research": "论文事实：该工作将大语言模型用于自动启发式设计，并引入实例级故障诊断与定向修复，在TSP和CVRP上验证了构造性搜索、引导局部搜索和蚁群优化三类启发式。迁移设想（推测）：其失败感知、证据约束的修复机制可迁移至生产调度中的启发式或元启发式组件调优，例如柔性作业车间或流水车间的分派规则修复，但需要将路径证据替换为调度解结构与机器/工序约束证据，并在调度基准上重新验证故障恢复与附带退化；迁移到动态扰动或多目标场景还需额外机制支持。",
+        "relevance_score": 7,
+        "setting": "研究问题为在有限计算预算下，利用大语言模型自动设计高质量路径优化启发式；决策对象是路径优化启发式程序的组件及其修改方案；目标是在困难实例上提升启发式性能，同时保护已表现良好的行为；关键约束包括有界修复目标、基于匹配的父子评估进行验证；信息假设是可获取实例级性能、路径证据、求解器行为和程序上下文；环境为静态的组合优化问题，不涉及动态扰动。",
+        "tags": [
+          "大语言模型",
+          "自动启发式设计",
+          "路径优化",
+          "故障诊断",
+          "定向修复",
+          "TSP",
+          "CVRP",
+          "蚁群优化",
+          "引导局部搜索"
+        ],
+        "title_zh": "RouteRepair：基于大语言模型的路径优化自动启发式设计中实例级故障诊断与定向修复",
+        "uncertainty": "仅依据标题和摘要进行分析，未提供全文。方法的具体网络结构、状态动作定义、训练细节、实验规模、基线公平性、计算预算和消融实验均不明确，因此对方法机制和实验严谨性的判断存在不确定性。",
+        "why_recommended": "该论文涉及大语言模型驱动的自动启发式设计及其故障诊断与修复，与AI4OR和学习辅助搜索方向相关。其实例级诊断和有界修复思路对生产调度中启发式规则的自适应改进具有参考价值，尤其是如何在保护已有良好性能的前提下针对特定实例结构进行修复，以及通过匹配评估控制附带退化。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-11T09:53:01.375200+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2609.11452v1",
+        "status": "html_unavailable"
+      },
+      "final_score": 0.6866165481287843,
+      "provenance": {
+        "analyzed_at": "2026-09-11T01:54:07.146517Z",
+        "input_hash": "3000ab2355f4d76bc64532ef2ad711c1908fa266d9a6a9b94109c9b30b544124",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Efficient routing optimization is essential to freight transportation, urban logistics, and shared mobility, where high-quality heuristics are often required under limited computational budgets. Recent large language model (LLM)-based automated heuristic design methods can generate effective routing rules, but aggregate evaluation may mask recurrent failures on particular instance structures. To address this limitation, this study develops RouteRepair, which diagnoses parent-specific weaknesses from instance-level performance and applies targeted modifications to the corresponding heuristic components while protecting behavior that already performs well. Routing evidence, solver behavior, and program context are combined to define bounded repair objectives, and each intervention is validated through matched parent-child evaluation of failure recovery and collateral degradation. Experiments on the traveling salesman problem (TSP) and capacitated vehicle routing problem (CVRP) span constructive search, guided local search, and ant colony optimization. RouteRepair-GLS reduces the mean TSP optimality gap from 1.7476% to 0.7587%, while the constructive CVRP heuristic lowers average route cost by 1.91% relative to the savings heuristic; the generated ACO priors also outperform matched hand-designed priors. These results show that failure-aware, evidence-constrained refinement can improve routing heuristics on difficult instances while preserving performance on cases they already solve well.",
+          "authors": [
+            "Binghao Ji",
+            "Di Huang",
+            "Jiahui Fang",
+            "Zhiyuan Liu"
+          ],
+          "canonical_id": "2609.11452",
+          "categories": [
+            "cs.AI"
+          ],
+          "comment": "22 pages, 13 figures, 11 tables",
+          "pdf_url": "https://arxiv.org/pdf/2609.11452",
+          "published_at": "2026-09-10T12:21:18Z",
+          "source": "arxiv",
+          "title": "RouteRepair: Instance-Level Failure Diagnosis and Targeted Repair in LLM-Based Automated Heuristic Design for Routing Optimization",
+          "updated_at": "2026-09-10T12:21:18Z",
+          "url": "https://arxiv.org/abs/2609.11452",
+          "version": 1
+        },
+        "rank": 4,
+        "score": {
+          "base_score": 0.675666451143244,
+          "exploration": 0.26729960367630407,
+          "matched_terms": [
+            "vehicle routing",
+            "traveling salesman",
+            "large language model",
+            "local search"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.8685552168558429,
+          "topic": 0.7372316173587699
+        }
+      },
+      "tier": "browse"
+    },
+    "arxiv:2609.11455:v1": {
+      "analysis": {
+        "analysis": "材料未说明作者具体如何分析问题结构（例如是否使用分解、下界、图表示或对偶信息），仅从摘要可知作者识别出作业调度与BESS管理之间的复杂相互依赖，并据此设计两种数学启发式算法变体来协调两类决策。",
+        "challenges": [
+          "作业调度与BESS管理决策之间的复杂相互依赖，导致问题结构显著复杂化",
+          "在TOU电价下，充电与放电时机需要与作业加工时段精确配合，否则无法有效削峰填谷",
+          "需要在固定时间范围内同时满足生产与储能的多重约束，保证解的可行性",
+          "设计高效算法以在合理时间内获得高质量解，避免耦合带来的组合爆炸"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文研究在分时电价下，单机调度与电池储能系统协同以最小化能耗成本的问题",
+            "location": "abstract",
+            "quote": "In this work, we study the problem of minimizing the energy cost of executing a set of jobs on a single machine within a fixed time horizon, where electricity prices follow a Time-of-Use (TOU) tariff. In addition, we consider the presence of a BESS that can be charged from the grid and discharged during high-price periods to reduce overall energy costs."
+          },
+          {
+            "claim": "作者提出并分析两种数学启发式算法变体来协调生产调度与BESS使用决策",
+            "location": "abstract",
+            "quote": "To efficiently address this problem, we propose and analyze two matheuristic algorithm variants designed to effectively coordinate production scheduling and BESS usage decisions."
+          },
+          {
+            "claim": "作业调度与BESS管理之间引入复杂相互依赖，显著增加问题结构复杂度",
+            "location": "abstract",
+            "quote": "however, incorporating such systems introduces complex interdependencies between job scheduling and BESS management decisions, significantly complicating the problem structure."
+          },
+          {
+            "claim": "研究动机是降低运营成本与碳排放，并使生产活动与电价对齐",
+            "location": "abstract",
+            "quote": "As industries increasingly aim to reduce operational costs and carbon emissions, aligning production activities with electricity tariffs is increasingly important."
+          }
+        ],
+        "experiments": [
+          "摘要未提供实验设置、基线对比、实例规模、约束可行性、解质量、运行时间或训练开销等任何具体结果"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "该工作的核心洞察在于：作业调度与BESS充放电决策之间存在强烈的相互依赖，单独优化任一子问题都无法得到全局最优成本；通过设计数学启发式（matheuristic）来协调这两类决策，可以在可接受的计算代价下有效探索耦合解空间，从而降低总能耗成本。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "针对固定时间范围内单机调度与BESS充放电协同问题，建立以最小化购电成本为目标的优化模型（摘要未给出具体数学形式）",
+          "提出两种数学启发式算法变体，用于有效协调生产调度与BESS使用决策",
+          "对两种算法变体进行分析，以处理作业调度与储能管理之间的复杂耦合"
+        ],
+        "motivation": "制造业面临降低运营成本与碳排放的压力，将生产活动与电价对齐变得重要；引入电池储能可进一步降低购电成本，但同时也使作业调度与BESS管理之间产生复杂耦合，显著增加问题结构复杂度，因此需要高效求解算法。",
+        "primary_topic": "能耗感知单机调度与电池储能协同优化",
+        "relation_to_research": "该论文直接研究能耗感知的生产调度问题，与智能优化和生产调度领域中的能效调度、多目标约束优化方向相关。其方法为数学启发式，而非神经网络或强化学习，因此与AI4OR中的学习辅助搜索、进化算法与数学规划结合等主题存在潜在关联：matheuristic的框架可能为后续将学习方法嵌入调度与储能协同决策提供结构基础（推测）。但论文未涉及图神经网络、强化学习或多智能体，迁移到柔性作业车间、流水车间或分布式制造等场景需要额外扩展问题模型与算法设计（推测）。",
+        "relevance_score": 6,
+        "setting": "研究在固定时间范围内、分时电价（TOU）下，对一组作业在单台机器上进行调度，同时管理电池储能系统（BESS）的充放电决策，使总购电成本最小。决策对象包括作业的加工顺序/时间安排以及BESS在各时段的充电与放电行为；关键约束涉及单机加工能力、固定horizon、TOU电价结构以及BESS的充放电物理限制（如容量、功率约束，但摘要未给出具体约束形式）；信息假设（电价、作业参数、负荷是否已知或动态）材料未说明；环境为静态还是动态材料未说明。",
+        "tags": [
+          "能耗感知调度",
+          "单机调度",
+          "电池储能系统",
+          "分时电价",
+          "数学启发式算法",
+          "生产调度与能源协同"
+        ],
+        "title_zh": "面向电池储能的能耗感知单机调度高效算法",
+        "uncertainty": "仅依据标题与摘要，未提供全文，因此无法确认问题的具体数学模型、约束形式、算法细节、实验设计、基线选择、实例规模、求解质量与运行时间，也无法判断作者是否使用了任何学习或智能优化组件。相关性评分主要基于问题领域（能耗感知调度+储能协同）与生产调度方向的直接关联，但方法本身为数学启发式，与神经网络/强化学习辅助求解的关联为推测，故评分存在不确定性。",
+        "why_recommended": "对关注能耗感知生产调度、生产与能源协同优化以及数学启发式设计的研究者具有参考价值：该问题刻画了调度与储能管理之间的耦合结构，是生产调度向能源维度扩展的一个具体实例；其matheuristic求解思路可能为学习辅助搜索或智能优化方法在该类耦合问题上的应用提供问题背景和算法设计参照。但需注意，由于仅基于摘要，无法评估其算法机制细节、求解质量和计算预算公平性，建议获取全文后再判断其可迁移性。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-11T09:53:01.375200+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2609.11455v1",
+        "status": "not_found"
+      },
+      "final_score": 0.5782877990025491,
+      "provenance": {
+        "analyzed_at": "2026-09-11T01:54:48.561035Z",
+        "input_hash": "d109f57c29e4797af9bdebc9d9f8c305ebd333b9af1e7e510806baea8f1bbd6c",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Energy-aware scheduling has become a central challenge in modern manufacturing environments. As industries increasingly aim to reduce operational costs and carbon emissions, aligning production activities with electricity tariffs is increasingly important. The integration of battery energy storage system (BESS) further enhances the potential to reduce energy purchase costs; however, incorporating such systems introduces complex interdependencies between job scheduling and BESS management decisions, significantly complicating the problem structure.\\\\In this work, we study the problem of minimizing the energy cost of executing a set of jobs on a single machine within a fixed time horizon, where electricity prices follow a Time-of-Use (TOU) tariff. In addition, we consider the presence of a BESS that can be charged from the grid and discharged during high-price periods to reduce overall energy costs. To efficiently address this problem, we propose and analyze two matheuristic algorithm variants designed to effectively coordinate production scheduling and BESS usage decisions.",
+          "authors": [
+            "Luca Forte",
+            "Stijn De Vuyst",
+            "Pieter Leyman"
+          ],
+          "canonical_id": "2609.11455",
+          "categories": [
+            "math.OC"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2609.11455",
+          "published_at": "2026-09-10T12:26:48Z",
+          "source": "arxiv",
+          "title": "Efficient Algorithms for Energy-Aware Single-Machine Scheduling with Battery Storage",
+          "updated_at": "2026-09-10T12:26:48Z",
+          "url": "https://arxiv.org/abs/2609.11455",
+          "version": 1
+        },
+        "rank": 11,
+        "score": {
+          "base_score": 0.5605232709137256,
+          "exploration": 0.8132112506275516,
+          "matched_terms": [
+            "production scheduling"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.8693849625381692,
+          "topic": 0.4000805076742199
+        }
+      },
+      "tier": "browse"
+    },
+    "arxiv:2609.11636:v1": {
+      "analysis": {
+        "analysis": "论文将动态优化形式化为在累积自然语言修改下的优化问题：每一轮从请求与输入表出发，后续修改定义时刻t的可行集与目标向量；单目标要求输出一个可行且目标值小的方案，多目标要求输出互不支配的可行方案集。作者通过维护可执行状态、事件记录与候选解进行分解式处理，并将语言式问题构建与数学规划、进化搜索结合，用固定求解器执行并由隐藏评测器离线评分比较。",
+        "challenges": [
+          "自然语言修改可能指向多个早期实体或遗漏约束，需澄清消歧",
+          "修改后要保证生成的优化程序可执行且满足硬约束",
+          "在有限搜索预算与延迟下决定复用旧候选解还是重新初始化",
+          "多目标动态修改下维持Pareto解集的多样性与非支配性",
+          "生成代码运行在应用进程内带来隔离与安全风险"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文提出MAPLE，一个通过连续自然语言请求维护优化问题的智能体，结合语言式问题构建与数学规划、进化搜索。",
+            "location": "abstract",
+            "quote": "We introduce MAPLE (Memory-Augmented Planning with Language and Evolution), an agent for maintaining optimization problems through successive natural-language requests. MAPLE combines language-based problem construction with mathematical programming and evolutionary search."
+          },
+          {
+            "claim": "论文提出NLDO基准，包含15条轨迹与180次更新，覆盖选择、排班、人员排班、路径规划与云资源放置。",
+            "location": "abstract",
+            "quote": "We introduce NLDO, a benchmark of 15 trajectories and 180 updates spanning selection, scheduling, rostering, routing, and cloud-resource placement."
+          },
+          {
+            "claim": "主评估中MAPLE完成全部轨迹，在线标量质量为0.951，Pareto超体积比为0.875。",
+            "location": "abstract",
+            "quote": "In the main evaluation, MAPLE completes all trajectories and achieves online scalar quality of 0.951 and a Pareto hypervolume ratio of 0.875."
+          },
+          {
+            "claim": "MAPLE保留优化程序、已接受方案、早期更新与候选解以供后续请求使用。",
+            "location": "abstract",
+            "quote": "It retains the optimization program, accepted plans, earlier updates, and candidate solutions for subsequent requests."
+          },
+          {
+            "claim": "MAPLE依赖固定的决策类型、求解器路由与重启动作目录。",
+            "location": "supplied_full_text",
+            "quote": "MAPLE relies on a fixed catalog of decision types, solver routes, and restart actions."
+          }
+        ],
+        "experiments": [
+          "提出NLDO基准，包含15条轨迹与180次更新，覆盖选择、排班、人员排班、路径规划与云资源放置",
+          "主评估中MAPLE完成全部轨迹，在线标量质量达到0.951，Pareto超体积比达到0.875",
+          "与ReAct、Persistent ReAct、ORLM、OptiMUS、OR-LLM-Agent、OptimAI等比较，使用DeepSeek-V4-Pro（Preview），API ID为deepseek-v4-pro",
+          "受控比较表明维护可执行状态可提升更新有效性，并能在大幅修改后保留有用搜索信息",
+          "控制实验显示TSS降低无效输出，某些历史请求需要同时使用更新记录与已接受方案",
+          "在破坏性路径变更后全新初始化有帮助，修复后的候选解在重命名与任务添加控制中仍然有用"
+        ],
+        "first_affiliation": "Harbin Institute of Technology, Shenzhen, China",
+        "insight": "论文的核心洞察在于：把自然语言修改后的优化问题视为需要持续维护的可执行状态，而不仅是每次重新生成模型。通过保留可执行优化程序、已接受方案、历史修改记录与候选解集合，后续修改可以在已有数值搜索状态上继续，从而在频繁修改下保持更新的有效性与搜索信息的连续性。",
+        "limitations": [
+          "MAPLE依赖固定的决策类型、求解器路由与重启动作目录，需要新决策类型或数值算子的任务需要运行时扩展",
+          "类型化算子保留表示成员资格，但可行性仍取决于生成的评估函数",
+          "LSM将参考锚定在保留事件与已接受结果上，当请求可能指代多个早期实体或约束未说明时需要澄清",
+          "语义重启门依赖模型对更新的解释",
+          "进化路径在有限预算内优化，修复保留候选会在搜索前增加工作量，复用与全新初始化的选择还取决于可用延迟",
+          "当前实现在应用进程内运行生成的Python函数，实际使用需要更强的文件、导入、凭证和网络隔离",
+          "MAPLE面向批处理或人工监督的再优化，高影响决策应支持检查、人工批准与回滚"
+        ],
+        "method": [
+          "MAPLE把优化程序、已接受输出、输入表与候选解组成状态 S_t=(D_t,W_t,A_t,P_t)，并保留早期修改事件记录 E_t",
+          "语言侧根据自然语言请求构建与修订优化程序，固定求解器执行并校验必需输出字段与结构，失败则拒绝修订并保留先前状态",
+          "修改通过后提交修订后的数据、工作台、已接受输出与搜索状态，并追加已接受事件",
+          "搜索侧使用NSGA-II等既定求解器，在候选复用、种群修复、迁移与初始化之间选择重启策略",
+          "重启选择读取公开历史与变更摘要，搜索使用工作台评估器；隐藏评分与参考解仅离线使用",
+          "主比较中，一条模型输出序列提供优化程序与重启选择，数值搜索用十个随机种子重复，每个搜索200个候选、最多200代，工作台修复上限B=3"
+        ],
+        "motivation": "领域从业者理解自身业务约束，但可能缺乏运筹优化专业知识或专门支持；基于大语言模型的优化智能体虽然能把自然语言需求转化为模型或求解器程序，但真实运营是动态的，需求、资源和优先级不断变化，需要更新数据、约束和目标。以孤立请求为中心的方法难以为保留既有决策并复用有用搜索结果的快速适应提供支持。",
+        "primary_topic": "基于大语言模型的优化问题持续维护与动态重优化",
+        "relation_to_research": "论文直接位于AI4OR与大语言模型优化智能体方向，与学习辅助搜索和多目标动态优化相关。其记忆增强的可执行状态维护、候选解复用与重启策略对生产调度中的动态扰动重优化具有明确的迁移潜力；但要迁移到柔性作业车间、流水车间或生产运输协同，需要把决策类型目录、领域约束校验与生成式建模模板扩展到相应问题（推测），并重新验证在有限计算预算下的可行性维持与解质量。",
+        "relevance_score": 7,
+        "setting": "研究面向不具备运筹优化专业背景的领域从业者，让智能体把自然语言需求翻译为可执行的优化模型或求解器程序，并在后续连续的自然语言修改请求下持续维护该优化问题。决策对象是优化程序、已接受方案、历史修改记录与候选解集合；目标是在多目标或单目标情形下输出可行且质量较高的方案或Pareto非支配解集；关键约束包括硬约束、目标向量、可行性校验以及有限搜索预算；信息假设是智能体可获得初始请求、公开数据表、累积的公开修改与公开验证反馈，但隐藏评测器与参考解仅离线使用；环境为动态环境，需求、资源与优先级会随请求序列变化。",
+        "tags": [
+          "LLM优化智能体",
+          "记忆增强规划",
+          "进化搜索",
+          "数学规划",
+          "动态优化",
+          "多目标优化",
+          "自然语言建模"
+        ],
+        "title_zh": "MAPLE：结合语言与进化搜索的记忆增强规划",
+        "uncertainty": "论文提供全文节选，部分实验细节、基线实现与消融数据可能未完整呈现；对迁移到具体车间调度问题的可行性判断基于方法结构相似性，未经原文验证。",
+        "why_recommended": "该工作把大语言模型优化智能体从单次建模推进到连续修改下的可执行状态维护，系统比较了记忆、已接受方案与候选解复用对更新有效性的影响，并给出动态多目标任务基准NLDO与公平的模型执行与搜索预算设定，对关注动态扰动重优化、学习辅助搜索与多目标约束优化的研究者具有方法迁移和实验设计参考价值。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-11T09:53:01.375200+08:00",
+        "figures": [
+          {
+            "caption": "MAPLE maintains plans through successive requests. The routing example shows problem revision, memory of earlier decisions, and reuse of search results. The tables compare capabilities and performance. An asterisk marks adapted baselines.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2609.11636/v1/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2609.11636v1/figure01_overview.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2609.11636v1#S0.F1"
+          },
+          {
+            "caption": "Constructing the initial state. The model builds W 0 W_{0} from D 0 D_{0} ; TSS and NSGA-II produce P 0 P_{0} and A 0 A_{0} . Dashed teal marks model-authored code; solid blue-gray marks fixed execution.",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2609.11636/v1/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2609.11636v1/figure02_initialization.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2609.11636v1#S3.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2609.11636v1",
+        "status": "available"
+      },
+      "final_score": 0.6237909521853726,
+      "provenance": {
+        "analyzed_at": "2026-09-11T01:54:41.946228Z",
+        "input_hash": "f6f8fe221b6a26e5cd648d43fe3fe5ca53024b1bc527c693ae17dc4be2644eb1",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Domain practitioners understand their business constraints but may lack operations-research expertise or dedicated support. LLM-based optimization agents translate natural-language requirements into models or solver programs that established optimization tools can execute. This progress makes optimization more accessible, but real-world operations are dynamic: changing demand, resources, and priorities require updates to data, constraints, and objectives. Methods centered on isolated requests offer limited support for rapid adaptation that preserves earlier decisions and reuses useful search results. We introduce MAPLE (Memory-Augmented Planning with Language and Evolution), an agent for maintaining optimization problems through successive natural-language requests. MAPLE combines language-based problem construction with mathematical programming and evolutionary search. It retains the optimization program, accepted plans, earlier updates, and candidate solutions for subsequent requests. We introduce NLDO, a benchmark of 15 trajectories and 180 updates spanning selection, scheduling, rostering, routing, and cloud-resource placement. In the main evaluation, MAPLE completes all trajectories and achieves online scalar quality of 0.951 and a Pareto hypervolume ratio of 0.875. Controlled comparisons further show that maintaining executable state improves update validity and can preserve useful search information across substantial revisions.",
+          "authors": [
+            "Kesheng Chen",
+            "Yamin Hu",
+            "Wenjian Luo"
+          ],
+          "canonical_id": "2609.11636",
+          "categories": [
+            "cs.AI"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2609.11636",
+          "published_at": "2026-09-10T14:44:50Z",
+          "source": "arxiv",
+          "title": "MAPLE: Memory-Augmented Planning with Language and Evolution",
+          "updated_at": "2026-09-10T14:44:50Z",
+          "url": "https://arxiv.org/abs/2609.11636",
+          "version": 1
+        },
+        "rank": 10,
+        "score": {
+          "base_score": 0.5614380948824957,
+          "exploration": 0.4036888725364522,
+          "matched_terms": [
+            "operations research"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.8904706493172743,
+          "topic": 0.5125
+        }
+      },
+      "tier": "deep_read"
+    },
+    "arxiv:2609.11710:v1": {
+      "analysis": {
+        "analysis": "作者将问题刻画为多年度、多目标、带周期性检查与维修坞容量约束的混合整数规划，通过目标函数中的多个竞争项显式表达飞机使用与维修之间的耦合；为应对长时域求解困难，作者采用滚动时域分解思路把多年问题拆成较短的滚动窗口求解；为处理权重设定问题，把代价函数系数调节交给贝叶斯优化自动完成；并进一步利用机队状态统计构造逐机权重方案，使模型优先级随机队实际状况自适应。摘要未说明是否使用下界、图表示或具体分解理论。",
+        "challenges": [
+          "多年度规划时域长导致混合整数问题计算负担大",
+          "飞机使用与维修之间存在紧密耦合的多竞争目标需要权衡",
+          "周期性检查要求与有限维修坞容量构成硬约束，容易导致不可行",
+          "真实机队初始状态非名义、检查方案复杂，模型需具备适应性",
+          "多目标代价函数系数难以人工调节，且固定权重难以适应不同机队状态"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文研究多年度军用飞机机队管理，目标是最大化长期机队可用性并处理多竞争目标、周期性检查与有限维修坞容量",
+            "location": "abstract",
+            "quote": "we propose a multi-year planning strategy that maximizes long-term fleet availability. The formulation incorporates multiple competing objectives capturing the tight coupling between aircraft usage and maintenance, while enforcing cyclic inspection requirements and limited maintenance-dock capacity."
+          },
+          {
+            "claim": "论文引入滚动时域、贝叶斯优化自动整定代价系数和逐机权重三项策略以提升实用性",
+            "location": "abstract",
+            "quote": "we introduce three complementary strategies: a receding-horizon approach to reduce computational burden, a Bayesian Optimization routine to automatically tune cost-function coefficients, and an aircraft-specific weighting scheme that adapts model priorities based on fleet-condition statistics."
+          },
+          {
+            "claim": "论文在三个贴近实际的基准场景上验证方法有效性，但摘要未给出具体数值",
+            "location": "abstract",
+            "quote": "Results on three realistic benchmark scenarios demonstrate the effectiveness of the approach."
+          }
+        ],
+        "experiments": [
+          "在三个贴近实际的基准场景上验证所提方法，摘要称结果展示了方法的有效性",
+          "摘要未给出基线方法、实例规模、约束可行性比例、解质量指标数值、运行时间、训练或调参开销、公平计算预算、泛化实验或消融实验的具体信息"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "该方法之所以有效，核心不在于某一单独模块，而在于把多年期可用性最大化问题显式建模为含多竞争目标、周期性检查与维修坞容量约束的混合整数问题，使飞机使用与维修之间的耦合在数学规划层面可被直接权衡；随后针对实际部署中的两个瓶颈分别处理：用滚动时域降低长时域求解负担，用贝叶斯优化解决多目标权重系数难以人工设定的问题，并用机队状态统计驱动的逐机权重让模型优先级随实际机队健康状况自适应，从而在保持约束可行性的同时提升长期可用性表现。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "构建多年度飞行与维修计划的混合整数优化模型，目标为最大化长期机队可用性，并在目标中纳入多个竞争项以刻画使用与维修的紧耦合",
+          "在模型中强制周期性检查要求并限制维修坞容量",
+          "引入滚动时域（receding-horizon）策略，将长时域问题分解为较短窗口以降低计算负担",
+          "引入贝叶斯优化（Bayesian Optimization）流程，自动整定代价函数系数",
+          "引入机队条件统计驱动的逐机权重方案，根据机队状态自适应调整模型优先级",
+          "摘要未给出网络输入输出、状态动作奖励、智能体分工等学习型求解要素，也未说明与求解器的具体耦合方式"
+        ],
+        "motivation": "现有飞行与维修计划策略通常假设理想化条件，难以应对真实场景中的非名义初始状态与复杂检查方案，因此需要一种能在多年度尺度上兼顾多目标、周期性检查与有限维修坞容量的规划方法，并提升实际可解性与可调性。",
+        "primary_topic": "军用飞机机队的多年期飞行与维修计划的混合整数优化",
+        "relation_to_research": "该论文属于运筹优化与生产调度相邻的维修/使用联合规划问题，其混合整数建模、滚动时域分解、贝叶斯优化自动调参和多目标权重自适应机制，与智能优化、生产调度中的多目标约束优化、滚动时域调度、学习辅助参数整定有方法层面的可迁移性。迁移到柔性作业车间、流水车间或生产运输协同等场景属于推测：需要把飞机与维修坞替换为机器/工件/运输资源，把周期性检查替换为工序或维护约束，并重新验证滚动窗口长度、权重自适应统计量与贝叶斯优化目标在离散调度问题上的有效性；论文本身未涉及神经网络、图神经网络、强化学习或多智能体智能体求解，因此不能视为 AI4OR 学习型方法的直接证据。",
+        "relevance_score": 6,
+        "setting": "面向国防领域的飞行与维修计划（Flight and Maintenance Planning）问题，决策对象是多年度跨度下军用飞机机队的飞行与维修安排，目标为最大化机队长期可用性（availability），同时处理多个相互竞争的目标以刻画飞机使用与维修之间的紧密耦合，并强制满足周期性检查要求和有限的维修坞容量约束；摘要指出真实规划常涉及非名义初始机队状态和复杂检查方案，但未说明具体机队规模、检查周期数值、优化时域长度、是否含随机性或动态扰动，亦未说明求解器与计算预算。",
+        "tags": [
+          "混合整数优化",
+          "飞机机队管理",
+          "飞行与维修计划",
+          "滚动时域",
+          "贝叶斯优化",
+          "多目标优化",
+          "定期检查约束",
+          "维修坞容量约束"
+        ],
+        "title_zh": "多年度军用飞机机队管理的混合整数优化",
+        "uncertainty": "仅依据标题与摘要，无法确认模型规模、求解器、目标函数具体形式、滚动时域窗口长度、贝叶斯优化搜索空间、逐机权重统计口径以及三个基准场景的数据来源与难度；也无法判断与神经网络、强化学习或多智能体方法的实际关联，因此相关性评分存在由 6 向 5 或 7 波动的可能。",
+        "why_recommended": "对研究智能优化与生产调度的人而言，这篇论文提供了一个结构清晰的多目标混合整数规划实例，其滚动时域降复杂度、贝叶斯优化自动整定权重、按系统状态统计自适应调整逐实体权重这三项策略，在柔性作业车间多目标调度、分布式制造维护规划或生产运输协同中具有方法借鉴价值；同时其将实际非名义状态与复杂约束纳入模型的做法，也符合对约束可行性与实际适用性的关注。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-11T09:53:01.375200+08:00",
+        "figures": [
+          {
+            "caption": "A schematic representation of the receding horizon strategy over a planning horizon T T of five years, considering an optimization horizon of 2 2 years. In this representation, MW stands for moving window.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2609.11710/v1/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2609.11710v1/MW_sketch.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2609.11710v1#S4.F1"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2609.11710v1",
+        "status": "available"
+      },
+      "final_score": 0.5663683916121122,
+      "provenance": {
+        "analyzed_at": "2026-09-11T01:54:51.263084Z",
+        "input_hash": "e6fa912fcdce7db1d3f38934f4839c8e9b316a620176de52cd19851b996a895e",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "While existing strategies for Flight and Maintenance Planning for the defense sector generally address idealized conditions, real-world planning often involve non-nominal initial fleet states and complex inspection schemes. To address these challenges, we propose a multi-year planning strategy that maximizes long-term fleet availability. The formulation incorporates multiple competing objectives capturing the tight coupling between aircraft usage and maintenance, while enforcing cyclic inspection requirements and limited maintenance-dock capacity. To enhance practical applicability, we introduce three complementary strategies: a receding-horizon approach to reduce computational burden, a Bayesian Optimization routine to automatically tune cost-function coefficients, and an aircraft-specific weighting scheme that adapts model priorities based on fleet-condition statistics. Results on three realistic benchmark scenarios demonstrate the effectiveness of the approach.",
+          "authors": [
+            "Matteo Vescovi",
+            "Raffaele Giuseppe Cestari",
+            "Roberto Valdambrini",
+            "Andrea Mercurio",
+            "Valentina Breschi",
+            "Mara Tanelli"
+          ],
+          "canonical_id": "2609.11710",
+          "categories": [
+            "eess.SY",
+            "cs.SY",
+            "math.OC"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2609.11710",
+          "published_at": "2026-09-10T15:28:29Z",
+          "source": "arxiv",
+          "title": "Mixed-integer optimization for multi-year military aircraft fleet management",
+          "updated_at": "2026-09-10T15:28:29Z",
+          "url": "https://arxiv.org/abs/2609.11710",
+          "version": 1
+        },
+        "rank": 14,
+        "score": {
+          "base_score": 0.5388516211129312,
+          "exploration": 0.05384166221713737,
+          "matched_terms": [
+            "mixed integer",
+            "mixed-integer"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.897244380882111,
+          "topic": 0.5750279637205351
         }
       },
       "tier": "browse"
     }
   },
   "schema_version": 1,
-  "updated_at": "2026-09-10T09:54:03.414461+08:00"
+  "updated_at": "2026-09-11T09:53:01.375200+08:00"
 }
