@@ -2071,6 +2071,84 @@
       "reading_scope": "abstract"
     }
   },
+  "39d6bb024bc3720c6d9291afbf4b7c336117bebf6c109c69ee0e6e2db4be0c3e": {
+    "analysis": {
+      "analysis": "材料未说明。摘要未提供作者如何利用问题结构、图表示、分解、下界或学习信号来设计求解流程，只说明采用端到端多智能体框架，并通过消融式分析识别迭代自修复为最重要组件。",
+      "challenges": [
+        "从自然语言中准确识别二值变量、约束与目标函数",
+        "把约束正确转化为QUBO惩罚项并设定合适惩罚权重",
+        "覆盖12个应用领域、100个组合优化问题的多样性与泛化",
+        "在缺乏结构化输入时处理非结构化测试用例",
+        "评估生成QUBO形式的正确性并定位错误来源"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究从自然语言自动生成QUBO形式。",
+          "location": "abstract",
+          "quote": "we propose an end-to-end multi-agent framework that automatically generates QUBO formulations from natural-language problem descriptions"
+        },
+        {
+          "claim": "论文提出包含100个组合优化问题、覆盖12个应用领域的QUBOBench。",
+          "location": "abstract",
+          "quote": "We also introduce QUBOBench, a benchmark containing 100 combinatorial optimization problems across 12 application domains"
+        },
+        {
+          "claim": "框架在QUBOBench上达到68%准确率，比直接单次调用基线高22%。",
+          "location": "abstract",
+          "quote": "our framework achieves 68% accuracy on QUBOBench, outperforming a direct single-call baseline by 22%"
+        },
+        {
+          "claim": "迭代自修复被识别为性能提升最重要的组件。",
+          "location": "abstract",
+          "quote": "Further analysis identifies iterative self-repair as the most important component contributing to improved performance."
+        }
+      ],
+      "experiments": [
+        "在QUBOBench上达到68%准确率。",
+        "相比直接单次调用基线提升22%。",
+        "进一步分析识别迭代自修复是性能提升最重要的组件。",
+        "实验未在摘要中给出实例规模、训练开销、运行时间、公平计算预算、约束可行性单独指标或泛化测试细节。"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "该工作有效性的关键在于把困难的建模任务交给多智能体协作流程，并用迭代自修复机制让生成器在发现错误后反复修正建模产物；摘要中的进一步分析表明迭代自修复是性能提升的最重要组成，说明自动建模的瓶颈更多在于模型正确性与约束编码的迭代校正，而非一次性文本到公式的生成能力。",
+      "limitations": [
+        "材料未说明。摘要未明确陈述局限。"
+      ],
+      "method": [
+        "提出端到端多智能体框架，自动从自然语言问题描述生成QUBO形式。",
+        "支持结构化或非结构化的测试用例作为输入。",
+        "框架涉及识别二值变量、约束、目标函数、惩罚项与合适惩罚权重。",
+        "引入QUBOBench，含12个应用领域、100个组合优化问题，来源包括同行评审文献、竞赛与经典NP难问题。",
+        "通过对比直接单次调用基线以及组件分析，指出迭代自修复对性能改进贡献最大。"
+      ],
+      "motivation": "QUBO是组合优化与量子/量子启发求解器的核心建模形式，但人工从自然语言描述构造QUBO需要识别变量、约束、目标、惩罚项和惩罚权重，耗时长且依赖大量领域专业知识，因此需要端到端的自动化方法。",
+      "primary_topic": "自然语言到QUBO模型的自动建模（多智能体框架）",
+      "relation_to_research": "该论文属于AI驱动运筹优化的自动建模方向，直接面向组合优化问题的自然语言到QUBO形式生成，与自动建模、大模型智能体、多智能体协作和组合优化求解器接口相关。与生产调度、柔性作业车间、分布式制造等具体调度问题的关系在摘要中未直接出现；推测其多智能体加迭代自修复的自动建模机制可迁移到生产调度问题的数学规划建模或约束编码生成，但迁移需要满足：调度问题能被表达为二值或混合整数形式、有领域约束与目标函数可被结构化描述、并且有可验证的求解器反馈用于自修复，这些均为推测，并非作者结论。",
+      "relevance_score": 7,
+      "setting": "研究问题是将自然语言描述的组合优化问题自动翻译为正确的QUBO形式，决策对象包括二值变量、约束、目标函数、惩罚项及惩罚权重的识别与构造；目标是生成可直接交给量子、混合量子-经典或量子启发式求解器的QUBO模型；关键约束在于约束须以惩罚项形式并入无约束目标，惩罚权重需合适；信息假设是输入为自然语言问题描述，测试用例可为结构化或非结构化；静态或动态环境材料未说明。",
+      "tags": [
+        "QUBO",
+        "自动建模",
+        "多智能体",
+        "组合优化",
+        "大模型智能体",
+        "基准测试"
+      ],
+      "title_zh": "从自然语言自动生成二次无约束二值优化（QUBO）建模",
+      "uncertainty": "证据仅限标题与摘要，无法确认多智能体的具体角色分工、状态动作奖励、学习或搜索与求解器的结合位置、消融实验细节、评估指标定义以及QUBOBench的问题构成。68%准确率和22%提升的单位与统计显著性未知。相关性评分为7是因为方法可直接迁移到AI4OR自动建模与智能体优化，但未直接针对生产调度或车间调度问题。",
+      "why_recommended": "该工作关注从自然语言自动生成组合优化模型，属于AI4OR中自动建模与智能体优化的前沿方向；其提出的QUBOBench、单次调用基线和迭代自修复组件分析，对研究学习辅助搜索、大模型智能体自动建模、约束编码正确性和可复现评测的研究者有参考价值。对生产调度方向，若未来扩展到调度约束与多目标建模，可作为自动建模与迭代修复机制的借鉴。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-09-12T01:59:13.404867Z",
+      "input_hash": "dbbb74ed4e6f5be1499aa590769db3aee490d28941f2d292aecd1335722b21b9",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
   "3a044949aac9f6c33473ecae73f52c72f3f8b6189313e649cc6e4841f7f90584": {
     "analysis": {
       "analysis": "作者通过分析现有OR建模LLM训练范式的三个瓶颈（监督来源、信用分配、风格失配）来定位问题，并据此提出利用模型自身rollout执行后产生的solver artifact作为无评估器稠密监督来源；具体如何利用问题结构或分解材料未说明。",
@@ -2941,6 +3019,109 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
+    }
+  },
+  "51e91cc00fa5d51631801def969750b76a7a72ecdb9cdd8a4d4b5968f6d359fe": {
+    "analysis": {
+      "analysis": "作者将问题结构化为传感器-执行器空间（SAS）、技能与适应度三部分：SAS 以集合形式定义可用传感器和执行器及其参数接口；每个技能由依赖于该技能的若干量（如距离、速度）构成的适应度函数来评估质量；知识图谱 K={E,U,P,τ} 是一个有向无环图，实体标签集合为技能、传感器与执行器的并集，边表示技能执行所需的传感器/执行器可用性以及技能之间的层级依赖。机器人据此推断（a）发展特定技能所需的感知运动能力是否已满足，以及（b）随着自身演进哪些高阶技能变得可发展。作者还借助课程学习的思想说明知识图谱的层级可以加速学习，并用物理仿真环境对学习算法与内在动机参数做系统比较。",
+      "challenges": [
+        "在 9 kB 量级的内存预算内实现知识图谱、运动学推理、学习与内在动机机制",
+        "在最小硬编码技能与最小先验知识的前提下，仍要保证技能可自主、开放式地发展",
+        "知识图谱可灵活扩展，机器人需要面对随时出现的新技能与新问题，这对内在动机与复杂行为构成挑战",
+        "仿真环境与真实机器人在物理和运动学属性上存在差异，无法保证仿真到现实无需额外调参即可直接迁移"
+      ],
+      "corresponding_authors": [
+        "Markus Kobelrausch"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究资源受限毫微机器人的自主探索、学习与适应能力，并用强化学习结合所提出的 tinyDSM 指导技能习得与适应。",
+          "location": "abstract",
+          "quote": "In this study, we investigate developmental mechanisms that enable small, resource-constrained systems, such as cm-sized millirobots, to autonomously explore, learn, and adapt their capabilities throughout their lifespans."
+        },
+        {
+          "claim": "方法强调整合内在动机与基于适应度的评估，且追求最小硬编码技能、鼓励无外部任务序列的自导向技能发展。",
+          "location": "abstract",
+          "quote": "Reinforcement learning algorithms guide the agent’s skill acquisition and adaptation through the interplay of our proposed tiny Developmental Skill Method (tinyDSM), which integrates intrinsic motivation and fitness-based assessment."
+        },
+        {
+          "claim": "方法使用层级知识图谱与运动学推理器来建模和评估简单与进阶运动相关技能。",
+          "location": "abstract",
+          "quote": "It uses a hierarchical knowledge graph and kinematic reasoners to model and evaluate simple and advanced motion-related skills."
+        },
+        {
+          "claim": "实验平台为体积 36 cm^3、搭载 Raspberry Pi Pico 32 位微控制器的毫微机器人，除摄像头系统外所有功能集成在 9 kB 中。",
+          "location": "abstract",
+          "quote": "we use a resource-constrained millirobot with a volume of\n36\ncm\n3\n36\\text{\\,}{\\mathrm{cm}}^{3}\nwith a Raspberry Pi Pico 32-bit microcontroller that integrates all described features and capabilities except the camera system in\n9\nkB\n9\\text{\\,}\\mathrm{kB}\n."
+        },
+        {
+          "claim": "机器人从最基础运动技能出发，在 15 分钟内自主从线性与角运动进展到复杂几何模式。",
+          "location": "abstract",
+          "quote": "Starting with learning the most elementary motor skills the millirobot autonomously progresses from simple linear and angular movements to complex geometric patterns within 15 minutes."
+        },
+        {
+          "claim": "仿真分析用于系统比较不同学习算法与内在动机参数。",
+          "location": "abstract",
+          "quote": "To complement the physical experiments, we perform a simulation-based analysis that enables systematic comparisons across learning algorithms and intrinsic motivation parameters."
+        },
+        {
+          "claim": "知识图谱被形式化为有向无环图，实体标签集合为技能、传感器与执行器的并集，边表示技能所需的传感器/执行器可用性以及技能层级关系。",
+          "location": "supplied_full_text",
+          "quote": "the\nKG\nis a directed acyclic graph\nK\n=\n{\nE\n,\nU\n,\nP\n,\nτ\n}\nK=\\{E,U,P,\\tau\\}\n, where\nE\nE\nis a set of entities,\nU\n⊆\n{\n(\nn\n,\nm\n)\n|\n(\nn\n,\nm\n)\n∈\nE\n×\nE\n∧\nn\n≠\nm\n}\nU\\subseteq\\{(n,m)\\,|\\,(n,m)\\in E\\times E\\land n\\neq m\\}\nis the set of directed edges and\nτ\n:\nE\n→\nP\n\\tau:E\\to P\nis a bijective function mapping labels to entities."
+        },
+        {
+          "claim": "仿真中比较三种学习算法：用于真实机器人的模拟退火、Q-learning 与均匀随机动作选择作为下界参考，且所有学习器在相同内在动机、适应度阈值和知识图谱结构下运行。",
+          "location": "supplied_full_text",
+          "quote": "We evaluated three learning algorithms:\n•\nSimulated Annealing (SA)\n- used on the real robot,\n•\nQ-learning\n- a Q-Table RL,\n•\nRandom\n- a uniform random action selection (as a lower-bound reference).\nAll learners operate under identical intrinsic motivation, fitness thresholds, and knowledge graph structures."
+        }
+      ],
+      "experiments": [
+        "真实实验平台为体积 36 cm^3 的毫微机器人，搭载 Raspberry Pi Pico 32 位微控制器，除摄像头系统外所有描述的功能与能力集成在 9 kB 内存中。",
+        "从学习最基础的运动技能开始，毫微机器人在 15 分钟内自主从简单线性与角运动进展到复杂几何模式。",
+        "仿真基于 Python 与 pygame 实现，具有与真实机器人相同的控制接口和传感器读数，但物理与运动学属性不同；作者明确说明不能保证仿真到现实无需额外微调即可直接迁移。",
+        "仿真中对三种学习算法进行比较：模拟退火（用于真实机器人）、Q-learning 和均匀随机动作选择（下界参考）；所有学习器在相同的内在动机、适应度阈值和知识图谱结构下运行。",
+        "内在动机配置分析中，每个设置用不同随机种子独立运行 N=10 次仿真。",
+        "评价指标为平均技能适应度，同时用选择熵 H(t) 和最大忽略 N_max(t) 刻画内在动机动态。"
+      ],
+      "first_affiliation": "TU Wien, Institute of Computer Technology, 1040 Vienna, Austria",
+      "insight": "该工作的有效性来自于把技能这一层抽象同时作为强化学习的学习单元、知识图谱的节点和内在动机的评估对象：机器人不需要为每个具体任务重新编程，而是通过技能间的层级依赖关系，把已获得的能力组合成更高阶技能，并以基于适应度的评估与内在动机来驱动选择。这种设计在极小资源下仍然可行，是因为知识图谱只保留技能与 SAS 之间的层级关系，推理器只做运动学层面的适配判断，从而避免了存储和计算上的高昂开销。",
+      "limitations": [
+        "仿真与真实机器人在物理和运动学属性上存在差异，作者明确表示仿真不能保证无需额外微调即可直接迁移到现实。",
+        "知识图谱可灵活扩展，机器人需要处理随时出现的新技能与新问题，这对复杂行为尤其是内在动机构成挑战；当前机器人只能推断技能与 SAS 之间的层级关系。"
+      ],
+      "method": [
+        "定义传感器-执行器空间 SAS=(S, C)：传感器读数 s_i 是传感器标识与时间到值向量的映射，执行器指令 c_j 由执行器标识与若干参数构成，例如双电机机器人中每个电机指令为 c(t,f,τ)。",
+        "为每个技能定义基于技能相关量（常为距离、速度等传感器读数）的适应度评估，实验中所有技能的适应度阈值配置为 f_threshold=0.95。",
+        "用有向无环图表示层级知识图谱：实体集合 E、边集合 U、标签集合 P=O∪S∪C，τ 将标签双射到实体；边从 SAS 指向技能表示执行该技能前需要的传感器/执行器可用性。",
+        "机器人利用知识图谱推断已满足的感知运动能力，并推断演进后可能可用的高阶技能，从而在无外部任务序列的情况下自导向发展。",
+        "将强化学习与内在动机及适应度评估结合，指导技能习得与适应；内在动机参数包括 N_init=50.0, N_limit=100.0, β=0.1, γ=0.003, p_scale=80.0, p_offset=20.0。",
+        "在真实毫微机器人上使用模拟退火（SA）作为学习算法，并在仿真中对比 Q-learning（Q-Table，学习率 α=0.011、单步更新无折扣因子、ϵ-greedy 从 1 衰减到 10^-3）与均匀随机动作选择这一下界基线。",
+        "用平均技能适应度（五个运动相关技能适应度的平均值）作为性能指标，并定义选择熵 H(t) 与最大忽略 N_max(t) 来刻画内在动机的内部动态。"
+      ],
+      "motivation": "主流机器人学习方法往往依赖大量数据、内存、时间和能量，并要求大量先验知识，难以部署在厘米级、低成本、低功耗的毫微机器人上。作者希望借鉴发展式机器人与认知架构的思想，用极少的硬编码技能和极少的先验知识，让资源极度受限的系统也能在设备端自主、开放式地发展新技能，并覆盖通用应用域。",
+      "primary_topic": "资源受限毫微机器人的技能习得与发展式强化学习",
+      "relation_to_research": "该论文与智能优化、生产调度和 AI4OR 的关系较间接。论文事实层面，它研究的是资源受限毫微机器人的技能习得与内在动机驱动的强化学习，核心要素是知识图谱、运动学推理和微小内存预算下的学习，并未涉及车间调度、多目标约束优化或数学规划与进化算法的结合。可迁移之处属于推测：其把技能组织为带层级依赖的知识图谱、并用适应度评估驱动技能选择与发展的机制，可能与生产调度中任务/工序的层级分解、课程式求解顺序设计或学习辅助搜索的技能复用存在类比，但迁移到调度问题需要重新定义状态-动作空间、适应度函数与约束可行性判据，并验证在更大规模实例与严格约束下的求解质量与公平计算预算，这些条件在本论文中均未被研究。",
+      "relevance_score": 4,
+      "setting": "论文研究的是厘米级、资源受限的毫微机器人如何在生命周期内自主探索、学习并适应运动相关技能。决策对象是机器人对技能的选择与执行，目标是使机器人从最基础的运动技能出发，自主发展出线性移动、角运动以至复杂几何轨迹等进阶技能。关键约束包括极小的内存与算力预算（除摄像头外全部功能集成于约 9 kB）、尽可能少的人工预设技能、以及由预定义知识图谱限定的技能发展空间。信息假设是机器人仅拥有由传感器-执行器空间（SAS）规定的少量传感器读数（如位置与偏航角）和执行器指令接口，初始先验知识最小化。环境方面，实验在真实毫微机器人上开展，同时使用具有相同控制接口和传感器读数的物理仿真环境进行可重复分析；材料未说明环境是否包含外部动态扰动的显式建模。",
+      "tags": [
+        "developmental robotics",
+        "skill modeling",
+        "intrinsic motivation",
+        "knowledge graph",
+        "resource-constrained learning",
+        "reinforcement learning",
+        "cognitive architecture"
+      ],
+      "title_zh": "tinyDSM：面向资源受限毫微机器人的技能建模与开发框架",
+      "uncertainty": "本文与生产调度及 AI4OR 的直接关联很弱，相关性评分基于论文聚焦资源受限机器人的技能发展式学习，而非约束决策或优化求解。此外，全文节选中缺少部分方法细节（如认知架构的完整推理流程、内在动机的具体公式、仿真与真实实验的完整技能列表与统计结果），因此对方法内部机制与实验充分性的判断存在不确定。",
+      "why_recommended": "推荐给关注极小资源预算下学习系统设计的读者作为边缘场景的对照参考。其技能层级知识图谱与适应度驱动技能选择的组合，为思考如何在严格内存与算力约束下组织自导向学习提供了具体实例；但对以柔性作业车间、流水车间、生产运输协同、多目标约束优化为核心的智能优化研究者而言，本文与调度和运筹优化的关联较弱，实用迁移价值有限。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-09-12T01:59:19.531054Z",
+      "input_hash": "b16cf7ab72845e47b23def7c888d44b4606a6ab2a9eb45455bed6d54b32442d1",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
     }
   },
   "54021300a4820e56acf15ce7cf5c2f21c166a7dc315ed2736c5b952a7932acb4": {
@@ -7893,6 +8074,91 @@
       "reading_scope": "abstract"
     }
   },
+  "ca19bf2477a66ac8ba895fd4f067e55436804f86ab7bd404dbb965f0ba4a3f93": {
+    "analysis": {
+      "analysis": "材料未说明作者如何具体分析问题结构、分解或推导下界。从摘要可推断，作者通过将优化问题构造为可执行程序并保留历史状态来分析动态维护需求，并引入NLDO基准来评估连续更新场景下的表现。",
+      "challenges": [
+        "如何在连续自然语言请求中维护优化程序的可执行性和一致性",
+        "如何保留并复用早先的决策和有用搜索信息",
+        "如何将语言构建、数学规划与进化搜索有效结合",
+        "如何在动态变化的需求下保持更新有效性"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究的是通过连续自然语言请求维护优化问题的智能体",
+          "location": "abstract",
+          "quote": "We introduce MAPLE (Memory-Augmented Planning with Language and Evolution), an agent for maintaining optimization problems through successive natural-language requests."
+        },
+        {
+          "claim": "MAPLE结合了语言构建、数学规划和进化搜索",
+          "location": "abstract",
+          "quote": "MAPLE combines language-based problem construction with mathematical programming and evolutionary search."
+        },
+        {
+          "claim": "MAPLE保留优化程序、已接受方案、先前更新和候选解供后续请求使用",
+          "location": "abstract",
+          "quote": "It retains the optimization program, accepted plans, earlier updates, and candidate solutions for subsequent requests."
+        },
+        {
+          "claim": "NLDO基准包含15条轨迹和180次更新，覆盖选择、调度、排班、路径和云资源放置",
+          "location": "abstract",
+          "quote": "We introduce NLDO, a benchmark of 15 trajectories and 180 updates spanning selection, scheduling, rostering, routing, and cloud-resource placement."
+        },
+        {
+          "claim": "主评估中MAPLE完成所有轨迹，在线标量质量0.951，Pareto超体积比0.875",
+          "location": "abstract",
+          "quote": "In the main evaluation, MAPLE completes all trajectories and achieves online scalar quality of 0.951 and a Pareto hypervolume ratio of 0.875."
+        },
+        {
+          "claim": "受控比较表明维护可执行状态可提升更新有效性并保留搜索信息",
+          "location": "abstract",
+          "quote": "Controlled comparisons further show that maintaining executable state improves update validity and can preserve useful search information across substantial revisions."
+        }
+      ],
+      "experiments": [
+        "引入NLDO基准，包含15条轨迹、180次更新，覆盖选择、调度、排班、路径和云资源放置等场景",
+        "主评估中MAPLE完成所有轨迹，达到在线标量质量0.951和Pareto超体积比0.875",
+        "受控比较表明，维护可执行状态可提升更新有效性，并能在较大修订中保留有用的搜索信息"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "MAPLE的核心洞察在于：将优化问题视为可执行、可积累的记忆载体，而非一次性生成的产物。通过在同一智能体内保留优化程序、已接受方案、先前更新和候选解，后续自然语言请求可以在既有可执行状态上增量修订，从而同时提升更新有效性和搜索信息复用率。这种持久化可执行状态的设计使语言构建、数学规划与进化搜索形成闭环，让动态更新不再从零开始，而是继承并演化已有解空间结构。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "基于语言的问题构建：利用大语言模型将自然语言需求转化为优化模型或求解器程序",
+        "数学规划与进化搜索结合：将程序交给数学规划求解器执行，同时使用进化搜索探索解空间",
+        "记忆增强：保留优化程序、已接受方案、先前更新记录和候选解，供后续请求使用",
+        "连续请求维护：在既有可执行状态上增量处理新的自然语言更新请求"
+      ],
+      "motivation": "领域实践者理解业务约束但可能缺乏运筹优化专业知识或专职支持。基于大语言模型的优化智能体可以将自然语言需求转化为模型或求解器程序，让优化更易获取。然而现实运营是动态的，需求、资源和优先级变化要求对数据、约束和目标进行更新。以孤立请求为中心的方法对快速适应支持有限，难以保留早先决策并复用有用的搜索结果，因此需要一种能够跨请求维护优化问题的智能体。",
+      "primary_topic": "大语言模型智能体驱动的优化问题动态维护与进化搜索",
+      "relation_to_research": "该论文直接涉及生产调度相关场景（NLDO基准涵盖调度和排班），并研究大语言模型智能体与数学规划、进化搜索的结合，属于AI4OR方向。其记忆增强的连续更新机制与动态扰动下的生产调度问题有明确关联。推测而言，若将该方法迁移到柔性作业车间或分布式制造调度，需要验证其能否处理车间特有的机器、工序、运输等复杂约束，以及进化搜索与数学规划在调度问题上的公平计算预算和约束可行性保障。",
+      "relevance_score": 8,
+      "setting": "论文研究的是如何让领域实践者在缺乏运筹优化专业知识的情况下，通过连续的自然语言请求来维护和更新优化问题。决策对象是优化问题本身，包括数据、约束和目标函数，目标是在需求、资源和优先级动态变化时快速适应，同时保留已有决策和复用有效搜索信息。关键约束是必须生成可由成熟优化工具执行的可执行程序。信息假设是用户以自然语言表达业务需求，环境是动态的，即优化问题会随一系列连续请求而不断演变。材料未说明问题规模、具体优化问题类型或实时性要求。",
+      "tags": [
+        "LLM智能体",
+        "优化建模",
+        "进化搜索",
+        "记忆增强",
+        "动态优化",
+        "数学规划"
+      ],
+      "title_zh": "MAPLE：结合语言与进化的记忆增强规划",
+      "uncertainty": "仅依据标题和摘要进行分析，未提供全文，因此方法细节、网络结构、状态动作奖励设计、基线对比、公平计算预算、约束可行性保障、消融实验和泛化能力等均无法确认。相关性评分基于摘要中明确提及的调度、排班和优化问题动态维护，但具体与柔性作业车间或流水车间的距离仍需全文验证。",
+      "why_recommended": "该工作将LLM智能体、数学规划与进化搜索结合用于动态优化问题维护，其记忆增强机制对生产调度中频繁的需求变更、资源扰动和优先级调整具有直接借鉴意义。NLDO基准涵盖调度和排班任务，其实验设计和在线质量指标可为动态调度研究提供评估参考。此外，论文关注可执行状态维护和搜索信息复用，契合学习辅助搜索与智能体优化的研究兴趣。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-09-12T01:59:31.461971Z",
+      "input_hash": "6dabcd6f3819d23da4260b6029b3f31243e8948e0c5281fee28c5035f5dc89d9",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
   "ca56288b9c3a03fd588c9ab1acba40a45ea6a078fd3cacaf10647bd455bacafc": {
     "analysis": {
       "analysis": "材料未说明作者如何分析问题结构，但从摘要可以看出作者将任务形式化为图像重建，通过对比不同预训练策略与非预训练基线，并采用定量和定性评估，进一步测试最优模型的迁移性。可能使用了图像相似度指标和专家评估。",
@@ -8322,6 +8588,83 @@
       "reading_scope": "abstract"
     }
   },
+  "d1cf2902827de6114ef6cdd5438cd29e2d6adb976afb0ce48abef96ef0d018d3": {
+    "analysis": {
+      "analysis": "作者对鲁棒稀疏均值-方差问题进行了支撑级分解，刻画了支撑限制、局部和全局极小点，推导了全局最优解非零分量的界，并证明了稀疏水平可通过正则化参数进行阈值控制；在此基础上将结构性质转化为分支定界中的下界、上界和热启动策略。",
+      "challenges": [
+        "ℓ0稀疏惩罚与椭球不确定性共同导致非凸、非光滑且NP难的优化问题",
+        "需要在最坏情况鲁棒框架下刻画局部和全局极小点结构",
+        "设计能够利用问题结构进行有效剪枝的分支定界算法",
+        "与混合整数二阶锥规划求解器进行公平计算比较"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究带ℓ0惩罚和椭球不确定性的鲁棒稀疏均值-方差投资组合问题",
+          "location": "abstract",
+          "quote": "We investigate mean-variance portfolio selection with an $\\ell_0$-penalty to promote sparsity in asset allocations. Uncertainty in the mean return vector is incorporated through an ellipsoidal uncertainty set, yielding a robust sparse optimization framework."
+        },
+        {
+          "claim": "作者刻画了局部和全局极小点结构并用于两种表述",
+          "location": "abstract",
+          "quote": "We characterize the structure of both local and global minimizers and exploit these properties in the risk minimization and return maximization formulations."
+        },
+        {
+          "claim": "作者提出了定制分支定界算法和可一次排除指数多个候选组合的剪枝规则",
+          "location": "abstract",
+          "quote": "Building on this structural insight, we develop a branch-and-bound algorithm tailored to the resulting robust sparse portfolio problems, together with a new pruning rule that can discard exponentially many candidate portfolios in a single step."
+        },
+        {
+          "claim": "作者在真实市场数据上进行了实验并与混合整数二阶锥规划求解器比较",
+          "location": "abstract",
+          "quote": "Extensive computational experiments on real market data, together with comparisons against a mixed-integer second-order cone programming solver, demonstrate the effectiveness and competitiveness of the proposed approach."
+        }
+      ],
+      "experiments": [
+        "在真实市场数据上进行大量计算实验",
+        "与混合整数二阶锥规划求解器进行比较",
+        "作者报告所提方法在较大规模实例上计算有效，且常以显著更短的运行时间产生高质量稀疏鲁棒投资组合"
+      ],
+      "first_affiliation": "Bilkent University, Department of Industrial Engineering, Ankara, Türkiye",
+      "insight": "作者通过分析鲁棒稀疏问题的局部与全局极小点的支撑结构，发现可按支撑子集进行分解，并利用这些结构性质推导出最优解的显式界和阈值性质，从而将分支定界中的剪枝建立在问题特定下界与上界之上，而非通用松弛，使得一次迭代可以排除指数多个候选投资组合。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "将鲁棒稀疏投资组合问题表述为带ℓ0惩罚的均值-方差模型，并给出风险最小化和收益最大化两种变体",
+        "引入椭球不确定性集刻画均值收益的不确定性，得到鲁棒对应问题",
+        "对问题进行支撑子集分解，分析支撑限制、局部和全局极小点的结构",
+        "推导最优解非零分量的显式界，并证明通过正则化参数的阈值性质控制稀疏水平",
+        "设计基于枚举的分支定界算法：每个节点对应一个支撑子集，维护解、下界、上界、候选资产集和已固定支撑集五元组",
+        "使用优先队列按下界排序节点，并结合问题特定界与热启动启发式",
+        "在分支定界的右节点边界计算中增加剪枝步骤，可在单次迭代中排除指数多个子问题"
+      ],
+      "motivation": "经典均值-方差模型对期望收益估计误差高度敏感，同时实际投资组合常因交易成本、流动性或监管要求限制持仓数量，因此需要同时处理参数不确定性与资产配置稀疏性，并为之设计高效精确求解算法。",
+      "primary_topic": "鲁棒稀疏均值-方差投资组合优化",
+      "relation_to_research": "该论文研究的是金融投资组合优化中的鲁棒稀疏优化与分支定界精确算法，与智能优化、生产调度、神经网络辅助求解、强化学习或智能体优化的直接关联较弱。其核心方法——利用问题结构推导界并嵌入分支定界剪枝——在方法论上可能对组合优化问题（包括带复杂约束的生产调度）的结构化精确求解有借鉴意义；若迁移到生产调度，需要将稀疏资产选择结构替换为调度中的机器分配或工序排序结构，并重新推导对应的支撑分解与下界，这属于推测。",
+      "relevance_score": 3,
+      "setting": "研究在均值-方差投资组合选择中同时引入资产配置的ℓ0稀疏惩罚与均值收益向量的椭球不确定性集，形成鲁棒稀疏优化问题；决策对象为资产权重向量，目标包括风险最小化和收益最大化两种变体，约束涉及椭球不确定性下的最坏情况收益以及方差预算，信息假设为均值收益位于给定椭球不确定集内，静态单期环境。",
+      "tags": [
+        "鲁棒优化",
+        "稀疏投资组合",
+        "分支定界",
+        "椭球不确定性",
+        "混合整数二阶锥规划"
+      ],
+      "title_zh": "椭球不确定性下稀疏正则化与鲁棒均值-方差投资组合选择",
+      "uncertainty": "论文属于金融投资组合优化领域，与生产调度、神经网络辅助求解、强化学习等当前研究方向仅有方法层面的间接联系；是否值得深入阅读取决于读者对分支定界和鲁棒优化结构分析的兴趣。",
+      "why_recommended": "虽然与当前关注的生产调度和AI4OR主线关联有限，但该文展示了如何从问题结构出发设计精确分支定界算法与新型剪枝规则，这种‘结构分析—界推导—算法设计’的研究范式对从事组合优化精确求解的研究者具有方法论参考价值。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-09-12T01:59:05.717153Z",
+      "input_hash": "9ebe0ec5749b0efd9a2bff820db30f40ddd94222248a2d43cb35c087b771b388",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "d1dd392722cf57756611fd9d761cb38cc47c59348fe18bf871a0d61b01c996da": {
     "analysis": {
       "analysis": "作者从基于符号的联邦学习通信瓶颈与隐私泄露风险出发，指出安全聚合需与符号传输兼容；随后将问题转化为安全计算多数投票多项式，并利用多项式结构的指数约减性质降低有效次数；同时利用MDS码的解码能力来同时应对掉队与恶意行为。摘要未说明更详细的问题分解、下界推导或收敛性分析。",
@@ -8622,6 +8965,108 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
+    }
+  },
+  "d70d99bcc00b8a48ab521c006d1318847f2ff0312c5932ad5aaeeb833c3803d4": {
+    "analysis": {
+      "analysis": "作者将 FMP 建模为多目标混合整数问题，目标为最大化长期机队可用性，并显式刻画飞机使用与维修之间的紧密耦合；把循环检查需求与维修坞容量作为硬约束纳入模型。针对计算复杂度，作者利用问题的时间结构采用滚动时域分解，仅优化长度为 L 的预测窗并以当前解作为下一段初始化；针对多目标权重，作者把权重调节视为嵌套优化外层，用贝叶斯优化构建目标函数 J_tune(W) 的概率代理模型并迭代选择新候选权重；针对不均衡初始状态，作者依据各机与其中队目标 sc/aling 的距离以及距下次维修的距离等统计量，将权重 w1、w2、w3 改为飞机特定形式。",
+      "challenges": [
+        "混合整数多目标 FMP 问题复杂度超出所用硬件一次性求解 5 年规划的能力",
+        "多个相互竞争目标（可用性、使用与维修耦合）导致代价函数系数难以人工设定",
+        "非名义/临界初始机队状态下，新飞机被统一处理会同时趋近大检查，形成长期检查排队",
+        "循环检查要求与有限维修坞容量（仅部分维修坞可做大检查）带来的产能与可行性约束",
+        "需要保证年度计划之间平滑过渡而非短视逐年规划"
+      ],
+      "corresponding_authors": [
+        "Matteo Vescovi"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究的是多年军用机队飞行与维修计划的混合整数优化问题，目标为最大化长期机队可用性",
+          "location": "abstract",
+          "quote": "we propose a multi-year planning strategy that maximizes long-term fleet availability"
+        },
+        {
+          "claim": "模型包含多个相互竞争目标，并强制循环检查要求和有限维修坞容量",
+          "location": "abstract",
+          "quote": "The formulation incorporates multiple competing objectives capturing the tight coupling between aircraft usage and maintenance, while enforcing cyclic inspection requirements and limited maintenance-dock capacity."
+        },
+        {
+          "claim": "作者提出三种增强实用性的策略：滚动时域、贝叶斯优化自动调参、飞机特定加权",
+          "location": "abstract",
+          "quote": "we introduce three complementary strategies: a receding-horizon approach to reduce computational burden, a Bayesian Optimization routine to automatically tune cost-function coefficients, and an aircraft-specific weighting scheme that adapts model priorities based on fleet-condition statistics"
+        },
+        {
+          "claim": "由于 5 年一次性求解超出硬件能力，实验采用逐年求解或固定 L=24 的滚动时域",
+          "location": "supplied_full_text",
+          "quote": "Since the complexity of the planning problem exceeds what can be handled with the employed device, a one-shot solution for all 5 years is, however, not practically computable with our hardware."
+        },
+        {
+          "claim": "贝叶斯优化用于求解嵌套问题的外层，通过代理模型与采集函数迭代选择权重",
+          "location": "supplied_full_text",
+          "quote": "BO is used to tackle the outer level of the nested problem"
+        },
+        {
+          "claim": "飞机特定加权方案针对不均衡初始机队状态，按初始状态统计调整惩罚权重",
+          "location": "supplied_full_text",
+          "quote": "When the initial conditions of the fleet are particularly critical, we propose to further manipulate the weights of the loss in (\n22q\n), by assigning the penalties for the different aircraft based on some statistics related to the initial condition."
+        },
+        {
+          "claim": "作者承认当前方案假设循环检查框架，可能不反映所有军用机队运行",
+          "location": "supplied_full_text",
+          "quote": "Currently, it assumes a cyclic inspection framework, which may not reflect all military fleet operations."
+        },
+        {
+          "claim": "基准机队规模为 25 架飞机、分为 2 个中队，5 个维修坞中 2 个可执行大检查",
+          "location": "supplied_full_text",
+          "quote": "we consider three benchmark fleet, all composed of\nN\n=\n25\nN=25\naircraft organized in\nF\n=\n2\nF=2\nsquadrons, respectively made of\n20\n20\nand\n5\n5\naircraft. The fleet gets maintained in\nC\n=\n5\nC=5\ndocks, of which\nΓ\n=\n2\n\\Gamma=2\nare equipped to perform major inspections."
+        }
+      ],
+      "experiments": [
+        "在三个真实基准场景（标准机队、临界机队、新机队）上评估所提 FMP 方案，规划期为 5 年",
+        "基准机队均由 N=25 架飞机组成，分为 F=2 个中队（20 架与 5 架），在 C=5 个维修坞中维护，其中 Γ=2 个可执行大检查",
+        "因 5 年一次性求解超出所用硬件能力，实验采用两种简化求解方式：逐年的 year-by-year（以上一年 FMP 结果作为下一年初始化）与固定 L=24 的滚动时域",
+        "结果（结论部分陈述）表明滚动时域相对短视的逐年规划有明确优势，并确认方法的计算可行性；自动调参在临界初始缩放机队上优于人工选择；飞机特定加权在刚接收新机批次的基准机队上缓解了检查排队并改善机队效率",
+        "摘要/节选未给出具体数值化的解质量、运行时间、训练开销或公平计算预算等量化指标，材料未说明",
+        "消融方面仅以“是否使用层级加权”“是否使用自动调参”“滚动时域与逐年”的对比形式定性描述，未见完整量化消融表"
+      ],
+      "first_affiliation": "Dipartimento di Elettronica, Informazione e Bioingegneria, Politecnico di Milano, Via Giuseppe Ponzio, 34, Milano, 20133, Italy",
+      "insight": "核心洞察在于：多年 FMP 的困难既来自混合整数多目标模型的求解复杂度，也来自多目标权重难以人工设定以及初始机队状态不均衡。作者通过滚动时域把长周期问题分解为可计算的短预测窗（L=24，即两年预测期）以降低计算负担并保证年度计划间平滑过渡；通过贝叶斯优化在嵌套问题外层自动调节代价函数系数，减少人工调参并缓解不利初始状态；再依据机队状态统计为每架飞机定制权重，使剩余飞行小时在飞机间更均匀分布，从而避免新机同时趋近大检查造成长期排队。其有效性来自将“可计算性—权重选择—个体差异”三个实际障碍分别用分解、自动调参和自适应加权来处理，而非单纯依赖模型规模。",
+      "limitations": [
+        "当前方案假设循环检查框架，可能无法反映所有军用机队运行方式",
+        "未来工作拟扩展到非循环与依赖日历的检查，以及实际中常见的维修提前与延迟",
+        "另一方向是增强对可能扰乱飞行与维修计划的突发与随机事件的鲁棒性"
+      ],
+      "method": [
+        "将多年 FMP 表述为多目标混合整数规划，目标函数由若干分量组成（含 J4(X)、J5(E) 等），以最大化长期机队可用性并约束循环检查与维修坞容量",
+        "引入滚动时域策略：固定预测窗 L=24（两年），降低单次求解规模并保证年度计划衔接，代替一次性求解 5 年",
+        "引入贝叶斯优化外层流程（Algorithm 1）：从随机采样权重与对应损失评估出发，构建 J_tune(W) 的概率代理模型，用采集函数 α 选择新候选权重，求解 FMP 问题评估后加入数据集，直至满足收敛准则，输出最优惩罚权重 W*",
+        "引入飞机特定加权方案：按式 (28a)-(28c) 依据初始状态统计修改 w1,n、w2,n、w3,n，其中 w1,n 与未达标缩放相关的计数项关联、w2,n 随 Δn(12φ) 减小、w3,n 随 zn(12φ) 增大，w4、w5 保持不变",
+        "将定制的飞机权重代入目标函数 (29)，其中包含 w1,n(φ+1)(1-Σ h_{n,t,c}) 项、w2,n(φ+1)(x_{n,t})^2 项、w3,n(φ+1)(r(s_{n,t})a_{n,t}-z_{n,t}) 项以及 w4J4(X)、w5J5(E)"
+      ],
+      "motivation": "既有防务 FMP 策略多针对理想化条件，而现实规划常面临非名义初始机队状态与复杂检查方案，且民航 FMP 的短周期、以利润为导向的建模不适用于规划期更长、维修政策依赖不规律使用、不需要航线安排、利润非主要驱动因素的军用场景，因此需要能最大化长期机队可用性并兼顾使用-维修耦合与产能限制的多年规划方法。",
+      "primary_topic": "军用机队多年飞行与维修计划的混合整数多目标优化",
+      "relation_to_research": "该论文属于运筹优化中的混合整数计划与调度问题，与智能优化、生产调度在“多目标约束下的长周期计划—维修/产能耦合—分解求解”层面具有明确迁移价值：其滚动时域分解、贝叶斯优化自动调参、按个体状态自适应加权的三层机制，可直接类比到柔性作业车间/流水车间的长周期调度、分布式制造与生产运输协同中的多目标权重设定及个体差异处理。需要说明的是，论文本身未使用神经网络、图神经网络、强化学习或多智能体方法，其学习成分仅为替代模型驱动的贝叶斯优化；因此将其中机制迁移到学习辅助搜索或强化学习调度属于推测，需满足的条件包括：把滚动时域窗口与学习型调度器耦合、把权重自动调参推广为奖励/代价塑形、并验证在随机扰动与动态事件下的可行性与公平计算预算下的泛化性。",
+      "relevance_score": 6,
+      "setting": "论文研究防务部门的飞行与维修计划（Flight and Maintenance Planning, FMP）问题：决策对象为一支由 N=25 架飞机组成、分为 F=2 个中队（分别 20 架与 5 架）的机队，规划期为 5 年，目标是在满足循环检查要求与有限维修坞容量（C=5 个维修坞，其中 Γ=2 个可执行大检查）的前提下最大化机队长期可用性；约束包括使用与维修的紧密耦合、循环检查需求、维修坞产能上限以及各机型的剩余飞行小时（RFH）与剩余维修时间（RMT）等；信息假设为初始机队状态可能非理想（非名义状态），摘要与全文节选未说明是否考虑随机扰动或不确定性，动态扰动要素材料未说明。",
+      "tags": [
+        "混合整数规划",
+        "调度",
+        "维修计划",
+        "滚动时域",
+        "贝叶斯优化",
+        "多目标优化"
+      ],
+      "title_zh": "面向多年军用机队管理的混合整数优化",
+      "uncertainty": "判断不确定性主要来自证据范围仅为摘要与部分全文节选：实验的具体实例规模扩展、解质量与运行时间的量化对比、公平计算预算设定、消融的完整结果以及训练/调参开销均未在提供文本中给出，因此无法确认其优越性的量化幅度；此外，论文未涉及神经网络或强化学习，其与当前研究方向（如学习辅助搜索、RL 调度）的关系需要额外迁移验证，相关迁移判断已标注为推测。",
+      "why_recommended": "对关注多目标约束优化、长周期计划与调度分解、以及求解器与自动参数调节结合的研究者而言，该文提供了一个结构清晰、面向真实工业/防务约束的混合整数建模范例：其滚动时域分解与贝叶斯优化自动调参可直接类比到生产调度中的多目标权重选取和计算预算控制；其“按个体状态自适应加权”的思路对处理机队/机器/工件差异导致的排队瓶颈具有启发意义，且文中明确给出了计算可行性、逐年与滚动对比以及消融式的定性讨论，便于评估机制迁移成本与局限。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-09-12T01:59:16.839020Z",
+      "input_hash": "41b8a6d9742943c993cd45da6e3aed4c134dca912645f3e9081f41d9fc9b9a01",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
     }
   },
   "d8aa1c19e8c3947c1113fdd058dd806dd28e73ed4687f5c834604492bebf04bd": {
