@@ -1147,6 +1147,177 @@
       },
       "tier": "browse"
     },
+    "arxiv:2603.21880:v5": {
+      "analysis": {
+        "analysis": "作者沿用分支定价框架，将问题分解为高层定价（生成候选tour）和低层代价计算。关键分析在于识别出「tour代价计算」是MT-VRP-O相对于已有VRP的额外瓶颈，并据此设计惰性求值机制：只有在剪枝或加列检查无法用下界判定时才触发精确最短路径搜索。低层代价计算被建模为凸集图上的最短路径问题（SPP-GCS），并引入同时考虑目标剩余轨迹距离与障碍的启发式来加速搜索。",
+        "challenges": [
+          "在同时存在移动目标和静态障碍时，单智能体tour代价的精确计算（最短路径搜索）显著比传统VRP昂贵",
+          "需要在分支定价中维护下界与真实代价之间的一致性，以保证剪枝正确且最终获得最优解",
+          "静态障碍破坏原有连续性松弛假设，需要设计障碍感知的连续性松弛策略",
+          "在图结构中搜索最短路径时，启发式需要同时考虑目标剩余轨迹距离和障碍规避，以加速精确代价的获取"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文研究的问题为带障碍的移动目标车辆路径问题（MT-VRP-O）",
+            "location": "abstract",
+            "quote": "The Moving Target Vehicle Routing Problem with Obstacles (MT-VRP-O) seeks trajectories for several agents that collectively intercept a set of moving targets."
+          },
+          {
+            "claim": "论文提出Lazy BPRC算法，核心思想是在传统需要精确代价的位置使用廉价下界，并惰性更新为真实代价",
+            "location": "abstract",
+            "quote": "The key idea in Lazy BPRC is to use cheap-to-compute lower bounds on tour costs where costs are traditionally used, and lazily update lower bounds to true costs."
+          },
+          {
+            "claim": "精确tour代价通过在凸集图（GCS）上搜索最短路径来计算",
+            "location": "abstract",
+            "quote": "When computing a tour’s true cost is needed, we do so by searching for a shortest path on a graph of convex sets, and we introduce a new heuristic to accelerate the search."
+          },
+          {
+            "claim": "论文声明Lazy BPRC相比Non-Lazy消融最多快43倍",
+            "location": "supplied_full_text",
+            "quote": "Our results show that Lazy BPRC runs up to 43 times faster than a non-lazy ablation"
+          },
+          {
+            "claim": "论文声明Lazy BPRC相比使用忽略障碍启发式的消融最多快23倍",
+            "location": "supplied_full_text",
+            "quote": "and up to 23 times faster than an ablation using an existing obstacle-unaware heuristic"
+          },
+          {
+            "claim": "实验在无已有基线的情况下与两个消融算法对比",
+            "location": "supplied_full_text",
+            "quote": "There are no baselines from prior work for the MT-VRP-O, so we compared Lazy BPRC to two ablations."
+          },
+          {
+            "claim": "作者在结论中提出未来方向是追求有界次优解以扩展到更多目标",
+            "location": "supplied_full_text",
+            "quote": "One direction for future work is to pursue bounded-suboptimal solutions to enable scaling to more targets."
+          }
+        ],
+        "experiments": [
+          "实验在Intel i9-9820X 3.3GHz CPU（10核，关闭超线程，128GB RAM）上进行；由于已有工作没有MT-VRP-O的基线，作者将Lazy BPRC与两个消融算法对比",
+          "第一个消融为Non-Lazy BPRC：在labeling算法生成tour并通过检查后，立即计算精确代价c*(Γ)并替换原有的UB与LB，再重新执行检查",
+          "第二个消融为Ignore-Obstacles-Heuristic：将GCS搜索中作者的启发式替换为文献[10]中不考虑障碍的启发式，即将max{dist(τa,rem), h_n(t)}替换为dist(τa,rem)",
+          "实例生成基于修改文献[15]的方法以支持多智能体；每个目标有两个时间窗，需求为1，每个时间窗内速度在0.5至1 m/s之间均匀随机生成；每个实例三个智能体，最大速度v_max=4 m/s",
+          "障碍地图为方形网格，但智能体与目标在网格中的连续空间移动；GCS中的区域由未占用网格单元组合而成的矩形构成",
+          "实验1改变随机网格中的目标数量，并测试来自文献[20]的迷宫地图；在迷宫图中Non-Lazy BPRC的中位运行时间达到时间上限，因此作者用9个目标对其n_seg,tar进行了调参",
+          "作者报告Lazy BPRC相比Non-Lazy消融的运行速度最多快43倍，相比使用忽略障碍的已有启发式的消融最多快23倍",
+          "作者观察到在某些实例中Lazy BPRC有时会不如Ignore-Obstacles-Heuristic消融，说明惰性机制并非在所有情况下都占优"
+        ],
+        "first_affiliation": "Robotics Institute at Carnegie Mellon University, 5000 Forbes Ave., Pittsburgh, PA 15213",
+        "insight": "核心洞察在于：分支定价的剪枝过程并不总是需要tour的精确代价，许多候选tour最终会被丢弃，因此在传统需要精确代价的位置上先使用易于计算且可安全用于剪枝的下界，仅在必要时才「惰性」地将其更新为真实代价，可在不牺牲最优性的前提下大幅减少高成本的精确轨迹搜索调用次数；同时障碍感知的连续性松弛策略使下界在存在障碍时仍然有效。",
+        "limitations": [
+          "作者在结论中明确指出未来工作方向之一是追求有界次优解以扩展到更多目标，暗示当前精确算法在目标数量上的可扩展性受限",
+          "实验对比仅使用两个消融算法，因为作者声明已有文献中不存在针对MT-VRP-O的基线"
+        ],
+        "method": [
+          "在分支定价中，对每个候选tour先使用易计算的下界LB(Γ)，替代传统立即精确计算c*(Γ)，并进行剪枝与加列检查",
+          "当且仅当LB无法判定tour是否应被保留或丢弃时，才计算tour的真实代价c*(Γ)，并更新UB与LB后重新执行检查",
+          "精确tour代价通过求解GCS（graph of convex sets）上的最短路径问题（SPP-GCS）获得，其中环境中的无障碍单元格组合为矩形区域",
+          "引入一种新的障碍感知启发式，在GCS最短路径搜索中同时利用目标剩余轨迹距离和障碍信息，替代已有工作中忽略障碍的启发式",
+          "将已有的无目标障碍VRP中的连续性松弛扩展为障碍感知的连续性松弛，以适配MT-VRP-O中的静态障碍",
+          "在定价中的后继生成和GCS搜索中并行化计算，并对segment-to-segment及segment-start-to-segment-start的轨迹代价并行计算"
+        ],
+        "motivation": "已有分支定价框架（BPRC）可用于无移动目标的传统VRP，但在MT-VRP-O中，由于同时存在移动目标和静态障碍，逐个精确计算tour代价（单智能体访问给定目标序列的路径代价）代价高昂，导致传统分支定价在每个候选序列上都精确算代价的做法效率低下，需要一种机制来避免不必要的精确代价计算。",
+        "primary_topic": "带时间窗与障碍的移动目标车辆路径问题的精确分支定价求解",
+        "relation_to_research": "该论文研究的是带时间窗和障碍的移动目标多智能体路径规划，属于车辆路径问题的精确求解分支，与生产调度和AI4OR中的分支定价技术有方法层面的关联：惰性代价求值、下界驱动的剪枝策略以及列生成思想可迁移到调度与路径协同优化中。但该文不涉及柔性作业车间、流水车间、能效或多目标进化算法；其低层最短路径搜索和凸集图方法也与图神经网络或强化学习求解调度问题无直接联系。若要在生产调度中应用类似思路，推测需要将「tour代价」替换为调度子问题的代价评估，并设计适配调度约束的下界与惰性更新机制，这仅是迁移设想而非作者结论。",
+        "relevance_score": 6,
+        "setting": "研究多个智能体协作拦截一组移动目标的问题（MT-VRP-O），决策对象是每个智能体访问目标-时间窗配对的序列（tour）以及对应的拦截轨迹，目标是最小化总路径代价，关键约束包括：每个目标有一个或多个可访问时间窗、智能体必须避开静态障碍、满足速度上限与容量限制；假设目标轨迹在每个时间窗内为匀速分段线性且不穿过障碍，智能体与目标在同一连续空间内运动，环境为各目标与智能体同时运动的动态场景。",
+        "tags": [
+          "车辆路径问题",
+          "分支定价",
+          "移动目标",
+          "最短路径",
+          "凸集图",
+          "精确算法"
+        ],
+        "title_zh": "带障碍移动目标车辆路径问题的精确求解：惰性分支定价算法",
+        "uncertainty": "提供的全文节选缺少完整的数值结果表格、运行时间分布的详细数据以及更完整的算法伪代码，导致对实验规模（如目标数量的具体范围、时间上限具体数值）和调参细节的把握不完整；此外，没有提供与生产调度直接相关的实验，因此其迁移价值判断存在较大不确定性。",
+        "why_recommended": "对于关注精确求解框架与学习/搜索结合的研究者，该文的惰性求值与下界驱动剪枝机制提供了一种减少昂贵子问题求解调用的通用思路，可能启发在分支定价或分支切割框架中类似地设计「用廉价下界替代精确子问题求解」的策略，适用于生产调度中需要频繁评估子问题代价的场景。此外，其将GCS上的最短路径搜索与障碍感知启发式结合的方式，对多智能体协同路径规划有参考价值。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-14T10:08:56.065868+08:00",
+        "figures": [
+          {
+            "caption": "Targets move through obstacle environment. Time windows of targets are shown in bold colored lines, and each target must be intercepted in one of its time windows. Agents begin and end at depot, intercepting targets while avoiding obstacles.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2603.21880/v5/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2603.21880v5/intro_fig.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2603.21880v5#S1.F1"
+          },
+          {
+            "caption": "(a) Example tour Γ \\Gamma . (b) To compute the lower bound LB ​ ( Γ ) {\\textnormal{LB}}(\\Gamma) on c ∗ ​ ( Γ ) c^{*}(\\Gamma) , we divide each target-window visited by Γ \\Gamma into segments. A lower bound on c ∗ ​ ( Γ ) c^{*}(\\Gamma) is the cost of a trajectory τ a {\\tau_{\\textnormal{a}}} that optimally follows Γ \\Gamma subject to a relaxed continuity constraint: the arrival and departure points at a target may differ, but must lie on the same segment. LB ​ ( Γ ) {\\textnormal{LB}}(\\Gamma) lower-bounds the cost of such a discontinuous trajectory. (c) The upper bound UB ​ ( Γ ) {\\textnormal{UB}}(\\Gamma) is the cost of a trajectory that optimally follows Γ \\Gamma subject to the constraint that targets are only intercepted at segment start points.",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2603.21880/v5/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2603.21880v5/bounding_tour_cost.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2603.21880v5#S5.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2603.21880v5",
+        "status": "available"
+      },
+      "final_score": 0.461018653661246,
+      "provenance": {
+        "analyzed_at": "2026-09-14T02:10:27.577672Z",
+        "input_hash": "8500853a143fed63e1c821748b50e764513fb0630bdda64f87addcb5047bc3fc",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "The Moving Target Vehicle Routing Problem with Obstacles (MT-VRP-O) seeks trajectories for several agents that collectively intercept a set of moving targets. Each target has one or more time windows where it can be visited, and the agents must avoid static obstacles and satisfy speed and capacity constraints. Previously studied VRPs are often addressed using a framework called branch-and-price. This framework requires computing the cost for a single agent to visit a given sequence of target-time window pairings, for several candidate sequences. These sequences are called tours. Computing tour costs is more expensive in the MT-VRP-O than in previously studied VRPs due to the presence of both moving targets and static obstacles. Thus, we introduce a new exact algorithm, Lazy Branch-and-Price with Relaxed Continuity (Lazy BPRC), for the MT-VRP-O. The key idea in Lazy BPRC is to use cheap-to-compute lower bounds on tour costs where costs are traditionally used, and lazily update lower bounds to true costs. When computing a tour's true cost is needed, we do so by searching for a shortest path on a graph of convex sets, and we introduce a new heuristic to accelerate the search. We demonstrate that Lazy BPRC runs up to an order of magnitude faster than two ablations.",
+          "authors": [
+            "Anoop Bhat",
+            "Geordan Gutow",
+            "David Neiman",
+            "Surya Singh",
+            "Zhongqiang Ren",
+            "Sivakumar Rathinam",
+            "Howie Choset"
+          ],
+          "canonical_id": "2603.21880",
+          "categories": [
+            "cs.RO"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2603.21880",
+          "published_at": "2026-03-23T12:10:12Z",
+          "source": "arxiv",
+          "title": "Optimal Solutions for the Moving Target Vehicle Routing Problem with Obstacles via Lazy Branch-and-Price",
+          "updated_at": "2026-09-11T12:56:20Z",
+          "url": "https://arxiv.org/abs/2603.21880",
+          "version": 5
+        },
+        "rank": 9,
+        "score": {
+          "base_score": 0.3473066430204472,
+          "exploration": 0.2271791983519245,
+          "matched_terms": [
+            "vehicle routing"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.5285571426142465,
+          "topic": 0.3298429130417968
+        }
+      },
+      "tier": "deep_read"
+    },
     "arxiv:2605.29829:v2": {
       "analysis": {
         "analysis": "作者通过将问题聚类到原型层次，将问题表面形式与求解本质分离，从而利用问题结构引导技能学习。通过在每个聚类内探索不同建模和求解器配置形成轨迹，并将成功轨迹蒸馏为工作流级技能，将经验转化为可重用的模式。通过在线学习新轨迹来调整或扩充技能库，实现持续适应。具体分析机制在摘要中未详述，但整体体现了利用聚类和蒸馏将求解知识抽象化的思路。",
@@ -6006,6 +6177,152 @@
       },
       "tier": "browse"
     },
+    "arxiv:2609.10629:v2": {
+      "analysis": {
+        "analysis": "作者通过构建 QUBOBench 基准来系统评估自然语言到 QUBO 的生成质量，并对比直接单次调用基线；同时通过进一步分析（消融式分析）识别迭代自修复是最重要组件。对于问题结构、分解方式、下界或图表示等具体分析手段，材料未说明。",
+        "challenges": [
+          "从自然语言中准确识别组合优化问题的二值决策变量及其编码方式",
+          "正确表达原问题约束并转换为 QUBO 惩罚项",
+          "为惩罚项选择合适的惩罚权重以平衡目标与约束",
+          "保证生成的 QUBO 形式化建模作为可执行研究工件与原问题一致",
+          "在跨 12 个应用领域的多样化问题上保持建模正确性",
+          "缺乏系统性的端到端验证基准"
+        ],
+        "corresponding_authors": [
+          "nkm2105044@gmail.com",
+          "mparvez@hbku.edu.qa"
+        ],
+        "evidence": [
+          {
+            "claim": "论文提出端到端多智能体框架，从自然语言问题描述自动生成 QUBO 形式化建模。",
+            "location": "abstract",
+            "quote": "we propose an end-to-end multi-agent framework that automatically generates QUBO formulations from natural-language problem descriptions, supported by structured or unstructured test cases."
+          },
+          {
+            "claim": "论文构建了 QUBOBench 基准，包含 100 个组合优化问题，覆盖 12 个应用领域。",
+            "location": "abstract",
+            "quote": "We also introduce QUBOBench, a benchmark containing 100 combinatorial optimization problems across 12 application domains, curated from peer-reviewed literature, competitions, and canonical NP-hard problems."
+          },
+          {
+            "claim": "该框架在 QUBOBench 上达到 68% 准确率，比直接单次调用基线高 22%。",
+            "location": "abstract",
+            "quote": "Experimental results show that our framework achieves 68% accuracy on QUBOBench, outperforming a direct single-call baseline by 22%."
+          },
+          {
+            "claim": "迭代自修复是性能提升最重要的组件。",
+            "location": "abstract",
+            "quote": "Further analysis identifies iterative self-repair as the most important component contributing to improved performance."
+          },
+          {
+            "claim": "QUBO 形式化建模需要识别二值变量、约束、目标函数、惩罚项和合适的惩罚权重。",
+            "location": "abstract",
+            "quote": "requiring the identification of binary variables, constraints, objective functions, penalty terms, and suitable penalty weights."
+          },
+          {
+            "claim": "第一作者单位为孟加拉国工程技术大学。",
+            "location": "supplied_full_text",
+            "quote": "Niloy Kumar Mondal\nAffiliation:\nBangladesh University of Engineering and Technology"
+          }
+        ],
+        "experiments": [
+          "在 QUBOBench 上，该框架达到 68% 准确率。",
+          "相比直接单次调用基线，准确率提升 22%。",
+          "进一步分析表明，迭代自修复是性能提升最重要的组件。",
+          "材料未提供实例规模、约束可行性、解质量、运行时间、训练开销、公平计算预算、泛化和完整消融等更细粒度实验结果。"
+        ],
+        "first_affiliation": "Bangladesh University of Engineering and Technology",
+        "insight": "论文的核心洞察是：QUBO 形式化建模可以被拆解为理解问题、选择二值编码、定义约束与目标、构造惩罚项以及调校惩罚权重等多个相互关联的步骤，单一直接生成调用难以稳定完成全部步骤；通过多智能体分工并引入迭代自修复，能够在生成出错时依据反馈重新构造公式，从而显著提升端到端正确率。作者进一步通过消融指出，迭代自修复是性能提升的最重要组件，说明反馈驱动的重构机制而非单纯的模型规模或提示设计，是该框架有效性的关键来源。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "提出端到端多智能体框架，从自然语言问题描述自动生成 QUBO 形式化建模，支持结构化或非结构化测试用例。",
+          "将 QUBO 生成分解为理解问题、选择二值编码变量与约束、定义惩罚项等多个步骤。",
+          "引入迭代自修复机制，在生成出错时进行反馈驱动的重新构造。",
+          "构建 QUBOBench 基准，包含 100 个组合优化问题，覆盖 12 个应用领域，取自同行评审文献、竞赛和经典 NP-hard 问题。",
+          "与直接单次调用基线进行对比评估。"
+        ],
+        "motivation": "QUBO 是组合优化的核心形式，并且与量子退火、QAOA 等量子及量子启发式求解器兼容，因而受到越来越多关注。然而，把自然语言问题描述翻译为正确 QUBO 形式化建模仍很困难，需要识别二值变量、约束、目标、惩罚项和合适惩罚权重，这一过程耗时且高度依赖领域专家。已有 LLM 方法主要关注 LP、MILP 或通用求解器建模，QUBO 场景探索较少；AutoQUBO 依赖精确的程序化输入，LLM-QUBO 主要做 MILP 到 QUBO 的转换且缺乏端到端可执行验证和反馈式重构。",
+        "primary_topic": "利用多智能体大模型框架从自然语言自动生成 QUBO 形式化建模",
+        "relation_to_research": "论文事实：该工作聚焦于从自然语言自动生成 QUBO 形式化建模，属于 AI 驱动运筹优化与自动建模方向，使用多智能体大模型框架，并通过基准测试评估建模正确性；其关注点包括组合优化问题的变量、约束、目标和惩罚项生成，与生产调度中的自动建模具有一定关联。推测：若要迁移到柔性作业车间、流水车间、分布式制造或生产运输协同等调度问题，需要条件是该调度问题能够被表述为 QUBO 形式，且框架能够正确处理调度特有的时间、机器、工序和运输约束；此外还需验证生成模型在大规模调度实例上的约束可行性和求解质量，当前实验并未覆盖这些内容，因此迁移属于推测而非作者结论。",
+        "relevance_score": 6,
+        "setting": "论文研究的问题是：给定一个组合优化问题的自然语言描述（可带结构化或非结构化测试用例），自动生成正确的二次无约束二值优化（QUBO）形式化建模，即确定二值决策变量、约束、目标函数、惩罚项以及合适的惩罚权重，使该 QUBO 可交由量子、量子-经典混合或量子启发式求解器处理。决策对象是生成的 QUBO 公式本身（变量编码、目标与惩罚项结构）。优化目标是最小化形如 E(x)=x^T Q x + c 的能量函数。关键约束是必须正确识别并编码原问题的约束，且惩罚权重需合适；信息假设是仅提供自然语言问题描述，可能附带结构化或非结构化测试用例；环境为静态离线建模任务，材料未说明在线或动态扰动情形。",
+        "tags": [
+          "QUBO",
+          "自动建模",
+          "多智能体",
+          "大语言模型",
+          "组合优化",
+          "基准测试"
+        ],
+        "title_zh": "QuantumQUBO Agent：从自然语言自动生成二次无约束二值优化（QUBO）形式化建模",
+        "uncertainty": "本次判断的不确定性主要在于：全文节选内容有限，未提供方法细节（如智能体分工、奖励或反馈信号设计）、实验细节（基线设置、实例规模、计算预算）和局限讨论；因此对方法机制的解读只能依据摘要与有限正文，相关性评分基于自动建模与智能体优化方向，而非直接的生产调度应用。",
+        "why_recommended": "该论文与 AI4OR 中的自动建模方向直接相关，展示了大模型智能体如何把自然语言优化问题转化为可求解的形式化建模，并配有基准和消融分析，可为生产调度问题的自动 QUBO/数学建模提供参考；同时其迭代自修复机制对学习辅助搜索和智能体优化具有方法层面的借鉴意义。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-14T10:08:56.065868+08:00",
+        "figures": [
+          {
+            "caption": "Per-domain distribution of problems in QUBOBench.",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2609.10629/v2/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2609.10629v2/piechart.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2609.10629v2#A2.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2609.10629v2",
+        "status": "available"
+      },
+      "final_score": 0.55544907214286,
+      "provenance": {
+        "analyzed_at": "2026-09-14T02:09:40.503763Z",
+        "input_hash": "9bd547149aa88b64c0f549de4544b70b608fe2359ac11af9875575c9a6bc2d13",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Quadratic Unconstrained Binary Optimization (QUBO) is a central formulation for combinatorial optimization and has gained increasing attention due to its compatibility with quantum, hybrid quantum-classical, and quantum-inspired solvers. However, translating natural-language problem descriptions into correct QUBO formulations remains difficult, requiring the identification of binary variables, constraints, objective functions, penalty terms, and suitable penalty weights. This process is time-consuming and often demands substantial domain expertise. To address this challenge, we propose an end-to-end multi-agent framework that automatically generates QUBO formulations from natural-language problem descriptions, supported by structured or unstructured test cases. To evaluate its performance, We also introduce QUBOBench, a benchmark containing 100 combinatorial optimization problems across 12 application domains, curated from peer-reviewed literature, competitions, and canonical NP-hard problems. Experimental results show that our framework achieves 68% accuracy on QUBOBench, outperforming a direct single-call baseline by 22%. Further analysis identifies iterative self-repair as the most important component contributing to improved performance. The data and code are open-sourced at https://quitttcat.github.io/QuantumQUBOAgent.",
+          "authors": [
+            "Niloy Kumar Mondal",
+            "Md Rizwan Parvez"
+          ],
+          "canonical_id": "2609.10629",
+          "categories": [
+            "cs.AI"
+          ],
+          "comment": "Accepted at the ICML 2026 Workshop on AI as a Tool for Mathematics, Computer Science, and Machine Learning (AI4Research)",
+          "pdf_url": "https://arxiv.org/pdf/2609.10629",
+          "published_at": "2026-09-09T05:44:59Z",
+          "source": "arxiv",
+          "title": "QuantumQUBO Agent: Automating Quadratic Unconstrained Binary Optimization (QUBO) Formulation Generation from Natural Language",
+          "updated_at": "2026-09-11T02:28:17Z",
+          "url": "https://arxiv.org/abs/2609.10629",
+          "version": 2
+        },
+        "rank": 2,
+        "score": {
+          "base_score": 0.518998312987018,
+          "exploration": 0.4973474136491854,
+          "matched_terms": [
+            "combinatorial optimization",
+            "multi-agent"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.4739559872077833,
+          "topic": 0.538053520163323
+        }
+      },
+      "tier": "deep_read"
+    },
     "arxiv:2609.11452:v1": {
       "analysis": {
         "analysis": "作者通过实例级性能分析识别父代启发式的特定弱点，结合路径证据、求解器行为和程序上下文来定义有界修复目标，并采用匹配的父子评估来验证每次干预的故障恢复和附带退化。材料未进一步说明具体的分解、下界或图表示等分析技术。",
@@ -6587,8 +6904,131 @@
         }
       },
       "tier": "deep_read"
+    },
+    "arxiv:2609.12863:v1": {
+      "analysis": {
+        "analysis": "材料未说明作者如何具体分析问题；摘要层面显示作者以“翻译鸿沟”为切入点，把问题结构拆分为语义翻译层（大模型）与形式化求解层（精确组合方法），并通过数字孪生的双向耦合机制把运营观测状态与优化决策状态联系起来，同时用系统松弛量作为修复与重优化之间切换的判断依据。",
+        "challenges": [
+          "非结构化运营日志与定性人类输入到形式化数学约束之间的语义翻译鸿沟",
+          "在引入大语言模型的同时保持精确组合优化方法的可行性保证",
+          "定性扰动事件需要在运行时动态改变优化问题可行域，而不是离线重新建模",
+          "运营观测与优化决策之间的双向同步，即数字孪生的状态一致性要求",
+          "在低复杂度调度修复与完整重优化之间自动选择，需要可靠判断可用系统松弛量"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文将大语言模型定位为语义翻译器而非直接求解器，以保留精确组合方法的可行性保证",
+            "location": "abstract",
+            "quote": "Our architecture uniquely positions Large Language Models as semantic translators rather than direct solvers, ensuring that the system retains the feasibility guarantees of exact combinatorial methods."
+          },
+          {
+            "claim": "论文设计了动态约束注入机制，在运行时把定性扰动事件翻译为形式化数学约束以改变可行域",
+            "location": "abstract",
+            "quote": "We design a dynamic constraint injection mechanism (the runtime translation of qualitative disruption events into formal mathematical constraints) that allows the system to structurally modify the optimization problem's feasibility region in real-time based on qualitative human inputs."
+          },
+          {
+            "claim": "运营观测与优化决策之间的双向耦合满足数字孪生的同步要求",
+            "location": "abstract",
+            "quote": "The resulting bidirectional coupling---where operational observations update the virtual model state and optimized decisions are reflected back into the Knowledge Graph---satisfies the synchronization requirement of a proper Digital Twin."
+          },
+          {
+            "claim": "框架包含自适应决策策略，依据可用系统松弛量在调度修复与完整重优化之间自动选择",
+            "location": "abstract",
+            "quote": "The framework features an adaptive decision policy} that automatically selects between low-complexity schedule repair and full re-optimization by analyzing the available system slack."
+          },
+          {
+            "claim": "论文声称在六个不同优化领域上验证了泛化性，但摘要未给出具体领域与实验细节",
+            "location": "abstract",
+            "quote": "Finally, we demonstrate the generalization of this approach across six distinct optimization domains"
+          }
+        ],
+        "experiments": [
+          "摘要称在六个不同的优化领域上展示了该方法的泛化性，但未给出具体领域名称、实例规模、基线、解质量指标、运行时间或训练开销，材料未说明这些细节。"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "贡献有效的关键不在于把大模型当作求解器，而在于对其角色进行结构性重定位：大模型只负责把非结构化运营话语与定性扰动事件翻译为形式化数学约束，求解仍交由具有可行性保证的精确组合方法完成。由此，语言模型的能力被限制在它擅长的语义层，而可行域的修改权仍由数学优化掌握；再配合基于可用系统松弛量的自适应决策策略，系统能在便宜但局部的调度修复与昂贵但全局的重优化之间按需切换，使静态模型获得对运营不确定性的弹性。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "神经符号框架架构：将大语言模型定位为语义翻译器而非直接求解器，由精确组合方法承担求解并保留可行性保证",
+          "动态约束注入机制：在运行时把定性的扰动事件翻译为形式化的数学约束，从而结构性修改优化问题的可行域",
+          "双向耦合与知识图谱：运营观测更新虚拟模型状态，优化后的决策再反射回知识图谱，以满足数字孪生的同步要求",
+          "自适应决策策略：分析可用系统松弛量，在低复杂度调度修复与完整重优化之间自动选择"
+        ],
+        "motivation": "实际运营中的扰动与人类判断通常以日志、口语化描述等非结构化形式出现，难以直接进入数学模型；若让大模型直接求解组合优化问题，则可能丧失可行性保证。作者希望保留精确组合方法的严格性，同时让大模型只承担“语义翻译”的角色，把运营话语转成形式化约束，从而在不牺牲可行性的前提下让优化模型实时响应运营现实。",
+        "primary_topic": "神经符号中间件：用大模型把非结构化运营日志与定性扰动翻译为数学优化约束，并耦合数字孪生状态",
+        "relation_to_research": "该论文与智能优化和 AI4OR 直接相关：它研究如何用大语言模型作为语义接口去修改数学优化模型的可行域，并保留精确组合方法的可行性保证，这与生产调度中“动态扰动—重调度—修复与重优化权衡”的问题结构高度一致。其自适应策略以系统松弛量为判断依据，在概念上可对应柔性作业车间、流水车间或分布式制造中的产能松弛与交期松弛。需要说明的是，论文本身并未涉及生产调度、作业车间或流水车间，因此“把动态约束注入与松弛量驱动的修复/重优化切换迁移到调度场景”属于推测；该迁移成立的条件是：调度领域的定性扰动（如设备异常、人员口头反馈、工艺变更）能够被稳定地形式化为调度约束，且存在可量化、可比较的系统松弛度量作为修复与重优化的切换判据。",
+        "relevance_score": 8,
+        "setting": "研究问题是在数学优化与真实运营环境之间存在的“翻译鸿沟”：运营侧产生的是非结构化的运营日志与定性的人类输入，而优化侧需要严格的形式化数学模型。决策对象是优化问题的可行域结构以及在扰动下的调度决策；目标是让精确组合优化方法在动态不确定环境中仍保持可行性保证，同时把定性扰动事件实时转化为形式化约束，并在数字孪生中实现运营观测与优化决策的双向同步。关键约束包括必须保留精确组合方法的可行性保证、扰动事件以定性形式出现而非数值形式、以及系统需要在低复杂度调度修复与完整重优化之间做自适应选择。信息假设是运营日志为无结构文本、人类输入为定性描述，而系统内部维护一个虚拟模型状态与知识图谱。静态或动态环境方面：论文明确将静态模型转变为能适应真实环境运营不确定性与变异性的弹性系统，因此面向的是动态环境；其余要素材料未说明。",
+        "tags": [
+          "神经符号优化",
+          "大语言模型语义翻译",
+          "动态约束注入",
+          "数字孪生",
+          "调度修复与重优化",
+          "知识图谱",
+          "自适应决策策略"
+        ],
+        "title_zh": "GenOR-Twin：一种连接运营话语与数学优化的语义中间件",
+        "uncertainty": "仅依据标题与摘要判断，未提供全文，因此无法核实具体的技术实现、六个优化领域的身份、基线设置、实验规模、解质量与运行时间，也无法判断可行性保证在引入大模型翻译后是如何被形式化论证或测试的；此外无法确认第一单位与通讯作者信息；相关性评分基于方法机制的潜在可迁移性，而非论文实际研究生产调度问题。",
+        "why_recommended": "对关注学习与搜索/精确求解结合的研究者而言，这篇工作提供了一个明确的分工范式：大模型不做求解，而做约束语义翻译，求解可行性与最优性交给组合优化，这正好回应了 AI4OR 中“学习如何介入而不破坏可行性”的核心关切。此外，动态约束注入与基于松弛量的自适应修复/重优化切换，对动态扰动下的生产调度、生产运输协同与多目标约束优化具有可借鉴的机制价值，且作者声称跨六个优化领域验证了泛化性，值得进一步核查其设置与公平计算预算。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-14T10:08:56.065868+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2609.12863v1",
+        "status": "html_unavailable"
+      },
+      "final_score": 0.5862263152816607,
+      "provenance": {
+        "analyzed_at": "2026-09-14T02:09:50.658267Z",
+        "input_hash": "5862ce3494b9f5c4d556c47ba664ccf5f79c689ce90385c86257cb3bb22db7ad",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "We introduce GenOR-Twin, a neuro-symbolic framework that bridges the translation gap between unstructured operational logs and rigorous mathematical optimization. Our architecture uniquely positions Large Language Models as semantic translators rather than direct solvers, ensuring that the system retains the feasibility guarantees of exact combinatorial methods. { \\color{red}We design a dynamic constraint injection mechanism (the runtime translation of qualitative disruption events into formal mathematical constraints) that allows the system to structurally modify the optimization problem's feasibility region in real-time based on qualitative human inputs. The resulting bidirectional coupling---where operational observations update the virtual model state and optimized decisions are reflected back into the Knowledge Graph---satisfies the synchronization requirement of a proper Digital Twin. The framework features an adaptive decision policy} that automatically selects between low-complexity schedule repair and full re-optimization by analyzing the available system slack. Finally, we demonstrate the generalization of this approach across six distinct optimization domains, {\\color{red}turning static models into resilient systems that adapt to the operational uncertainty and variability of real-world environments.}",
+          "authors": [
+            "Rahimeh Neamatian Monemi",
+            "Shahin Gelareh",
+            "Lubin Cui",
+            "Nelson Maculan"
+          ],
+          "canonical_id": "2609.12863",
+          "categories": [
+            "cs.LG"
+          ],
+          "comment": "33 pages and 8 figures",
+          "pdf_url": "https://arxiv.org/pdf/2609.12863",
+          "published_at": "2026-09-11T13:49:03Z",
+          "source": "arxiv",
+          "title": "GenOR-Twin: A Semantic Middleware for Integrating Operational Discourse with Mathematical Optimization",
+          "updated_at": "2026-09-11T13:49:03Z",
+          "url": "https://arxiv.org/abs/2609.12863",
+          "version": 1
+        },
+        "rank": 5,
+        "score": {
+          "base_score": 0.411320573239383,
+          "exploration": 0.3252241326344032,
+          "matched_terms": [
+            "mathematical optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.5334168071927795,
+          "topic": 0.4010349179969782
+        }
+      },
+      "tier": "browse"
     }
   },
   "schema_version": 1,
-  "updated_at": "2026-09-13T09:51:38.234745+08:00"
+  "updated_at": "2026-09-14T10:08:56.065868+08:00"
 }
