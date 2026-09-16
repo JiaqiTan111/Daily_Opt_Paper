@@ -101,6 +101,125 @@
       },
       "tier": "explore"
     },
+    "arxiv:2502.20462:v2": {
+      "analysis": {
+        "analysis": "作者通过非常规的约束强化学习 formulation，将多智能体协调问题转化为对偶变量的分布式更新问题，利用单比特 gossip 通信和局部估计，并引入收缩因子控制误差传播，从而在理论上分析几乎必然可行性。材料未说明具体的分解或下界方法。",
+        "challenges": [
+          "随机连通网络下的分布式协调",
+          "有限通信缓冲下的对偶变量估计误差控制",
+          "动态环境中的实时约束满足",
+          "冲突任务下的多智能体策略适应",
+          "几乎必然可行性的理论保证"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文采用约束多智能体强化学习框架，对偶变量不驱动至收敛而是允许循环。",
+            "location": "abstract",
+            "quote": "We address the challenges of multi-agent coordination through an unconventional formulation in which the dual variables are not driven to convergence but are free to cycle, enabling agents to adapt their policies dynamically based on real-time constraint satisfaction levels."
+          },
+          {
+            "claim": "论文使用单比特通信协议在随机连通网络上进行协调，并引入收缩因子保持估计误差有界。",
+            "location": "abstract",
+            "quote": "The coordination relies on a light single-bit communication protocol over a network with stochastic connectivity. Using this gossiped information, agents update local estimates of the dual variables. Furthermore, we modify the local dual dynamics by introducing a contraction factor, which lets us use finite communication buffers and keep the estimation error bounded."
+          },
+          {
+            "claim": "论文提供几乎必然可行性的理论保证，并在机器人巡逻任务中进行了数值实验。",
+            "location": "abstract",
+            "quote": "Under this model, we provide theoretical guarantees of almost sure feasibility and corroborate them with numerical experiments in which a team of robots successfully patrols multiple regions, communicating under a time-varying ad-hoc network."
+          }
+        ],
+        "experiments": [
+          "数值实验中，一队机器人成功巡逻多个区域，并在时变 ad-hoc 网络下通信。",
+          "摘要未提供基线、实例规模、约束可行性量化、解质量、运行时间、训练开销、公平计算预算、泛化或消融等具体实验细节。"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "作者的核心洞察在于：不要求对偶变量收敛，而是允许其自由循环，使智能体能够根据实时约束满足水平动态调整策略；同时通过引入收缩因子修改局部对偶动态，使得在有限通信缓冲下估计误差有界，从而在随机连通网络中仍能保证几乎必然可行性。这一设计将约束满足的负担从集中式收敛转移到分布式自适应调整，利用通信 gossip 和收缩机制在动态环境中维持可行性。",
+        "limitations": [
+          "材料未说明作者明确陈述的局限。"
+        ],
+        "method": [
+          "采用约束多智能体强化学习框架，智能体在动态环境中学习策略以执行冲突任务。",
+          "对偶变量不驱动至收敛，而是允许循环，使智能体根据实时约束满足水平动态调整策略。",
+          "使用轻量级单比特通信协议在随机连通网络上进行协调，智能体通过 gossip 信息更新局部对偶变量估计。",
+          "修改局部对偶动态，引入收缩因子以使用有限通信缓冲并保持估计误差有界。",
+          "提供几乎必然可行性的理论保证。"
+        ],
+        "motivation": "多智能体强化学习在动态环境中面临可扩展性和约束可行性挑战，尤其是在通信受限且任务冲突的场景下，需要设计既能保证几乎必然可行性又能适应实时约束满足水平变化的协调机制。",
+        "primary_topic": "约束多智能体强化学习与随机通信网络下的协作任务分配",
+        "relation_to_research": "该论文直接研究约束多智能体强化学习在随机图上的任务分配，与智能优化、生产调度中的多智能体协同、动态扰动和约束可行性问题有明确关联。其分布式对偶变量更新和收缩因子机制可迁移至生产调度中的分布式决策场景，例如柔性作业车间中多智能体协调、生产运输协同中的通信受限协调。迁移需要将任务分配问题映射为调度决策变量，并验证在调度约束下的可行性保证；这属于推测，需进一步研究。",
+        "relevance_score": 7,
+        "setting": "研究多智能体团队在动态环境中执行冲突任务的协作分配问题，目标是在随机连通性网络和单比特通信协议下实现几乎必然的约束满足。决策对象为各智能体的策略；关键约束为任务冲突和实时约束满足；信息假设为智能体仅通过随机连通网络进行轻量级单比特通信，并维护局部对偶变量估计；环境为动态且通信拓扑时变（ad-hoc网络）；静态或动态环境方面，摘要明确为动态环境。",
+        "tags": [
+          "约束强化学习",
+          "多智能体系统",
+          "随机图",
+          "任务分配",
+          "分布式优化",
+          "对偶变量",
+          "通信协议"
+        ],
+        "title_zh": "基于约束强化学习的随机图上的协作多智能体任务分配",
+        "uncertainty": "仅基于标题和摘要分析，缺乏全文细节，如具体网络结构、状态动作空间、奖励设计、收缩因子的数学形式、实验规模和对比基线等，因此对方法细节和实验验证程度的判断存在不确定性。",
+        "why_recommended": "对研究智能优化和生产调度的读者而言，该论文提供了在随机通信网络下保证约束几乎必然可行的多智能体强化学习框架，其允许对偶变量循环和引入收缩因子的思路可启发动态扰动环境下的分布式调度算法设计，尤其是通信受限和实时约束满足场景。同时，其理论保证与数值实验结合的方式值得借鉴。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-16T10:08:43.061028+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2502.20462v2",
+        "status": "not_found"
+      },
+      "final_score": 0.5693787021112943,
+      "provenance": {
+        "analyzed_at": "2026-09-16T02:14:12.687345Z",
+        "input_hash": "4664722759fb265af50f3aa2c74770a76aa439f1ed88ef845d4a1e929a2ebe0f",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Constrained multi-agent reinforcement learning offers the framework to design scalable and almost surely feasible solutions for teams of agents operating in dynamic environments to carry out conflicting tasks. We address the challenges of multi-agent coordination through an unconventional formulation in which the dual variables are not driven to convergence but are free to cycle, enabling agents to adapt their policies dynamically based on real-time constraint satisfaction levels. The coordination relies on a light single-bit communication protocol over a network with stochastic connectivity. Using this gossiped information, agents update local estimates of the dual variables. Furthermore, we modify the local dual dynamics by introducing a contraction factor, which lets us use finite communication buffers and keep the estimation error bounded. Under this model, we provide theoretical guarantees of almost sure feasibility and corroborate them with numerical experiments in which a team of robots successfully patrols multiple regions, communicating under a time-varying ad-hoc network.",
+          "authors": [
+            "Leopoldo Agorio",
+            "Sean Van Alen",
+            "Santiago Paternain",
+            "Miguel Calvo-Fullana",
+            "Juan Andres Bazerque"
+          ],
+          "canonical_id": "2502.20462",
+          "categories": [
+            "eess.SY",
+            "cs.SY"
+          ],
+          "comment": "15 pages, 5 figures, submitted to IEEE Transactions on Control of Network Systems",
+          "pdf_url": "https://arxiv.org/pdf/2502.20462",
+          "published_at": "2025-02-27T19:05:21Z",
+          "source": "arxiv",
+          "title": "Cooperative Multi-Agent Assignment over Stochastic Graphs via Constrained Reinforcement Learning",
+          "updated_at": "2026-09-14T16:13:28Z",
+          "url": "https://arxiv.org/abs/2502.20462",
+          "version": 2
+        },
+        "rank": 30,
+        "score": {
+          "base_score": 0.4625067311114441,
+          "exploration": 0.1272945531900535,
+          "matched_terms": [
+            "constraint satisfaction",
+            "reinforcement learning",
+            "multi-agent"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.7023368192832491,
+          "topic": 0.4897587567541826
+        }
+      },
+      "tier": "browse"
+    },
     "arxiv:2503.10421:v2": {
       "analysis": {
         "analysis": "材料未说明作者如何具体分析问题结构，仅指出问题具有巨大解空间和复杂约束，且现有方法在硬约束下失效。作者通过引入约束导向的超图和动态超边重建策略，将约束作为图结构的一部分，利用超图的多边关系捕捉约束间的相互作用。训练过程中，通过约束损失监督约束满足，并采用异步参数更新，促使模型在策略优化时同时优化约束目标，从而在搜索解空间时引导朝向可行解区域。",
@@ -629,6 +748,160 @@
       },
       "tier": "browse"
     },
+    "arxiv:2601.08696:v2": {
+      "analysis": {
+        "analysis": "作者首先提出一个关于‘种群感知程度’的简单分类法，用其指出两个关键设计挑战：种群在神经网络中的表示，以及种群动态的学习。在此分析基础上，将问题结构分解为改进已有解与生成新解两类互补操作，并针对图/集合结构问题选用自然的种群表示与距离度量，同时指出路由、分配或排列问题需要问题特定的距离与记忆描述子，材料未说明更细节的问题结构利用方式如下界或分解。",
+        "challenges": [
+          "如何在神经网络内部表示整个种群",
+          "如何学习种群动态以平衡强化（生成高质量解）与多样化（维持多样性）",
+          "种群表示与距离度量在不同问题类别（图/集合结构 vs 路由、分配、排列问题）间的迁移性",
+          "种群级协调引入额外组件与设计选择带来的复杂度"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文目标是使神经组合优化显式基于种群，通过学习作用于候选解集合的策略。",
+            "location": "abstract",
+            "quote": "we study how to make NCO explicitly population-based by learning policies that act on sets of candidate solutions."
+          },
+          {
+            "claim": "论文指出两个关键设计挑战：如何在神经网络内表示整个种群，以及如何学习平衡强化与多样化的种群动态。",
+            "location": "abstract",
+            "quote": "two key design challenges: (i) how to represent a whole population inside a neural network, and (ii) how to learn population dynamics that balance intensification (generating good solutions) and diversification (maintaining variety)."
+          },
+          {
+            "claim": "论文提出两个互补工具：利用种群共享信息改进解，以及生成兼顾质量与多样性的新解。",
+            "location": "abstract",
+            "quote": "one that improves existing solutions using information shared across the whole population, and the other generates new candidate solutions that explicitly balance being high-quality with diversity."
+          },
+          {
+            "claim": "实验在最大割与最大独立集上进行，表明引入种群结构对学习式优化方法有益。",
+            "location": "abstract",
+            "quote": "Experimental results on Maximum Cut and Maximum Independent Set indicate that incorporating population structure is advantageous for learned optimization methods"
+          },
+          {
+            "claim": "第一作者单位是西班牙巴斯克地区大学智能系统组。",
+            "location": "supplied_full_text",
+            "quote": "The authors are with the Intelligent Systems Group, University of the Basque Country (UPV/EHU), San Sebastian, 20018 Gipuzkoa, Spain"
+          },
+          {
+            "claim": "种群表示与距离度量对排列类问题的迁移是重要未来方向。",
+            "location": "supplied_full_text",
+            "quote": "for routing, assignment, or permutation problems, one would need problem-specific distances, such as edge-set or assignment-based distances, and memory descriptors aligned with the neighborhood structure."
+          },
+          {
+            "claim": "实验包含五次随机运行、任意时间比较、消融与敏感性分析，覆盖 ER 与 RB 图族及大尺寸训练外图。",
+            "location": "supplied_full_text",
+            "quote": "across ER and RB graph families, large out-of-training graph sizes, five stochastic runs, anytime comparisons, ablations, and sensitivity analyses."
+          }
+        ],
+        "experiments": [
+          "在 Maximum Cut 和 Maximum Independent Set 上评估 PB-NCO。",
+          "覆盖 ER 与 RB 两类图族、大尺寸训练外图、五次随机运行、任意时间（anytime）比较、消融与敏感性分析。",
+          "结论表明融入种群结构对学习式优化方法有益，种群级协调在局部改进开始进入平台期后收益最强，尤其当种群协调与学习式重启互补时。",
+          "材料未提供具体数值、基线名称、运行时间或训练开销等量化结果。"
+        ],
+        "first_affiliation": "Intelligent Systems Group, University of the Basque Country (UPV/EHU), San Sebastian, 20018 Gipuzkoa, Spain",
+        "insight": "贡献的有效性来自将搜索努力的协调分配显式置于种群层面，而非仅提升单解预测。通过共享记忆为改进算子提供种群级上下文，并以显式权衡质量与多样性的方式生成新候选解（重启），使局部改进进入平台期后仍能由种群协调与学习式重启继续推进搜索。其核心在于把种群中候选解之间的交互关系本身作为可学习对象，从而在强化（生成好解）与多样化（维持多样性）之间取得动态平衡。",
+        "limitations": [
+          "种群级协调引入额外组件与设计选择。",
+          "种群表示与距离度量对排列、路由、分配等问题的迁移性尚不明确，理解哪些距离与种群表示可跨问题类别迁移是重要的未来方向。"
+        ],
+        "method": [
+          "提出种群感知程度的简单分类法，用以刻画不同程度的种群结构融入。",
+          "设计上下文神经改进（cNI）组件：利用整个种群共享的信息改进已有候选解。",
+          "设计条件神经构造（cNC）组件：生成新候选解，显式平衡高质量与多样性，充当学习式重启。",
+          "将 cNI 与 cNC 整合为完整框架 PB-NCO。",
+          "在最大割（MC）上 cNC 采用一步式实现：网络输出节点概率 π_u∈[0,1]，单次前向采样得到完整割，并处理全局位翻转对称性。",
+          "种群的输入表示包含距离度量与归一化目标等要素，图/集合结构问题使用自然距离，排列类问题需问题特定距离与邻域对齐的记忆描述子。"
+        ],
+        "motivation": "神经组合优化（NCO）大多学习一次只操作单一候选解的策略，要么从零构造要么迭代改进；而元启发式数十年的研究表明维持并演化解种群能提升鲁棒性与探索能力，常带来更强性能。作者希望弥合这一差距，使 NCO 显式地基于种群，通过学习作用于候选解集合的策略来结合两者优势。",
+        "primary_topic": "神经组合优化中的种群感知架构与学习式种群动态",
+        "relation_to_research": "该文直接属于 AI4OR 中学习辅助搜索与神经组合优化的交叉方向：它将元启发式的种群机制引入 NCO，提出学习作用于解集合的策略，并以共享记忆、质量-多样性重启等机制协调搜索。这与生产调度中强调约束可行性、求解质量与公平计算预算的研究高度相关。迁移到柔性作业车间、流水车间或生产运输协同问题属于推测：需将种群表示、解间距离与记忆描述子替换为与调度解结构（工序序列、机器分配、分批与运输耦合）对齐的度量，并验证在排列/序列空间下的质量-多样性生成与可行性修复机制；在动态扰动场景中还需额外的在线反馈与自适应重启条件，原文未涉及这些设定。",
+        "relevance_score": 7,
+        "setting": "论文研究组合优化问题的求解，目标是在可行解集合 S(I) 中最大化目标函数 f_I(s)。决策对象为一组候选解（种群）而非单一解，学习策略 π_θ 作用于解集合以显式维持种群结构。关键约束包括可行解集 S(I) 与图结构问题的对称性（如最大割的全局位翻转）。信息假设方面，策略在离线实例分布上训练后直接迁移到新实例，材料未说明是否依赖在线反馈或动态扰动信息。环境为静态离线训练加推理阶段的新实例泛化，材料未说明动态或在线环境设定。",
+        "tags": [
+          "神经组合优化",
+          "种群方法",
+          "强化学习",
+          "学习辅助搜索",
+          "组合优化",
+          "最大割",
+          "最大独立集"
+        ],
+        "title_zh": "为神经组合优化引入种群式架构",
+        "uncertainty": "证据范围仅为摘要与部分全文节选，方法细节（网络结构、状态/动作/奖励定义、训练算法）、基线设置与所有具体实验数值均未完整提供，因此对方法机制的描述和迁移设想存在不确定性；相关性判定主要基于其种群式学习搜索框架与 AI4OR 学习辅助搜索主题的邻近性，而非已验证的调度实验结果。",
+        "why_recommended": "本文为‘神经网络与种群式元启发式结合’提供了清晰的设计分类与两个可复用组件（种群上下文改进与质量-多样性重启），其共享记忆与种群协调思想可迁移到调度与分布式制造中的多解协同搜索；同时其强调任意时间比较、消融与训练外尺寸泛化，契合本方向对公平计算预算与泛化评估的关注，有助于思考如何将学习辅助搜索从单解构造扩展到种群级协作。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-16T10:08:43.061028+08:00",
+        "figures": [
+          {
+            "caption": "High-level encoder–decoder architecture used in Neural Combinatorial Optimization. First, graph features associated with nodes and edges are extracted from the problem instance and the current search state (1). These raw features are then projected into a common d d -dimensional latent space, producing initial node embeddings h ( 0 ) h^{(0)} and edge embeddings e ( 0 ) e^{(0)} (2). The embeddings are processed by a GNN through L L layers (3). The final embeddings are used by a decoder (4) to produce action logits, which define action probabilities (5) used to modify or construct the solution (6).",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2601.08696/v2/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2601.08696v2/images/PB_NCO_GENERAL_ENC_DEC_SCHEME.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2601.08696v2#S2.F1"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2601.08696v2",
+        "status": "available"
+      },
+      "final_score": 0.6507202447506444,
+      "provenance": {
+        "analyzed_at": "2026-09-16T02:13:22.554325Z",
+        "input_hash": "7cf262997c66655f29b87e64aae301ff33609a2b87f91bd9dbf0af3ef5a11262",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Neural Combinatorial Optimization (NCO) has mostly focused on learning policies, typically neural networks, that operate on a single candidate solution at a time, either by constructing one from scratch or iteratively improving it. In contrast, decades of work in metaheuristics have shown that maintaining and evolving populations of solutions improves robustness and exploration, and often leads to stronger performance. To close this gap, we study how to make NCO explicitly population-based by learning policies that act on sets of candidate solutions. We first propose a simple taxonomy of population awareness levels and use it to highlight two key design challenges: (i) how to represent a whole population inside a neural network, and (ii) how to learn population dynamics that balance intensification (generating good solutions) and diversification (maintaining variety). We make these ideas concrete with two complementary tools: one that improves existing solutions using information shared across the whole population, and the other generates new candidate solutions that explicitly balance being high-quality with diversity. Experimental results on Maximum Cut and Maximum Independent Set indicate that incorporating population structure is advantageous for learned optimization methods and opens new connections between NCO and classical population-based search.",
+          "authors": [
+            "Andoni Irazusta Garmendia",
+            "Josu Ceberio",
+            "Alexander Mendiburu"
+          ],
+          "canonical_id": "2601.08696",
+          "categories": [
+            "cs.NE",
+            "cs.LG"
+          ],
+          "comment": "Accepted manuscript. Published in IEEE Transactions on Evolutionary Computation. DOI: 10.1109/TEVC.2026.3730516. Revised version incorporating the changes made during peer review",
+          "pdf_url": "https://arxiv.org/pdf/2601.08696",
+          "published_at": "2026-01-13T16:19:34Z",
+          "source": "arxiv",
+          "title": "Enabling Population-Based Architectures for Neural Combinatorial Optimization",
+          "updated_at": "2026-09-14T07:01:42Z",
+          "url": "https://arxiv.org/abs/2601.08696",
+          "version": 2
+        },
+        "rank": 7,
+        "score": {
+          "base_score": 0.6104004450011715,
+          "exploration": 0.32542315924632387,
+          "matched_terms": [
+            "combinatorial optimization",
+            "neural combinatorial",
+            "neural network"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.6381799293017516,
+          "topic": 0.6838855311309623
+        }
+      },
+      "tier": "deep_read"
+    },
     "arxiv:2601.12723:v3": {
       "analysis": {
         "analysis": "作者通过文献回顾指出传统和真实基准的局限性，进而论证自动生成方法的必要性，并分析现有自动生成方法在表示空间上的共性限制。在此基础上，提出用LLM作为生成算子替代预定义结构约束，通过进化框架在文本符号表达式空间中搜索问题。实验部分采用探索性景观分析来揭示生成基准的几何特征，以此分析问题结构与算法行为之间的关系。",
@@ -745,6 +1018,171 @@
           "personal": 0.0,
           "recency": 0.5966602343750423,
           "topic": 0.5250863900202387
+        }
+      },
+      "tier": "deep_read"
+    },
+    "arxiv:2602.00532:v2": {
+      "analysis": {
+        "analysis": "作者将约束黑箱优化中的ε-松弛调度建模为动态算法配置问题，把松弛策略的学习表述为强化学习问题。控制器观测紧凑的种群和约束特征，输出标量动作，解码为松弛向量用于候选比较规则。作者利用问题分布进行元训练，在留一法函数、维度迁移和应用领域任务上测试泛化，并通过消融分析约束相关状态特征、动作缩放、奖励塑形和元训练各自的角色，以此分析学习到的策略是否比固定松弛水平、自适应惩罚规则或随机控制器更有效。",
+        "challenges": [
+          "ε-松弛的调度需要问题相关选择，固定值或手工规则难以跨问题泛化",
+          "目标改进与可行性恢复提供冲突的搜索信号，平衡时机难以预先设计",
+          "约束处理控制在学习型元黑箱优化中探索较少，状态与动作设计缺乏参考",
+          "学习到的策略需在未见函数、更高维度和应用领域上泛化，不能依赖问题特定调优",
+          "在低评估预算下在线应用策略，需保证训练开销与部署开销可控"
+        ],
+        "corresponding_authors": [
+          "Zeyuan Ma"
+        ],
+        "evidence": [
+          {
+            "claim": "论文提出MeCO，一种元学习辅助优化器，为约束黑箱优化学习自适应ε-松弛策略。",
+            "location": "abstract",
+            "quote": "this letter proposes MeCO, a meta-learning-assisted optimizer that learns an adaptive $\\epsilon$-relaxation policy for constrained BBO."
+          },
+          {
+            "claim": "MeCO将SHADE优化器与Double Deep Q-Network控制器耦合。",
+            "location": "abstract",
+            "quote": "MeCO couples a SHADE optimizer with a Double Deep Q-Network controller."
+          },
+          {
+            "claim": "控制器观测紧凑的种群和约束特征并选择标量动作，解码为松弛向量用于候选比较规则。",
+            "location": "abstract",
+            "quote": "the controller observes compact population and constraint features and selects a scalar action, which is decoded into a relaxation vector for the candidate comparison rule."
+          },
+          {
+            "claim": "策略在约束黑箱优化实例上训练后部署到留出问题，无需问题特定调优。",
+            "location": "abstract",
+            "quote": "The policy is trained across constrained BBO instances and then deployed on held-out problems without problem-specific tuning."
+          },
+          {
+            "claim": "实验覆盖CEC2017约束基准、16个无人机路径规划任务和8个真实工程问题。",
+            "location": "abstract",
+            "quote": "Experiments on the CEC2017 constrained benchmark, 16 UAV path-planning tasks and eight real-world engineering problems provide evidence that MeCO transfers across held-out benchmark functions, higher dimensions, and an application-domain setting."
+          },
+          {
+            "claim": "消融和行为分析阐明约束相关状态特征、动作缩放、奖励塑形和元训练的作用。",
+            "location": "abstract",
+            "quote": "Ablation and behavior analyses further clarify the roles of constraint-related state features, action scaling, reward shaping, and meta-training."
+          },
+          {
+            "claim": "作者认为约束处理控制在学习型元黑箱优化中探索较少，且可行性压力的有用水平在运行中变化。",
+            "location": "supplied_full_text",
+            "quote": "However, constraint-handling control remains less explored. This gap is important because the useful level of feasibility pressure changes during a run: early search may benefit from accepting nearly feasible candidates, while later search often needs stricter feasibility restoration."
+          },
+          {
+            "claim": "维度迁移中策略仅在10D训练后直接用于50D和100D问题。",
+            "location": "supplied_full_text",
+            "quote": "The policy is trained on 10D problems and then used directly on 50D and 100D problems."
+          }
+        ],
+        "experiments": [
+          "在CEC2017约束基准、16个无人机路径规划任务和8个真实工程问题上评估，部分实验预算为2500次函数评估。",
+          "在50D CEC2017上做留一法测试，每个MeCO模型在27个函数上训练并在留出函数上测试，MeCO取得最佳平均排名。",
+          "部分基线在个别函数上取得最佳值，表明专用约束处理机制在特定地形上可高度竞争。",
+          "与SHADE-ε、SHADE-BOC和MeCO-u的对比表明，学习到的DDQN策略而非固定松弛水平、自适应惩罚规则或随机控制器是自适应可行压力的关键来源。",
+          "维度迁移中，策略仅在10D训练后用于50D和100D，MeCO在两种设定下保持更好的归一化进展。",
+          "手工基线常快速改进后停滞，MeCO可在接近可行候选有用时放松规则、在可行性成为瓶颈时收紧规则。",
+          "无人机路径规划和工程问题的迁移实验用箱线图报告归一化性能，高值表示更好。",
+          "消融和行为分析阐明约束相关状态特征、动作缩放、奖励塑形和元训练的作用。"
+        ],
+        "first_affiliation": "华南师范大学",
+        "insight": "核心洞察是约束松弛的水平不应在运行前固定，而应根据在线搜索信号动态调整。其有效性来自学习一个状态依赖的松弛策略：控制器观察到紧凑的种群和约束特征后选择动作，解码为候选比较规则的松弛向量，从而在搜索早期允许接近可行的候选作为跳板、后期收紧可行性恢复。这种自适应性使策略不绑定固定惩罚、固定松弛水平或固定可行性规则，因而能在惩罚敏感、松弛敏感和大违反等异构问题上保持一致竞争力。",
+        "limitations": [
+          "作者指出未来工作可增强框架，包括设计更丰富的状态编码器以处理详细违反分布和可行裕度，使用向量值松弛动作实现逐约束控制，以及引入稳定性感知奖励项以更显式地建模动作平滑性。",
+          "尽管无人机任务和工程问题拓宽了经验范围，跨更多应用领域的验证也是重要方向。"
+        ],
+        "method": [
+          "MeCO将SHADE优化器与Double Deep Q-Network控制器耦合，形成双层工作流：SHADE在ε-松弛规则下搜索，策略根据种群特征设定松弛动作。",
+          "在每个优化步，控制器观测紧凑的种群和约束特征作为状态。",
+          "控制器选择标量动作，该动作被解码为松弛向量，用于候选比较规则。",
+          "策略在多个约束黑箱优化实例上训练，然后部署到留出的问题上，无需问题特定调优。",
+          "奖励设计与约束违反和目标改进相关，消融分析涉及约束相关状态特征、动作缩放、奖励塑形和元训练。",
+          "维度迁移测试中，策略在10D问题上训练后直接用于50D和100D问题，表明控制器作用于归一化搜索状态而非固定维度。"
+        ],
+        "motivation": "现有ε-松弛方法简单有效，但松弛调度通常是固定值或针对有限问题范围手工设计，需要问题相关的设计选择。固定值需要问题相关选择，手工自适应规则可能编码问题特定偏差。约束处理控制这一方向在基于强化学习的元黑箱优化中探索较少，而可行性压力的有用水平在运行过程中会变化：早期搜索可能受益于接受接近可行的候选，后期搜索通常需要更严格的可行性恢复。作者希望研究松弛策略本身能否从问题分布中学习。",
+        "primary_topic": "约束黑箱优化中的自适应约束松弛策略学习",
+        "relation_to_research": "该论文直接研究约束黑箱优化中的约束处理，与智能优化和AI4OR高度相关。其学习辅助搜索机制——用强化学习控制器动态配置元启发式的约束松弛规则——可迁移到生产调度中的约束处理，例如柔性作业车间或分布式制造中可行性恢复与目标改进的平衡。迁移设想（推测）：需要将种群和约束特征替换为调度解的特征表示，将标量动作解码为适合调度约束的松弛或惩罚参数，并重新设计奖励以反映调度目标与约束违反；迁移到动态扰动或多目标场景还需扩展状态编码与奖励设计。论文未涉及生产调度、图神经网络或大模型智能体。",
+        "relevance_score": 6,
+        "setting": "论文研究约束黑箱优化问题，目标函数与约束函数只能通过有限次评估查询，优化器需在有限评估预算内同时寻找可行解并改进目标值。决策对象是SHADE差分进化优化器在候选比较规则中使用的ε-松弛向量。关键约束是可行性与目标改进之间的冲突：可行压力过强会使搜索停滞在平庸可行点，可行压力过弱会浪费大量评估在不可行区域。信息假设为优化过程中可获得种群特征和约束特征。环境为静态优化问题分布，但训练与测试问题不同，策略需跨问题泛化。材料未说明更具体的约束类型或动态扰动设定。",
+        "tags": [
+          "约束黑箱优化",
+          "元学习",
+          "强化学习",
+          "约束处理",
+          "差分进化",
+          "ε-松弛",
+          "元黑箱优化"
+        ],
+        "title_zh": "元学习辅助的约束松弛方法用于约束黑箱优化",
+        "uncertainty": "全文节选包含摘要、引言、部分实验结果和附录片段，但许多实验数字、基线完整列表和消融细节被截断，因此对实验严谨性和具体性能优势的判断存在不确定性。此外，论文应用领域为无人机路径规划和工程问题，未直接涉及生产调度，迁移到生产调度的可行性为推测。",
+        "why_recommended": "对研究智能优化和生产调度的读者而言，该论文展示了如何用元学习和强化学习自动配置约束处理策略，避免问题相关的手工设计，其状态-动作-奖励设计和跨维度、跨领域泛化评估对学习辅助搜索有参考价值。约束可行性、解质量和公平计算预算的分析角度也与当前研究关注点一致。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-16T10:08:43.061028+08:00",
+        "figures": [
+          {
+            "caption": "Bi-level workflow of MeCO. The SHADE optimizer searches with an ϵ \\epsilon -relaxation rule, while the policy sets the relaxation action from population features.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2602.00532/v2/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2602.00532v2/intro.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2602.00532v2#S1.F1"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2602.00532v2",
+        "status": "available"
+      },
+      "final_score": 0.5999167702306274,
+      "provenance": {
+        "analyzed_at": "2026-09-16T02:13:43.430351Z",
+        "input_hash": "f344c77d5e8881e685b8986b972a6529deba340b5b84c4456640bade15b4030e",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Constraint handling is central to constrained black-box optimization (BBO), where objective improvement and feasibility restoration often provide conflicting search signals. Existing $\\epsilon$-relaxation methods are simple and effective, but their relaxation schedules are usually fixed or manually designed for a limited range of problems. To address this limitation, this letter proposes MeCO, a meta-learning-assisted optimizer that learns an adaptive $\\epsilon$-relaxation policy for constrained BBO. MeCO couples a SHADE optimizer with a Double Deep Q-Network controller. At each optimization step, the controller observes compact population and constraint features and selects a scalar action, which is decoded into a relaxation vector for the candidate comparison rule. The policy is trained across constrained BBO instances and then deployed on held-out problems without problem-specific tuning. Experiments on the CEC2017 constrained benchmark, 16 UAV path-planning tasks and eight real-world engineering problems provide evidence that MeCO transfers across held-out benchmark functions, higher dimensions, and an application-domain setting. Ablation and behavior analyses further clarify the roles of constraint-related state features, action scaling, reward shaping, and meta-training.",
+          "authors": [
+            "Sijie Ma",
+            "Zeyuan Ma",
+            "Yue-Jiao Gong",
+            "Ran Cheng"
+          ],
+          "canonical_id": "2602.00532",
+          "categories": [
+            "cs.NE",
+            "cs.LG"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2602.00532",
+          "published_at": "2026-01-31T05:52:36Z",
+          "source": "arxiv",
+          "title": "Meta-Learning-Assisted Constraint Relaxation for Constrained Black-Box Optimization",
+          "updated_at": "2026-09-15T04:40:31Z",
+          "url": "https://arxiv.org/abs/2602.00532",
+          "version": 2
+        },
+        "rank": 9,
+        "score": {
+          "base_score": 0.5998486731465953,
+          "exploration": 0.37479621604588187,
+          "matched_terms": [
+            "black-box optimization",
+            "deep Q",
+            "meta-learning"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.7995981340851308,
+          "topic": 0.6070781006215032
         }
       },
       "tier": "deep_read"
@@ -1411,7 +1849,7 @@
         "html_url": "https://arxiv.org/html/2605.03374v2",
         "status": "not_found"
       },
-      "final_score": 0.5651157355000839,
+      "final_score": 0.6081726376803818,
       "provenance": {
         "analyzed_at": "2026-09-15T02:17:25.577797Z",
         "input_hash": "a31902ec06717c67bc100bbd09f27b2a25d028d3f4b7eb68330f4e416ae1809b",
@@ -1441,10 +1879,10 @@
           "url": "https://arxiv.org/abs/2605.03374",
           "version": 2
         },
-        "rank": 9,
+        "rank": 8,
         "score": {
-          "base_score": 0.536574064545607,
-          "exploration": 0.07404467241296389,
+          "base_score": 0.6148593412370578,
+          "exploration": 0.6887228241888255,
           "matched_terms": [
             "mixed integer",
             "mixed-integer",
@@ -1453,7 +1891,7 @@
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.835961546379708,
+          "recency": 0.6518524164068261,
           "topic": 0.5831860389166189
         }
       },
@@ -7545,7 +7983,7 @@
         "html_url": "https://arxiv.org/html/2609.14418v1",
         "status": "not_found"
       },
-      "final_score": 0.6463280485882184,
+      "final_score": 0.6754109849464208,
       "provenance": {
         "analyzed_at": "2026-09-15T02:17:02.324541Z",
         "input_hash": "7a7a7aa3d40dd69a77b84aed93ad7ecfd360e0c099fa56aa7ee44c6be11b0174",
@@ -7575,10 +8013,10 @@
           "url": "https://arxiv.org/abs/2609.14418",
           "version": 1
         },
-        "rank": 1,
+        "rank": 3,
         "score": {
-          "base_score": 0.6024146337967605,
-          "exploration": 0.4564444995144372,
+          "base_score": 0.6552926999025832,
+          "exploration": 0.8930046972308547,
           "matched_terms": [
             "project scheduling",
             "resource-constrained",
@@ -7586,7 +8024,7 @@
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.6617019670677714,
+          "recency": 0.5159711329333784,
           "topic": 0.6271811483714211
         }
       },
@@ -8059,8 +8497,582 @@
         }
       },
       "tier": "deep_read"
+    },
+    "arxiv:2609.16629:v1": {
+      "analysis": {
+        "analysis": "作者通过重新形式化无人机路径规划问题以纳入具有挑战性的约束，并引入显式惩罚度量来量化约束违反，其中空间与时间约束通过决策变量值截断强制满足，其余约束以不同尺度的违反量聚合，以重新平衡差分进化优化器对各类约束的关注。",
+        "challenges": [
+          "高约束空间导致搜索困难",
+          "训练数据稀缺与真实环境分布偏移",
+          "固定数量悬停点编码限制优化灵活性",
+          "人工设计优化器泛化能力弱",
+          "多类复杂约束（通信带宽、数据收集、避障）的违反度量与平衡"
+        ],
+        "corresponding_authors": [
+          "Zeyuan Ma"
+        ],
+        "evidence": [
+          {
+            "claim": "论文提出 LAMDE 学习辅助规划框架以应对无人机路径规划中人工设计偏差和简化仿真的局限。",
+            "location": "abstract",
+            "quote": "we propose a novel learning-assisted planning framework, termed Landscape-Aware Meta Differential Evolution (LAMDE), to tackle the mentioned limitations."
+          },
+          {
+            "claim": "作者采用双层学习优化，元层为可训练算法配置策略，低层为差分进化算法。",
+            "location": "abstract",
+            "quote": "we propose a bi-level learning to optimize approach, where the meta-level is a trainable algorithm configuration policy that meta-learns an adaptable planning strategy for low-level planning algorithm."
+          },
+          {
+            "claim": "作者设计了变长编码策略，动态剪枝冗余悬停点并同时优化连续飞行参数。",
+            "location": "abstract",
+            "quote": "we further design a variable-length encoding strategy that dynamically prunes redundant hover points and optimizes continuous flight parameters concurrently within a unified search space."
+          },
+          {
+            "claim": "论文在复杂无人机路径规划任务上取得 state-of-the-art 性能。",
+            "location": "abstract",
+            "quote": "Comprehensive experiments demonstrate that LAMDE achieves state-of-the-art performance on the tested complex UAV path planning tasks in WSN data collection scenarios."
+          },
+          {
+            "claim": "材料指出未来工作包括 3D 环境、在线动态规划和多无人机协同进化，说明当前工作未覆盖这些设定。",
+            "location": "supplied_full_text",
+            "quote": "i) 3D UAV environmental setting. ii) Online dynamic planning in noisy environment. iii) Multi-UAV co-evolution."
+          }
+        ],
+        "experiments": [
+          "在多种无人机任务上与代表性基线对比，材料称 LAMDE 在测试的复杂 WSN 数据采集场景中取得 state-of-the-art 性能，但未提供具体数值、实例规模、运行时间或训练开销。",
+          "材料提到在不同 I_max 下测试平均可行率，并进行了更深入分析以说明设计有效性，但未给出具体结果数字。",
+          "材料列出未来工作包括 3D 无人机环境、噪声环境中的在线动态规划以及多无人机协同进化，暗示当前实验未覆盖这些设定。"
+        ],
+        "first_affiliation": "华南理工大学",
+        "insight": "将无人机路径规划中的低层差分进化配置建模为可训练的策略，使元层能够根据优化状态自适应调整算法配置，而不是依赖固定人工超参数；同时通过景观感知的数据增强方案缓解训练分布偏移，并通过变长编码动态剪枝冗余悬停点在统一搜索空间中同时优化连续飞行参数，从而在高度约束空间中提升适应性与求解灵活性。",
+        "limitations": [
+          "材料明确陈述的未来工作包括：3D 无人机环境设定、噪声环境中的在线动态规划、多无人机协同进化，暗示这些方面是当前工作的局限。"
+        ],
+        "method": [
+          "提出 Landscape-Aware Meta Differential Evolution (LAMDE) 学习辅助规划框架",
+          "采用双层学习优化：元层为可训练算法配置策略，通过元学习为低层规划算法提供可适应策略",
+          "引入景观感知自动增强方案丰富训练数据，应对训练数据稀缺与分布偏移",
+          "低层采用差分进化算法求解路径规划任务",
+          "设计变长编码策略，动态剪枝冗余悬停点并在统一搜索空间中同时优化连续飞行参数",
+          "元层将低层差分进化的动态算法配置建模为 MDP，状态包含种群、目标值、违反量与搜索进度，动作指定每个个体的进化配置"
+        ],
+        "motivation": "现有无人机数据采集路径规划方法主要依赖人工设计，存在设计偏差，难以适应未见任务；同时它们常通过简化仿真假设理想化空间复杂度，在真实部署中表现不佳。作者因此希望用学习辅助规划框架替代人工设计优化器，并应对真实环境中训练数据稀缺与分布偏移问题。",
+        "primary_topic": "MetaBBO 与差分进化结合的无人机路径规划",
+        "relation_to_research": "该论文属于学习辅助进化优化与 MetaBBO 方向，直接相关于智能优化中“学习如何优化”的范式，其元层策略根据优化状态配置低层差分进化、变长编码与约束惩罚设计，对生产调度、柔性作业车间等约束优化问题中的算法配置、约束处理与搜索空间编码具有迁移参考价值；但论文本身针对无人机路径规划，未涉及车间调度或分布式制造，迁移需要重新定义状态、动作与约束违反度量。",
+        "relevance_score": 6,
+        "setting": "研究面向无线传感器网络数据采集的无人机路径规划问题，决策对象是包含悬停点激活变量与连续飞行参数的飞行计划，目标是在满足通信带宽、数据收集量、避障等约束的同时优化任务代价；环境带有城市级障碍布局，问题被重新建模为高约束黑盒优化问题，具体的目标函数形式、约束阈值和动态/静态假设在提供的材料中未完全说明。",
+        "tags": [
+          "UAV路径规划",
+          "MetaBBO",
+          "差分进化",
+          "变长编码",
+          "约束优化",
+          "无线传感器网络"
+        ],
+        "title_zh": "面向无线传感器网络数据感知的无人机路径规划学习优化",
+        "uncertainty": "提供的材料仅为摘要与部分全文节选，缺少完整的实验数值、基线细节、训练开销和消融结果，因此对方法优越性的判断只能依据作者陈述；部分方法细节在节选中不完整，相关分析基于有限证据。",
+        "why_recommended": "对研究学习辅助搜索、进化算法与神经网络结合、约束优化及变长编码的读者有参考意义，尤其是元层配置低层进化算法、景观感知数据增强和约束违反聚合机制，可能启发生产调度中的算法自适应配置与约束可行性维护。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-16T10:08:43.061028+08:00",
+        "figures": [
+          {
+            "caption": "Overview of UAV path planning for ground sensor data collection under environmental constraints, including obstacles and no-fly zones.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2609.16629/v1/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2609.16629v1/problem_framework.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2609.16629v1#S2.F1"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2609.16629v1",
+        "status": "available"
+      },
+      "final_score": 0.6433464680366008,
+      "provenance": {
+        "analyzed_at": "2026-09-16T02:13:18.964372Z",
+        "input_hash": "026297cc561fb080ddc57b559267210e788a91114f3b42e8b302835a71335f86",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "UAVs have emerged as highly flexible platforms for data sensing in Wireless Sensor Networks (WSNs). Path planning for UAVs in such tasks plays a key role to assure remote sensing effectiveness and friendly energy consumption. However, existing approaches show two key limitations: i) they are primarily hand-crafted with certain design biases that harm adaptation on unseen tasks. ii) they predominantly assume idealized spatial complexities of actual environments through simplified simulation, causing them to underperform during real-world deployment. In this paper, we propose a novel learning-assisted planning framework, termed Landscape-Aware Meta Differential Evolution (LAMDE), to tackle the mentioned limitations. The major contributions come from the following aspects. We first re-formulate such UAV path planning problem to embrace challenging constraints. To efficiently navigate this highly constrained space, we propose a bi-level learning to optimize approach, where the meta-level is a trainable algorithm configuration policy that meta-learns an adaptable planning strategy for low-level planning algorithm. To address the potential training data scarcity and distribution shift in real-world environments, we introduce a landscape-aware automatic augmentation scheme that enriches training data. At the low-level, a Differential Evolution algorithm is deployed for solving the path planning tasks. To enhance the solving flexibility, we further design a variable-length encoding strategy that dynamically prunes redundant hover points and optimizes continuous flight parameters concurrently within a unified search space. Based on all proposed designs, we meta-train LAMDE and compare it with representative baselines. Comprehensive experiments demonstrate that LAMDE achieves state-of-the-art performance on the tested complex UAV path planning tasks in WSN data collection scenarios.",
+          "authors": [
+            "Sijie Ma",
+            "Zeyuan Ma",
+            "Weijia Cao",
+            "Yue-Jiao Gong",
+            "Lingling Ma",
+            "Zhiyang Huang",
+            "Jun Zhang"
+          ],
+          "canonical_id": "2609.16629",
+          "categories": [
+            "cs.RO",
+            "cs.NE"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2609.16629",
+          "published_at": "2026-09-15T04:51:47Z",
+          "source": "arxiv",
+          "title": "Learning to Optimize UAV Path Planning for Data Sensing in Wireless Sensor Networks",
+          "updated_at": "2026-09-15T04:51:47Z",
+          "url": "https://arxiv.org/abs/2609.16629",
+          "version": 1
+        },
+        "rank": 4,
+        "score": {
+          "base_score": 0.6788117600665466,
+          "exploration": 0.5353896460979463,
+          "matched_terms": [
+            "differential evolution",
+            "algorithm configuration",
+            "learning to optimize"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.8011636934752,
+          "topic": 0.6848318116551028
+        }
+      },
+      "tier": "deep_read"
+    },
+    "arxiv:2609.16680:v1": {
+      "analysis": {
+        "analysis": "作者将问题分析为自然语言与空间图示到严谨数学语法之间的鸿沟，并指出通用LLM在多物理动力学建模中会引入无效约束；为此设计领域专用知识库与LLM驱动交互相结合，并构建包含50个典型场景的多模态基准IPC-Bench，以文本与过程图联合推理为任务形式，通过自动化结构评估与双盲人类评估来检验建模质量。",
+        "challenges": [
+          "从非结构化自然语言与空间/过程图中抽出可求解的数学结构",
+          "连续多物理动力学建模时通用LLM易引入无效约束",
+          "需要同时评估模型的结构正确性与语义正确性",
+          "现有评估缺少针对工业过程控制建模任务的系统基准"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文研究目标是从杂乱工业规格生成数学优化模型以支持工业过程控制",
+            "location": "abstract",
+            "quote": "synthesizing mathematical optimization models from messy, real-world industrial specifications requires bridging unstructured natural language and spatial diagrams with rigorous mathematical syntax."
+          },
+          {
+            "claim": "通用LLM在连续多物理动力学建模中可能引入无效约束",
+            "location": "abstract",
+            "quote": "This poses a profound challenge for general-purpose Large Language Models (LLMs), which may introduce invalid constraints when tasked with modeling continuous multi-physics dynamics."
+          },
+          {
+            "claim": "little m结合领域专用知识库与LLM驱动交互来构建数学模型",
+            "location": "abstract",
+            "quote": "Combining a domain-specific knowledge repository with LLM-driven interaction, the proposed framework formulates real-world optimization problems as mathematical models."
+          },
+          {
+            "claim": "论文提出IPC-Bench，包含50个需要文本与过程图联合推理的多模态场景",
+            "location": "abstract",
+            "quote": "we introduce the Industrial Process Control Benchmark (IPC-Bench), a novel multimodal dataset of 50 canonical scenarios requiring joint reasoning over text and process diagrams."
+          },
+          {
+            "claim": "little m在语义正确的模型生成上显著优于最先进LLM",
+            "location": "abstract",
+            "quote": "little m substantially outperforms state-of-the-art LLMs, generating semantically correct models."
+          },
+          {
+            "claim": "评估仅针对建模质量，不覆盖求解器可行性、形式物理有效性与闭环工业性能",
+            "location": "abstract",
+            "quote": "These evaluations assess formulation quality rather than solver feasibility, formal physical validity, or closed-loop industrial performance."
+          }
+        ],
+        "experiments": [
+          "在IPC-Bench上通过综合自动化结构评估与双盲人类评估，little m显著优于当前最先进LLM，能够生成语义正确的模型",
+          "评估针对的是建模质量（formulation quality），而非求解器可行性、物理形式有效性或闭环工业性能",
+          "具体实例规模、运行时间、训练开销、消融实验、计算预算与泛化结果材料未说明"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "有效的关键在于把通用LLM的语言能力与领域专用知识库结合：领域知识约束并引导LLM的建模过程，使其在自然语言与过程图联合推理时减少无效约束、生成语义正确的模型，而不是仅依赖通用LLM的自由生成能力。",
+        "limitations": [
+          "作者明确说明评估评估的是建模质量，而非求解器可行性、形式物理有效性或闭环工业性能；其他局限材料未说明"
+        ],
+        "method": [
+          "提出little m智能体，用于辅助工业过程控制模型的构建（formulation）",
+          "结合领域专用知识库与LLM驱动的交互，将真实优化问题表述为数学模型",
+          "构建Industrial Process Control Benchmark（IPC-Bench）：包含50个典型场景的多模态数据集，要求对文本与过程图进行联合推理",
+          "采用自动化结构评估与双盲人类评估来评价生成模型的语义正确性",
+          "公开实现与数据集于 https://github.com/yeyongchao/process-modeling-benchmark"
+        ],
+        "motivation": "制造业消耗全球三分之一能源且能效仍有较大提升空间，而最优过程控制依赖数学优化模型；但把杂乱的真实工业规格（非结构化自然语言与空间图示）转换为严谨数学语法，对通用大语言模型而言是深刻挑战，容易在连续多物理动力学建模中引入无效约束。",
+        "primary_topic": "大模型智能体驱动的工业过程控制数学优化建模",
+        "relation_to_research": "该工作属于AI4OR中的自动建模方向，直接触及“自然语言/多模态规格到大模型辅助数学规划建模”这一环节，与神经网络辅助求解、学习辅助搜索、大模型智能体优化高度相邻。其领域知识库+LLM智能体的结构可迁移到生产调度建模（如柔性作业车间、流水车间的约束与目标自动表述），但推测迁移需要补充调度领域知识库、可验证的约束模板以及求解器可行性/最优性评估，论文本身未验证这些场景。",
+        "relevance_score": 8,
+        "setting": "论文研究的是工业过程控制中的数学优化模型自动构建问题：决策对象是从杂乱的真实工业规格（非结构化自然语言与空间/过程图）生成严谨的数学优化模型，目标（隐含）是缓解制造业能耗问题并提升能效，关键约束在于模型必须具有语义正确性与合法约束，信息假设为模型构建需要同时推理文本与过程图两种模态，环境性质（静态或动态）材料未说明；摘要明确其评估不覆盖求解器可行性、物理形式有效性或闭环工业性能。",
+        "tags": [
+          "AI4OR",
+          "大模型智能体",
+          "自动建模",
+          "工业过程控制",
+          "多模态推理",
+          "数学规划建模"
+        ],
+        "title_zh": "little m：面向工业过程优化的AI智能体",
+        "uncertainty": "仅依据标题与摘要，无法获知little m的具体网络结构、状态/动作/奖励定义、知识库形式、基线LLM列表、实验规模、运行时间与训练开销；作者单位、通讯作者亦未提供；因此对方法细节与实验严谨性的判断存在不确定性，相关性评分基于其自动建模与AI4OR主题。",
+        "why_recommended": "对研究AI驱动运筹优化与自动建模的博士生而言，本文提供了“领域知识库+LLM智能体+多模态基准”的完整范式，并把评估边界明确限定为建模质量而非求解性能，这对当前关注自动建模、约束可行性与可复现基准的研究者具有直接参考价值；其基准构建与双盲评估协议也可用于生产调度自动建模任务的评测设计。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-16T10:08:43.061028+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2609.16680v1",
+        "status": "not_found"
+      },
+      "final_score": 0.6181374032647444,
+      "provenance": {
+        "analyzed_at": "2026-09-16T02:14:00.390053Z",
+        "input_hash": "633cb1156c44d2ccdb4efd98400be1221ea22e338eab9b06207ef32edc613365",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Manufacturing consumes one third of global energy and still has significant room for improvement in terms of energy efficiency. Optimal process control is essential for this purpose. However, synthesizing mathematical optimization models from messy, real-world industrial specifications requires bridging unstructured natural language and spatial diagrams with rigorous mathematical syntax. This poses a profound challenge for general-purpose Large Language Models (LLMs), which may introduce invalid constraints when tasked with modeling continuous multi-physics dynamics. To address this, we introduce little m, an AI agent designed to assist the formulation of industrial process control models. Combining a domain-specific knowledge repository with LLM-driven interaction, the proposed framework formulates real-world optimization problems as mathematical models. For systematic evaluation, we introduce the Industrial Process Control Benchmark (IPC-Bench), a novel multimodal dataset of 50 canonical scenarios requiring joint reasoning over text and process diagrams. Through comprehensive automated structural assessments and double-blind human evaluation, little m substantially outperforms state-of-the-art LLMs, generating semantically correct models. These evaluations assess formulation quality rather than solver feasibility, formal physical validity, or closed-loop industrial performance. The implementation of little m and the IPC-Bench dataset are available at https://github.com/yeyongchao/process-modeling-benchmark.",
+          "authors": [
+            "Yongchao Ye",
+            "Xinyu He",
+            "Dutliff Boshoff",
+            "Way Kuo",
+            "Lishuai Li"
+          ],
+          "canonical_id": "2609.16680",
+          "categories": [
+            "cs.AI"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2609.16680",
+          "published_at": "2026-09-15T06:01:18Z",
+          "source": "arxiv",
+          "title": "little m: An AI Agent for Industrial Process Optimization",
+          "updated_at": "2026-09-15T06:01:18Z",
+          "url": "https://arxiv.org/abs/2609.16680",
+          "version": 1
+        },
+        "rank": 22,
+        "score": {
+          "base_score": 0.4693407332086261,
+          "exploration": 0.4540408360299219,
+          "matched_terms": [
+            "mathematical optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.8108914137269349,
+          "topic": 0.37612622368302473
+        }
+      },
+      "tier": "browse"
+    },
+    "arxiv:2609.16939:v1": {
+      "analysis": {
+        "analysis": "材料未说明作者具体如何分析问题；摘要仅表明综述覆盖列车调度与运行控制的优化策略、储能技术在能量管理、削峰和电压频率控制方面的作用，以及人工智能和先进控制策略的集成。",
+        "challenges": [
+          "列车动态调度与运行控制的能耗降低与系统性能提升",
+          "储能系统在能量管理、削峰以及电压和频率控制中的实际应用",
+          "人工智能与先进控制策略在电气化铁路系统中的集成"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "该文是一篇关于电气化铁路系统优化的综述，覆盖动态调度、能量管理与储能集成。",
+            "location": "abstract",
+            "quote": "In this review, recent advancements in dynamic scheduling, energy management, and energy storage systems (ESSs) integration within electric railway networks are analyzed."
+          },
+          {
+            "claim": "该综述关注降低能耗和提升系统性能的列车调度与运行控制优化策略。",
+            "location": "abstract",
+            "quote": "Optimization strategies for train scheduling and operation control are reviewed, with a focus on methods that reduce energy consumption and improve overall system performance."
+          },
+          {
+            "claim": "该综述分析了储能在能量管理、削峰以及电压和频率控制方面的作用。",
+            "location": "abstract",
+            "quote": "The role of energy storage technologies is analyzed in terms of energy management, peak shaving, and voltage and frequency control for practical application."
+          },
+          {
+            "claim": "该综述也回顾了人工智能与先进控制策略在电气化铁路系统中的集成。",
+            "location": "abstract",
+            "quote": "The integration of artificial intelligence and advanced control strategies is also reviewed in electrified railway systems."
+          }
+        ],
+        "experiments": [
+          "该文为综述，摘要未报告具体实验、基线、实例规模、约束可行性、解质量、运行时间、训练开销或消融结果，材料未说明。"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "该综述的核心价值在于将列车动态调度、能量管理和储能集成视为相互关联的系统级优化问题，而非孤立模块，并指出人工智能与先进控制策略在提升电气化铁路韧性和能效方面的整合作用；但摘要未给出具体机制层面的因果解释。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "综述列车调度与运行控制的优化策略，重点关注降低能耗和提升系统性能的方法",
+          "分析储能在能量管理、削峰以及电压和频率控制中的角色",
+          "综述人工智能与先进控制策略在电气化铁路系统中的集成"
+        ],
+        "motivation": "铁路系统现代化受到更高效率、可持续性和智能运营需求的驱动，因此需要系统梳理列车动态调度、能量管理与储能集成方面的优化进展，并总结人工智能与先进控制策略在电气化铁路中的应用趋势。",
+        "primary_topic": "电气化铁路系统的优化：列车动态调度、能量管理与储能集成",
+        "relation_to_research": "该综述与智能优化、生产调度和AI4OR存在领域相邻关系：铁路列车动态调度在问题结构上属于带时间、能量和安全约束的动态调度与运行控制，储能与能量管理涉及多目标约束优化，人工智能与先进控制策略的集成属于学习或智能方法辅助优化的应用方向。论文事实是它综述了上述方向；推测层面，其调度与能量管理框架可能对生产调度、生产运输协同或能效多目标优化具有迁移价值，但迁移时需要将铁路特有的线路、列车动力学、供电与储能约束重新映射为制造系统中的机器、工件、运输与能耗约束，并验证约束可行性和计算预算公平性。",
+        "relevance_score": 6,
+        "setting": "该文是一篇综述，研究电气化铁路网络在效率、可持续性和智能化运营驱动下的优化问题，决策对象包括列车调度与运行控制策略、能量管理策略以及储能系统（ESS）的集成；目标为降低能耗、削峰、电压与频率控制并提升系统整体性能；关键约束、信息假设以及静态或动态环境的细节在摘要中未具体说明，材料未说明。",
+        "tags": [
+          "铁路调度",
+          "能量管理",
+          "储能系统",
+          "动态调度",
+          "运行控制",
+          "人工智能",
+          "综述"
+        ],
+        "title_zh": "电气化铁路系统优化综述：列车动态调度、能量管理与储能集成",
+        "uncertainty": "仅有标题和摘要，未提供全文；因此无法确认具体优化模型、算法细节、实验基线、数据规模、约束处理方式、AI方法类型以及作者明确陈述的局限，相关性判断主要基于领域相邻性而非直接的方法贡献。",
+        "why_recommended": "对于研究生产调度、动态扰动、能效与多目标约束优化的读者，该综述提供了铁路场景下动态调度、能量管理与储能集成的优化视角和人工智能集成趋势，可作为跨领域问题建模与约束结构迁移的参考；但因其为综述且摘要未给出具体算法机制与实验数字，阅读时应进一步核实原文中的方法细节与验证范围。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-16T10:08:43.061028+08:00",
+        "figures": [
+          {
+            "caption": "Optimization Strategies and System Architecture in Electrified Railway Networks.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2609.16939/v1/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2609.16939v1/optimization.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2609.16939v1#S1.F1"
+          },
+          {
+            "caption": "The framework of dynamic scheduling and operation control.",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2609.16939/v1/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2609.16939v1/framework1.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2609.16939v1#S3.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2609.16939v1",
+        "status": "available"
+      },
+      "final_score": 0.5224165832359213,
+      "provenance": {
+        "analyzed_at": "2026-09-16T02:14:05.139047Z",
+        "input_hash": "8bc29a546807bb4f4df62dda1a58130b1b0b80b0b078c08b140534c50af7e243",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "The modernization of railway systems is being driven by the need for greater efficiency, sustainability, and intelligent operation. In this review, recent advancements in dynamic scheduling, energy management, and energy storage systems (ESSs) integration within electric railway networks are analyzed. Optimization strategies for train scheduling and operation control are reviewed, with a focus on methods that reduce energy consumption and improve overall system performance. The role of energy storage technologies is analyzed in terms of energy management, peak shaving, and voltage and frequency control for practical application. The integration of artificial intelligence and advanced control strategies is also reviewed in electrified railway systems. This review provides a comprehensive overview of current research trends and outlines future directions for the development of resilient, energy efficient, and intelligent railway systems with ESSs integration.",
+          "authors": [
+            "Fei Liu",
+            "Can Wan",
+            "Stefan \\\"Ostlund",
+            "Qianwen Xu"
+          ],
+          "canonical_id": "2609.16939",
+          "categories": [
+            "eess.SY",
+            "cs.SY"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2609.16939",
+          "published_at": "2026-09-15T10:15:03Z",
+          "source": "arxiv",
+          "title": "Review on Electric Railway System Optimization: Train Dynamic Scheduling, Energy Management, and Storage Integration",
+          "updated_at": "2026-09-15T10:15:03Z",
+          "url": "https://arxiv.org/abs/2609.16939",
+          "version": 1
+        },
+        "rank": 25,
+        "score": {
+          "base_score": 0.45893924224712973,
+          "exploration": 0.02575649026133443,
+          "matched_terms": [
+            "dynamic scheduling",
+            "energy-efficient"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.8474128251353982,
+          "topic": 0.47171329056070876
+        }
+      },
+      "tier": "browse"
+    },
+    "arxiv:2609.17440:v1": {
+      "analysis": {
+        "analysis": "作者以昂贵黑箱函数为出发点，先利用全局敏感性分析进行降维，再构建保真度增强的高斯过程来关联低保真与高保真评估，最后通过成本感知采集函数并配合 cooldown 与 promotion 机制，把有限的高保真预算引导到更有价值的位置。材料未说明更细致的理论分析，如下界、收敛性或后悔界。",
+        "challenges": [
+          "高维设计空间带来的维度灾难",
+          "严格过程仿真评估成本极高",
+          "低保真近似与高保真评估之间相关性的建模",
+          "在不同保真度之间进行成本感知的自适应采样分配",
+          "保持优化性能同时减少高保真评估次数"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文针对高维昂贵黑箱函数提出降维多保真贝叶斯优化框架",
+            "location": "abstract",
+            "quote": "we present a reduced-space multi-fidelity Bayesian optimization (RS-MFBO) framework designed for high-dimensional, expensive black-box functions"
+          },
+          {
+            "claim": "方法使用全局敏感性分析降维并构建保真度增强高斯过程",
+            "location": "abstract",
+            "quote": "The approach integrates Global Sensitivity Analysis (GSA) for dimensionality reduction with a fidelity-augmented Gaussian process that captures correlations between low-cost approximations and expensive high-fidelity evaluations."
+          },
+          {
+            "claim": "使用成本感知采集策略和 cooldown 与 promotion 机制分配样本",
+            "location": "abstract",
+            "quote": "A cost-aware acquisition strategy, augmented with cooldown and promotion mechanisms, adaptively guides the allocation of samples across fidelities."
+          },
+          {
+            "claim": "在两个工业过程仿真器上验证并减少高保真评估次数",
+            "location": "abstract",
+            "quote": "The framework is validated on two distinct industrial process simulators: a plasmid DNA bioprocess in SuperPro Designer and a green fuel synthesis plant in Aspen HYSYS."
+          },
+          {
+            "claim": "结果声称大幅减少高保真仿真评估并保持竞争性能",
+            "location": "abstract",
+            "quote": "Results across diverse economic and physical objectives demonstrate that the proposed method substantially reduces the number of high-fidelity simulator evaluations while maintaining competitive optimization performance compared to single-fidelity baselines."
+          }
+        ],
+        "experiments": [
+          "在 SuperPro Designer 的质粒 DNA 生物过程和 Aspen HYSYS 的绿色燃料合成工厂两个不同工业过程仿真器上验证",
+          "覆盖多种经济与物理目标",
+          "与单保真基线相比，所提方法大幅减少高保真仿真评估次数，同时保持有竞争力的优化性能",
+          "摘要未给出具体实例规模、运行时间、训练开销或消融数字"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "其有效性来自两点结构性利用：一是通过全局敏感性分析识别并去除对目标影响弱的维度，从而降低有效搜索空间；二是用保真度增强高斯过程显式建模低保真与高保真评估之间的相关性，使廉价近似承担大部分探索，昂贵评估只用于校正和确认，并以成本感知的采集策略在保真度之间自适应分配样本。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "使用 Global Sensitivity Analysis 对高维设计空间做降维，筛选重要变量",
+          "构建保真度增强的高斯过程，捕捉低保真近似与昂贵高保真评估之间的相关性",
+          "设计成本感知的采集策略，按成本效益决定下一次采样保真度",
+          "引入 cooldown 与 promotion 机制自适应引导样本在不同保真度间的分配",
+          "在两类工业过程仿真器上验证框架：SuperPro Designer 中的质粒 DNA 生物过程与 Aspen HYSYS 中的绿色燃料合成工厂"
+        ],
+        "motivation": "工业过程流仿真优化通常因严格仿真计算成本高和复杂设计空间维度灾难而难以直接求解，作者希望减少高保真仿真调用次数，在有限计算预算下仍获得有竞争力的优化解。",
+        "primary_topic": "高维昂贵黑箱过程仿真的多保真贝叶斯优化",
+        "relation_to_research": "论文事实层面：该工作属于昂贵黑箱优化与多保真贝叶斯优化，核心是降维、保真度相关建模与成本感知采样分配，并非直接研究生产调度或柔性作业车间。推测层面：其多保真采样与保真度增强高斯过程思想可迁移到生产调度中，例如把精确调度求解器作为高保真、把快速启发式或代理模型作为低保真，在有限计算预算下分配求解资源；但迁移需要解决调度问题中约束可行性、离散决策空间以及高低保真模型相关性如何定义与验证等问题。",
+        "relevance_score": 6,
+        "setting": "研究面向工业过程流（flowsheet）仿真模型的优化问题，决策对象是高维设计空间中的工艺设计变量，目标是在经济与物理指标上取得优化性能，关键约束是严格高保真仿真评估成本极高且设计空间维度高导致维度灾难，信息假设是可获得低成本近似（低保真）与昂贵高保真两类仿真并存在相关性，环境为静态黑箱优化，材料未说明是否涉及动态扰动或在线决策。",
+        "tags": [
+          "贝叶斯优化",
+          "多保真优化",
+          "降维",
+          "全局敏感性分析",
+          "高斯过程",
+          "过程系统工程",
+          "黑箱优化"
+        ],
+        "title_zh": "过程仿真模型的降维多保真贝叶斯优化",
+        "uncertainty": "仅有标题与摘要，无法确认作者单位、通讯作者、具体实验规模、基线设置、统计显著性、运行时间和消融细节，也无法判断其高维降维在离散约束优化中的适用性，因此相关性评分限定在相邻方向可迁移的 6 分。",
+        "why_recommended": "对研究学习辅助搜索和计算预算受限优化的读者有参考价值：它展示了如何用敏感性分析降维，并用多保真高斯过程与成本感知采集在昂贵评估之间分配预算。该机制与调度中代理模型辅助精确求解的思路相通，可启发将有限高保真评估预算用于关键解的策略设计。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-16T10:08:43.061028+08:00",
+        "figures": [
+          {
+            "caption": "High-fidelity black-box simulator models: (a) pDNA bioprocess (SuperPro Designer), (b) green fuel synthesis (Aspen HYSYS) [ 24 ] .",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": null,
+                "original_url": "https://arxiv.org/html/2609.17440v1/flowsheets2.jpg"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2609.17440v1#S1.F1"
+          },
+          {
+            "caption": "Optimization results for all objectives: best observed high-fidelity value vs. function evaluations for Case Study I. Surrogate-based methods are validated with the simulator.",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2609.17440/v1/fig2-panel1.jpg",
+                "original_url": "https://arxiv.org/html/2609.17440v1/superpro_panel.jpeg"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2609.17440v1#S5.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2609.17440v1",
+        "status": "available"
+      },
+      "final_score": 0.5724862115738822,
+      "provenance": {
+        "analyzed_at": "2026-09-16T02:13:35.511102Z",
+        "input_hash": "50ad26b2acbb60cb07b1c8a4b4d621106475e5c2889b8c4a410183ecc0a50afc",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Optimizing industrial process flowsheets is often computationally prohibitive due to the high cost of rigorous simulations and the curse of dimensionality inherent in complex design spaces. To address these challenges, we present a reduced-space multi-fidelity Bayesian optimization (RS-MFBO) framework designed for high-dimensional, expensive black-box functions. The approach integrates Global Sensitivity Analysis (GSA) for dimensionality reduction with a fidelity-augmented Gaussian process that captures correlations between low-cost approximations and expensive high-fidelity evaluations. A cost-aware acquisition strategy, augmented with cooldown and promotion mechanisms, adaptively guides the allocation of samples across fidelities. The framework is validated on two distinct industrial process simulators: a plasmid DNA bioprocess in SuperPro Designer and a green fuel synthesis plant in Aspen HYSYS. Results across diverse economic and physical objectives demonstrate that the proposed method substantially reduces the number of high-fidelity simulator evaluations while maintaining competitive optimization performance compared to single-fidelity baselines. These results highlight RS-MFBO as a scalable, simulator-agnostic approach for cost-constrained black-box optimization.",
+          "authors": [
+            "Niki Triantafyllou",
+            "Andrea Bernardi",
+            "Maria M. Papathanasiou"
+          ],
+          "canonical_id": "2609.17440",
+          "categories": [
+            "cs.LG",
+            "math.OC"
+          ],
+          "comment": "Accepted at the 20th Learning and Intelligent Optimization Conference (LION 20), 2026. Corrected author version. This version corrects a typo in the mathematical description of the multi-fidelity covariance kernel in Section 3.2",
+          "pdf_url": "https://arxiv.org/pdf/2609.17440",
+          "published_at": "2026-09-15T16:46:51Z",
+          "source": "arxiv",
+          "title": "Reduced-Space Multi-Fidelity Bayesian Optimization of Process Simulation Models",
+          "updated_at": "2026-09-15T16:46:51Z",
+          "url": "https://arxiv.org/abs/2609.17440",
+          "version": 1
+        },
+        "rank": 12,
+        "score": {
+          "base_score": 0.5499749301343312,
+          "exploration": 0.7869192562296452,
+          "matched_terms": [
+            "black-box optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.9070601868753034,
+          "topic": 0.3802521921811064
+        }
+      },
+      "tier": "explore"
     }
   },
   "schema_version": 1,
-  "updated_at": "2026-09-15T10:15:50.072716+08:00"
+  "updated_at": "2026-09-16T10:08:43.061028+08:00"
 }
