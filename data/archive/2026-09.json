@@ -1215,7 +1215,7 @@
         "why_recommended": "该论文为 JSSP 首次引入变分推断，并给出 ELBO 与最大熵强化学习结合的数学推导与两阶段训练算法，思路清晰且与图神经网络、强化学习、学习辅助求解等方向直接相关。其对表示学习与策略优化解耦的机制分析、零样本泛化实验以及明确的局限性陈述，对研究生产调度中泛化性、训练稳定性与约束可行性的博士生具有直接参考价值。"
       },
       "figure_gallery": {
-        "checked_at": "2026-09-17T10:12:41.309353+08:00",
+        "checked_at": "2026-09-18T09:59:08.536678+08:00",
         "figures": [
           {
             "caption": "Overview of the proposed VG2S framework",
@@ -1247,7 +1247,7 @@
         "html_url": "https://arxiv.org/html/2602.00408v3",
         "status": "available"
       },
-      "final_score": 0.8344347200764661,
+      "final_score": 0.8017378228226023,
       "provenance": {
         "analyzed_at": "2026-09-17T02:19:05.134781Z",
         "input_hash": "7cef4a8a11766651a5780bbdbdb9a2112bdaeba168cfb46c1e3520afdcb38e26",
@@ -1280,10 +1280,10 @@
           "url": "https://arxiv.org/abs/2602.00408",
           "version": 3
         },
-        "rank": 1,
+        "rank": 2,
         "score": {
-          "base_score": 0.7807904001390293,
-          "exploration": 0.711628533526352,
+          "base_score": 0.721341496041095,
+          "exploration": 0.5724843962156492,
           "matched_terms": [
             "job shop",
             "job-shop",
@@ -1292,7 +1292,7 @@
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.8562186672383088,
+          "recency": 0.668393832010373,
           "topic": 0.779
         }
       },
@@ -1379,7 +1379,7 @@
         "why_recommended": "该工作把约束松弛调度从人工固定规则转化为可跨问题迁移的强化学习策略，与生产调度和 AI for OR 中“学习辅助搜索、平衡目标改进与可行性”的核心问题高度同构，其状态—动作—奖励设计、与进化优化器的耦合方式以及元训练加零调参部署的实验范式，可为柔性作业车间、分布式制造等约束调度问题的学习辅助求解机制提供可借鉴的设计思路与评估视角。"
       },
       "figure_gallery": {
-        "checked_at": "2026-09-17T10:12:41.309353+08:00",
+        "checked_at": "2026-09-18T09:59:08.536678+08:00",
         "figures": [
           {
             "caption": "Bi-level workflow of MeCO. The SHADE optimizer searches with an ϵ \\epsilon -relaxation rule, while the policy sets the relaxation action from population features.",
@@ -1398,7 +1398,7 @@
         "html_url": "https://arxiv.org/html/2602.00532v2",
         "status": "available"
       },
-      "final_score": 0.5976658652423341,
+      "final_score": 0.59366276372361,
       "provenance": {
         "analyzed_at": "2026-09-17T02:20:20.801190Z",
         "input_hash": "867ab7cd8cfbb8739aef233d1b961c8cdb4609713f719c30e43868598e57b621",
@@ -1429,10 +1429,10 @@
           "url": "https://arxiv.org/abs/2602.00532",
           "version": 2
         },
-        "rank": 27,
+        "rank": 23,
         "score": {
-          "base_score": 0.5139379368042439,
-          "exploration": 0.07958679280322496,
+          "base_score": 0.5066595704065636,
+          "exploration": 0.17606660025480908,
           "matched_terms": [
             "black-box optimization",
             "deep Q",
@@ -1440,7 +1440,7 @@
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.622298507444855,
+          "recency": 0.48578768480602963,
           "topic": 0.6070781006215032
         }
       },
@@ -2015,6 +2015,145 @@
       },
       "tier": "deep_read"
     },
+    "arxiv:2604.00826:v2": {
+      "analysis": {
+        "analysis": "作者将问题建模为底层马尔可夫决策过程，利用RL学习完整混合动作空间上的策略与critic，其中critic近似Q函数。在部署时，将RL actor在预测时域上滚动展开，用生成的离散动作序列参数化一个无整数非线性MPC，并提供连续热启动；学到的critic可作为终端代价。作者通过理论证明递归可行性，并通过F1比赛策略问题的消融实验分析各学习组件的贡献。材料未说明更详细的问题结构利用或分解方法。",
+        "challenges": [
+          "混合整数最优控制中离散变量进入代价和动态导致在线求解困难",
+          "分层方法仅学习离散动作空间可能忽略连续与离散决策的耦合",
+          "在有限预测时域内捕获长期性能",
+          "保证部署时MPC的递归可行性",
+          "在无需重新训练的情况下适应未见过扰动"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文提出一种混合RL与MPC框架，用于离散变量进入代价和动态但不进入约束的混合整数最优控制。",
+            "location": "abstract",
+            "quote": "We propose a hybrid reinforcement learning (RL) and model predictive control (MPC) framework for mixed-integer optimal control, where discrete variables enter the cost and dynamics but not the constraints."
+          },
+          {
+            "claim": "与仅对离散动作空间学习策略的分层方法不同，该工作在完整混合动作空间上训练RL智能体，使critic近似底层MDP的Q函数。",
+            "location": "abstract",
+            "quote": "Unlike these methods, we train an RL agent on the full hybrid action space, such that the learned critic approximates the Q-function of the underlying Markov decision process."
+          },
+          {
+            "claim": "部署时RL actor在预测时域上滚动展开，用离散动作序列参数化无整数非线性MPC，并提供连续热启动。",
+            "location": "abstract",
+            "quote": "During deployment, the RL actor is rolled out over the prediction horizon to parametrize an integer-free nonlinear MPC through the discrete action sequence and provide a continuous warm-start."
+          },
+          {
+            "claim": "学到的critic可作为终端代价以捕获长期性能。",
+            "location": "abstract",
+            "quote": "The learned critic can additionally serve as a terminal cost to capture long-term performance."
+          },
+          {
+            "claim": "作者证明了递归可行性，并在F1比赛策略问题上进行验证与消融研究。",
+            "location": "abstract",
+            "quote": "We prove recursive feasibility, and validate the framework on a Formula 1 race strategy problem, where an ablation study identifies the contribution of each learned component."
+          },
+          {
+            "claim": "混合方法相对于离线混合整数非线性规划基准达到近最优，并优于独立RL智能体；同时通过模块化MPC扩展以零再训练成本适应未见过扰动。",
+            "location": "abstract",
+            "quote": "The hybrid method achieves near-optimal performance relative to an offline mixed-integer nonlinear program benchmark, outperforming a standalone RL agent. Moreover, the hybrid scheme enables adaptation to unseen disturbances through modular MPC extensions at zero retraining cost."
+          }
+        ],
+        "experiments": [
+          "在F1比赛策略问题上验证框架，与离线混合整数非线性规划基准相比达到近最优性能，并优于独立RL智能体",
+          "通过消融研究识别每个学习组件的贡献",
+          "混合方案通过模块化MPC扩展能够以零再训练成本适应未见过扰动",
+          "具体实例规模、运行时间、训练开销和公平计算预算材料未说明"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "贡献的有效性来自将学习到的 critic 作为 Q 函数近似，从而在 MPC 中充当终端代价以弥补有限预测时域造成的短视；同时 RL actor 在完整混合动作空间上训练，使得部署时可滚动生成离散动作序列并给连续优化提供热启动，因此离散决策的长期影响通过 critic 被纳入在线优化，而连续可行性仍由 MPC 约束保证。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "训练一个RL智能体于完整混合动作空间，使学到的critic近似底层MDP的Q函数",
+          "部署时将RL actor在预测时域上滚动展开，生成离散动作序列",
+          "用离散动作序列参数化一个无整数非线性MPC",
+          "为非线性MPC提供连续热启动",
+          "可选地将学到的critic作为终端代价以捕获长期性能",
+          "证明递归可行性",
+          "在F1比赛策略问题上进行消融研究以识别每个学习组件的贡献"
+        ],
+        "motivation": "现有分层方法仅对离散动作空间学习策略，将连续优化完全交给MPC，可能无法充分利用混合动作空间的耦合信息，且难以兼顾长期性能与在线可行性。作者希望训练能在完整混合动作空间上工作的RL智能体，使critic近似底层MDP的Q函数，从而在部署时通过滚动RL actor为无整数非线性MPC提供离散动作序列与连续热启动，并利用critic作为终端代价捕获长期性能。",
+        "primary_topic": "混合整数最优控制的强化学习与模型预测控制混合框架",
+        "relation_to_research": "论文事实：该工作研究混合整数最优控制，结合强化学习与模型预测控制，其中离散变量进入代价和动态但不进入约束。与智能优化、生产调度和AI4OR的关联属于推测：其混合动作空间RL训练、critic作为终端代价、滚动离散动作序列参数化无整数MPC以及热启动等机制，在需要同时决定离散决策（如机器选择、工序排序）和连续变量（如加工参数、速度）的生产调度问题中可能具有迁移价值；迁移条件包括问题可建模为离散变量不进入约束或可转化为该形式、可定义合适的MDP奖励与动态、能在线求解无整数非线性MPC并保证可行性；但论文未涉及生产调度或分布式制造，未验证在这些场景下的有效性。",
+        "relevance_score": 7,
+        "setting": "研究混合整数最优控制问题，其中离散变量进入代价和动态但不进入约束；决策对象是离散动作序列与连续控制输入，目标是最小化长期代价或逼近最优性能；关键约束为连续约束（离散变量不直接约束），信息假设为可获取系统动态模型并在线求解MPC，环境为可包含未见过扰动的动态环境，具体实例为F1比赛策略问题。",
+        "tags": [
+          "混合整数最优控制",
+          "强化学习",
+          "模型预测控制",
+          "混合动作空间",
+          "F1比赛策略",
+          "递归可行性",
+          "Q函数近似"
+        ],
+        "title_zh": "连接强化学习与模型预测控制：面向混合整数最优控制及其在F1比赛策略中的应用",
+        "uncertainty": "仅基于标题与摘要，未提供全文，因此无法核实实验规模、具体基线设置、计算预算、训练细节、递归可行性证明的条件以及消融实验的具体结果；第一单位和通讯作者信息未提供；与生产调度的迁移路径为推测，未经作者验证。",
+        "why_recommended": "对关注学习辅助搜索、强化学习与数学规划结合的博士生，该论文提供了一种将RL actor与critic嵌入MPC的混合架构，特别是在离散变量进入代价和动态但不进入约束的情形下，展示了如何用critic近似Q函数作为终端代价以及如何通过滚动离散动作序列为无整数MPC提供热启动与可行性保证。其消融实验和零再训练扰动适应机制对设计生产调度中的学习-优化协同方法有参考意义，尽管其应用背景为F1比赛策略而非生产调度。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-18T09:59:08.536678+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2604.00826v2",
+        "status": "not_found"
+      },
+      "final_score": 0.6017643324312347,
+      "provenance": {
+        "analyzed_at": "2026-09-18T02:01:13.472833Z",
+        "input_hash": "49c01a9e3c5ace2cd6ca19041b67a052730845793bb7e4d234bb4cc59ed9fe12",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "We propose a hybrid reinforcement learning (RL) and model predictive control (MPC) framework for mixed-integer optimal control, where discrete variables enter the cost and dynamics but not the constraints. Existing hierarchical approaches learn a policy only for the discrete action space, leaving continuous optimization to MPC. Unlike these methods, we train an RL agent on the full hybrid action space, such that the learned critic approximates the Q-function of the underlying Markov decision process. During deployment, the RL actor is rolled out over the prediction horizon to parametrize an integer-free nonlinear MPC through the discrete action sequence and provide a continuous warm-start. The learned critic can additionally serve as a terminal cost to capture long-term performance. We prove recursive feasibility, and validate the framework on a Formula 1 race strategy problem, where an ablation study identifies the contribution of each learned component. The hybrid method achieves near-optimal performance relative to an offline mixed-integer nonlinear program benchmark, outperforming a standalone RL agent. Moreover, the hybrid scheme enables adaptation to unseen disturbances through modular MPC extensions at zero retraining cost.",
+          "authors": [
+            "Joschua W\\\"uthrich",
+            "Romir Damle",
+            "Giona Fieni",
+            "Melanie N. Zeilinger",
+            "Christopher H. Onder",
+            "Andrea Carron"
+          ],
+          "canonical_id": "2604.00826",
+          "categories": [
+            "eess.SY",
+            "cs.SY"
+          ],
+          "comment": "8 pages, 4 figures; Accepted for presentation and publication at IEEE CDC 2026",
+          "pdf_url": "https://arxiv.org/pdf/2604.00826",
+          "published_at": "2026-04-01T12:35:23Z",
+          "source": "arxiv",
+          "title": "Bridging RL and MPC for mixed-integer optimal control with application to Formula 1 race strategies",
+          "updated_at": "2026-09-17T12:04:55Z",
+          "url": "https://arxiv.org/abs/2604.00826",
+          "version": 2
+        },
+        "rank": 28,
+        "score": {
+          "base_score": 0.5213896953295176,
+          "exploration": 0.022797414020223877,
+          "matched_terms": [
+            "mixed integer",
+            "mixed-integer",
+            "reinforcement learning"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.8651686367293921,
+          "topic": 0.5656220781607803
+        }
+      },
+      "tier": "browse"
+    },
     "arxiv:2604.11507:v2": {
       "analysis": {
         "analysis": "材料未说明。摘要仅给出教程的总体框架，包括决策基础回顾、神经架构连接以及三大主题的组织方式，未提供作者对具体问题结构、分解方式、下界或图表示的分析细节。",
@@ -2088,7 +2227,7 @@
         "html_url": "https://arxiv.org/html/2604.11507v2",
         "status": "not_found"
       },
-      "final_score": 0.5946266701395674,
+      "final_score": 0.5523919448346434,
       "provenance": {
         "analyzed_at": "2026-09-17T02:19:34.985628Z",
         "input_hash": "0f229239d2fae7dedd200df2626909865d24f1af1382d39750aebf2ec15af24b",
@@ -2120,17 +2259,17 @@
           "url": "https://arxiv.org/abs/2604.11507",
           "version": 2
         },
-        "rank": 11,
+        "rank": 20,
         "score": {
-          "base_score": 0.5902303093446679,
-          "exploration": 0.5509671933364458,
+          "base_score": 0.5134398996993516,
+          "exploration": 0.28646427720815104,
           "matched_terms": [
             "operations research",
             "reinforcement learning"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.7195495080592273,
+          "recency": 0.5617051711382818,
           "topic": 0.5645
         }
       },
@@ -9041,81 +9180,94 @@
     },
     "arxiv:2609.16629:v1": {
       "analysis": {
-        "analysis": "作者通过重新形式化无人机路径规划问题以纳入具有挑战性的约束，并引入显式惩罚度量来量化约束违反，其中空间与时间约束通过决策变量值截断强制满足，其余约束以不同尺度的违反量聚合，以重新平衡差分进化优化器对各类约束的关注。",
+        "analysis": "作者首先将无人机路径规划问题重新表述以纳入具有挑战性的约束，随后采用双层学习优化结构：元层为可训练的算法配置策略，通过元学习为底层规划算法提供可适应的规划策略；底层使用差分进化算法求解路径规划任务。针对潜在训练数据稀缺与分布偏移，引入景观感知自动增强方案丰富训练数据。在底层求解中设计变长编码策略，动态裁剪冗余悬停点并在统一搜索空间中并发优化连续飞行参数。摘要未说明更具体的理论分析（如下界、分解或图表示）。",
         "challenges": [
-          "高约束空间导致搜索困难",
-          "训练数据稀缺与真实环境分布偏移",
-          "固定数量悬停点编码限制优化灵活性",
-          "人工设计优化器泛化能力弱",
-          "多类复杂约束（通信带宽、数据收集、避障）的违反度量与平衡"
+          "高度约束的路径规划搜索空间难以高效导航",
+          "手工设计方法存在设计偏差，对未见任务适应能力差",
+          "真实环境空间复杂度复杂，简化仿真导致部署性能下降",
+          "真实环境中训练数据稀缺与分布偏移",
+          "需要同时处理悬停点离散选择与连续飞行参数优化",
+          "需在统一搜索空间中动态裁剪冗余悬停点"
         ],
         "corresponding_authors": [
-          "Zeyuan Ma"
+          "证据未提供"
         ],
         "evidence": [
           {
-            "claim": "论文提出 LAMDE 学习辅助规划框架以应对无人机路径规划中人工设计偏差和简化仿真的局限。",
+            "claim": "现有无人机路径规划方法主要通过手工设计且带有设计偏差，难以适应未见任务。",
             "location": "abstract",
-            "quote": "we propose a novel learning-assisted planning framework, termed Landscape-Aware Meta Differential Evolution (LAMDE), to tackle the mentioned limitations."
+            "quote": "they are primarily hand-crafted with certain design biases that harm adaptation on unseen tasks."
           },
           {
-            "claim": "作者采用双层学习优化，元层为可训练算法配置策略，低层为差分进化算法。",
+            "claim": "现有方法多假设理想化的空间复杂度，导致真实部署时性能不佳。",
+            "location": "abstract",
+            "quote": "they predominantly assume idealized spatial complexities of actual environments through simplified simulation, causing them to underperform during real-world deployment."
+          },
+          {
+            "claim": "论文提出 LAMDE 框架，采用双层学习优化方法，元层是可训练的算法配置策略。",
             "location": "abstract",
             "quote": "we propose a bi-level learning to optimize approach, where the meta-level is a trainable algorithm configuration policy that meta-learns an adaptable planning strategy for low-level planning algorithm."
           },
           {
-            "claim": "作者设计了变长编码策略，动态剪枝冗余悬停点并同时优化连续飞行参数。",
+            "claim": "论文引入景观感知自动增强方案以应对训练数据稀缺与分布偏移。",
+            "location": "abstract",
+            "quote": "we introduce a landscape-aware automatic augmentation scheme that enriches training data."
+          },
+          {
+            "claim": "底层使用差分进化算法求解路径规划任务。",
+            "location": "abstract",
+            "quote": "At the low-level, a Differential Evolution algorithm is deployed for solving the path planning tasks."
+          },
+          {
+            "claim": "设计变长编码策略动态裁剪冗余悬停点并同时优化连续飞行参数。",
             "location": "abstract",
             "quote": "we further design a variable-length encoding strategy that dynamically prunes redundant hover points and optimizes continuous flight parameters concurrently within a unified search space."
           },
           {
-            "claim": "论文在复杂无人机路径规划任务上取得 state-of-the-art 性能。",
+            "claim": "在测试的复杂无人机路径规划任务中 LAMDE 达到 state-of-the-art 性能。",
             "location": "abstract",
             "quote": "Comprehensive experiments demonstrate that LAMDE achieves state-of-the-art performance on the tested complex UAV path planning tasks in WSN data collection scenarios."
-          },
-          {
-            "claim": "材料指出未来工作包括 3D 环境、在线动态规划和多无人机协同进化，说明当前工作未覆盖这些设定。",
-            "location": "supplied_full_text",
-            "quote": "i) 3D UAV environmental setting. ii) Online dynamic planning in noisy environment. iii) Multi-UAV co-evolution."
           }
         ],
         "experiments": [
-          "在多种无人机任务上与代表性基线对比，材料称 LAMDE 在测试的复杂 WSN 数据采集场景中取得 state-of-the-art 性能，但未提供具体数值、实例规模、运行时间或训练开销。",
-          "材料提到在不同 I_max 下测试平均可行率，并进行了更深入分析以说明设计有效性，但未给出具体结果数字。",
-          "材料列出未来工作包括 3D 无人机环境、噪声环境中的在线动态规划以及多无人机协同进化，暗示当前实验未覆盖这些设定。"
+          "在测试的复杂无人机路径规划任务（WSN 数据采集场景）上，LAMDE 取得了 state-of-the-art 性能",
+          "摘要未提供具体基线名称、实例规模、约束可行性指标、解质量数值、运行时间、训练开销、公平计算预算、泛化或消融实验的量化结果"
         ],
-        "first_affiliation": "华南理工大学",
-        "insight": "将无人机路径规划中的低层差分进化配置建模为可训练的策略，使元层能够根据优化状态自适应调整算法配置，而不是依赖固定人工超参数；同时通过景观感知的数据增强方案缓解训练分布偏移，并通过变长编码动态剪枝冗余悬停点在统一搜索空间中同时优化连续飞行参数，从而在高度约束空间中提升适应性与求解灵活性。",
+        "first_affiliation": "证据未提供",
+        "insight": "该工作的有效性来源于将规划算法的配置策略本身作为可训练对象进行元学习，使底层差分进化能够根据任务景观自适应调整，而不是依赖人工设定的固定参数；同时通过景观感知的自动数据增强缓解真实环境中训练数据稀缺和分布偏移问题，再配合变长编码在统一搜索空间中动态裁剪冗余悬停点并同时优化连续飞行参数，从而在高度约束空间中保持求解灵活性与约束可行性。",
         "limitations": [
-          "材料明确陈述的未来工作包括：3D 无人机环境设定、噪声环境中的在线动态规划、多无人机协同进化，暗示这些方面是当前工作的局限。"
+          "材料未说明"
         ],
         "method": [
-          "提出 Landscape-Aware Meta Differential Evolution (LAMDE) 学习辅助规划框架",
-          "采用双层学习优化：元层为可训练算法配置策略，通过元学习为低层规划算法提供可适应策略",
-          "引入景观感知自动增强方案丰富训练数据，应对训练数据稀缺与分布偏移",
-          "低层采用差分进化算法求解路径规划任务",
-          "设计变长编码策略，动态剪枝冗余悬停点并在统一搜索空间中同时优化连续飞行参数",
-          "元层将低层差分进化的动态算法配置建模为 MDP，状态包含种群、目标值、违反量与搜索进度，动作指定每个个体的进化配置"
+          "将无人机路径规划重新表述为包含挑战性约束的问题形式",
+          "提出双层学习优化框架 LAMDE：元层为可训练的算法配置策略，元学习适应底层规划算法的规划策略",
+          "底层采用差分进化（Differential Evolution）算法求解路径规划任务",
+          "引入景观感知自动增强方案，丰富训练数据以应对训练数据稀缺与分布偏移",
+          "设计变长编码策略，动态剪枝冗余悬停点，并在统一搜索空间中同时优化连续飞行参数",
+          "基于上述设计对 LAMDE 进行元训练，并与代表性基线比较"
         ],
-        "motivation": "现有无人机数据采集路径规划方法主要依赖人工设计，存在设计偏差，难以适应未见任务；同时它们常通过简化仿真假设理想化空间复杂度，在真实部署中表现不佳。作者因此希望用学习辅助规划框架替代人工设计优化器，并应对真实环境中训练数据稀缺与分布偏移问题。",
-        "primary_topic": "MetaBBO 与差分进化结合的无人机路径规划",
-        "relation_to_research": "该论文属于学习辅助进化优化与 MetaBBO 方向，直接相关于智能优化中“学习如何优化”的范式，其元层策略根据优化状态配置低层差分进化、变长编码与约束惩罚设计，对生产调度、柔性作业车间等约束优化问题中的算法配置、约束处理与搜索空间编码具有迁移参考价值；但论文本身针对无人机路径规划，未涉及车间调度或分布式制造，迁移需要重新定义状态、动作与约束违反度量。",
+        "motivation": "既有无人机路径规划方法主要有两点局限：一是大多为手工设计并带有特定设计偏差，难以适应未见任务；二是通过简化仿真假设理想化的空间复杂度，导致真实部署时表现不佳。因此需要一种能自动适应新任务、并能应对真实环境数据稀缺与分布偏移的学习辅助规划框架。",
+        "primary_topic": "基于元学习与差分进化的无人机路径规划（无线传感器网络数据采集）",
+        "relation_to_research": "该论文事实层面研究的是无人机路径规划这一组合优化问题，采用学习辅助优化与元学习配置差分进化算法，属于学习辅助搜索与进化算法结合的范畴，与智能优化有方法上的交集。推测层面，其双层元学习配置策略、景观感知数据增强与变长编码思路可能迁移到生产调度问题（如柔性作业车间、流水车间、分布式制造中的调度规则自动配置和搜索空间压缩），但迁移需要满足以下条件：调度问题需具备可参数化的算法配置空间、可构造景观特征以支持数据增强、以及能定义变长编码或等价的自适应决策表示；这些均为推测，并非作者结论。",
         "relevance_score": 6,
-        "setting": "研究面向无线传感器网络数据采集的无人机路径规划问题，决策对象是包含悬停点激活变量与连续飞行参数的飞行计划，目标是在满足通信带宽、数据收集量、避障等约束的同时优化任务代价；环境带有城市级障碍布局，问题被重新建模为高约束黑盒优化问题，具体的目标函数形式、约束阈值和动态/静态假设在提供的材料中未完全说明。",
+        "setting": "论文研究无线传感器网络数据感知场景下无人机路径规划问题，决策对象是无人机的飞行路径与悬停点选择，目标是保证遥感有效性并实现友好的能量消耗；摘要提到将问题重新表述以纳入具有挑战性的约束，但未给出约束的具体形式；信息假设方面，作者指出既有方法多假设简化的理想空间复杂度，实际环境部署时性能下降，故假设训练数据可能存在稀缺与分布偏移；静态或动态环境材料未说明。",
         "tags": [
           "UAV路径规划",
-          "MetaBBO",
+          "无线传感器网络",
+          "数据采集",
+          "元学习",
+          "学习辅助优化",
           "差分进化",
+          "双层学习",
           "变长编码",
-          "约束优化",
-          "无线传感器网络"
+          "景观感知数据增强"
         ],
-        "title_zh": "面向无线传感器网络数据感知的无人机路径规划学习优化",
-        "uncertainty": "提供的材料仅为摘要与部分全文节选，缺少完整的实验数值、基线细节、训练开销和消融结果，因此对方法优越性的判断只能依据作者陈述；部分方法细节在节选中不完整，相关分析基于有限证据。",
-        "why_recommended": "对研究学习辅助搜索、进化算法与神经网络结合、约束优化及变长编码的读者有参考意义，尤其是元层配置低层进化算法、景观感知数据增强和约束违反聚合机制，可能启发生产调度中的算法自适应配置与约束可行性维护。"
+        "title_zh": "学习优化无人机路径规划以用于无线传感器网络中的数据感知",
+        "uncertainty": "仅依据标题与摘要分析，未提供全文，无法确认问题约束的具体形式、实验基线细节、数值结果、训练开销与消融实验结论；第一单位与通讯作者信息未在输入中给出；该方法与生产调度等目标应用的相关性判断包含推测成分。",
+        "why_recommended": "该论文展示了如何用元学习训练算法配置策略来驱动物种级差分进化求解高度约束的组合优化问题，并针对数据稀缺与分布偏移设计景观感知增强，这些机制对 AI4OR 中的学习辅助搜索、进化算法与学习结合、以及约束满足方向有方法借鉴价值；变长编码处理混合离散-连续决策的思路也可能启发生产调度中的解表示设计。"
       },
       "figure_gallery": {
-        "checked_at": "2026-09-17T10:12:41.309353+08:00",
+        "checked_at": "2026-09-18T09:59:08.536678+08:00",
         "figures": [
           {
             "caption": "Overview of UAV path planning for ground sensor data collection under environmental constraints, including obstacles and no-fly zones.",
@@ -9134,13 +9286,13 @@
         "html_url": "https://arxiv.org/html/2609.16629v1",
         "status": "available"
       },
-      "final_score": 0.617448555004002,
+      "final_score": 0.5678075241220308,
       "provenance": {
-        "analyzed_at": "2026-09-16T02:13:18.964372Z",
-        "input_hash": "026297cc561fb080ddc57b559267210e788a91114f3b42e8b302835a71335f86",
+        "analyzed_at": "2026-09-18T02:01:28.601937Z",
+        "input_hash": "eea9c58a1fa5e7cacf3929bcb26b2650bebaccba3c635f54eb58d8b6f1733451",
         "model": "deepseek-v4-flash",
         "prompt_version": "optimization-analysis-v1",
-        "reading_scope": "full_text"
+        "reading_scope": "abstract"
       },
       "ranked": {
         "paper": {
@@ -9168,10 +9320,10 @@
           "url": "https://arxiv.org/abs/2609.16629",
           "version": 1
         },
-        "rank": 7,
+        "rank": 19,
         "score": {
-          "base_score": 0.6317246454618217,
-          "exploration": 0.4540572831614571,
+          "base_score": 0.5414682256764197,
+          "exploration": 0.09442507599376343,
           "matched_terms": [
             "differential evolution",
             "algorithm configuration",
@@ -9179,11 +9331,11 @@
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.6235169260857027,
+          "recency": 0.4867388244336855,
           "topic": 0.6848318116551028
         }
       },
-      "tier": "deep_read"
+      "tier": "browse"
     },
     "arxiv:2609.16680:v1": {
       "analysis": {
@@ -9395,7 +9547,7 @@
         "html_url": "https://arxiv.org/html/2609.16680v2",
         "status": "not_found"
       },
-      "final_score": 0.5534917028015385,
+      "final_score": 0.5077302729123322,
       "provenance": {
         "analyzed_at": "2026-09-17T02:20:07.181162Z",
         "input_hash": "76ea52c090c9d21f3ab67f36ffbdb3e8ddd6456aa8579a006ad9edbeee2cc6a5",
@@ -9426,20 +9578,20 @@
           "url": "https://arxiv.org/abs/2609.16680",
           "version": 2
         },
-        "rank": 24,
+        "rank": 37,
         "score": {
-          "base_score": 0.5154394596391607,
-          "exploration": 0.7019218161761503,
+          "base_score": 0.4322368598406039,
+          "exploration": 0.42343116771998646,
           "matched_terms": [
             "mathematical optimization"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.8165534289486468,
+          "recency": 0.6374297785127485,
           "topic": 0.37612622368302473
         }
       },
-      "tier": "explore"
+      "tier": "browse"
     },
     "arxiv:2609.16774:v1": {
       "analysis": {
@@ -9512,7 +9664,7 @@
         "why_recommended": "该论文展示了在不削弱求解质量的前提下，用 LLM 智能体负责工具编排、解释与人类监督的范式，与当前关注的‘大模型智能体用于优化求解’‘学习辅助搜索’以及扰动下恢复调度高度相关，可为生产调度中的可解释重调度与人机协同提供可借鉴的架构思路。"
       },
       "figure_gallery": {
-        "checked_at": "2026-09-17T10:12:41.309353+08:00",
+        "checked_at": "2026-09-18T09:59:08.536678+08:00",
         "figures": [
           {
             "caption": "Overview of the proposed PMU restoration framework.",
@@ -9531,7 +9683,7 @@
         "html_url": "https://arxiv.org/html/2609.16774v1",
         "status": "available"
       },
-      "final_score": 0.5769009086125898,
+      "final_score": 0.5668656316735821,
       "provenance": {
         "analyzed_at": "2026-09-17T02:19:42.466557Z",
         "input_hash": "ccb2896bc3365fd010ba97011b203947fcd2428ed356aa617ec5e2f232b94216",
@@ -9562,10 +9714,10 @@
           "url": "https://arxiv.org/abs/2609.16774",
           "version": 1
         },
-        "rank": 12,
+        "rank": 11,
         "score": {
-          "base_score": 0.5580016520228905,
-          "exploration": 0.25865650308402466,
+          "base_score": 0.5397556939519674,
+          "exploration": 0.2992216581819943,
           "matched_terms": [
             "mixed integer",
             "mixed-integer",
@@ -9574,8 +9726,166 @@
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.6423887306953877,
+          "recency": 0.501470806207341,
           "topic": 0.6194182435275671
+        }
+      },
+      "tier": "browse"
+    },
+    "arxiv:2609.16846:v1": {
+      "analysis": {
+        "analysis": "作者通过提示工程策略，将优化反馈作为大语言模型的输入，由大语言模型动态选择变异策略并配置控制参数，从而把超参数设计问题转化为由大语言模型依据反馈进行决策的问题。对于投资组合任务，作者先使用因子分析与 K-means 聚类进行选股，再以 CVaR 为目标、在预算与最低期望收益约束下应用 LLMDE 求解。摘要未说明是否使用问题结构分解、下界或图表示等更具体的分析手段。",
+        "challenges": [
+          "如何将优化反馈有效编码为提示，使大语言模型选择合理的变异策略与控制参数",
+          "大语言模型动态决策带来的额外计算与调用开销，以及是否在公平计算预算下仍具优势",
+          "在预算约束与最低期望收益约束下保持解可行性并优化 CVaR 目标",
+          "大语言模型驱动策略在不同问题景观上的稳定性与泛化能力",
+          "与传统差分进化及代表性元启发式相比，性能优势的来源需要消融验证"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文提出 LLMDE，即大语言模型驱动的差分进化算法",
+            "location": "abstract",
+            "quote": "This study proposes a Large Language Model-Driven Differential Evolution (LLMDE) algorithm to reduce the reliance on handcrafted hyperparameter design."
+          },
+          {
+            "claim": "大语言模型依据优化反馈动态选择变异策略并配置控制参数",
+            "location": "abstract",
+            "quote": "The proposed algorithm leverages a prompt engineering strategy, allowing large language models (LLMs) to dynamically select mutation strategies and configure control parameters guided by optimization feedback, thus enhancing the performance of the DE algorithm."
+          },
+          {
+            "claim": "在 CEC2022 基准套件上与标准差分进化及代表性元启发式比较",
+            "location": "abstract",
+            "quote": "We evaluate the performance of LLMDE on the CEC2022 benchmark suite, comparing it with standard DE and representative metaheuristics."
+          },
+          {
+            "claim": "使用因子分析与 K-means 聚类选股，并求解带预算与最低期望收益约束的 CVaR 投资组合优化问题",
+            "location": "abstract",
+            "quote": "Furthermore, we employ factor analysis and K-means clustering for stock selection, and then apply LLMDE to solve the Conditional Value at Risk (CVaR) portfolio optimization problem using the selected stocks, subject to budget and minimum expected return constraints."
+          },
+          {
+            "claim": "实验结果表明 LLMDE 在基准套件上具有竞争力，并能持续为复杂约束优化任务生成高质量解",
+            "location": "abstract",
+            "quote": "Experimental results demonstrate that LLMDE achieves competitive performance on the benchmark suite while continuously generating high-quality solutions for complex constrained optimization tasks."
+          }
+        ],
+        "experiments": [
+          "在 CEC2022 基准测试套件上比较 LLMDE 与标准差分进化及代表性元启发式",
+          "使用因子分析与 K-means 聚类进行选股后，在预算与最低期望收益约束下求解 CVaR 投资组合优化问题",
+          "摘要指出 LLMDE 在基准套件上取得具有竞争力的性能，并能持续为复杂约束优化任务生成高质量解",
+          "摘要未提供具体数值、实例规模、运行时间、训练开销、计算预算公平性、消融实验或泛化性结果"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "该工作有效性的核心在于把优化过程产生的反馈转化为自然语言提示，使大语言模型充当策略与参数的自适应控制器，而非直接求解问题。差分进化仍负责种群搜索与解的生成，大语言模型只在策略选择与参数配置层面介入，从而绕开手工调参并保留元启发式的搜索能力。摘要还表明，这种嵌入方式在基准测试与带约束组合优化上都产生了具有竞争力的解。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "提出 LLMDE，即以大语言模型驱动差分进化算法的框架",
+          "采用提示工程策略，让大语言模型依据优化反馈动态选择变异策略",
+          "由大语言模型根据优化反馈配置差分进化的控制参数",
+          "在 CEC2022 基准测试套件上评估 LLMDE，并与标准差分进化及代表性元启发式比较",
+          "使用因子分析与 K-means 聚类进行股票选择",
+          "在选定股票上应用 LLMDE 求解 CVaR 投资组合优化问题，约束包括预算约束与最低期望收益约束"
+        ],
+        "motivation": "传统差分进化算法依赖人工设计变异策略与超参数，调参成本高且难以适应不同问题景观。作者希望利用大语言模型根据优化过程中产生的反馈动态选择变异策略并配置控制参数，从而降低对手工超参数设计的依赖，并探索将大语言模型嵌入元启发式框架的可行性。",
+        "primary_topic": "大语言模型驱动的差分进化算法及其在带约束投资组合优化中的应用",
+        "relation_to_research": "该论文直接研究元启发式算法与大语言模型的结合，属于人工智能驱动运筹优化中学习辅助搜索的方向。其 LLMDE 框架将大语言模型用于差分进化的策略选择与参数配置，这一机制原则上可迁移到生产调度中的进化算法或混合求解框架，例如用大语言模型根据调度反馈动态选择邻域结构、变异算子或参数；但摘要只在 CEC2022 与 CVaR 投资组合优化上进行了验证，是否能迁移到柔性作业车间、流水车间、分布式制造或生产运输协同等问题，取决于能否把调度约束反馈有效编码为提示并保持约束可行性，这属于推测。论文未涉及图神经网络、多智能体强化学习或数学规划与进化的严格混合，与这些方向的关联需要额外工作建立。",
+        "relevance_score": 6,
+        "setting": "研究面向连续或混合决策变量的元启发式优化问题，具体任务包括 CEC2022 基准函数优化与 CVaR 投资组合优化。决策对象在投资组合任务中为所选股票上的资金配置权重，目标为在预算约束与最低期望收益约束下优化 CVaR 风险度量。信息假设方面，作者使用因子分析与 K-means 聚类进行选股，再在选定股票上求解组合优化，但摘要未说明收益分布、市场环境或动态扰动等更细的信息假设。静态或动态环境材料未说明，仅能推断基准测试与组合优化实例均为给定问题设置。",
+        "tags": [
+          "大语言模型",
+          "差分进化",
+          "元启发式",
+          "投资组合优化",
+          "CVaR",
+          "约束优化",
+          "提示工程",
+          "参数自适应"
+        ],
+        "title_zh": "LLMDE：一种大语言模型驱动的差分进化算法用于投资组合优化",
+        "uncertainty": "本次分析仅基于标题与摘要，未提供全文，因此无法确认提示工程的具体形式、大语言模型调用次数与成本、实验的具体数值、实例规模、训练或推理开销、消融实验设计以及约束处理细节；作者也未在摘要中明确陈述局限性。相关性评分定为 6，因为该工作与智能优化和学习辅助搜索直接相关，但应用验证集中在投资组合优化而非生产调度，迁移到生产调度需要额外的约束建模与验证。",
+        "why_recommended": "该论文提供了一个将大语言模型嵌入进化算法控制层的具体实例，涉及提示设计、优化反馈利用、参数自适应与带约束组合优化，对关注学习辅助搜索、大语言模型智能体优化和约束可行性的研究者有参考价值。虽然应用场景是投资组合优化，但其大语言模型驱动变异策略与参数配置的机制可启发生产调度中的进化算法自适应控制研究，并且其与标准差分进化和代表性元启发式的对比有助于理解大语言模型介入的真实收益。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-18T09:59:08.536678+08:00",
+        "figures": [
+          {
+            "caption": "Systematic framework of the LLMDE algorithm, illustrating the interaction between the DE optimization workflow and the LLM prompt engineering design.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2609.16846/v1/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2609.16846v1/figs/Fig1.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2609.16846v1#S3.F1"
+          },
+          {
+            "caption": "Factor loadings of financial metrics.",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2609.16846/v1/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2609.16846v1/Fig2.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2609.16846v1#S5.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2609.16846v1",
+        "status": "available"
+      },
+      "final_score": 0.5452906064025218,
+      "provenance": {
+        "analyzed_at": "2026-09-18T02:01:39.041866Z",
+        "input_hash": "b836eb74e7a58e7b7745bb41d397036aa1f9376c693356343b02d1284f4c338b",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "This study proposes a Large Language Model-Driven Differential Evolution (LLMDE) algorithm to reduce the reliance on handcrafted hyperparameter design. The proposed algorithm leverages a prompt engineering strategy, allowing large language models (LLMs) to dynamically select mutation strategies and configure control parameters guided by optimization feedback, thus enhancing the performance of the DE algorithm. We evaluate the performance of LLMDE on the CEC2022 benchmark suite, comparing it with standard DE and representative metaheuristics. Furthermore, we employ factor analysis and K-means clustering for stock selection, and then apply LLMDE to solve the Conditional Value at Risk (CVaR) portfolio optimization problem using the selected stocks, subject to budget and minimum expected return constraints. Experimental results demonstrate that LLMDE achieves competitive performance on the benchmark suite while continuously generating high-quality solutions for complex constrained optimization tasks. These outcomes successfully demonstrate the viability of embedding LLMs within metaheuristics, paving a promising path toward the design of advanced LLM-assisted optimization techniques.",
+          "authors": [
+            "Rong Chai",
+            "Vaclav Snasel",
+            "Xiaopeng Wang",
+            "Seyedali Mirjalili",
+            "Crina Grosan"
+          ],
+          "canonical_id": "2609.16846",
+          "categories": [
+            "cs.NE"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2609.16846",
+          "published_at": "2026-09-15T08:39:44Z",
+          "source": "arxiv",
+          "title": "LLMDE: A Large Language Model-Driven Differential Evolution Algorithm for Portfolio Optimization",
+          "updated_at": "2026-09-15T08:39:44Z",
+          "url": "https://arxiv.org/abs/2609.16846",
+          "version": 1
+        },
+        "rank": 32,
+        "score": {
+          "base_score": 0.5005283752773122,
+          "exploration": 0.2707684877002388,
+          "matched_terms": [
+            "differential evolution",
+            "large language model"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.5063875763249781,
+          "topic": 0.5645
         }
       },
       "tier": "browse"
@@ -9645,7 +9955,7 @@
         "why_recommended": "对于研究生产调度、动态扰动、能效与多目标约束优化的读者，该综述提供了铁路场景下动态调度、能量管理与储能集成的优化视角和人工智能集成趋势，可作为跨领域问题建模与约束结构迁移的参考；但因其为综述且摘要未给出具体算法机制与实验数字，阅读时应进一步核实原文中的方法细节与验证范围。"
       },
       "figure_gallery": {
-        "checked_at": "2026-09-17T10:12:41.309353+08:00",
+        "checked_at": "2026-09-18T09:59:08.536678+08:00",
         "figures": [
           {
             "caption": "Optimization Strategies and System Architecture in Electrified Railway Networks.",
@@ -9677,7 +9987,7 @@
         "html_url": "https://arxiv.org/html/2609.16939v1",
         "status": "available"
       },
-      "final_score": 0.5823555094466544,
+      "final_score": 0.570419142063983,
       "provenance": {
         "analyzed_at": "2026-09-16T02:14:05.139047Z",
         "input_hash": "8bc29a546807bb4f4df62dda1a58130b1b0b80b0b078c08b140534c50af7e243",
@@ -9708,17 +10018,17 @@
           "url": "https://arxiv.org/abs/2609.16939",
           "version": 1
         },
-        "rank": 14,
+        "rank": 18,
         "score": {
-          "base_score": 0.5679191080848262,
-          "exploration": 0.8130476134436568,
+          "base_score": 0.5462166219345146,
+          "exploration": 0.8383578913718236,
           "matched_terms": [
             "dynamic scheduling",
             "energy-efficient"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.6595109640604059,
+          "recency": 0.5148370123055257,
           "topic": 0.47171329056070876
         }
       },
@@ -9801,7 +10111,7 @@
         "why_recommended": "对研究学习辅助搜索和计算预算受限优化的读者有参考价值：它展示了如何用敏感性分析降维，并用多保真高斯过程与成本感知采集在昂贵评估之间分配预算。该机制与调度中代理模型辅助精确求解的思路相通，可启发将有限高保真评估预算用于关键解的策略设计。"
       },
       "figure_gallery": {
-        "checked_at": "2026-09-17T10:12:41.309353+08:00",
+        "checked_at": "2026-09-18T09:59:08.536678+08:00",
         "figures": [
           {
             "caption": "High-fidelity black-box simulator models: (a) pDNA bioprocess (SuperPro Designer), (b) green fuel synthesis (Aspen HYSYS) [ 24 ] .",
@@ -9833,7 +10143,7 @@
         "html_url": "https://arxiv.org/html/2609.17440v1",
         "status": "available"
       },
-      "final_score": 0.5271397134967668,
+      "final_score": 0.5136714771196602,
       "provenance": {
         "analyzed_at": "2026-09-16T02:13:35.511102Z",
         "input_hash": "50ad26b2acbb60cb07b1c8a4b4d621106475e5c2889b8c4a410183ecc0a50afc",
@@ -9863,16 +10173,16 @@
           "url": "https://arxiv.org/abs/2609.17440",
           "version": 1
         },
-        "rank": 37,
+        "rank": 38,
         "score": {
-          "base_score": 0.4675267518123033,
-          "exploration": 0.5345820990711068,
+          "base_score": 0.4430390493084731,
+          "exploration": 0.5547569404571642,
           "matched_terms": [
             "black-box optimization"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.7059323632626887,
+          "recency": 0.551075158105565,
           "topic": 0.3802521921811064
         }
       },
@@ -9962,7 +10272,7 @@
         "html_url": "https://arxiv.org/html/2609.17633v1",
         "status": "not_found"
       },
-      "final_score": 0.5333966259677814,
+      "final_score": 0.49121880430543485,
       "provenance": {
         "analyzed_at": "2026-09-17T02:20:28.541614Z",
         "input_hash": "b5d911f57d57ec2f69f59dc8a980d505f3f46b8e247c458ea3f3c1c4efb8b115",
@@ -9990,17 +10300,17 @@
           "url": "https://arxiv.org/abs/2609.17633",
           "version": 1
         },
-        "rank": 38,
+        "rank": 49,
         "score": {
-          "base_score": 0.4789029563050571,
-          "exploration": 0.3677784270327407,
+          "base_score": 0.40221600782806327,
+          "exploration": 0.09119375916714809,
           "matched_terms": [
             "job shop",
             "job-shop"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.6618795999911338,
+          "recency": 0.5166860512332604,
           "topic": 0.4583737807582684
         }
       },
@@ -10227,7 +10537,7 @@
         "html_url": "https://arxiv.org/html/2609.17964v1",
         "status": "not_found"
       },
-      "final_score": 0.5800355565939063,
+      "final_score": 0.5630359645440106,
       "provenance": {
         "analyzed_at": "2026-09-17T02:19:58.272892Z",
         "input_hash": "879387cda96c6fc61958b9c50589efc94738c3c024afa3ad7cf291800ecaca24",
@@ -10261,8 +10571,8 @@
         },
         "rank": 21,
         "score": {
-          "base_score": 0.5637010119889204,
-          "exploration": 0.14972400360085605,
+          "base_score": 0.532792662807292,
+          "exploration": 0.14806492391725082,
           "matched_terms": [
             "mixed integer",
             "mixed-integer",
@@ -10270,7 +10580,7 @@
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.7673806571698257,
+          "recency": 0.5990438163544742,
           "topic": 0.6237859729052514
         }
       },
@@ -10358,7 +10668,7 @@
         "html_url": "https://arxiv.org/html/2609.18130v1",
         "status": "not_found"
       },
-      "final_score": 0.7437535683004248,
+      "final_score": 0.7002039974467889,
       "provenance": {
         "analyzed_at": "2026-09-17T02:18:59.320336Z",
         "input_hash": "1eff3a5895fab40dbdad043d852d92ac16c6458cbae0ff06e6b44e9cee460d14",
@@ -10393,10 +10703,10 @@
           "url": "https://arxiv.org/abs/2609.18130",
           "version": 1
         },
-        "rank": 2,
+        "rank": 3,
         "score": {
-          "base_score": 0.7795519423644086,
-          "exploration": 0.9400832530177571,
+          "base_score": 0.7003709044487069,
+          "exploration": 0.6807276049924905,
           "matched_terms": [
             "evolutionary optimization",
             "expensive optimization",
@@ -10404,7 +10714,7 @@
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.8029524299864905,
+          "recency": 0.6268123694753974,
           "topic": 0.727
         }
       },
@@ -10507,7 +10817,7 @@
         "why_recommended": "对研究 AI4OR 的博士生而言，这篇论文提供了一个清晰的范式：把“建模”本身作为学习对象，让 LLM 输出可执行的 MIP 建模代码，并用求解器结果作为可验证奖励来训练，从而绕开直接答案生成的幻觉问题。这一思路与自动化建模、学习辅助搜索、求解器在环优化高度契合，可类比迁移到作业车间与生产-运输协同调度的自动建模；同时它的评价方式（成功率、基线对比、真实硬件迁移、静态环境局限声明）也提供了处理约束可行性与泛化评估的参考。"
       },
       "figure_gallery": {
-        "checked_at": "2026-09-17T10:12:41.309353+08:00",
+        "checked_at": "2026-09-18T09:59:08.536678+08:00",
         "figures": [
           {
             "caption": "M 3 P-R1 enables unified planning for diverse M 3 P tasks: multi-robot footstep planning, unmanned aerial vehicle (UAV) navigation, inverse kinematics (IK), and grasping, as well as their compositional combinations. By generating solver-grounded MIP programs, the method produces feasible and robust trajectories across heterogeneous robotic domains. Trajectories are shown as dotted lines, with blue spheres on the T-shaped object marking predicted grasp contact points.",
@@ -10539,7 +10849,7 @@
         "html_url": "https://arxiv.org/html/2609.18669v1",
         "status": "available"
       },
-      "final_score": 0.7269871446807449,
+      "final_score": 0.7241698103054585,
       "provenance": {
         "analyzed_at": "2026-09-17T02:19:07.360001Z",
         "input_hash": "fcf6fcb4fb595fce8a9aab13e7464f25c245bafd7c374a767fd1b8ca91ef13fe",
@@ -10571,10 +10881,10 @@
           "url": "https://arxiv.org/abs/2609.18669",
           "version": 1
         },
-        "rank": 3,
+        "rank": 1,
         "score": {
-          "base_score": 0.7490675357831724,
-          "exploration": 0.2695778624070829,
+          "base_score": 0.743945109646288,
+          "exploration": 0.4341396929357304,
           "matched_terms": [
             "mixed integer",
             "mixed-integer",
@@ -10584,7 +10894,7 @@
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.8786029486089761,
+          "recency": 0.685867774327464,
           "topic": 0.8490544673689682
         }
       },
@@ -10667,7 +10977,7 @@
         "why_recommended": "对关注学习辅助精确求解的研究者而言，该文给出了一个清晰范式：将MINLP实例图化，用GNN预测整数变量最优值分布，再以置信度固定变量以加速求解；其“固定高置信整数决策、保留模糊变量给求解器”的思路可迁移到调度中的机器分配、工序排序等组合决策，且报告了固定比例、加速比与最优性损失的量化证据，同时保留可解释性，适合作为AI4OR中学习与数学规划结合的参考。"
       },
       "figure_gallery": {
-        "checked_at": "2026-09-17T10:12:41.309353+08:00",
+        "checked_at": "2026-09-18T09:59:08.536678+08:00",
         "figures": [
           {
             "caption": "Interaction in a roundabout: the ego (green) enters the roundabout and moves to the inner lane to overtake, then probes to merge into the outer lane. If the opponent (orange) yields (cautious), the ego exits; otherwise (aggressive), it drives another lap.",
@@ -10699,7 +11009,7 @@
         "html_url": "https://arxiv.org/html/2609.18679v1",
         "status": "available"
       },
-      "final_score": 0.6741894874339728,
+      "final_score": 0.6447860557439817,
       "provenance": {
         "analyzed_at": "2026-09-17T02:19:24.407007Z",
         "input_hash": "3f07dd371456d290e3dc8933e4dda0a974245d67ca7771066a51572d3a54e4a4",
@@ -10731,10 +11041,10 @@
           "url": "https://arxiv.org/abs/2609.18679",
           "version": 1
         },
-        "rank": 5,
+        "rank": 9,
         "score": {
-          "base_score": 0.6530717953344959,
-          "exploration": 0.538578445190453,
+          "base_score": 0.5996110104436032,
+          "exploration": 0.4375488516754221,
           "matched_terms": [
             "mixed integer",
             "mixed-integer",
@@ -10743,13 +11053,421 @@
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.87983171568741,
+          "recency": 0.6868269923025306,
           "topic": 0.6209956324176755
         }
       },
       "tier": "deep_read"
+    },
+    "arxiv:2609.18859:v1": {
+      "analysis": {
+        "analysis": "作者利用两阶段随机规划中追索价值函数的凸性与分段线性结构：连续追索时该函数关于第一阶段决策凸，这一性质正是Benders分解与L-Shaped方法以支撑超平面逼近追索函数的依据，也是ICNN代理按构造匹配的对象；在整数追索下该性质不再成立，作者通过保留ICNN凸结构并用事后修正回路恢复精确最优，从而规避对偶切失效的问题。作者通过对比ICNN与Neur2SP的近似误差指出，在多数算例上凸性约束几乎不损失精度，却带来类一致性与无伪盆地的优化景观，并把近似变难归因于被学习函数本身的性质而非某一模型类的能力局限。",
+        "challenges": [
+          "扩展形式随场景数线性增长导致日前时间窗内计算不可行",
+          "整数追索下第二阶段价值函数非凸、不连续，使基于对偶信息的切失效",
+          "机组状态变化引起有效约束集变化并产生尖锐决策边界，紧凑代理难以全局逼近",
+          "ICNN的凸性约束限制表示能力，需要更深或更宽的网络的代价",
+          "代理嵌入MILP后求解规模变大，需要权衡近似精度与求解时间"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文用输入凸神经网络学习第二阶段价值函数的凸代理，并将其与Neural-Benders修正回路结合以恢复精确最优并认证解质量",
+            "location": "abstract",
+            "quote": "We propose an Input Convex Neural Network architecture to learn a convex surrogate of the second-stage value function, enabling fast first-stage optimization while preserving convexity by construction. We couple the surrogate with a Neural-Benders correction loop that refines the first-stage solution a posteriori, recovering the exact optimum whether the network overestimates or underestimates the recourse cost, and certifying solution quality independently of surrogate accuracy."
+          },
+          {
+            "claim": "论文在IEEE随机机组组合基准上所有测试算例与场景维度达到零最优性间隙，整数设定下加速比最高达214×",
+            "location": "abstract",
+            "quote": "The proposed approach achieves solutions with zero optimality gap on the $K$-scenario instance across all test cases and scenario dimensions $K \\in \\{10, 50, 100\\}$, with speedups up to $214\\times$ over the Extensive Form in the integer setting."
+          },
+          {
+            "claim": "节选报告连续追索设定下加速比最高达450×、整数追索设定下最高达1570×，且近似良好实例上的间隙低于1%",
+            "location": "supplied_full_text",
+            "quote": "Neur2SP and ICNN consistently deliver sub-second solve times across almost all instances and scenario dimensions, achieving speedups up to\n450\n×\n450\\times\nin the continuous recourse setting (\ncase57\n,\nK\n=\n100\nK=100\n) and up to\n1570\n×\n1570\\times\nin the integer recourse setting (\ncase118\n,\nK\n=\n100\nK=100\n). On well-approximated instances, both methods maintain a percentage gap below 1% with respect to EF."
+          },
+          {
+            "claim": "作者明确指出ICNN的凸性约束限制表示能力、导致某些实例间隙略高，并需要更深或更宽网络",
+            "location": "supplied_full_text",
+            "quote": "The convexity constraint imposed on the network architecture typically requires deeper or wider networks to achieve comparable approximation accuracy, which translates into a larger MILP embedding at solve time. The same constraint also restricts the representational capacity of ICNN relative to Neur2SP, resulting in somewhat higher optimality gaps on certain instances."
+          },
+          {
+            "claim": "作者在结论中把多阶段随机问题列为未来工作，并把方法扩展到经典分解失效的整数追索情形作为贡献",
+            "location": "supplied_full_text",
+            "quote": "The ICNN enforces convexity of the recourse cost in the first-stage decision, enabling MILP embedding and exact Benders cuts that certify optimality a posteriori, and extends the approach to integer recourse where classical decompositions fail."
+          }
+        ],
+        "experiments": [
+          "在IEEE随机机组组合基准case9至case118上评估，覆盖连续追索与整数追索两种情形，场景数K∈{10,50,100}",
+          "摘要报告：在K场景实例上所有测试算例和场景维度达到零最优性间隙，整数设定下相对扩展形式的加速比最高达214×，求解时间在不同场景实现间稳定且与所测试基准算例的日前时间窗兼容",
+          "正文节选报告：Neur2SP与ICNN在几乎所有实例和场景维度上均为亚秒级求解，连续追索设定下加速比最高达450×（case57，K=100），整数追索设定下最高达1570×（case118，K=100）；在近似良好的实例上两者相对扩展形式的百分比间隙低于1%",
+          "ICNN因凸性约束通常需要更深或更宽网络，嵌入MILP后求解时间略高于Neur2SP，在某些实例上最优性间隙略高，但这些间隙被Neural-Benders修正系统地降至零；ICNN+比纯代理方法更慢，因为其总时间还包含修正过程",
+          "在最具挑战性的case118、K=100上，ICNN+在20秒内完成并在SAA实例上获得认证零最优性间隙；节选指出ICNN+减少了所需Benders切的数量，使经典分解单独无法收敛的情形变得可处理",
+          "节选提及除case30外ICNN与Neur2SP误差相当，但未提供具体误差数值；其余基线对比、训练开销、公平计算预算的细节在节选中未说明"
+        ],
+        "first_affiliation": "康奈尔科技（Cornell Tech）",
+        "insight": "该工作有效的关键在于让所学代理函数与问题本身的结构性质保持一致：连续追索时第二阶段价值函数关于第一阶段决策是凸且分段线性的，因此用输入凸神经网络（ICNN）按构造保持凸性，既可直接嵌入MILP中被精确求解器优化，又能在凸代理上生成有效的Benders切以事后认证最优性；由于认证由修正回路而非代理精度承担，代理可以有偏，从而放宽对近似精度的要求，并把方法扩展到经典分解因非凸不连续而难以处理的整数追索情形。",
+        "limitations": [
+          "作者在结论中明确未来工作可将该方法扩展到电力系统多阶段随机问题，隐含当前工作限于两阶段",
+          "作者明确ICNN凸性约束限制表示能力，导致某些实例上最优性间隙略高，且需要更深或更宽网络、嵌入MILP后求解更慢"
+        ],
+        "method": [
+          "用ICNN学习第二阶段价值函数的凸代理，网络输入为第一阶段决策，输出为追索成本估计，按构造保持凸性",
+          "将训练好的凸代理嵌入第一阶段MILP，由精确求解器快速得到第一阶段候选解",
+          "设计Neural-Benders修正循环，在代理高估或低估追索成本两种情形下均对第一阶段解进行事后精化，恢复精确最优并独立于代理精度认证解质量",
+          "利用凸代理生成精确Benders切来认证最优性，并将方法扩展到第二阶段含整数决策的追索情形",
+          "在IEEE随机机组组合基准上以扩展形式作为参考，报告墙钟时间、相对扩展形式的平均百分比间隙、加速比和达到认证零间隙所需的Benders迭代次数"
+        ],
+        "motivation": "两阶段随机混合整数线性规划是电力系统不确定性下运行优化的标准建模工具，但其扩展形式（extensive form）规模随场景数线性增长，在日前时间窗口下很快变得计算上不可行；经典分解方法在整数追索情形下又会失效，因此需要既能快速求解又能保持解质量认证的手段。",
+        "primary_topic": "两阶段随机机组组合的神经网络代理求解与最优性认证",
+        "relation_to_research": "该论文直接研究电力系统机组组合这一生产调度类的两阶段随机混合整数优化问题，其核心机制是把神经网络作为价值函数代理嵌入数学规划，并用分解切进行事后最优性认证，属于学习辅助搜索与数学规划结合的方向，与AI4OR中代理优化和分解方法的融合高度相关。迁移到柔性作业车间、流水车间或生产运输协同调度时，需要先把相应问题写成第一阶段整数决策加第二阶段追索的两阶段随机规划，并验证追索价值函数或其对偶结构是否满足可凸代理、可生成有效切的条件；这属于推测，论文本身并未涉及车间调度问题。对于整数追索设定的处理思路，也可能为调度中离散追索决策下的学习辅助方法提供参考，但同样需要条件验证。",
+        "relevance_score": 6,
+        "setting": "研究面向电力系统日前运行中的两阶段随机机组组合问题：第一阶段为慢启动机组的开停机与启动、停机二进制决策（u,v,w），第二阶段在给定场景实现后确定快启动机组的开停机二进制及所有机组的出力、切负荷、线路潮流等追索变量，目标是最小化第一阶段成本加第二阶段的期望追索成本；关键约束包括最小开停机时间、出力上下限、爬坡率、功率平衡与输电线路热稳极限，不确定性由场景集合刻画，属于静态的两阶段场景型随机优化，第一阶段决策不依赖场景而第二阶段随场景变化。",
+        "tags": [
+          "两阶段随机规划",
+          "机组组合",
+          "输入凸神经网络",
+          "Benders分解",
+          "代理优化",
+          "最优性保证"
+        ],
+        "title_zh": "带质量保证的两阶段随机机组组合问题学习求解",
+        "uncertainty": "判断基于摘要与有限的全文节选：节选缺失方法细节章节、完整的实验设置与全部结果表格，因此实验部分的基线完整列表、训练开销、公平计算预算、消融实验以及具体间隙数值无法核实；相关性给定为6，是因为论文面向电力机组组合而非车间调度，但方法机制具有明确的迁移路径。",
+        "why_recommended": "它提供了学习代理与精确分解协同的完整范式：代理负责快速给出第一阶段候选解，分解切负责独立于代理精度的质量认证，并专门处理了整数追索这一经典分解失效的情形；其中关于凸性约束对近似精度与求解时间的权衡、以及认证回路如何把有偏代理修正为零间隙的机制，对研究学习辅助求解、代理嵌入数学规划以及约束可行性保证的读者具有直接参考价值。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-18T09:59:08.536678+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2609.18859v1",
+        "status": "not_found"
+      },
+      "final_score": 0.627438755156827,
+      "provenance": {
+        "analyzed_at": "2026-09-18T02:00:59.177692Z",
+        "input_hash": "685b85e6c4e6d69b626fffb2eb075170b565cf77237c56e89c80a5d2e3edd55e",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Two-stage stochastic Mixed-Integer Linear Programs are a canonical modeling tool to optimize power system operations under uncertainty, yet their extensive-form counterparts scale linearly with the number of scenarios and quickly become computationally prohibitive under day-ahead time constraints. We propose an Input Convex Neural Network architecture to learn a convex surrogate of the second-stage value function, enabling fast first-stage optimization while preserving convexity by construction. We couple the surrogate with a Neural-Benders correction loop that refines the first-stage solution a posteriori, recovering the exact optimum whether the network overestimates or underestimates the recourse cost, and certifying solution quality independently of surrogate accuracy. We evaluate the method on IEEE Stochastic Unit Commitment benchmarks (case9-case118) under both continuous and integer recourse. The proposed approach achieves solutions with zero optimality gap on the $K$-scenario instance across all test cases and scenario dimensions $K \\in \\{10, 50, 100\\}$, with speedups up to $214\\times$ over the Extensive Form in the integer setting. Solve times are stable across scenario realizations and compatible with day-ahead time windows on the tested benchmark instances.",
+          "authors": [
+            "Andrea Fusco",
+            "Andrea Lodi",
+            "Lavanya Marla"
+          ],
+          "canonical_id": "2609.18859",
+          "categories": [
+            "eess.SY",
+            "cs.SY",
+            "math.OC"
+          ],
+          "comment": "11 pages, 2 figures, 3 tables, 1 algorithm. Submitted to IEEE Transactions on Power Systems",
+          "pdf_url": "https://arxiv.org/pdf/2609.18859",
+          "published_at": "2026-09-16T16:00:07Z",
+          "source": "arxiv",
+          "title": "Learning to Solve Two-Stage Stochastic Unit Commitment Problems with Quality Guarantees",
+          "updated_at": "2026-09-16T16:00:07Z",
+          "url": "https://arxiv.org/abs/2609.18859",
+          "version": 1
+        },
+        "rank": 5,
+        "score": {
+          "base_score": 0.6498886457396854,
+          "exploration": 0.8460041687899736,
+          "matched_terms": [
+            "mixed integer",
+            "mixed-integer",
+            "neural network"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.7018767206680602,
+          "topic": 0.5790019034600672
+        }
+      },
+      "tier": "deep_read"
+    },
+    "arxiv:2609.19858:v1": {
+      "analysis": {
+        "analysis": "材料未说明作者对问题结构的具体分析过程。摘要只说明作者将问题形式化为贝叶斯决策问题，并以超体积期望为最大化目标，同时指出可通过基于梯度的随机优化方法求解，前提是谨慎处理被支配点。",
+        "challenges": [
+          "超体积期望关于有限输入点集合的优化是非平凡问题",
+          "被支配点会干扰基于梯度的随机优化框架",
+          "在缺乏可微代码时难以直接获得梯度",
+          "需要设计合适的采集函数以构建适合该多目标问题的代理模型"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文将不确定性下的多目标优化形式化为贝叶斯决策问题，并最大化超体积的期望值",
+            "location": "abstract",
+            "quote": "In this work, we propose instead to formulate this as a Bayesian decision problem and to rely on the expected value of the hypervolume, which is to be maximized with respect to a finite set of input points."
+          },
+          {
+            "claim": "作者指出可通过基于梯度的随机优化方法实现，但需要谨慎处理被支配点",
+            "location": "abstract",
+            "quote": "We show that this can be performed using methods based on gradients in a stochastic optimization framework, provided that care is taken with respect to dominated points."
+          },
+          {
+            "claim": "在缺少可微代码时，作者提出使用高斯过程作为可微代理模型",
+            "location": "abstract",
+            "quote": "Moreover, in the absence of readily available differentiable code, we propose to use Gaussian Processes as differentiable surrogate models, in order to perform the optimization."
+          },
+          {
+            "claim": "作者提出基于采集函数的主动学习策略以构建适合该多目标问题的代理模型",
+            "location": "abstract",
+            "quote": "An additional contribution in this work are some active learning strategies, through acquisition functions which helps construct a surrogate model well-designed for the multiobjective optimization problem at stake."
+          },
+          {
+            "claim": "这些策略在简单解析问题上进行了性能比较",
+            "location": "abstract",
+            "quote": "These strategies are compared on simple analytical problems to assess their performances."
+          }
+        ],
+        "experiments": [
+          "摘要说明这些主动学习策略在简单解析问题上进行了比较以评估其性能，但未给出任何具体基线、实例规模、约束可行性、解质量、运行时间、训练开销或公平计算预算的数字。",
+          "摘要未报告消融实验或泛化性验证结果。"
+        ],
+        "first_affiliation": "Mines Saint-Étienne MSE, LIMOS, FAYOL-ENSMSE（依据作者署名信息）",
+        "insight": "其核心洞察在于把不确定性下的多目标优化重述为关于超体积期望的贝叶斯决策问题：超体积本身是非线性且依赖支配关系的集合度量，直接对其期望最大化能更完整地反映目标不确定性对解集质量的影响；但难点在于被支配点会破坏基于梯度的随机优化，因此需要在处理支配点时格外小心，并借助可微代理模型使梯度信息可用。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "将不确定性下的多目标优化形式化为贝叶斯决策问题，以超体积的期望值为最大化目标，作用于有限输入点集合",
+          "采用基于梯度的随机优化框架来最大化该期望超体积，并特别处理被支配点",
+          "在缺少现成可微代码时，使用高斯过程作为可微代理模型来执行优化",
+          "提出若干基于采集函数的主动学习策略，用于构建适合该多目标优化问题的代理模型"
+        ],
+        "motivation": "作者指出，不确定性下的多目标优化通常通过对每个目标取期望来处理，这种做法可能丢失目标分布中与超体积相关的信息；因此作者转向贝叶斯决策视角，直接用超体积的期望值作为优化准则。",
+        "primary_topic": "不确定性条件下的多目标优化（贝叶斯决策与期望超体积最大化）",
+        "relation_to_research": "该论文研究不确定性下的多目标优化，其期望超体积准则、贝叶斯决策视角、高斯过程可微代理模型与主动学习采集函数，与智能优化和多目标约束优化方向中的代理模型辅助求解、不确定性处理和学习辅助搜索有概念上的联系。推测其方法可迁移到生产调度中的不确定性多目标问题（如加工时间波动下的工期与能耗权衡），但迁移需要解决调度解的离散表示、约束可行性处理以及超体积度量在组合解空间上的定义与可微化问题；这属于推测，并非作者结论。该文未涉及强化学习、多智能体或大模型智能体，也未直接处理生产调度问题。",
+        "relevance_score": 6,
+        "setting": "研究问题是不确定性条件下的多目标优化：目标函数带有不确定性，决策对象是一个有限的输入点集合，优化目标是在该集合上最大化超体积的期望值（expected hypervolume），而不是传统地对每个目标取期望后再优化。约束条件、具体的不确定性来源分布形式、静态或动态环境以及信息假设在摘要中均未说明，材料未说明。",
+        "tags": [
+          "多目标优化",
+          "不确定性优化",
+          "超体积",
+          "贝叶斯决策",
+          "高斯过程",
+          "代理模型",
+          "主动学习",
+          "随机梯度优化"
+        ],
+        "title_zh": "不确定性下多目标优化的期望超体积最大化",
+        "uncertainty": "本次判断仅基于标题与摘要，未获得全文；作者如何具体处理被支配点、主动学习策略的设计细节、实验中的基线设置与性能数字均无法核实，因此对方法深度和实验充分性的评估存在不确定性。作者单位与通讯作者信息仅来自提供的作者署名行，可能不完整。",
+        "why_recommended": "尽管不直接针对生产调度，但其以超体积期望处理不确定性多目标优化的思路、以及对可微代理模型与主动学习采集函数的结合方式，可为关注不确定性下多目标调度、代理模型辅助进化优化和学习辅助搜索的研究者提供方法借鉴；其关于被支配点破坏梯度优化的观察对多目标学习辅助求解有一般性参考价值。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-18T09:59:08.536678+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2609.19858v1",
+        "status": "html_unavailable"
+      },
+      "final_score": 0.5761210143309388,
+      "provenance": {
+        "analyzed_at": "2026-09-18T02:01:02.617404Z",
+        "input_hash": "58484a9c9268a3ebe00a9d7a469da872923c14046b2aad72d722c924c3b30630",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "The problem of multiobjective optimization under uncertainties is often approached by taking the expectation of each objective. In this work, we propose instead to formulate this as a Bayesian decision problem and to rely on the expected value of the hypervolume, which is to be maximized with respect to a finite set of input points. We show that this can be performed using methods based on gradients in a stochastic optimization framework, provided that care is taken with respect to dominated points. Moreover, in the absence of readily available differentiable code, we propose to use Gaussian Processes as differentiable surrogate models, in order to perform the optimization. An additional contribution in this work are some active learning strategies, through acquisition functions which helps construct a surrogate model well-designed for the multiobjective optimization problem at stake. These strategies are compared on simple analytical problems to assess their performances.",
+          "authors": [
+            "Victor Trappler (Mines Saint-\\'Etienne MSE",
+            "LIMOS",
+            "FAYOL-ENSMSE",
+            "FAYOL-ENSMSE)"
+          ],
+          "canonical_id": "2609.19858",
+          "categories": [
+            "cs.LG"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2609.19858",
+          "published_at": "2026-09-17T08:10:15Z",
+          "source": "arxiv",
+          "title": "Expected Hypervolume Maximization for Multiobjective Optimization under Uncertainties",
+          "updated_at": "2026-09-17T08:10:15Z",
+          "url": "https://arxiv.org/abs/2609.19858",
+          "version": 1
+        },
+        "rank": 16,
+        "score": {
+          "base_score": 0.5565836624198885,
+          "exploration": 0.5224397049704131,
+          "matched_terms": [
+            "multiobjective optimization",
+            "stochastic optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.8306293802948345,
+          "topic": 0.4880403022983255
+        }
+      },
+      "tier": "browse"
+    },
+    "arxiv:2609.20352:v1": {
+      "analysis": {
+        "analysis": "作者从问题结构出发，观察到 OCTSP 的复杂度可部分归约到簇内规模：利用簇的序列结构，方法可在簇大小而非整个实例大小的指数时间内求得精确解，从而把大规模问题分解为可管理的局部子问题，并借助学习加速的路径规划与并行子求解器协调求解。摘要未给出具体的下界、图表示或分解推导细节，材料未说明。",
+        "challenges": [
+          "簇独立优化会丢失非局部依赖",
+          "需要处理一般距离矩阵而非仅坐标输入",
+          "需要在大规模实例上保持可扩展性",
+          "需协调多个并行子求解器以在有限算力下持续改进解"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文研究有序聚类旅行商问题（OCTSP），要求按指定顺序访问节点簇",
+            "location": "abstract",
+            "quote": "Large-scale routing often requires visiting clusters of nodes in a prescribed order, giving rise to the Ordered Clustered Traveling Salesman Problem (OCTSP)."
+          },
+          {
+            "claim": "作者指出独立优化每个簇会忽略非局部依赖",
+            "location": "abstract",
+            "quote": "Optimizing each cluster independently seems natural, but misses non-local dependencies."
+          },
+          {
+            "claim": "COMPASS 结合搜索与学习加速的路径规划，并编排并行子求解器",
+            "location": "abstract",
+            "quote": "We introduce the COMPASS algorithm for OCTSP, which combines search with learning-accelerated routing by orchestrating parallel sub-solvers."
+          },
+          {
+            "claim": "方法无质量上限，解随算力增加持续改进",
+            "location": "abstract",
+            "quote": "COMPASS has no quality ceiling and its solutions keep improving with compute."
+          },
+          {
+            "claim": "方法利用簇结构，精确求解时间对簇大小而非实例规模呈指数级",
+            "location": "abstract",
+            "quote": "It exploits the clustered structure, and can reach exact solutions in time exponential in cluster size rather than instance size."
+          },
+          {
+            "claim": "方法接受一般距离矩阵，不限于坐标输入",
+            "location": "abstract",
+            "quote": "Unlike common large-scale routing solvers, COMPASS consumes general distance matrices and is not limited to coordinate inputs."
+          },
+          {
+            "claim": "论文展示了在 10 万合成节点和 2.85 万真实电商节点上的扩展能力",
+            "location": "abstract",
+            "quote": "We demonstrate scaling to 100K synthetic nodes and to 28.5K real e-commerce nodes."
+          }
+        ],
+        "experiments": [
+          "与替代方法相比，COMPASS 持续取得更优表现",
+          "在 10 万合成节点上展示了可扩展性",
+          "在 2.85 万真实电商节点上进行了求解，作者称这是已知最大的非对称距离路径规划解，比已有 ATSP 基准规模大 9 倍",
+          "摘要未提供具体基线名称、解质量数值、运行时间、训练开销、计算预算公平性或消融实验，材料未说明"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "核心洞察在于：OCTSP 的困难来自簇间非局部依赖与簇内组合复杂性，而非实例整体规模。通过并行编排多个子求解器并结合学习加速的路径规划，算法既能利用簇结构缩小需精确求解的局部规模，又能保持搜索质量随算力持续提升，从而避免传统启发式方法的质量上限。",
+        "limitations": [
+          "摘要未明确陈述局限性，材料未说明"
+        ],
+        "method": [
+          "将 OCTSP 的求解组织为并行子求解器的编排：搜索与学习加速的路径规划相结合",
+          "方法无质量上限，解随计算资源增加而持续改进",
+          "利用聚类结构：精确求解的时间复杂度对簇大小而非实例规模呈指数级",
+          "接受一般距离矩阵作为输入，不限于坐标输入",
+          "在多个子求解器之间进行协调，以覆盖簇间非局部依赖"
+        ],
+        "motivation": "作者指出，大规模路径规划常需按给定顺序访问节点簇，而将每个簇独立优化看似自然，却会忽略簇之间的非局部依赖，因此需要一种既能利用簇结构、又能捕获跨簇耦合的求解方法。",
+        "primary_topic": "大规模有序聚类旅行商问题（OCTSP）的学习加速搜索求解",
+        "relation_to_research": "该论文直接研究大规模路径规划中的有序聚类结构，属于组合优化与学习加速搜索的结合，和生产调度中的分布式制造、生产运输协同、柔性作业车间等具有结构相似性：簇的顺序约束可类比工序或任务的分组与先后约束，并行子求解器编排可类比多智能体或学习辅助搜索框架。可能的迁移是：将簇内精确求解与簇间搜索协调的思想用于作业车间或分布式调度中的子问题分解，或把学习加速的路径规划器嵌入生产调度求解流程；但摘要是路径规划问题，未涉及机器、工序、时间窗或能效约束，迁移到生产调度需要重新定义状态、约束与目标，属于推测，需额外验证约束可行性与计算预算公平性。",
+        "relevance_score": 7,
+        "setting": "论文研究有序聚类旅行商问题（OCTSP）：需要按给定顺序访问若干节点簇的大规模路径规划。决策对象是访问各簇内节点并连接簇间路径的整体路线；目标是最小化路径代价。关键约束是簇必须按指定顺序被访问，且算法需处理一般距离矩阵而非仅坐标输入。摘要未说明时间窗、容量或车辆数等其他约束，也未说明输入是静态还是动态环境，这些要素材料未说明。",
+        "tags": [
+          "有序聚类 TSP",
+          "大规模路径规划",
+          "搜索与学习结合",
+          "并行子求解器",
+          "非对称距离矩阵"
+        ],
+        "title_zh": "COMPASS：十万规模下的有序聚类路径规划",
+        "uncertainty": "本次分析仅基于标题与摘要，未提供全文，因此方法细节（如子求解器类型、学习信号、并行协调机制、精确求解边界）与实验细节（基线、数值、时间、开销）均无法确认；相关性评分基于摘要中问题结构与求解范式的迁移潜力，而非全文实证。",
+        "why_recommended": "论文体现了大规模组合优化中“利用问题结构分解 + 并行子求解器 + 学习加速搜索”的求解范式，与当前关注的学习辅助搜索、多智能体优化和可扩展精确求解机制高度相关。其强调无质量上限、解随算力持续改进以及处理一般距离矩阵的设定，对生产调度中公平计算预算下的可扩展求解设计具有参考价值。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-18T09:59:08.536678+08:00",
+        "figures": [
+          {
+            "caption": "A sample OCTSP solution with 100K nodes, shown at 3 zoom levels. Clusters (in colors) must be visited in a prescribed order defined by the problem. Bridges (in black) connect the clusters in locations chosen by the solver. Each red box marks the region enlarged in the preceding panel.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2609.20352/v1/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2609.20352v1/figures/fig1_100k_zoom_out.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2609.20352v1#S1.F1"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2609.20352v1",
+        "status": "available"
+      },
+      "final_score": 0.5529681453908818,
+      "provenance": {
+        "analyzed_at": "2026-09-18T02:01:43.828946Z",
+        "input_hash": "a06a361a86f6af413af3c2c5915920500c3fd312c6cd7fc14c54157f25b7ad10",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Large-scale routing often requires visiting clusters of nodes in a prescribed order, giving rise to the Ordered Clustered Traveling Salesman Problem (OCTSP). Optimizing each cluster independently seems natural, but misses non-local dependencies. We introduce the COMPASS algorithm for OCTSP, which combines search with learning-accelerated routing by orchestrating parallel sub-solvers. COMPASS has no quality ceiling and its solutions keep improving with compute. It exploits the clustered structure, and can reach exact solutions in time exponential in cluster size rather than instance size. Empirically, COMPASS consistently outperforms alternative methods. Unlike common large-scale routing solvers, COMPASS consumes general distance matrices and is not limited to coordinate inputs. We demonstrate scaling to 100K synthetic nodes and to 28.5K real e-commerce nodes. To our knowledge, the latter is the largest reported routing solution over asymmetric distances, 9x beyond established ATSP benchmarks.",
+          "authors": [
+            "Ido Greenberg",
+            "Hugo Linsenmaier",
+            "Piotr Sielski",
+            "Shie Mannor",
+            "Alex Fender",
+            "Gal Chechik",
+            "Eli Meirom"
+          ],
+          "canonical_id": "2609.20352",
+          "categories": [
+            "cs.LG"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2609.20352",
+          "published_at": "2026-09-17T13:17:42Z",
+          "source": "arxiv",
+          "title": "COMPASS: Ordered Clustered Routing at 100K Scale",
+          "updated_at": "2026-09-17T13:17:42Z",
+          "url": "https://arxiv.org/abs/2609.20352",
+          "version": 1
+        },
+        "rank": 33,
+        "score": {
+          "base_score": 0.4326693552561487,
+          "exploration": 0.20569015643015964,
+          "matched_terms": [
+            "traveling salesman"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.8761702654988299,
+          "topic": 0.3708060091370937
+        }
+      },
+      "tier": "browse"
     }
   },
   "schema_version": 1,
-  "updated_at": "2026-09-17T10:12:41.309353+08:00"
+  "updated_at": "2026-09-18T09:59:08.536678+08:00"
 }
