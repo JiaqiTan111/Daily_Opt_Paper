@@ -4037,6 +4037,109 @@
       "reading_scope": "abstract"
     }
   },
+  "357712a0c352b0170535081a5145567e09ef8ebed2636bc5d8970edf2c8abcf8": {
+    "analysis": {
+      "analysis": "作者从问题结构出发，将CVRP建模为强化学习顺序决策任务，策略由VQC承担状态到动作概率的映射，参数由经典优化器更新；随后把误差缓解的选择问题构造为带效用函数的在线控制问题，用保真度、熵和成本三项构成效用，并借助时序差分Q分数上的ε-贪婪规则做自适应选择。作者通过在不同训练时长和噪声工况下观察选择分布（短训练期以CDR为主，长训练期变为四种技术均衡）来论证选择确实依赖于训练阶段，而非固定偏好。",
+      "challenges": [
+        "退相干降低保真度、提高状态熵并破坏QRL学习稳定性",
+        "传统误差缓解静态统一施加，不感知电路与噪声特征",
+        "如何从观测到的性能信号实时选择缓解策略尚属开放问题",
+        "硬件上无法直接获得理想参考态，保真度需通过硬件可计算的代理量估计",
+        "评估目前仅限于单一实例，缺乏跨实例基准验证"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究NISQ硬件上QRL用于CVRP时的自适应误差缓解问题",
+          "location": "abstract",
+          "quote": "Quantum Reinforcement Learning (QRL) represents policies as variational quantum circuits (VQCs), making it attractive for combinatorial optimization such as the Capacitated Vehicle Routing Problem (CVRP)."
+        },
+        {
+          "claim": "传统误差缓解静态施加且不考虑学习上下文",
+          "location": "abstract",
+          "quote": "conventional error mitigation is applied statically without regard to the learning context"
+        },
+        {
+          "claim": "APGEM基于保真度、熵与代价感知的效用函数以及时序差分Q分数上的ε-贪婪规则在线选择缓解技术",
+          "location": "abstract",
+          "quote": "driven by a fidelity, entropy, and cost aware utility function and an epsilon-greedy rule over temporal-difference Q-scores"
+        },
+        {
+          "claim": "在高噪声下缓解将近似比从0.84-0.87恢复到0.92-0.94",
+          "location": "abstract",
+          "quote": "mitigation restores approximation ratios from 0.84-0.87 to 0.92-0.94 under high noise"
+        },
+        {
+          "claim": "控制器从短训练期的CDR主导转变为长训练期的四种技术均衡部署",
+          "location": "abstract",
+          "quote": "The controller shifts from a CDR-dominated regime under short training horizons to a balanced deployment across all four techniques under longer horizons, indicating genuine regime-dependent selection."
+        },
+        {
+          "claim": "评估基于单一德里CVRP实例，跨实例基准测试列为未来工作",
+          "location": "supplied_full_text",
+          "quote": "The evaluation still centers on a single instance, which we treat as a focused case study; cross-instance benchmarking on standard suites is the natural next step and is already framed as future work."
+        },
+        {
+          "claim": "真实NISQ硬件上精确理想态不可得，保真度需用硬件可计算的代理估计，硬件端保真度估计留作未来工作",
+          "location": "supplied_full_text",
+          "quote": "On real NISQ hardware the exact ideal state is not available, so the fidelity term would instead be estimated through hardware-computable surrogates (for example, near-Clifford or mirror-circuit fidelity proxies), or replaced by the entropy and estimator-variance diagnostics that the controller already tracks; the APGEM selection logic is unchanged in either case. Hardware-side fidelity estimation is left to future work."
+        },
+        {
+          "claim": "该实例上QRL智能体优于构造式启发式并接近元启发式",
+          "location": "abstract",
+          "quote": "On this instance, the QRL agent outperforms constructive heuristics and approaches metaheuristics"
+        }
+      ],
+      "experiments": [
+        "在德里真实地标构成的城市场景CVRP测试床上评估，节点代价为大圆测地距离，需求采样且仓库需求为零，容量由总需求函数设定。",
+        "噪声条件覆盖五个噪声族（退极化、振幅阻尼、相位阻尼、双量子比特门、读出）与严重程度等级{0.01, 0.05, 0.08, 0.10}构成的场景网格。",
+        "该实例上QRL智能体优于构造式启发式并接近元启发式。",
+        "在高噪声下，误差缓解将近似比从0.84–0.87恢复到0.92–0.94。",
+        "控制器行为随训练时长变化：短训练期以CDR为主导，长训练期在四种技术间均衡部署，表明存在真实的阶段依赖选择。",
+        "鲁棒性以缓解增益ΔM=M_mitigated−M_unmitigated、每种缓解技术的选择频率以及跨种子的奖励、代价与保真度方差来量化。",
+        "评估局限于单一实例，被视为聚焦案例研究；跨实例基准测试被列为未来工作。"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "有效性的核心洞察在于：误差缓解不应被视为独立于学习过程的静态预处理，而应成为由学习信号本身驱动的在线决策——即把保真度、熵与缓解代价组成效用函数，并用基于时序差分Q分数的ε-贪婪规则在四种缓解技术间选择，从而让缓解强度与当前训练阶段及噪声状态相匹配，进而使缓解预算更多投向对策略优化最有利的环节。",
+      "limitations": [
+        "评估仍以单一实例为中心，作者将其视为聚焦案例研究，标准套件上的跨实例基准测试是自然下一步并已列为未来工作。",
+        "在真实NISQ硬件上无法获得精确理想态，保真度需靠硬件可计算代理估计，硬件端保真度估计留作未来工作。"
+      ],
+      "method": [
+        "混合QRL环境建立在一个真实世界CVRP案例上：德里最后一公里配送场景，单仓库位于Connaught Place，客户节点取自真实地标，节点间代价为测地线大圆距离，需求采样时仓库需求为零，车辆容量按总需求函数设定以保证可行性。",
+        "策略ansatz包含Ry(θi)特征编码旋转、受控Z纠缠层以及堆叠的可训练Ry(φi(k))变分层，以在NISQ可行深度内平衡表达能力。",
+        "电路在AerSimulator上模拟，因可访问噪声无关参考态，APGEM效用中的状态保真度被精确计算且成本可忽略。",
+        "APGEM控制器基于保真度、熵与代价感知的效用函数，在ZNE、PEC、CDR与REM之间在线选择。",
+        "选择规则为在时序差分Q分数上执行ε-贪婪策略。",
+        "在真实NISQ硬件上，保真度项将改为硬件可计算的代理量（如近Clifford或镜像电路保真度代理），或退化为控制器已跟踪的熵与估计量方差诊断，选择逻辑不变；硬件端保真度估计留作未来工作。"
+      ],
+      "motivation": "CVRP等NP难组合优化问题随客户数与约束增长而难以精确求解，促使探索量子等替代计算范式；QRL将策略表示为VQC适合顺序决策，但在NISQ设备上噪声会降低保真度、抬高熵并破坏学习稳定性；而现有ZNE、PEC、CDR、REM等缓解方法通常一次性选定并统一施加，不随电路或噪声特征自适应，且很少与驱动策略优化的强化信号耦合。作者由此提出噪声感知的自适应缓解选择问题。",
+      "primary_topic": "量子强化学习中的自适应误差缓解（NISQ硬件上的组合优化）",
+      "relation_to_research": "该论文属于量子强化学习与组合优化的交叉，核心是为噪声环境下的学习过程引入自适应误差缓解控制。与智能优化和生产调度的直接关联在于：CVRP是生产运输协同与分布式制造中常见的路径优化对象，且论文把缓解选择建模为基于效用和时序差分Q分数的在线决策，这一“学习信号驱动自适应选择”的机制在原理上可迁移到噪声或不确定性下的求解器组件选择（如生产调度中选择不同启发式或修复算子）。但需要明确：论文的QRL与误差缓解均运行在量子电路仿真环境中，作者并未给出任何经典生产调度实验，因此迁移到经典FJSP或流水车间属于推测，需额外验证状态表示、动作空间与效用函数在经典环境下的可定义性及计算预算的公平性。",
+      "relevance_score": 4,
+      "setting": "论文研究在含噪中等规模量子（NISQ）硬件条件下，将量子强化学习（QRL）智能体用于容量约束车辆路径问题（CVRP）：策略由变分量子电路（VQC）参数化，每个执行时刻需要从零噪声外推（ZNE）、概率误差抵消（PEC）、Clifford数据回归（CDR）与读出误差缓解（REM）四种误差缓解技术中在线选择一种；决策目标是在退相干导致保真度下降、状态熵升高并破坏学习稳定性的环境中恢复解质量；关键约束包括单仓库（德里Connaught Place）与来自真实地标的客户节点、节点间以测地线大圆距离计费、以及基于总需求设定的车辆容量；信息假设为仿真环境可直接获取噪声无关参考态以精确计算保真度；环境为静态CVRP实例但噪声工况跨越五个噪声族与四个严重程度等级。",
+      "tags": [
+        "量子强化学习",
+        "误差缓解",
+        "容量约束车辆路径问题",
+        "变分量子电路",
+        "NISQ",
+        "自适应控制"
+      ],
+      "title_zh": "APGEM：面向真实世界CVRP案例的量子强化学习自适应策略引导误差缓解",
+      "uncertainty": "输入材料为标题、摘要与全文节选，缺少完整的方法细节、超参数设置、基线对比表、训练开销与统计测试等信息，因此方法描述和实验结论主要依据摘要与所给节选推断，未提供的要素（如具体运行时间、训练成本、算法流程的完整步骤）无法判断；第一单位与通讯作者在材料中未出现，判为证据未提供；相关性评分基于其为量子RL+组合优化且未涉及经典生产调度实验，若研究者关注经典智能优化则需谨慎看待其迁移价值。",
+      "why_recommended": "对关注学习辅助搜索与自适应算法配置的研究者而言，论文提供了一种把资源选择（此处为误差缓解技术）与学习信号（时序差分Q分数、保真度、熵）耦合的在线控制范式，其效用函数设计与阶段依赖选择的分析方式可借鉴到生产调度中求解器/算子选择问题；同时论文明确依赖仿真中的精确保真度并承认单一实例的局限，对强调约束可行性与可复现性的研究者可作为方法设计边界与评估严格性的参考。若不做量子计算，阅读重点应放在自适应选择的建模框架而非量子实现细节。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-09-19T02:04:43.459794Z",
+      "input_hash": "a2c2c2532f05dd3a41b4ebb42e0f9783a5ed8c0ba8873961b9645fd60f9dd63c",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "359604fe952a06889a8eb018b175c5b1406432de396fe12b343cfec364ba9e93": {
     "analysis": {
       "analysis": "作者从调度问题的约束结构出发，指出其形式虽多但约束关系来自少数反复出现的类型：活动间优先级、一次处理一个活动的析取资源、在容量内允许并发的累积资源，以及每个活动的多种执行模式；据此设计只要求模型识别这些结构的领域特定语言，由确定性编译器处理后端编码，并以独立验证器直接对照源实例验证所报告调度，从而把失败面从“建模与搜索”缩小到“语义识别”。",
@@ -10695,6 +10798,84 @@
     "provenance": {
       "analyzed_at": "2026-09-10T01:57:39.759226Z",
       "input_hash": "88590e7dc31a8b1c3f53fec739af1b7ad3c0c7e2758f175798c7b66f749d6f4f",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
+  "88ca167edb0805cb4ade97953199bef57ad90eff2c659c7a3fa2cbf94988ac5d": {
+    "analysis": {
+      "analysis": "作者利用两阶段随机规划的结构，将第二阶段价值函数作为第一阶段优化的关键耦合项，用输入凸神经网络构造其凸代理以保留可求解的凸结构；随后以Benders型校正循环在代理解基础上迭代添加割并求解精确子问题，从而分析代理误差对第一阶段解的影响。具体理论分析细节材料未说明。",
+      "challenges": [
+        "在构造上保持第二阶段价值函数代理的凸性",
+        "代理高估或低估再调度成本时仍能恢复精确最优解",
+        "在整数再调度情形下保证校正循环收敛且实用",
+        "解时间需在场景实现间稳定并落入日前时间窗口"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文针对两阶段随机MILP，extensive form随场景数线性增长，在日前时间限制下计算困难。",
+          "location": "abstract",
+          "quote": "their extensive-form counterparts scale linearly with the number of scenarios and quickly become computationally prohibitive under day-ahead time constraints"
+        },
+        {
+          "claim": "方法使用输入凸神经网络学习第二阶段价值函数的凸代理，按构造保持凸性。",
+          "location": "abstract",
+          "quote": "We propose an Input Convex Neural Network architecture to learn a convex surrogate of the second-stage value function, enabling fast first-stage optimization while preserving convexity by construction."
+        },
+        {
+          "claim": "通过Neural-Benders校正循环事后精炼第一阶段解，并在代理高估或低估再调度成本时恢复精确最优解，质量证书独立于代理精度。",
+          "location": "abstract",
+          "quote": "We couple the surrogate with a Neural-Benders correction loop that refines the first-stage solution a posteriori, recovering the exact optimum whether the network overestimates or underestimates the recourse cost, and certifying solution quality independently of surrogate accuracy."
+        },
+        {
+          "claim": "在IEEE随机机组组合基准上，K场景实例取得零最优性间隙，整数设定下加速最高214倍，求解时间稳定且与日前时间窗口兼容。",
+          "location": "abstract",
+          "quote": "The proposed approach achieves solutions with zero optimality gap on the $K$-scenario instance across all test cases and scenario dimensions $K \\in \\{10, 50, 100\\}$, with speedups up to $214\\times$ over the Extensive Form in the integer setting."
+        }
+      ],
+      "experiments": [
+        "在IEEE随机机组组合基准（case9至case118）上评估，覆盖连续和整数再调度两种情形。",
+        "在场景维度K∈{10,50,100}的所有测试用例上，报告K场景实例取得零最优性间隙。",
+        "整数设定下相对extensive form的加速最高达214倍。",
+        "求解时间在不同场景实现间稳定，且在测试基准实例上与日前时间窗口兼容。",
+        "基线为extensive form；训练开销、公平计算预算、消融、泛化到未见场景分布等材料未说明。"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "纯代理模型加速的根本风险在于代理误差会污染第一阶段决策，而该工作将代理建模与精确校正解耦：用输入凸神经网络学习保持凸性的第二阶段价值函数代理，使第一阶段问题仍可被可靠求解，再通过Neural-Benders校正循环在事后恢复精确最优解，从而把“加速”与“最优性保证”分开处理，使质量保证不依赖代理精度。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "训练输入凸神经网络（ICNN）作为第二阶段价值函数的凸代理，按构造保持凸性。",
+        "以该代理替代extensive form中的第二阶段，进行快速第一阶段优化。",
+        "将代理与Neural-Benders校正循环耦合，对第一阶段解做事后精炼。",
+        "校正循环可处理网络高估或低估再调度成本的情形，并恢复精确最优解。",
+        "解质量证书独立于代理精度给出。"
+      ],
+      "motivation": "两阶段随机MILP的extensive form规模随场景数线性增长，在日前时间窗口下计算上难以承受，因此需要一种既能利用学习加速第一阶段求解、又不牺牲解质量保证的方法。",
+      "primary_topic": "随机两阶段混合整数规划的学习加速与质量保证求解",
+      "relation_to_research": "该论文与智能优化和生产调度的关联在于：它针对含整数决策的随机两阶段调度问题，提出学习辅助求解并显式保证解质量，其ICNN代理加Benders校正的思路可直接迁移到柔性作业车间、流水车间或分布式制造中带不确定加工时间、随机需求或随机故障的两阶段/多阶段随机调度模型。迁移需要满足条件：问题能写成两阶段随机MILP、第二阶段价值函数可用凸代理近似、且能实现针对整数子问题的Benders型校正；这些为推测，非作者结论。",
+      "relevance_score": 7,
+      "setting": "研究两阶段随机混合整数线性规划，典型场景为电力系统日前调度中的随机机组组合：第一阶段在不确定性实现前确定机组启停等决策，第二阶段在给定场景下优化再调度与运行成本。目标是在日前时间限制内快速获得高质量的第一阶段解。关键约束与信息假设（如具体网络约束、非预期性约束的建模形式）材料未说明；环境为静态的场景集建模，场景数K可扩展，摘要未讨论在线动态扰动或滚动决策。",
+      "tags": [
+        "两阶段随机规划",
+        "机组组合",
+        "输入凸神经网络",
+        "Benders分解",
+        "学习辅助优化",
+        "质量保证"
+      ],
+      "title_zh": "学习求解带质量保证的两阶段随机机组组合问题",
+      "uncertainty": "仅依据标题与摘要，未获取全文，因此方法细节（网络结构、训练方式、校正循环收敛条件、是否依赖特定求解器）、实验的公平计算预算、训练开销、消融与泛化结果、作者明确陈述的局限均无法确认；第一单位与通讯作者信息未提供。",
+      "why_recommended": "对关注学习辅助搜索与数学规划结合、约束可行性和公平计算预算的研究者，该工作展示了一种将神经网络代理嵌入精确分解框架并保留最优性证书的范式，与“学习加速但不牺牲质量保证”的研究关切高度一致，可作为随机调度与生产运输协同中不确定性建模的参考。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-09-19T02:04:22.926397Z",
+      "input_hash": "c5b493fad699d7bc0e8a98eaaba79e59f3147b855fd8a040aa4564f02e659aa7",
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
