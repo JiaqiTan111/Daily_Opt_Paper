@@ -161,7 +161,7 @@
 <main>
   <header class="page-header">
     <div class="masthead">
-      <span>PAPERDAILY · 智能优化与生产调度 · 2026-09-23 10:14</span>
+      <span>PAPERDAILY · 智能优化与生产调度 · 2026-09-24 10:01</span>
       <nav aria-label="站点导航">
         <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/">今日</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/daily/">每日日报</a>
         <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/library/">长期论文库</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/topics/">主题</a>
@@ -194,8 +194,8 @@
   <div class="paper-card__body">
     <div class="paper-card__rubric">
       <span class="topic-badge">智能体与自动建模</span>
-      <span>正文节选</span>
-      <span>相关性 8/10</span>
+      <span>摘要级</span>
+      <span>相关性 6/10</span>
       <span>v2</span>
     </div>
 
@@ -205,9 +205,9 @@
 
 <div class="paper-card__takeaway">
       <p class="field-label">核心洞察</p>
-      <p>与其让 LLM 提出测试场景再由求解器检查，不如反向利用求解器在高维空间中构造可行/最优解的可靠性，主动生成降复杂度的诊断查询，使 LLM 能在固定全局上下文下进行局部推理，从而以可处理的方式判断候选公式相对于任务描述的正确性；这种角色反转使得验证既保留全局语义结构，又降低 LLM 的推理负担，因此比单纯代码生成或 prompt 工程更稳健。</p>
+      <p>其核心洞察在于：与其让大模型直接对完整形式化做全局正确性判断，不如借助求解器生成关于候选形式化的简化诊断查询，在固定全局上下文下让大模型只对局部约束或变量做可处理的小范围推理；这种把全局验证分解为多个局部可验证问题的做法，既能降低大模型推理难度，又能产生高精度的自验证信号，从而提升形式化正确性。</p>
     </div>
-    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>该论文针对 AI4OR 中关键且真实存在的痛点——LLM 生成的优化公式可执行却语义错误——提出了求解器反向构造诊断查询的自验证框架，并在多个基准上给出一致的精度提升与高精度自验证信号。对研究生产调度自动建模、约束可行性验证和求解器-LLM 协同的研究者而言，其约束/变量维度分解与局部化推理思路可直接启发如何对调度模型中的工序约束、机器容量约束与决策变量语义进行系统化验证。</p>
+    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>论文提供了一个把大模型自动建模与求解器验证相结合的思路，其基于简化的自验证机制对关注学习辅助搜索、自动建模和约束可行性的研究者有迁移价值；虽然当前证据仅来自摘要且未涉及生产调度，但其对形式化正确性和可验证性的处理方式值得在调度建模与动态扰动场景中作为方法参照。</p>
     <ul class="paper-tags" aria-label="研究标签">
       <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/dynamic-robust/" data-tag-filter="dynamic-robust">动态与鲁棒</a></li>
       <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/llm/" data-tag-filter="llm">大模型辅助优化</a></li>
@@ -222,10 +222,10 @@
       </summary>
 
       <div class="paper-details__meta">
-        <p><strong>模型细分主题：</strong>自然语言到优化模型的自动形式化与自验证</p>
-        <p><strong>模型原始标签：</strong>LLM 自动建模、MILP、求解器-LLM 框架、自验证、简化诊断查询、AI4OR</p>
-        <p><strong>第一单位：</strong>Hamad Bin Khalifa University, Doha, Qatar</p>
-        <p><strong>通讯作者：</strong>Mohammad Raza</p>
+        <p><strong>模型细分主题：</strong>自然语言到优化模型的自动形式化与基于求解器的自验证</p>
+        <p><strong>模型原始标签：</strong>AI4OR、自动建模、大模型、求解器辅助验证、自然语言接口、优化建模</p>
+        <p><strong>第一单位：</strong>证据未提供</p>
+        <p><strong>通讯作者：</strong>证据未提供</p>
         <p><strong>首次上传：</strong>2026-05</p>
         <p class="paper-links">
           <a href="https://arxiv.org/abs/2607.20474">arXiv 摘要 ↗</a>
@@ -273,26 +273,25 @@
       <p class="copyright">图片来自论文官方 arXiv 页面，仅用于论文导航与学术阅读；版权归论文作者或相关权利人所有。</p>
 
       <dl class="research-note">
-        <dt>研究设定</dt><dd>研究问题是将自然语言描述的优化问题自动翻译为可由求解器执行的 MILP 形式化代码；决策对象是候选求解器程序（solver code）的选取；目标是提高翻译正确率并提供高精度的自验证信号；关键约束在于优化程序正确性依赖决策变量、约束与目标之间的全局交互，传统单元测试/行为测试用例方法不可行；信息假设为给定自然语言问题描述及数据 (x,d)，并可调用 LLM 与优化求解器；环境为静态离线基准评估，非动态在线调度场景。</dd>
-        <dt>研究动机</dt><dd>优化建模对非专家用户门槛高，需要运筹学与求解器 API 双重专业知识；LLM 虽可将自然语言转为求解器代码，但生成的公式即便能无错误执行，也可能因细微语义错误而错误地实现了任务。由于正确性取决于全局交互，用测试实例检测错误本身就是一个高维困难优化问题，因此需要新的验证范式。</dd>
-        <dt>核心洞察</dt><dd>与其让 LLM 提出测试场景再由求解器检查，不如反向利用求解器在高维空间中构造可行/最优解的可靠性，主动生成降复杂度的诊断查询，使 LLM 能在固定全局上下文下进行局部推理，从而以可处理的方式判断候选公式相对于任务描述的正确性；这种角色反转使得验证既保留全局语义结构，又降低 LLM 的推理负担，因此比单纯代码生成或 prompt 工程更稳健。</dd>
-        <dt>技术挑战</dt><dd><ul><li>候选公式可执行但语义错误，细微错误难以检测</li><li>优化代码正确性依赖变量、约束、目标的全局交互，传统单元测试不可行</li><li>在高维空间生成满足可行性或最优性条件的可靠测试实例本身是困难优化问题</li><li>LLM 与求解器可能共享对变量（如 start time）的错误解释，导致验证通过但模型整体错误</li><li>简化查询无法覆盖被候选程序完全遗漏而非错误表述的自然语言要素</li></ul></dd>
-        <dt>问题分析</dt><dd>作者从优化问题的结构出发，将候选程序分解为约束维度与决策变量维度，对每个约束构造规范化形式 e(V)≤0 并生成三种变异（严格小于、等于、严格大于）以探测可行性与最优性属性；通过在固定全局上下文下改变局部约束或变量取值，将全局正确性判断分解为可局部推理的子问题，并聚合多个验证信号进行候选程序排序。</dd>
-        <dt>方法</dt><dd><ul><li>给定自然语言描述与数据 (x,d)，从语言模型采样 K 个候选程序（实验中 K 最多为 10）</li><li>对每个候选程序执行三类验证：约束验证、变量验证和类型验证</li><li>约束简化验证：对每个约束规范化并构造三种变异（≤-δ、=0、≥+δ），由求解器生成 witness valuations，形成可行性诊断查询交由 LLM 推理</li><li>变量简化验证：分为单变量验证与全变量验证，分别探测决策变量的语义解释</li><li>类型验证：作为语法一致性检查</li><li>生成四个归一化分数：约束验证 sc、单变量验证 sd、全变量验证 sf、类型验证 st</li><li>三个语义验证信号等权聚合为最终语义验证分数，类型验证仅通过字典序作为二级打破平局信号，优先语义正确性</li><li>按综合得分选取排序最高的公式提交最终求解</li><li>在全部验证查询成功时输出自验证信号，作为系统置信度指标</li></ul></dd>
-        <dt>实验</dt><dd><ul><li>在四个基准数据集（NL4Opt、NLP4LP、CompOR、IndOR）上评估</li><li>与 BaseLLM、SelfDebug、Optimus 等基线比较，VeriSimpl 在所有基准上表现最佳</li><li>使用 GPT-4o 与 DeepSeek-R1 两种 LLM：NL4Opt 上 VeriSimpl 取得 88.1（GPT-4o）与 88.5（R1），缩小了基础模型之间 75.5 与 78.4 的差距</li><li>报告了数据集规模加权平均准确率，VeriSimpl 仍为最佳，相对 SelfDebug 与 BaseLLM 提升更大</li><li>Optimus 在加权平均下因在较大的 NL4Opt 上表现较好而显著上升，但仍低于 VeriSimpl 与 SelfDebug</li><li>自验证精度与覆盖率（Table 4）：GPT-4o 下平均精度 91.5、覆盖率 34.2；R1 下平均精度 78.5、覆盖率 23.0；NL4Opt 上 GPT-4o 精度 92.7、覆盖率 32.1，R1 精度 95.7、覆盖率 38.2；CompOR 上 GPT-4o 精度 100.0、覆盖率 53.8，R1 精度 66.7、覆盖率 15.3；NLP4LP 上 GPT-4o 精度 90.0、覆盖率 28.1，R1 精度 75.0、覆盖率 17.1；IndOR 上 GPT-4o 精度 83.3、覆盖率 22.7，R1 精度 76.5、覆盖率 21.3</li><li>还报告了使用 Mistral large 模型的评估显示类似结果</li><li>运行时间、训练开销、实例规模、约束可行性的详细量化指标：材料未说明</li></ul></dd>
-        <dt>局限</dt><dd><ul><li>决策变量被假定为给定，并在 LLM 推理与求解器分析之间共享，未显式验证变量定义</li><li>简化查询无法覆盖被候选程序完全遗漏或忽略的自然语言描述要素，缺少面向覆盖的检查</li><li>当 LLM 与求解器共享同一错误解释时，模型内部一致且验证通过，但整体错误</li></ul></dd>
-        <dt>与你的研究关系</dt><dd>论文事实：该工作研究 LLM 驱动的自然语言到 MILP 求解器代码的形式化，并用 solver-in-the-loop 生成诊断查询进行自验证，属于 AI4OR 中的自动建模与学习辅助求解方向。迁移设想（推测）：其简化验证机制可迁移到生产调度问题的自然语言/结构化建模流程中，例如柔性作业车间或分布式制造场景中由领域人员描述约束、系统生成 MILP 模型，再用约束维度和变量维度的简化查询验证生成的工序、机器分配与运输约束是否正确；迁移需具备的条件是：目标调度问题能被规范化表达为约束集合与决策变量集合、求解器可稳定生成可行 witness、且验证查询能在固定全局上下文下局部化，否则对时间耦合强、动态扰动频繁的调度问题可能不完全适用。</dd>
+        <dt>研究设定</dt><dd>论文研究将自然语言问题描述自动翻译为可求解器执行的优化模型这一问题，决策对象是候选数学规划形式化的正确性与鲁棒性，目标是在不依赖人工检查的情况下提高形式化相对于原始任务描述的正确率，关键约束是推断出的形式化可能语法正确、可执行却语义上未实现真实任务，信息假设为具备可调用求解器与可调用大模型，环境为静态的基准评测而非动态扰动场景，材料未说明具体的决策变量类型、约束类别和问题规模。</dd>
+        <dt>研究动机</dt><dd>自然语言接口能显著提升优化建模的可及性与可用性，而大模型在把文本描述转为可执行求解器表达式方面展现出潜力；但现有方法难以保证推断出的形式化真正实现意图任务，因为形式化即使无错执行也可能语义错误，作者因此希望提供一种稳健且可自动验证的自然语言到优化形式化框架。</dd>
+        <dt>核心洞察</dt><dd>其核心洞察在于：与其让大模型直接对完整形式化做全局正确性判断，不如借助求解器生成关于候选形式化的简化诊断查询，在固定全局上下文下让大模型只对局部约束或变量做可处理的小范围推理；这种把全局验证分解为多个局部可验证问题的做法，既能降低大模型推理难度，又能产生高精度的自验证信号，从而提升形式化正确性。</dd>
+        <dt>技术挑战</dt><dd><ul><li>大模型生成的优化形式化可能可执行但语义上未实现任务意图</li><li>直接对完整形式化做正确性推理对大模型而言过于困难</li><li>需要在不依赖人工标注的情况下获得高精度自验证信号</li><li>需要在约束和决策变量等不同维度设计有效的简化与验证策略</li></ul></dd>
+        <dt>问题分析</dt><dd>作者利用优化求解器作为验证工具，围绕问题约束和决策变量等维度设计简化策略，将候选形式化的正确性判断拆解为可局部处理的诊断查询；在固定全局上下文下，大模型只需针对简化后的局部问题推理，从而绕开对完整形式化进行全局判断的困难。材料未说明是否使用问题结构分解、下界或图表示等更具体的分析工具。</dd>
+        <dt>方法</dt><dd><ul><li>提出 VeriSimpl 求解器-大模型框架，用于自然语言到优化形式化的鲁棒转换</li><li>核心机制为基于简化的验证：用求解器对候选形式化生成简化的诊断查询</li><li>大模型在固定全局上下文下对简化后的局部诊断查询进行推理，判断候选形式化相对任务描述的正确性</li><li>沿问题约束和决策变量等不同维度设计简化策略</li><li>框架同时输出一种高精度的自验证信号，材料未说明其具体计算方式</li></ul></dd>
+        <dt>实验</dt><dd><ul><li>在一系列优化基准上进行评测</li><li>结果显示该方法在准确率上相较现有方法取得一致提升</li><li>结果同时提供了一种新颖的高精度自验证信号</li><li>材料未说明基线方法的具体名称、实例规模、约束可行性、解质量、运行时间、训练开销、公平计算预算、泛化与消融实验的具体数字与设置</li></ul></dd>
+        <dt>局限</dt><dd><ul><li>材料未说明</li></ul></dd>
+        <dt>与你的研究关系</dt><dd>该论文与 AI4OR 中的自动建模方向直接相关，关注用大模型和求解器协同把自然语言任务转为可执行优化形式化，并强调形式化正确性与自验证。将其迁移到生产调度（如柔性作业车间、流水车间、分布式制造、生产运输协同、动态扰动与多目标约束优化）属于推测，需要满足若干条件：调度问题描述需能被结构化表达为决策变量、约束和目标；需要设计面向调度结构（工序、机器、运输、时间窗、扰动）的简化验证查询；需要验证求解器诊断查询在调度问题上的可处理性；还需要在动态扰动场景下重新评估自验证信号的有效性和计算开销。</dd>
         <dt>证据与不确定性</dt>
         <dd>
-          <p>输入材料为摘要与部分全文节选，缺少完整的实验设置细节（如实例规模、运行时间、训练开销、公平计算预算比较、完整消融），部分方法描述在节选处被截断（如 OPEN Mutate 的完整定义），因此对方法细节和实验全面性的判断存在不确定性；相关性评分基于其自动建模与求解器-LLM 协同对 AI4OR 的可迁移性，而非论文直接针对车间调度问题。</p>
-          <blockquote><strong>论文提出基于简化验证的求解器-LLM 框架，用求解器生成关于候选公式的简化诊断查询，使 LLM 能可处理地推理公式正确性：</strong>Our approach is based on the idea of simplification-based verification, where the optimization solver is leveraged to generate simplified diagnostic queries about a candidate formulation to allow the LLM to tractably reason about the correctness of the formulation with respect to the task description.</blockquote>
-          <blockquote><strong>作者指出即便生成的求解器代码可无错误执行，仍可能没有正确实现意图任务，这是核心挑战：</strong>However, a key challenge remains: even when an LLM-based system produces solver code that may execute without errors, the generated formulation may not correctly formulate the intended pr</blockquote>
-          <blockquote><strong>作者反转传统验证流程，用求解器构造降复杂度实例，而非让 LLM 提出测试场景：</strong>instead of using the LLM to propose test scenarios that are then checked by the solver, we leverage the solver’s reliability in constructing feasible and optimal solutions in high-dimensional space to obtain reduced-complexity problem instances that are tractable for reasoning by the LLM.</blockquote>
-          <blockquote><strong>方法采样 K 个候选程序，进行约束、变量与类型三类验证，产生四个归一化分数，语义分数等权聚合，类型验证仅作平局打破：</strong>The three semantic verification signals are aggregated using equal weighting to produce the final semantic verification score, while type verification is used only as a secondary tie-breaking signal through lexicographic ordering (thus we prioritize semantic correctness over syntactic consistency).</blockquote>
-          <blockquote><strong>作者明确承认的局限包括决策变量被假定为给定且共享、验证不覆盖被完全遗漏的描述要素：</strong>decision variables are assumed as given and shared between the llm reasoning and solver analysis, and simplification queries do not cover any aspects of the NL description that may be completely missed or ignored by the candidate program rather than incorrectly formulated.</blockquote>
+          <p>本次分析仅基于标题和摘要，未提供全文，因此无法确认方法细节、实验基线、实例规模、计算开销、自验证信号的具体定义以及是否涉及生产调度相关约束；相关性分数与迁移讨论具有一定推测性。</p>
+          <blockquote><strong>论文研究自然语言到优化形式化的自动转换及其正确性保障问题：</strong>We introduce VeriSimpl, a solver LLM framework for robust natural-language-to-optimization formalization.</blockquote>
+          <blockquote><strong>核心方法是基于简化的验证，利用求解器生成关于候选形式化的简化诊断查询：</strong>Our approach is based on the idea of simplification-based verification, where the optimization solver is leveraged to generate simplified diagnostic queries about a candidate formulation to allow the LLM to tractably reason about the correctness of the formulation with respect to the task description.</blockquote>
+          <blockquote><strong>简化策略沿问题约束和决策变量等不同维度设计，使大模型能在固定全局上下文下做局部推理：</strong>We present such simplification strategies along different dimensions with respect to problem constraints and decision variables, which allow the LLM to reason locally under fixed global contexts.</blockquote>
+          <blockquote><strong>实验在若干优化基准上进行，方法在准确率上优于现有方法并提供自验证信号：</strong>Evaluations on a range of optimization benchmarks show how our approach provides consistent improvements in accuracy over existing methods, while also providing a novel high-precision self-verification signal.</blockquote>
         </dd>
       </dl>
-      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；读取了全文节选。证据范围不足的内容不应视为全文结论。</p>
+      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；仅依据标题与摘要。证据范围不足的内容不应视为全文结论。</p>
     </details>  </div>
 </article></section>
 </main>
