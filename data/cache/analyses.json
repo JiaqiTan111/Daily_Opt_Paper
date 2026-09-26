@@ -2662,6 +2662,88 @@
       "reading_scope": "abstract"
     }
   },
+  "163ee2be1e17c2fd6b5f596e8f382b99e129c021c86e0ca16d8d8b89bb0fa39c": {
+    "analysis": {
+      "analysis": "作者通过推导系统强度约束的严格LMI重构来消除非显式表达与维度变化问题，并将原始非凸隐式约束调度问题等价转换为显式的混合整数半定规划（MISDP），再设计兼容标准MILP求解器的Rayleigh Cut方法进行求解。",
+      "challenges": [
+        "系统强度约束固有的强非凸性",
+        "系统强度约束的非显式表达",
+        "GFM/GFL模式切换导致的约束维度变化",
+        "难以直接由标准MILP求解器处理非凸半定约束"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究IBR系统强度约束下的调度问题",
+          "location": "abstract",
+          "quote": "This paper develops a novel framework that simultaneously optimizes IBR operating behaviors and ensures adequate system strength."
+        },
+        {
+          "claim": "系统强度约束具有强非凸性且存在非显式与维度变化问题",
+          "location": "abstract",
+          "quote": "despite their inherent strong non-convexities"
+        },
+        {
+          "claim": "作者推导了系统强度约束的LMI重构",
+          "location": "abstract",
+          "quote": "We derive a rigorous linear-matrix-inequality (LMI) reformulation of the system strength constraint"
+        },
+        {
+          "claim": "问题被等价转为混合整数半定规划（MISDP）",
+          "location": "abstract",
+          "quote": "we equivalently convert the original non-convex implicit system strength-constrained scheduling problem into an explicit mixed-integer semi-definite programming (MISDP) problem"
+        },
+        {
+          "claim": "提出兼容标准MILP求解器的Rayleigh Cut方法",
+          "location": "abstract",
+          "quote": "We further provide a Rayleigh Cut method, which is compatible with standard mixed-integer linear programming (MILP) solvers"
+        },
+        {
+          "claim": "在IEEE 118节点系统与江苏电力系统上进行了案例研究",
+          "location": "abstract",
+          "quote": "Case studies on a modified IEEE 118-bus system and a practical Jiangsu power system demonstrate the performance of the proposed methods."
+        }
+      ],
+      "experiments": [
+        "在修改后的IEEE 118节点系统与实际江苏电力系统上进行案例研究，展示所提方法的性能。摘要未给出具体数值结果。"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "IBR的控制模式（GFM/GFL）切换带来的运行灵活性可以被纳入调度优化，但系统强度约束本身强非凸、非显式且因模式切换导致维度变化；作者通过将系统强度约束重构为线性矩阵不等式（LMI）形式并转化为显式混合整数半定规划，使这种灵活性可以在标准求解框架下被系统地优化。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "推导系统强度约束的严格线性矩阵不等式（LMI）重构，处理非显式表达与GFM/GFL模式切换引起的维度变化",
+        "将原始非凸隐式系统强度约束调度问题连同其他运行约束等价转换为显式混合整数半定规划（MISDP）问题",
+        "提出Rayleigh Cut方法，使其与标准混合整数线性规划（MILP）求解器兼容，用于求解该系统强度约束调度问题"
+      ],
+      "motivation": "IBR在现代电力系统中占比日益增大，维持系统强度面临显著的成本与稳定性挑战；同时IBR的运行行为（包括稳态功率输出与控制模式如GFM/GFL）是软件定义的，这种灵活性尚未被充分用于高效运行未来电力系统。",
+      "primary_topic": "电力系统调度中的系统强度约束与非凸优化建模",
+      "relation_to_research": "本文属于电力系统调度中的混合整数非凸优化，核心方法是LMI重构与Rayleigh Cut，与智能优化、生产调度、神经网络辅助求解、强化学习或多智能体/大模型智能体优化没有直接关系。其可迁移之处为推测：若生产调度或AI4OR问题中存在非显式、随离散模式切换而维度变化的约束，且可重构为半定或凸约束再嵌入MILP求解器，则本文的约束重构与割方法思路可能具有借鉴价值；但这需要问题本身具备可LMI化的数学结构，且迁移并非作者结论。",
+      "relevance_score": 3,
+      "setting": "研究面向以逆变器型资源（IBR）为主体的现代电力系统调度问题；决策对象是IBR的稳态功率输出与控制模式（构网型GFM/跟网型GFL）的联合优化，目标是在保证系统强度（稳定性）的前提下经济地运行系统；关键约束包括系统强度约束（原始形式强非凸、非显式且随模式切换发生维度变化）以及其他运行约束；信息假设与静态或动态环境材料未说明。",
+      "tags": [
+        "电力系统调度",
+        "构网型/跟网型切换",
+        "混合整数半定规划",
+        "线性矩阵不等式重构",
+        "Rayleigh Cut",
+        "MILP求解器兼容"
+      ],
+      "title_zh": "考虑系统强度约束且可在构网型与跟网型发电资源间切换的调度",
+      "uncertainty": "仅能依据标题与摘要判断，全文未提供，作者未说明局限；方法细节（如Rayleigh Cut具体机制）、实验规模、求解质量、运行时间与计算预算均未知，因此对其与生产调度或学习辅助求解的迁移价值只能作推测性判断。",
+      "why_recommended": "本文虽非当前研究方向的核心文献，但对关注混合整数非凸约束建模、约束重构嵌入标准MILP求解器以及离散模式切换导致约束维度变化的研究者，可作为一种跨领域的方法参考；对生产调度与AI4OR的直接启发有限。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-09-26T02:23:55.270425Z",
+      "input_hash": "2ccf01f7826c7ff6261bd2d3daa430968cae998662c5793975a78468035435aa",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
   "16411cf66789891cb38566a5ef915cbf3aaee9529b06da7c9de27fd7c414e0fc": {
     "analysis": {
       "analysis": "材料未说明作者如何分析问题，但可以推测他们利用量化误差和故障暴露的统计特性，通过激活方差采样和关键性分析来设计方法。但具体分析手段在摘要中未详述。",
@@ -11115,6 +11197,89 @@
       "reading_scope": "abstract"
     }
   },
+  "6443c64c04f5b911d535513e042feb7b560670f382dc0957e411bbe61b904817": {
+    "analysis": {
+      "analysis": "作者固定数据协议、解码器家族和攻击配置，仅改变压缩机制，从而分离压缩对攻击面的影响。利用可微量化-反量化模型进行白盒攻击和输入梯度分析，以FP32与压缩模型之间的输入梯度余弦相似度和符号一致性解释迁移效率差异。采用传输效率TE=(A_clean−A_transfer)/(A_clean−A_direct)量化迁移强度，并通过配对Δ百分点和Holm校正p值检验。使用10、20、50步PGD收敛检查以及PGD与FGSM的强度对比，降低欠优化一阶攻击伪影风险。最后用原生TensorRT部署验证模拟PTQ结论。",
+      "challenges": [
+        "在保持干净精度的前提下，如何分离并度量压缩对直接鲁棒性和跨模型迁移性的不同影响",
+        "如何为量化模型提供可微的白盒攻击与梯度分析通路，同时验证仿真结论在原生部署运行时中成立",
+        "剪枝与量化可能改变梯度和攻击迁移，量化模型在弱梯度评估下可能表现出误导性的表观鲁棒性",
+        "需要在多个被试、多个种子、两种架构和多个扰动预算下进行公平对比，避免欠优化一阶攻击造成的伪结论"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究EEG运动想象解码器在保精度压缩下的对抗脆弱性变化，而非生产调度或智能优化问题。",
+          "location": "abstract",
+          "quote": "Deployment-oriented compression is attractive for resource-constrained brain--computer interfaces (BCIs), but whether it changes adversarial vulnerability remains unclear."
+        },
+        {
+          "claim": "保精度压缩不改善直接鲁棒性，但剪枝与量化在迁移效率上分离。",
+          "location": "abstract",
+          "quote": "Accuracy-preserving compression does not improve direct robustness: at $\\epsilon=0.005$, EEGNet PGD accuracy remains 22--24\\% across FP32, 50\\% pruning (P50), PTQ, and QAT. However, P50 reduces bidirectional transfer efficiency to 0.963/0.928 (FP32$\\rightarrow$P50/P50$\\rightarrow$FP32), versus 0.994/0.997 for PTQ"
+        },
+        {
+          "claim": "作者将直接鲁棒性、对抗迁移性和部署效率视为压缩EEG解码器的不同属性。",
+          "location": "abstract",
+          "quote": "These results show that direct robustness, adversarial transfer, and deployment efficiency are distinct properties of compressed EEG decoders."
+        },
+        {
+          "claim": "方法核心是用可微量化-反量化模拟进行白盒攻击和梯度分析，并用原生TensorRT验证。",
+          "location": "abstract",
+          "quote": "Simulation provides differentiable quantize--dequantize models for white-box attacks and gradient analysis, while native TensorRT deployment is used for validation."
+        }
+      ],
+      "experiments": [
+        "在BCI Competition IV-2a上比较FP32 EEGNet和ShallowConvNet与全局幅度剪枝、模拟INT8 PTQ和QAT，覆盖九名被试和三个种子",
+        "保精度压缩不改善直接鲁棒性：在ε=0.005时，EEGNet PGD精度在FP32、P50、PTQ和QAT下保持在22–24%",
+        "P50降低双向迁移效率至0.963/0.928（FP32→P50/P50→FP32），而PTQ为0.994/0.997；ShallowConvNet趋势相同",
+        "P30/P50保持EEGNet干净精度，P70崩溃至25.96%，被视为过度压缩而非鲁棒性证据",
+        "梯度对齐显示相应分离；原生PTQ与模拟干净/对抗预测在95–98%情况下一致",
+        "攻击强度检查：EEGNet试点在ε=0.005时，10、20、50步PGD收敛到相同平均鲁棒精度37.36%，因此选择20步；全测试集上PGD在全部四个预算下至少与FGSM一样强；FP32鲁棒精度差距从ε=.001时的0.06 pp增长到.01时的0.93 pp",
+        "量化与梯度掩蔽检查：在EEGNet ε=.005时，直接PTQ/QAT鲁棒精度为22.57/22.52%，FP32构造迁移给出22.78/22.70%，反向迁移到FP32给出22.92/22.89%，对比直接22.83%；QAT迁移效率为0.995/0.997，其FP32梯度余弦为0.998",
+        "表2列出共享PGD预算下的迁移效率，P50在每个方向和预算下均低于PTQ；EEGNet P50在中小预算下P50→FP32迁移最弱，ShallowConvNet显示更广泛降低（TE≈0.88–0.92）；PTQ始终接近1；攻击接近饱和时TE趋近1"
+      ],
+      "first_affiliation": "eBRAIN Lab, Division of Engineering, New York University Abu Dhabi (NYUAD), Abu Dhabi, UAE",
+      "insight": "压缩对对抗攻击面的影响并非由干净精度或直接鲁棒精度单独决定。保精度压缩可能几乎不改变直接鲁棒精度，却显著改变跨模型迁移效率；其机制可追溯到压缩后局部输入梯度几何结构的变化：较强剪枝破坏FP32与压缩模型之间的输入梯度余弦相似度和符号一致性，从而削弱迁移，而PTQ/QAT保留接近FP32的梯度几何，因此迁移性基本不变。作者由此提出直接鲁棒性、对抗迁移性和部署效率是压缩EEG解码器的三个不同属性。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "数据集采用BCI Competition IV-2a，九名被试、四类运动想象、22个EEG通道、250 Hz，训练T与评估E会话分离；信号带通滤波4–38 Hz，转换为μV，指数标准化，按提示前−0.5 s到4.0 s分段；T分层80/20划分训练/验证，E仅用于测试",
+        "模型为EEGNet和ShallowConvNet，种子为{1,48,550}",
+        "压缩方法为全局非结构化L1幅度剪枝，比例30/50/70%，并做恢复微调；以及对称模拟INT8量化-反量化，包括PTQ和QAT；PTQ激活范围仅用训练数据，QAT用直通梯度微调校准模型",
+        "威胁模型为在标准化数字解码器输入上施加L∞扰动，ε∈{.001,.0025,.005,.01}；EEGNet使用FGSM和PGD，ShallowConvNet提供验证性PGD结果，预算为{.001,.005,.01}；PGD使用20步、五次随机重启、随机初始化、步长ε/4",
+        "评价指标包括干净精度、鲁棒精度、ASR和传输效率TE；TE=1表示迁移与直接PGD一样有效",
+        "机制分析使用FP32与压缩模型的输入梯度余弦相似度和符号一致性",
+        "用原生TensorRT部署验证模拟PTQ的干净/对抗预测一致性"
+      ],
+      "motivation": "EEG解码器既需要部署到低功耗硬件，又面临小扰动和可迁移攻击的威胁。已有EEG对抗研究主要关注对抗训练、防御基准或鲁棒架构，而边缘侧EEG压缩工作主要关注精度、内存、延迟和能耗，两条线之间存在方法学空白：尚不清楚保精度的压缩是否会改变匹配EEG解码器下的直接白盒脆弱性和跨模型对抗迁移性，也不清楚可微量化模拟的结论能否在原生边缘运行时中保持。",
+      "primary_topic": "EEG脑机接口解码器在压缩后的对抗鲁棒性与迁移性评估",
+      "relation_to_research": "论文事实：该工作研究EEG解码器的压缩、对抗鲁棒性和迁移性评估，不涉及生产调度、柔性作业车间、流水车间、分布式制造、生产运输协同、能效或多目标约束优化。迁移设想（推测）：其关于压缩改变输入梯度几何进而影响跨模型迁移的机制，可能可迁移到学习辅助搜索或神经网络代理模型的鲁棒性分析，但需要额外的条件，即优化求解器依赖可微代理梯度、模型压缩被用于部署且需评估对抗扰动下的决策质量；迁移到生产调度问题需要重新定义扰动空间、约束可行性与求解质量指标，原文未提供任何此类验证。",
+      "relevance_score": 3,
+      "setting": "论文研究面向资源受限脑机接口（BCI）部署的EEG运动想象解码器在保持干净精度前提下，其对抗脆弱性是否发生变化。决策对象为是否以及如何采用压缩方法（全局幅度剪枝与INT8量化）部署模型；目标是同时刻画干净精度、直接白盒鲁棒性和跨模型对抗迁移性。关键约束包括L∞扰动预算ε∈{.001,.0025,.005,.01}、固定数据协议、解码器家族和攻击配置，仅在压缩机制上变化。信息假设为攻击者可在标准化数字输入上做白盒梯度攻击，压缩模型通过可微量化-反量化模拟提供白盒梯度。环境为静态评估，数据集为BCI Competition IV-2a；动态扰动与在线决策材料未说明。",
+      "tags": [
+        "EEG解码",
+        "对抗鲁棒性",
+        "模型剪枝",
+        "量化",
+        "迁移性评估",
+        "边缘部署"
+      ],
+      "title_zh": "AERIAL：保精度低精度EEG解码器鲁棒性的对抗评估",
+      "uncertainty": "论文标题和摘要明确属于EEG脑机接口安全与压缩评估，与智能优化、生产调度、神经网络辅助求解、强化学习或智能体优化的核心议题缺乏实质关联。全文节选存在部分截断，作者贡献列表和章节内容不完整，可能遗漏与优化或调度相关的迁移性讨论；但基于现有证据，无法支持更高相关性判断。",
+      "why_recommended": "对当前研究者而言，这篇论文与AI4OR和生产调度的核心问题距离较远，相关性较弱。若研究者关注学习型代理模型在压缩部署后的鲁棒性、梯度几何变化对跨模型迁移的影响，或需要设计对抗评估协议来检查神经网络辅助求解模块的可靠性，则其中的梯度对齐分析、TE指标和原生部署验证思路可能提供方法学参考。但不应将其视为智能优化或生产调度方向的直接相关工作。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-09-26T02:23:58.992074Z",
+      "input_hash": "dc5189ea14e444cda76fb148e8bdb33701e2aba13c1e1d14cbc7fef7e36b0ba8",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "647e2ea3ceec515004f7d6679b5c9c2552fdf28a71a09768d85738f5ddb22163": {
     "analysis": {
       "analysis": "作者将块编码中索引映射这一组成部分作为核心分析对象，利用相干置换统一处理移位、删除和插入操作，并通过结构化压缩降低局部多控 X 控制复杂度；此外，作者将相干振幅置换与组合优化建立联系，以在硬件连通性约束下系统分配控制状态。材料未说明更具体的问题结构分析、分解或下界推导。",
@@ -18160,6 +18325,92 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
+    }
+  },
+  "9641e0f651c89ca2cfef8885d74a03449ca6821ca164ff2bd50292719a7d1c34": {
+    "analysis": {
+      "analysis": "作者利用问题结构进行分解：首先针对有界纯整数二次规划（IQP）构造精确求解器，利用二次恒等式 f(y)=f(x)+∇f(x)^T(y−x)+q(y−x) 和负曲率测试，通过整数查询分离预言机在胞元内精确优化；然后通过分母缩放（denominator scaling）将混合整数二次规划约化到纯整数情形；对无界区域，先运行无界性测试，再构造包含最优解的盒；对三次及更广多项式类，按类似胞元几何与分离不等式进行扩展，并使用对齐次拉格朗日限制、格层排序等格点层次论证。",
+      "challenges": [
+        "二次目标可不定，不存在全局凸性可利用",
+        "三次目标在二维以上此前无多项式算法",
+        "需要处理无界多面体并认证无界性",
+        "需要控制运行时间对系数编码长度的依赖而非系数幅值",
+        "混合整数情形需要将实数连续变量约化处理"
+      ],
+      "corresponding_authors": [
+        "Robert Hildebrand"
+      ],
+      "evidence": [
+        {
+          "claim": "论文给出固定维度下混合整数二次规划与整数三次规划的精确多项式时间算法",
+          "location": "abstract",
+          "quote": "We give exact polynomial-time algorithms in fixed dimension for mixed-integer quadratic programming over arbitrary rational polyhedra and for integer cubic programming over bounded rational polyhedra."
+        },
+        {
+          "claim": "二次目标可以是不定的，算法检测不可行、认证无界或返回精确最优解",
+          "location": "abstract",
+          "quote": "The quadratic objective may be indefinite; the algorithm detects infeasibility, certifies unboundedness, or returns an exact minimizer."
+        },
+        {
+          "claim": "算法的核心是利用隐藏凸性和反射胞元覆盖可行整数点",
+          "location": "abstract",
+          "quote": "Both algorithms rest on a hidden convexity of such objectives on bounded lattice sets, exposed by a cover of the feasible integer points by reflecting cells."
+        },
+        {
+          "claim": "对三次及更广多项式类，负曲率给出对所有全局最优解有效的线性割",
+          "location": "abstract",
+          "quote": "For cubics and the broader class, negative curvature at a query point yields a linear cut valid for every global minimizer in the cell, and supporting inequalities among the remaining admissible points play the same role."
+        },
+        {
+          "claim": "混合整数结果通过分母缩放约化到纯整数情形",
+          "location": "supplied_full_text",
+          "quote": "The mixed-integer result follows by denominator scaling and, for unbounded regions, an unboundedness test followed by construction of a box containing an optimizer."
+        },
+        {
+          "claim": "此前固定维度整数二次规划结果依赖系数幅值，本文改进为依赖编码长度",
+          "location": "abstract",
+          "quote": "This replaces the dependence on coefficient magnitudes in earlier fixed-parameter results by dependence on encoding length, and the exponent O(N) is optimal under the exponential time hypothesis."
+        }
+      ],
+      "experiments": [
+        "论文为理论算法研究，材料未说明数值实验、基准对比、实例规模、运行时间测量或消融实验；摘要和节选仅给出运行时间的理论界（如 2^{O(N log N)}·(m+1)^{O(N)}·编码长度多项式因子）以及指数 O(N) 在指数时间假设下的最优性声明。"
+      ],
+      "first_affiliation": "Grado Department of Industrial and Systems Engineering, Virginia Tech, Blacksburg, VA, USA.",
+      "insight": "论文的核心洞察是：在受限格点集上，此类非凸多项式目标具有一种隐藏凸性，可以通过用反射胞元覆盖可行整数点来暴露。对于二次型，若存在负曲率的整数位移则排除该胞元，否则胞元内整数点上的支撑不等式可构造整数查询分离预言机，从而实现精确优化；对三次及第二方向导数关于位置凹的更广多项式类，查询点处的负曲率给出对胞元内所有全局最优解有效的线性割，剩余可行点间的支撑不等式发挥同样作用。这一几何视角使问题从全局非凸搜索转化为胞元级别的精确分离与枚举，从而在固定维度下获得编码长度多项式时间的算法。",
+      "limitations": [
+        "材料未说明作者明确陈述的局限；节选仅提及算法为固定维度多项式时间，未讨论高维实用性、数值稳定性或实现层面的限制。"
+      ],
+      "method": [
+        "对有界纯整数二次规划建立精确求解器：利用二次恒等式与负曲率整数位移排除胞元，否则用胞元内整数点上的支撑不等式构造整数查询分离预言机进行精确优化",
+        "混合整数二次规划通过分母缩放约化到纯整数情形",
+        "对无界多面体区域，采用无界性测试并构造包含最优解的盒子",
+        "对三次目标和第二方向导数关于位置凹的更广多项式类，在查询点处用负曲率产生对胞元内所有全局最优解有效的线性割，剩余可行点间的支撑不等式继续用于分离",
+        "算法复杂度以变量数 N、约束数 m 和系数二进制编码长度表示，纯整数或特定混合整数情形下仅约束矩阵和二次矩阵进入指数因子"
+      ],
+      "motivation": "此前固定维度下整数二次规划的算法依赖系数幅值（coefficient magnitudes）作为参数，且三次整数规划在有界多面体上仅知二维是多项式可解的；作者希望将依赖从系数幅值替换为编码长度，并将三次及更广的多项式类扩展到任意固定维度。",
+      "primary_topic": "固定维度下混合整数二次规划与整数三次规划的多项式时间精确算法",
+      "relation_to_research": "该论文属于数学规划与参数化复杂度的理论研究，未涉及生产调度、柔性作业车间、流水车间、分布式制造、动态扰动、能效或多目标约束优化等具体场景，也未使用神经网络、图神经网络、强化学习、多智能体或大模型智能体作为求解组件。其关于固定维度下整数二次/三次规划精确求解的分离预言机与隐藏凸性思路，推测可能对含整数变量的小规模子问题精确求解或作为分支定界中的下界/割生成工具有间接启发，但迁移到生产调度问题需要额外的建模适配和维度控制，且论文本身未提供任何调度应用或学习辅助求解的证据。",
+      "relevance_score": 4,
+      "setting": "论文研究混合整数点上的多项式优化问题：min f(x) s.t. Ax≤b, x∈Z^{n_I}×R^{n_C}，其中 f 为有理系数多项式，目标在二次情形下可为不定二次型（不对 Q 做正定或负定假设），约束为任意有理多面体；二次问题要求检测不可行、认证无界或返回精确最优解，三次问题限定为有界有理多面体上的纯整数情形。信息假设为精确有理数输入，运行时间以变量数 N、约束数 m 和系数的二进制编码长度度量，环境为静态确定性优化问题，材料未说明动态扰动或在线信息假设。",
+      "tags": [
+        "混合整数二次规划",
+        "整数三次规划",
+        "固定维度",
+        "计算复杂度",
+        "参数化算法",
+        "格点优化",
+        "隐藏凸性"
+      ],
+      "title_zh": "通过对称位移覆盖揭示隐藏凸性：固定维度下的混合整数二次规划和整数三次规划",
+      "uncertainty": "证据仅来自摘要和部分正文节选，论文的主体证明、算法细节、复杂度推导和任何数值验证均未完整获取；关于方法在更高维或实际调度问题中的适用性无依据，相关迁移判断均为推测。",
+      "why_recommended": "对于研究智能优化与AI4OR的博士生，本文不直接涉及生产调度或学习驱动求解，但提供了固定维度下非凸整数二次/三次规划的精确多项式时间算法和隐藏凸性几何分析框架，可作为理解精确求解复杂性边界、整数格点分离与割平面的理论参考；若研究分支定界中的强割、下界或子问题精确求解，可能具有迁移启发性，但需注意其固定维度假设与调度问题维度通常较大的现实差距。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-09-26T02:23:47.420883Z",
+      "input_hash": "16777c31f78e57086ce58cdcba03cbab7d8a0b5c5ea018fa5c7758bb4b97eb4e",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
     }
   },
   "969dd143d159fa86ac9b693b9e2236981afc4d74f3bcb1f46e82ec09e32483a0": {
@@ -26687,6 +26938,80 @@
       "reading_scope": "abstract"
     }
   },
+  "d79311b9431a8f56ad41ed4993865187396f27929cfe6ebc5adaf041a2e8fba8": {
+    "analysis": {
+      "analysis": "作者基于 UniFL 的半径刻画（Mettu-Plaxton 及 Bădoiu 等人的局部决策规则）和分布式 𝒪(1)-UFL 算法，将局部邻域信息驱动的设施开启决策设计为 MPNN 消息传递过程；通过让网络学习估计信息性半径并实现概率性设施开启机制，将经典算法的结构分解为可微分模块，从而在无监督情况下端到端训练并保持理论保证。",
+      "challenges": [
+        "如何在不使用求解器监督、不采用离散松弛或梯度估计器的前提下训练网络",
+        "如何在可微分架构中嵌入近似算法原理并保留可证明的近似保证",
+        "如何利用分布结构改善经验近似比而不破坏最坏情况保证",
+        "如何实现从训练规模到更大图实例的尺寸泛化"
+      ],
+      "corresponding_authors": [
+        "Chendi Qian"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究均匀设施选址问题并提出可微分 MPNN。",
+          "location": "abstract",
+          "quote": "We study this tradeoff through Uniform Facility Location (UniFL), a problem with applications in clustering, summarization, logistics, and supply chains. We propose a fully differentiable MPNN that incorporates approximation-algorithmic principles without solver supervision or discrete relaxations."
+        },
+        {
+          "claim": "模型具有可证明的近似保证并在经验上改进标准近似算法。",
+          "location": "abstract",
+          "quote": "The model has provable approximation guarantees and empirically improves on standard approximation algorithms, narrowing the gap to integer linear programming."
+        },
+        {
+          "claim": "作者明确指出方法聚焦 UniFL 且扩展需要重新设计。",
+          "location": "supplied_full_text",
+          "quote": "our approach, which focuses on the UniFL and inherits structural assumptions from the underlying distributed approximation algorithm. While this is essential for preserving worst-case guarantees, it may also restrict flexibility, i.e., the architecture is tailored to UniFL and may require non-trivial redesign to extend to richer variants such as non-uniform opening costs, capacitated facility location, or settings with additional side constraints."
+        }
+      ],
+      "experiments": [
+        "在合成随机几何图上评估，节点位置从 100 个各向同性高斯分量的高斯混合模型采样，图有 1000 个顶点，边为欧氏距离单位内连接，含自环；每个数据集生成 10000 个图，按 8:1:1 划分训练/验证/测试。",
+        "与 SimpleUniformFL 非学习近似算法比较，回答 Q1 是否改进近似比。",
+        "在 2000 到 10000 个顶点的更大测试集上评估尺寸泛化（Q2）。",
+        "在城市地图数据集上评估。",
+        "与 KMeans++ 和 KMedoids++ 等可扩展聚类方法比较（Q3）。",
+        "聚类实验中报告了惯性（Inertia）和运行时间：例如 MPNN 初始化的 k-Means 在某个设定下惯性 132.438±1.077、时间 0.007±0.001，k-Medoids++ 惯性 170.904±1.258、时间 0.028±0.000，MPNN 初始化的 k-Medoids 惯性 161.600±1.148、时间 0.095±0.002（具体对照需结合原始表格）。"
+      ],
+      "first_affiliation": "RWTH Aachen University, Germany",
+      "insight": "将经典分布式近似算法中的局部决策规则（基于半径刻画与概率性设施开启）嵌入可微分 MPNN，使网络在保持近似算法最坏情况保证的同时，能够通过端到端无监督训练对输入分布中的结构进行数据驱动的修正，从而在经验性能上超过非学习的近似算法并逼近整数线性规划。",
+      "limitations": [
+        "方法聚焦于 UniFL，继承了底层分布式近似算法的结构假设，这虽然对保持最坏情况保证至关重要，但可能限制灵活性。",
+        "架构针对 UniFL 定制，扩展到非均匀开启成本、容量设施选址或带额外约束的变体可能需要非平凡的重设计。",
+        "需要更紧的理论分析将学习到的消息传递与实例相关的近似行为联系起来，并理解梯度下降变体在何种条件下能成功最小化期望损失。"
+      ],
+      "method": [
+        "提出全可微、无监督的消息传递图神经网络架构，镜像经典分布式近似算法的关键结构组件：用学习到的消息估计每个节点的信息性半径，并基于半径计算概率性设施开启概率。",
+        "消息传递网络在图上进行局部邻域信息聚合，输出每个节点的开启概率，无需求解器监督、无需离散松弛或梯度估计器。",
+        "通过轻微修改成本函数，使架构可端到端用于 k-means 聚类初始化。",
+        "给出了模型的可证明近似保证以及尺寸泛化理论结果（Proposition 5 等），表明训练好的网络在更大实例上保持泛化误差。"
+      ],
+      "motivation": "经典近似算法具有最坏情况保证但对自然输入分布不可自适应且不可微；基于学习的求解器虽能利用分布结构但依赖监督、强化学习或梯度估计器，训练成本高、不稳定且缺乏质量保证。作者希望结合两者优势：构造全可微、无需求解器监督、具备可证明近似保证、并能利用分布结构改进经验的 MPNN 架构。",
+      "primary_topic": "用可微分消息传递图神经网络嵌入近似算法原理求解均匀设施选址问题",
+      "relation_to_research": "论文事实：该工作将图神经网络与近似算法原理结合，在无监督、无求解器监督条件下求解组合优化问题 UniFL，并给出可证明保证与尺寸泛化。迁移设想（推测）：其核心思想——将经典近似算法的局部规则嵌入可微分 MPNN 并保持理论保证——有可能迁移到生产调度、设施选址类物流与供应链优化、以及更一般的约束优化问题，但需要针对具体问题的约束结构重新设计消息传递与概率决策机制，并验证保证在非 UniFL 变体中的可保持性。",
+      "relevance_score": 6,
+      "setting": "论文研究均匀设施选址问题（UniFL）：在给定有限度量空间中打开一组具有统一开启成本的设施来服务客户集合，目标是最小化开启成本与连接成本之和；问题为 NP-hard 且 APX-hard，约束为统一开启成本、度量空间，信息假设为仅依赖局部邻域信息的分布式近似算法结构，环境为静态图实例（合成随机几何图与城市地图数据集），材料未说明动态扰动。",
+      "tags": [
+        "图神经网络",
+        "组合优化",
+        "设施选址",
+        "近似算法",
+        "无监督学习"
+      ],
+      "title_zh": "学习用图神经网络近似均匀设施选址问题",
+      "uncertainty": "全文节选不完整，缺少完整的实验表格、基线细节、消融研究和部分理论证明；部分数值引用自节选片段，可能不完整；方法到生产调度的迁移可行性属于推测，未在原文验证。",
+      "why_recommended": "该论文展示了如何在保持近似算法最坏情况保证的同时利用分布结构提升经验性能，对研究学习辅助搜索、图神经网络与组合优化结合、以及无监督可微分求解器的读者具有方法启发；其尺寸泛化和理论保证的分析方式对生产调度等问题的学习辅助求解设计有参考价值。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-09-26T02:24:09.022612Z",
+      "input_hash": "39282ff77cd89599c61e8691aa2e8d3dee17a8d9af6fd232e76e8e9eb1387df0",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "d81af0f5a690bbab47ae1719275aff714eb5317e2476c95ec666bf073869a2c0": {
     "analysis": {
       "analysis": "作者首先将NOMA上行网络的资源分配问题建模为混合整数规划，包含用户接入变量和信道分配变量，并基于SINR与SIC解码约束刻画用户间干扰和信道容量限制；随后利用图论等价性，将MAP重构为最大独立集问题，使图顶点对应候选决策、边对应冲突或互斥约束；最后利用Rydberg原子阵列中原子间范德华相互作用导致的阻塞效应，将MIS的非邻接约束自然嵌入量子系统的物理几何中。",
@@ -28449,6 +28774,93 @@
     "provenance": {
       "analyzed_at": "2026-09-16T02:13:43.430351Z",
       "input_hash": "f344c77d5e8881e685b8986b972a6529deba340b5b84c4456640bade15b4030e",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
+  "ec48e87ab78845c95fc6095c4c571b9037d3ef47fa3ddee5cb564847179cdb2d": {
+    "analysis": {
+      "analysis": "作者将 JSSP 建模为序贯决策问题，采用构造式调度：当前车间状态编码为工序—机器异构图，经 GNN 骨干处理并由 actor 头选择下一个可行工序；通过特征同质化将工序节点与机器节点映射到共享特征空间，从而可用同构的 Graph Isomorphism Network 处理，同时保留两类节点的区分；用动作掩码保证前序可行性；用 PPO 训练 actor–critic。在此基础上，作者以实例尺寸为课程变量，先在小实例上训练、再逐步适配到更大目标尺寸，并与单尺寸直接训练进行对比，以最优性差距（相对 FDD/MWR 启发式）和墙钟训练时间作为评价指标来分析泛化、专门化与训练效率。",
+      "challenges": [
+        "大规模 JSSP 实例上直接训练的计算开销高，源于更长的回合、更大的图和更复杂的决策依赖",
+        "跨实例尺寸的泛化困难",
+        "需要兼顾跨所有评估尺寸的泛化与对目标尺寸的专门化表现"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "研究以实例尺寸为课程变量，先在小实例上训练再逐步适配到更大目标尺寸，对比单尺寸训练",
+          "location": "abstract",
+          "quote": "In the curriculum setting, the policy is first trained on smaller instances and then progressively adapted to larger target sizes, allowing scheduling behavior learned in earlier stages to support learning on larger instances."
+        },
+        {
+          "claim": "在 30×30 上课程学习跨所有评估尺寸平均最优性差距降低约 8.1 个百分点，目标尺寸平均最优性差距降低约 8.6 个百分点，并节省约 50 小时训练",
+          "location": "abstract",
+          "quote": "The strongest advantage is observed at\n30\n×\n30\n30\\times 30\n, where curriculum learning reduces the mean optimality gap across all evaluation sizes by approximately 8.1 percentage points, reduces the target-size mean optimality gap by approximately 8.6 percentage points, and saves approximately 50 hours of training time."
+        },
+        {
+          "claim": "方法采用 Hoss 等人提出的线性复杂度图强化学习调度架构，构造式调度，图包含工序节点与机器节点以及前后约束边和分配边，用 GIN 处理，PPO 训练 actor–critic，动作掩码保证前序可行性",
+          "location": "supplied_full_text",
+          "quote": "This study adopts the linear-complexity graph-based RL scheduling architecture proposed by Hoss et al.\n[\n6\n]\nas the policy model\nπ\nθ\n\\pi_{\\theta}\nfor the experiments. The model follows a constructive scheduling formulation, in which the schedule is built sequentially by selecting one operation at each decision step."
+        },
+        {
+          "claim": "课程切换间隔固定为 10 M 步，研究限于 J/M=1 的 JSSP 实例",
+          "location": "supplied_full_text",
+          "quote": "Several limitations remain. The curriculum switch interval is fixed at 10 M steps, and the study is limited to JSSP instances with\nJ\n/\nM\n=\n1\nJ/M=1\n."
+        },
+        {
+          "claim": "最优性差距相对 FDD/MWR 启发式定义并用于评估解质量",
+          "location": "supplied_full_text",
+          "quote": "This metric quantifies the relative difference between the learned policy and the reference heuristic. A lower OG indicates better solution quality, with values close to zero indicating performance similar to FDD/MWR."
+        }
+      ],
+      "experiments": [
+        "对比课程学习与单尺寸训练，目标尺寸为 20×20、25×25、30×30 三种",
+        "在 8×8 到 30×30 的未见实例上评估，采用最优性差距（optimality gap）指标，同时考察跨所有评估尺寸的泛化与对目标尺寸的专门化",
+        "最优性差距相对 FDD/MWR 启发式定义：OG 量化学习策略与参考启发式（C_FDD/MWR）之间的相对差距，越低越好，接近零表示接近 FDD/MWR 性能",
+        "结果：课程学习一致降低墙钟训练时间，目标尺寸越大收益越明显；在 30×30 上优势最强，跨所有评估尺寸平均最优性差距降低约 8.1 个百分点，目标尺寸平均最优性差距降低约 8.6 个百分点，并节省约 50 小时训练时间",
+        "小目标尺寸上课程学习也带来泛化、专门化和训练效率收益，但随目标尺寸增大收益更显著；原文未提供更多基线（如其他元启发式或更先进调度方法）的定量比较"
+      ],
+      "first_affiliation": "Rosenheim University of Applied Sciences, Dept. of Industrial Engineering",
+      "insight": "该工作的核心洞察在于：在 JSSP 中实例规模是一个天然且可控的课程变量，小实例具有更短的调度回合、更小的图表示和更低的每步计算成本，因而适合作为早期训练阶段；在小实例上学到的调度行为可以迁移并支撑大实例的学习，从而使训练总墙钟时间下降、跨尺寸最优性差距改善，且目标尺寸越大收益越明显（在 30×30 上收益最强）。",
+      "limitations": [
+        "课程切换间隔固定为 10 M 步",
+        "研究仅限于 J/M=1 的 JSSP 实例",
+        "未来工作需在更大实例和不同作业—机器比例上评估",
+        "需要研究基于收敛行为、性能阈值或实例难度的自适应课程调度",
+        "需与自适应课程策略、基于难度的课程以及更多最先进调度方法进行比较以提供更广泛评估"
+      ],
+      "method": [
+        "策略模型采用 Hoss 等人提出的线性复杂度图强化学习调度架构作为策略 πθ，遵循构造式调度：每个决策步选择一个工序，逐步构建完整调度",
+        "状态表示为工序—机器图 G_t=(V,E)，其中 V 由工序节点与机器节点组成，E 包含同一作业相邻工序之间的有向前后约束边以及工序与其所需机器之间的双向分配边",
+        "通过基于节点类型指示与动态调度特征的特征同质化，将异构图映射到共享特征空间，使同构 GIN 骨干可处理该图并保留工序与机器的区分",
+        "actor 头在动作掩码下选择下一个前序可行的工序，critic 估计当前调度状态的价值；使用 PPO 训练 actor–critic，θ 为 actor 参数，φ 为 critic 参数",
+        "课程学习设置：先在较小实例上训练策略，然后逐步适配到更大的目标尺寸；对比的单尺寸训练则只在目标尺寸上训练（课程最后阶段也只在目标尺寸上训练）",
+        "实验采用固定 GNN 架构与配置，超参数汇总于原文表 I，并对目标尺寸 20×20、25×25、30×30 分别进行课程学习与单尺寸训练对比"
+      ],
+      "motivation": "基于图神经网络的强化学习已被用于直接从问题实例学习调度策略并展现出跨实例尺寸泛化的潜力，但在大规模实例上直接训练的计算代价很高，原因是大实例导致更长的调度回合、更大的图表示和更复杂的决策依赖；同时跨实例尺寸的泛化仍然困难。因此作者希望利用课程学习，用较小实例先训练策略再逐步迁移到更大目标尺寸，以降低训练时间并改善泛化。",
+      "primary_topic": "图神经网络强化学习求解作业车间调度问题中的课程学习训练策略",
+      "relation_to_research": "本文直接研究智能优化与生产调度中的经典作业车间调度问题，采用图神经网络强化学习学习调度策略，并通过课程学习改善训练效率与跨尺寸泛化，处于神经网络辅助求解与强化学习求解组合优化的核心方向。其构造式调度、动作掩码保证可行性、以实例尺寸为课程变量的训练机制可迁移到柔性作业车间、流水车间等更复杂调度问题；迁移到生产运输协同或多目标约束场景时，需要将图表示与动作掩码扩展到运输资源、多目标奖励及动态扰动等要素（此段为推测）。",
+      "relevance_score": 9,
+      "setting": "研究求解作业车间调度问题（JSSP），决策对象为按顺序构造调度时每一步选择的下一个可行工序，目标是最小化完工时间（makespan）；关键约束包括工序前后约束（precedence）与机器分配约束，通过动作掩码确保只选择前序可行的工序；问题实例结构上可表示为包含工序节点与机器节点的图，环境为静态调度环境，即一次性构造完整调度而非动态扰动场景；信息假设为调度状态完全可观测并编码为图；训练目标尺寸共有三种：20×20、25×25 与 30×30。",
+      "tags": [
+        "作业车间调度",
+        "图神经网络",
+        "强化学习",
+        "课程学习",
+        "PPO",
+        "泛化"
+      ],
+      "title_zh": "面向作业车间调度的基于图神经网络强化学习的课程学习",
+      "uncertainty": "正文为节选，缺少表 I 的具体超参数、曲线图以及完整实验设置细节；20×20 与 25×25 的定量结果、训练总步数预算、评估实例数量与生成方式、与单尺寸训练的公平计算预算对齐方式等均未在材料中给出；此外通讯作者、代码地址及更多基线结果证据未提供；因此除摘要与节选明确给出的 30×30 数字外，不对其他尺寸结论做推断。",
+      "why_recommended": "该论文直接对应 AI4OR 与智能调度关注点：以 GNN+RL 求解 JSSP，方法聚焦约束可行性（动作掩码）、求解质量（最优性差距相对 FDD/MWR）与计算预算（墙钟训练时间），并系统比较课程学习与单尺寸训练在三个目标尺寸上的泛化与专门化。结论（更大目标尺寸下课程学习节省约 50 小时、差距降低约 8 个百分点）对设计大规模调度问题的训练课程具有直接参考价值，且其固定课程间隔与 J/M=1 等明确局限为后续研究留下清晰切口。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-09-26T02:23:48.965115Z",
+      "input_hash": "2c17985f7fb2fd84da74a8c594f9af845f1705ae0b054d6bd1c475961c275260",
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "full_text"
