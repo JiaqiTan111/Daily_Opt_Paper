@@ -1,4 +1,100 @@
 {
+  "014881addab5cbd0378ad58c1b54b641cbae002db69462d534888f444a5b8582": {
+    "analysis": {
+      "analysis": "作者将采样学习问题建模为 POMDP，利用观测堆叠提供时序信息以应对不可直接测量的不确定性；通过领域随机化训练 RL 增广以补偿匹配不确定性；基于伪控制对冲（PCH）概念设计修正参考模型，分析并避免 RL 增广与安全滤波之间的不良交互；引入干扰观测器来降低安全滤波的保守性。材料未说明是否对问题结构进行进一步分解或使用下界/图表示等方法。",
+      "challenges": [
+        "匹配不确定性不可直接测量，采样学习需在部分可观测条件下进行",
+        "RL 增广与安全滤波之间可能产生不良交互，导致学习信号失真或控制性能下降",
+        "安全滤波的保守性可能过度限制控制性能，需要在保证安全的同时降低保守性",
+        "连续时间系统动力学与离散时间策略调用之间的协调",
+        "控制输入存在饱和限制，安全集约束需与物理执行器能力一致"
+      ],
+      "corresponding_authors": [
+        "Mark Spiller"
+      ],
+      "evidence": [
+        {
+          "claim": "论文提出使用基于强化学习的自适应增广来弥补传统自适应控制的局限",
+          "location": "abstract",
+          "quote": "the proposed approach uses RL-based adaptive augmentation to address the limitations of conventional adaptive control"
+        },
+        {
+          "claim": "论文采用领域随机化与观测堆叠训练 RL 增广以补偿匹配不确定性",
+          "location": "abstract",
+          "quote": "Domain randomization combined with observation stacking is employed to train the RL-based augmentation to compensate for matched uncertainties in a fixed-wing aircraft system"
+        },
+        {
+          "claim": "论文基于伪控制对冲提出修正参考模型以避免 RL 增广与安全滤波之间的不良交互",
+          "location": "abstract",
+          "quote": "Based on the concept of pseudo control hedging (PCH), we propose a modified reference model that avoids undesirable interactions between the RL-based augmentation and the safety filter"
+        },
+        {
+          "claim": "论文引入干扰观测器以降低安全滤波的保守性",
+          "location": "abstract",
+          "quote": "To reduce the conservatism of the safety filter, we additionally incorporate a disturbance observer"
+        },
+        {
+          "claim": "论文在受不确定性影响的固定翼飞机模型上评估所提方法",
+          "location": "abstract",
+          "quote": "The proposed approach is evaluated on a fixed-wing aircraft model subject to uncertainties"
+        },
+        {
+          "claim": "匹配不确定性不可直接测量，采样学习问题被建模为 POMDP",
+          "location": "supplied_full_text",
+          "quote": "The matched uncertainties are not directly measured, so the sampled learning problem is treated as a partially observable Markov decision process (POMDP)"
+        },
+        {
+          "claim": "策略使用当前观测及前三个历史观测提供时序信息",
+          "location": "supplied_full_text",
+          "quote": "the policy uses the current observation and three preceding observations"
+        }
+      ],
+      "experiments": [
+        "在受不确定性影响的固定翼飞机模型上对所提方法进行了评估",
+        "结论指出结果展示了有效的不确定性补偿、成功避免了与安全滤波的不良交互，并维持了规定的飞行包线约束",
+        "材料未提供具体基线对比数字、实例规模、运行时间、训练开销或消融实验的定量结果"
+      ],
+      "first_affiliation": "德国航空航天中心（DLR）飞行系统研究所",
+      "insight": "该工作的核心洞察在于：将 RL 增广学习与安全滤波视为一个耦合控制系统来设计，而非简单叠加。具体而言，通过基于伪控制对冲（PCH）的修正参考模型，使 RL 增广在安全滤波介入时仍能接收到一致的参考信号，从而避免两者的对抗性交互；同时引入干扰观测器降低安全滤波的保守性，使约束满足与不确定性补偿可以同时实现。",
+      "limitations": [
+        "作者在结论中未明确陈述局限",
+        "材料未说明"
+      ],
+      "method": [
+        "RL 自适应增广：使用强化学习训练自适应增广信号，补偿固定翼飞机系统中的匹配不确定性",
+        "观测设计：策略输入为当前观测及前三个历史观测的堆叠，观测包含姿态误差、参考模型误差、Lyapunov 加权误差、自适应信号及不确定性估计量等",
+        "领域随机化：在训练中随机化系统参数以覆盖匹配不确定性",
+        "安全滤波：在控制架构中嵌入安全滤波器，确保状态保持在预定义安全集内",
+        "修正参考模型：基于伪控制对冲（PCH）设计修正参考模型，避免 RL 增广与安全滤波之间的不良交互",
+        "干扰观测器：额外引入干扰观测器以降低安全滤波的保守性"
+      ],
+      "motivation": "传统自适应控制依赖特定的参数化自适应结构，其适应能力受限；而现有将经典自适应控制与强化学习结合的工作通常是用自适应控制去弥补 RL 基线控制器的仿真到现实差距。作者反向思考：利用 RL 的自适应增广来弥补传统自适应控制的局限，同时借助安全滤波保证运行时的约束满足，并解决 RL 增广与安全滤波之间可能出现的负面交互问题。",
+      "primary_topic": "基于强化学习的固定翼无人机自适应增广控制与安全滤波",
+      "relation_to_research": "该论文与智能优化、生产调度和 AI4OR 领域的关系为相邻方向的工作。它研究的是基于强化学习的自适应控制与安全滤波的结合，核心机制包括安全约束满足、RL 与安全机制的交互设计以及不确定性补偿。这些思路推测可迁移至生产调度中的动态扰动应对与约束可行性保障，例如将安全滤波类比为调度中的可行性修复或约束满足机制，将 RL 增广类比为学习辅助的局部搜索或参数自适应。但迁移需要满足以下条件：调度问题具有可建模为连续或离散动态决策过程的特征、约束可表示为安全集、且存在可观测的偏差信号用于学习。该论文本身未涉及生产调度或组合优化，因此属于方法借鉴型相关，而非直接研究目标领域问题。",
+      "relevance_score": 3,
+      "setting": "研究问题为固定翼无人机在存在匹配不确定性（matched uncertainties）条件下的姿态控制；决策对象为姿态控制回路中的自适应增广信号，目标是通过强化学习学习自适应律以补偿不确定性效应，同时保证状态始终位于预定义安全集内并维持飞行包线约束；关键约束包括安全集约束、控制输入饱和限制（δ_max 取 25°、30°、90°）以及系统动态的连续时间特性；信息假设方面，匹配不确定性不可直接测量，因此采样学习问题被建模为部分可观测马尔可夫决策过程（POMDP），策略使用当前观测及前三个历史观测提供时序信息；环境为连续时间飞机、基线控制器和参考模型动力学，策略以采样周期 Ts 离散调用，属于动态不确定性场景。",
+      "tags": [
+        "强化学习",
+        "自适应控制",
+        "安全滤波",
+        "领域随机化",
+        "伪控制对冲",
+        "干扰观测器",
+        "固定翼无人机",
+        "不确定性补偿"
+      ],
+      "title_zh": "不确定性下固定翼无人机的安全学习型自适应增广控制",
+      "uncertainty": "本次判断基于仅提供的摘要和部分全文节选，全文节选较为零散，缺少完整的实验设置、基线对比和数值结果，因此无法准确评估方法的实际性能、计算开销和泛化能力；相关性评分为 3 主要因为论文属于控制领域，与生产调度和组合优化的直接关联较弱，但其安全约束满足与学习模块交互设计的思路具有潜在迁移价值。",
+      "why_recommended": "尽管该论文不属于生产调度或组合优化领域，但其核心机制——在强化学习求解过程中嵌入安全滤波以保证约束满足，并通过修正参考模型避免学习模块与安全模块之间的不良交互——对 AI4OR 中学习辅助搜索的约束可行性保障和模块协同设计具有方法层面的参考价值。对于关注动态环境约束满足、学习与修复机制结合的研究者，可从中获得启发。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-09-27T02:19:29.949101Z",
+      "input_hash": "b853191b619d596e63c4b7527b996082ae1f91b9896218c0464bba8831e37c99",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "02ae0c06e3700296cab7112aa59e55fb1334fcad48a40062001ef5f3d282a97e": {
     "analysis": {
       "analysis": "作者通过重新形式化无人机路径规划问题以纳入具有挑战性的约束，并引入显式惩罚度量来量化约束违反，其中空间与时间约束通过决策变量值截断强制满足，其余约束以不同尺度的违反量聚合，以重新平衡差分进化优化器对各类约束的关注。",
@@ -538,6 +634,109 @@
     "provenance": {
       "analyzed_at": "2026-09-08T09:08:20.604027Z",
       "input_hash": "ee01fa24dda4b06a504914d9b2554221afa64374d1b751013da144be6843a78a",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
+  "08b65a3b07f3bd3a98f25a92010018ba05d9b9161f95d3e40492119bd0007205": {
+    "analysis": {
+      "analysis": "作者将问题结构拆解为离线与在线两个阶段：离线阶段利用教师基础模型在无标注并注入故障的增强时序上生成伪标签，以弥补监督信号缺失并改善类别不平衡下的决策边界；在线阶段将学生模型建模为可用递推最小二乘在线更新的线性读出，通过其不确定性信号触发主动学习查询。作者还分析了在线学习过程中不确定性随新故障分布被逐步映射而自然衰减的现象，据此提出\"预热\"式操作生命周期。材料未说明是否使用下界、图表示或显式数学规划进行问题分析。",
+      "challenges": [
+        "高容量深度时序模型计算开销大，无法在受限边缘硬件上高频机载执行连续学习",
+        "真实故障数据稀缺且标注昂贵，需要依赖无监督基线并从无标注数据中构造监督信号",
+        "移动机器人部署中机械磨损等域偏移使静态离线模型性能下降",
+        "在线自适应需避免灾难性遗忘",
+        "人机协作中需最小化操作员的认知负荷，只在出现新故障分布时请求稀疏干预",
+        "多维时序特征不透明，操作员难以理解模型不确定性来源"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文面向移动机器人边缘硬件上的实时故障检测与在线自适应",
+          "location": "abstract",
+          "quote": "Mobile robots require robust, real-time fault detection capable of continuous adaptation on constrained edge hardware."
+        },
+        {
+          "claim": "采用教师-学生蒸馏框架，离线教师生成伪标签，轻量学生模型用于机载推理",
+          "location": "abstract",
+          "quote": "This paper bridges this gap via a Teacher-Student distillation framework. An offline foundation model (TSPulse) generates pseudo-labels from unlabeled time series augmented with fault injections. A lightweight MiniRocket Student, adapted with a Recursive Least Squares estimator, approximates this complex decision boundary to execute real-time inference onboard."
+        },
+        {
+          "claim": "学生模型 CPU 推理延迟为 4.30 ms",
+          "location": "abstract",
+          "quote": "the Student achieves a 4.30 ms CPU inference latency"
+        },
+        {
+          "claim": "在线适应使 VUS-PR 从 0.26 提升至 0.75 且无灾难性遗忘",
+          "location": "abstract",
+          "quote": "online adaptation enables the Student to recover from unseen mechanical degradation, improving VUS-PR scores from 0.26 to 0.75 without catastrophic forgetting"
+        },
+        {
+          "claim": "不确定性引导主动学习仅在遇到新故障分布时请求稀疏干预",
+          "location": "abstract",
+          "quote": "an uncertainty-guided active learning strategy minimizes operator cognitive load, requesting sparse interventions only when encountering novel fault distributions"
+        },
+        {
+          "claim": "作者指出缺乏连续多小时机器人基准以评估长期抗遗忘能力",
+          "location": "supplied_full_text",
+          "quote": "First, evaluating long-term resilience to catastrophic forgetting is constrained by the current lack of continuous, multi-hour robotic benchmarks featuring sequential fault transitions."
+        },
+        {
+          "claim": "作者指出高维时序特征不透明，操作员需无诊断指引地评估原始传感器信号",
+          "location": "supplied_full_text",
+          "quote": "Second, while the RLS uncertainty effectively triggers queries, high-dimensional temporal features remain opaque, forcing the human operator to evaluate raw sensor signals without diagnostic guidance."
+        },
+        {
+          "claim": "作者指出合成数据增强依赖简单统计扰动，可能无法捕捉复杂物理动态",
+          "location": "supplied_full_text",
+          "quote": "Finally, our synthetic data augmentation strategy relies on relatively simple statistical perturbations, which may not capture complex physical dynamics across all fault modes."
+        }
+      ],
+      "experiments": [
+        "在 TSB-AD 基准和一台物理移动机器人上进行评估",
+        "学生模型在 CPU 上实现 4.30 ms 推理延迟",
+        "在真实域偏移期间，在线适应使学生在面对未见机械退化时从域偏移中恢复，VUS-PR 分数从 0.26 提升至 0.75，且未出现灾难性遗忘",
+        "不确定性引导的主动学习策略减少了操作员认知负荷，仅在遇到新故障分布时请求稀疏干预",
+        "材料未说明基线对比的完整清单、实例规模、训练开销、消融实验细节以及是否在相同计算预算下比较"
+      ],
+      "first_affiliation": "IRIT, Université Toulouse Capitole, Toulouse, France",
+      "insight": "该工作有效性的关键在于将\"高容量离线无监督检测器\"与\"轻量在线可适应检测器\"解耦：离线教师模型只负责在带故障注入的无标注时序上产生伪标签，从而把无监督异常检测问题转化为学生模型可学习的监督问题；学生模型采用计算廉价的时序特征变换加线性读出结构，并用递推最小二乘替代静态读出，使决策边界可以在机载端以极低开销在线更新。由于不确定性可随新故障分布被逐步映射而自然衰减，系统在域偏移初期密集请求操作员反馈、随后逐渐恢复自主，从而在检测性能、推理延迟和人工标注负担之间取得平衡。",
+      "limitations": [
+        "缺乏连续多小时、包含顺序故障转换的机器人基准，限制了对长期灾难性遗忘韧性的评估",
+        "递推最小二乘不确定性虽能有效触发查询，但高维时序特征不透明，操作员需在无诊断指引下评估原始传感器信号",
+        "合成数据增强策略依赖相对简单的统计扰动，可能无法捕捉所有故障模式下的复杂物理动态"
+      ],
+      "method": [
+        "离线教师阶段：采用高容量基础模型 TSPulse 作为离线教师，在无标注时序经故障注入增强后生成伪标签，形成带标注增强数据集",
+        "离线学生阶段：采用轻量 MiniRocket 作为学生模型，拟合教师给出的复杂决策边界",
+        "在线适应阶段：用 Recursive Least Squares 估计器替换学生模型的静态读出层，使模型可在机载端在线更新",
+        "不确定性驱动的主动学习：当模型不确定性高且异常分数高时，向远程操作员请求反馈，仅在遇到新故障分布时进行稀疏干预",
+        "部署流程：学生模型在机器人机载端执行实时推理，检测到故障后机器人可进入安全降级模式并告警远程操作员，操作员反馈同时用于修复与在线适应"
+      ],
+      "motivation": "移动机器人在复杂危险环境中面临机械退化、传感器故障和外部扰动，需要稳健的实时故障检测以进入安全降级模式并通知远程操作员。传统基于物理模型的方法需要大量系统特定先验知识且维护困难，数据驱动方法虽能挖掘多维传感器中的非线性相关性，但高容量深度时序模型的计算开销使其无法在受限边缘硬件上高频机载执行，同时现有轻量在线方法在离线训练后模型保持静态，缺乏对机械磨损等持续域偏移的适应能力。",
+      "primary_topic": "移动机器人时序异常检测的边缘部署与在线自适应",
+      "relation_to_research": "该论文属于机器人时序异常检测与边缘在线学习方向，与智能优化、生产调度、AI4OR 的核心问题没有直接关联。其教师-学生蒸馏、递推最小二乘在线适应和不确定性驱动主动学习机制在方法论上可能与动态扰动下的生产系统监控或设备故障预测存在迁移路径，但这只是推测，且需要满足多个条件：目标问题需具有可获取的高频多变量传感器时序、故障样本稀疏且需无监督基线、部署端有严格推理延迟约束、以及存在可请求的稀疏人工反馈或标签。论文本身并未涉及生产调度建模、约束优化、多智能体协同调度或图神经网络求解器。",
+      "relevance_score": 3,
+      "setting": "研究面向资源受限移动机器人的连续在线故障检测问题：决策对象为机器人多变量高频传感器时序上的异常/故障判定，目标是在边缘硬件上以超低延迟执行推理，并在真实部署中因机械磨损等域偏移出现时持续保持检测性能。关键约束包括边缘算力限制导致高容量深度时序模型无法高频机载运行、故障样本稀缺且难以穷尽标注因而需依赖无监督基线、以及在线适应过程中出现灾难性遗忘的风险。信息假设为离线阶段只有无标注时序数据，可借助故障注入生成伪标签，在线阶段可获得机器人机载数据并在高不确定性时请求远程操作员稀疏反馈。环境被刻画为存在域偏移的动态部署环境，材料未说明具体的状态转移或时序决策形式化模型。",
+      "tags": [
+        "故障检测",
+        "时序异常检测",
+        "知识蒸馏",
+        "边缘推理",
+        "在线自适应",
+        "主动学习",
+        "机器人"
+      ],
+      "title_zh": "面向移动机器人的自适应边缘模型连续在线故障检测",
+      "uncertainty": "输入材料为标题、摘要和部分全文节选，缺少完整的方法细节、完整实验表格、基线设置和消融结果。因此无法确认学生模型的具体输入输出维度、训练数据规模、教师模型的具体结构、以及 VUS-PR 提升之外的其他评价指标。作者单位信息来自全文节选中的署名，但通讯作者未在材料中明确标注，因此填写证据未提供。相关性判断基于论文主题与生产调度/智能优化核心问题的距离，认为其属于相邻的在线监控与边缘学习方向，而非直接相关。",
+      "why_recommended": "对于研究智能优化与生产调度的读者，该论文的参考价值有限，主要可能作为\"动态扰动下的在线监控与自适应\"这一相邻问题的技术参考。若研究方向涉及设备故障预测辅助调度决策、或需要在资源受限边缘端部署学习型监控模型并处理域偏移，其离线伪标签生成、轻量学生模型加在线递推最小二乘读出、以及不确定性驱动的稀疏人工反馈机制可能提供可迁移的思路。但论文不涉及调度建模、约束可行性、组合优化或学习辅助搜索，因此不建议作为核心相关文献阅读。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-09-27T02:19:41.873540Z",
+      "input_hash": "2183aa278b1ed1e77d3d6bfcd0c8283f84aabc9026e79abac9d06b5edf92001f",
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "full_text"
@@ -6135,6 +6334,88 @@
       "reading_scope": "abstract"
     }
   },
+  "37f91a21b4e08cb001481b1576a1a98e9b00cf820e3624ac8c4501bf45c806f5": {
+    "analysis": {
+      "analysis": "作者利用约束的边际违反概率 r_{𝒞,c0}=1−Z(𝒞)/Z(𝒞∖{c0}) 与计数比之间的关系，得到 Z_Φ=(∏|Q_v|)∏(1−r)，从而把近似计数归约为估计一串约束边缘概率；利用删除约束只会降低依赖度、每个子实例都仍满足条件这一单调性，构造 constraint-wise self-reducibility。然后通过容斥展开并将项按规范 2-tree 重新分组（与统计物理中的簇展开相关），证明相关性指数衰减；这一结构同时给出确定性截断估计、基于采样规范 2-tree 的无偏估计（有界二阶矩、次临界期望工作量）以及用于采样的校正机制，从而在评估 oracle 模型下得到计数与采样算法及其复杂度界。",
+      "challenges": [
+        "一般多变量约束 CSP 的近似计数与采样可解性阈值长期以来未被刻画，已有的尖锐相变结果主要限于成对约束的自旋系统",
+        "约束函数可能无界作用域、无法显式表示，需要在评估 oracle 模型下设计算法",
+        "需要在临界 pD^2 尺度上同时获得确定性近似计数、随机近似计数与精确采样，并使条件在 NP≠RP 下紧至常数因子",
+        "采样时 Moser–Tardos 重采样会引入分布偏差，需要在不破坏近线性期望时间的前提下进行校正",
+        "需要保证展开项误差指数衰减并控制估计量的二阶矩与期望代价"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究一般 CSP 在局部引理机制下的近似计数与精确采样，给出了匹配已知硬度界的算法条件",
+          "location": "abstract",
+          "quote": "We establish counting and sampling analogues of the Lov\\'asz Local Lemma: we give efficient algorithms for approximately counting and exactly sampling satisfying assignments of general constraint satisfaction problems (CSPs) in the local lemma regime $$4 \\mathrm{e} p (D+1)^2\\leq 1, $$"
+        },
+        {
+          "claim": "核心结构性工具是约束边缘概率的 2-tree 展开，并在该机制内表现出相关性的指数衰减",
+          "location": "abstract",
+          "quote": "Our key ingredient is a novel $2$-tree expansion for constraint marginal probabilities that exhibits exponential decay of correlations throughout this regime."
+        },
+        {
+          "claim": "文中以约束边缘违反概率作为中心估计量",
+          "location": "supplied_full_text",
+          "quote": "A central quantity estimated by our algorithm is the following marginal probability of a constraint:"
+        },
+        {
+          "claim": "作者采用评估 oracle 模型并计每次调用为一次操作",
+          "location": "supplied_full_text",
+          "quote": "Each evaluation-oracle call is charged one operation; the\noracle cost\nis the number of such calls."
+        },
+        {
+          "claim": "采样算法基于 Moser–Tardos down–up walk 来校正重采样引入的分布偏差",
+          "location": "supplied_full_text",
+          "quote": "For sampling, we develop a Moser–Tardos down–up walk that corrects the distributional bias introduced by Moser–Tardos resampling."
+        }
+      ],
+      "experiments": [
+        "本文为理论工作，材料未提供数值实验；结果以定理形式给出：在条件 4ep(D+1)^2≤1 下实现确定性多项式时间近似计数（固定局部参数）、随机近似计数（代价二次）以及期望近线性时间的精确采样（固定局部参数）；并指出该条件在 NP≠RP 下紧至常数因子，与已知计数与采样硬度界匹配。材料未说明基线、实例规模、训练开销、消融或泛化实验等任何经验性数据。"
+      ],
+      "first_affiliation": "南京大学计算机科学与技术系，计算机软件新技术国家重点实验室，新基石科学实验室（School of Computer Science, State Key Laboratory for Novel Software Technology, New Cornerstone Science Laboratory, Nanjing University）",
+      "insight": "作者发现，约束边缘违反概率（marginal violation probability）可以通过一个按“2-tree”结构组织的展开来表示：2-tree 是约束依赖图中在平方图 G^2 上连通、在 G 上独立的约束集合，这种独立性与距离二连通性的组合恰好给出了每个展开项 p^{|T|} 与增长规模 D^{2|T|} 的权衡，从而自然暴露出临界尺度 pD^2。该展开在整个计数 LLL 机制内表现出相关性的指数衰减，使得截断带来可控误差、无偏估计具有有界二阶矩，这是计数与采样算法在所需阈值下高效运行的根本原因，而不是因为某个单纯模块或算法名称。",
+      "limitations": [
+        "材料未说明作者明确陈述的局限；仅在结论与开放问题中说明本文给出计数与采样的类比结果并给出若干开放问题方向，但输入节选中未提供这些开放问题的具体内容。"
+      ],
+      "method": [
+        "在评估 oracle 模型（Assumption 1）下工作，约束函数通过是否满足某赋值的查询访问，每次调用计一次操作，运行时间按二进制编码整数的随机存取模型计位代价；",
+        "定义约束边缘违反概率 r_{𝒞,c0}=ℙ[¬c0∣𝒞∖{c0}]=1−Z(𝒞)/Z(𝒞∖{c0})，并由 Z_Φ=(∏_{v∈V}|Q_v|)∏_{i=1}^m(1−r_{𝒞_i,c_i}) 将近似计数归约为估计序列边缘概率；",
+        "引入 2-tree（G(𝒞) 中的独立集且在平方图 G^2(𝒞) 中连通），对边缘概率做容斥展开并按规范 2-tree 重组，得到递归式并证明相关性的指数衰减；",
+        "确定性计数：按 2-tree 规模递减递归预算进行截断，大 2-tree 贡献指数小，从而控制近似误差；",
+        "随机计数：通过独立乘积赋值采样规范 2-tree 构造无偏边缘估计量，递归估计倒概率因子，直到估计为零，控制二阶矩与期望代价，再做独立估计平均并套用乘积恒等式；",
+        "采样：设计 Moser–Tardos down–up walk 以校正重采样带来的分布偏差，用带符号测度的 2-tree 递归把修正分解为局部重画项，通过有界无偏估计与反向 Moser–Tardos 重构实现，配合次临界递归与几何停止规则。"
+      ],
+      "motivation": "CSP 是刻画组合解空间与众多计算机科学问题的基本框架；近似计数估计解空间大小，采样生成典型解，二者在统计物理（配分函数估计）与统计推断（归一化常数、边缘概率）中均处于核心地位。对于一般多变量约束的 CSP，近似计数与采样的可解性阈值仍大多未知，已有尖锐相变结果主要针对成对约束的自旋系统，因此作者希望刻画一般 CSP 在局部引理机制下的计数与采样可解性阈值，并证明其与已知硬度界在常数因子内匹配。",
+      "primary_topic": "约束满足问题的近似计数与精确采样（计算复杂性/理论计算机科学）",
+      "relation_to_research": "论文事实：本文属于理论计算机科学的计数与采样复杂性研究，研究对象是 CSP 解空间，使用组合展开与递推设计近似计数与采样算法，与生产调度、流水车间、柔性作业车间、强化学习或神经网络辅助求解没有直接联系。推测：2-tree 展开与相关衰减思想若迁移到生产调度或其他组合优化问题的解空间计数、采样或可行解生成，需要在问题被表述为 CSP、约束依赖图具有局部性与可评估 oracle 等条件下才可能成立，这仅是推测，并非作者结论，也不构成对调度问题的直接方法贡献。",
+      "relevance_score": 3,
+      "setting": "研究一般约束满足问题（CSP）Φ=(V,𝒬,𝒞) 的解空间计数与采样问题：变量取值于有限域，目标是近似估计满足所有约束的赋值个数 Z_Φ（近似计数）以及从满足赋值的近乎均匀分布中精确采样（采样），关键约束是满足计数与采样的局部引理条件 4ep(D+1)^2≤1（p 为最大约束违反概率，D 为约束依赖图最大度），信息假设是约束函数仅通过评估 oracle 访问（每次调用计一次操作），环境为静态组合问题、无动态扰动，材料未说明任何在线或时变设定。",
+      "tags": [
+        "Lovász 局部引理",
+        "约束满足问题（CSP）",
+        "近似计数",
+        "采样",
+        "2-tree 展开",
+        "相关衰减",
+        "Moser–Tardos 重采样"
+      ],
+      "title_zh": "Lovász 局部引理的计数与采样",
+      "uncertainty": "输入为摘要与部分全文节选，缺少完整定理陈述、完整算法伪代码与证明细节，无法核实所有复杂度界的确切形式与常数的完整表述；未提供任何实验数据与代码信息；作者单位来自全文而非摘要，通讯作者信息材料未提供。",
+      "why_recommended": "仅对关心约束满足问题解空间计数与采样理论、局部引理算法机制、以及“相关衰减/展开用于近似计数”这一数学工具的研究者有参考价值；对智能优化与生产调度的主流读者相关性弱，除非其研究明确涉及解空间计数、采样或约束依赖图结构分析。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-09-27T02:19:32.516008Z",
+      "input_hash": "4a2bae31b0dbaa4b0a27657281477a45539de48f5c4663c347679014e8ad14e7",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "387daf8fa86647888f41d361244a2f45ae79a11b12c01456c607ca38d66d4752": {
     "analysis": {
       "analysis": "作者首先将无人机路径规划问题重新表述以纳入具有挑战性的约束，随后采用双层学习优化结构：元层为可训练的算法配置策略，通过元学习为底层规划算法提供可适应的规划策略；底层使用差分进化算法求解路径规划任务。针对潜在训练数据稀缺与分布偏移，引入景观感知自动增强方案丰富训练数据。在底层求解中设计变长编码策略，动态裁剪冗余悬停点并在统一搜索空间中并发优化连续飞行参数。摘要未说明更具体的理论分析（如下界、分解或图表示）。",
@@ -6520,6 +6801,101 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
+    }
+  },
+  "3a96b3ff15862be31dbdb893a72ed79feb207b2d7052076405dc3eaaf341ad19": {
+    "analysis": {
+      "analysis": "作者以 STM32N6 Neural-ART NPU 的编译器约束为出发点，识别出原 LiSenNet 中与静态 int8 图不兼容的算子（循环瓶颈、归一化、非线性、上采样等），并分析这些算子会导致编译失败、主机回退或数据传输开销。基于此，作者选择用仅含卷积的频率与时间混合器替换循环瓶颈，并将不支持的操作重新表述为静态 int8 兼容的原语。作者还分析了循环状态在长时流式下的漂移与量化累积问题，通过有界解码器激活限制激活范围以提升后训练量化鲁棒性，并利用有限帧数的卷积 FIFO 使量化误差最终被冲出感受野。实验分析对比了有状态推理与无状态感受野重算，揭示了流式状态在延迟和内存上的权衡。",
+      "challenges": [
+        "NPU 仅支持受限的静态 int8 操作符集，循环层、运行时归一化、动态张量和不受支持的非线性无法被高效执行或直接编译",
+        "int8 量化误差在循环状态中会随时间累积，导致长时流式推理的质量下降",
+        "有状态流式推理需要维护卷积 FIFO 状态，其内存占用（154 KiB）超过模型权重的三倍，构成内存与延迟之间的权衡",
+        "无状态感受野重算会显著增加延迟（一个数量级），无法满足 16 ms 截止时间",
+        "需要在重新设计后保持或超过原循环基线在 FP32 和 int8 下的增强质量"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文核心是重新设计 LiSenNet 以适配受限 NPU，而非优化或调度问题",
+          "location": "abstract",
+          "quote": "We address this gap by redesigning LiSenNet, a 37k parameter sub-band dual-path model, for the STM32N6570-DK Neural-ART accelerator."
+        },
+        {
+          "claim": "NPU 仅支持受限的静态 int8 操作符集，循环层和动态操作不兼容",
+          "location": "abstract",
+          "quote": "Microcontroller NPUs can accelerate neural inference under these constraints, but only through a restricted set of operators in static, integer-quantized graphs."
+        },
+        {
+          "claim": "论文通过实验验证了有状态推理相比无状态感受野重算快一个数量级",
+          "location": "abstract",
+          "quote": "Stateless receptive-field recomputation is an order of magnitude slower at the same frame rate despite higher accelerator utilization."
+        },
+        {
+          "claim": "论文的第一单位是 GN A/S, Audio Research, Denmark",
+          "location": "supplied_full_text",
+          "quote": "GN A/S, Audio Research, Lauptrupbjerg 7, 2750, Denmark"
+        },
+        {
+          "claim": "模型在 int8 量化下 PESQ 达到 3.01，优于循环基线的 2.93",
+          "location": "abstract",
+          "quote": "reaching PESQ 3.08 versus 3.01 in FP32 and 3.01 versus 2.93 in int8"
+        }
+      ],
+      "experiments": [
+        "数据集：16 kHz VoiceBank-DEMAND，使用原始训练/测试划分，在完整 824 条测试话语上报告结果",
+        "STFT 参数：512 样本分析窗，256 样本帧移，对应 16 ms 帧移",
+        "训练：所有模型（包括复现的 LiSenNet 基线）均从零开始用相同 CMGAN 配方训练 140 轮，AdamW，β1=0.8，β2=0.99，初始学习率 5e-4，衰减因子 0.98",
+        "质量指标：宽带 PESQ 为主要指标，另外报告 STOI、SI-SDR 和 DNSMOS P.835（语音、背景）",
+        "主要结果：最终 NPU 兼容模型在 VoiceBank-DEMAND 上匹配或超过循环 LiSenNet 基线，FP32 下 PESQ 3.08 对 3.01，int8 下 3.01 对 2.93",
+        "部署性能：在微控制器上每个 16 ms 输入帧处理耗时 4.83 ms，实时因子 0.30；有状态推理比无状态感受野重算快一个数量级，后者即使加速器利用率更高也无法满足 16 ms 截止时间（帧时间从 4.88 ms 到 127.16 ms）",
+        "内存：LiSenNet-NPU 在 25 个 FIFO 张量中存储 154 KiB 状态，超过 45 KiB 权重的三倍；时间 GRU 变体将状态降至 17 KiB 并将帧时间降至 2.18 ms",
+        "消融与对比：材料提供了循环基线、全卷积 NPU 变体、无状态重算变体以及时间 GRU 变体的延迟和质量对比，但未提供所有消融的完整数字"
+      ],
+      "first_affiliation": "GN A/S, Audio Research, Lauptrupbjerg 7, 2750, Denmark",
+      "insight": "实时嵌入式语音增强的性能瓶颈不在于参数规模或算术量，而在于模型操作符与 NPU 编译器约束、量化范围以及持续流式状态的匹配程度。将循环瓶颈替换为卷积频率与时间混合器并用有界解码器激活控制 int8 量化误差，可以同时获得编译可执行性、有界量化误差传播和可接受的流式延迟；有状态推理比无状态感受野重算在相同帧率下快一个数量级，说明持久化流式状态是满足时间截止的关键，但其内存开销需要与延迟权衡。",
+      "limitations": [
+        "材料未以专门章节明确陈述局限，但结论段隐含指出时间循环在状态内存和延迟可接受时仍是有效替代方案，暗示有状态卷积 FIFO 的内存开销（154 KiB）是当前设计的限制",
+        "无状态感受野重算方法虽然加速器利用率更高，但延迟比有状态方法高一个数量级，无法满足实时截止时间",
+        "作者指出这些观察预期可泛化到受限边缘 NPU 上的其他流式音频模型，但未给出泛化性的实验验证",
+        "材料未说明模型在其他数据集、其他 NPU 平台或不同量化方案下的表现"
+      ],
+      "method": [
+        "以 37k 参数的子带双路径模型 LiSenNet 为基线，目标硬件为 STM32N6570-DK 的 Neural-ART 加速器",
+        "将原有循环瓶颈替换为卷积的频率混合器和时间混合器，形成全卷积的编码器—混合器—解码器结构",
+        "将 NPU 不支持的操作（归一化、非线性、上采样等）重新表述为静态 int8 兼容的原语，使整个图可被编译器接受并完全整数执行",
+        "使用有界解码器激活函数，限制激活值范围，以保持后训练量化（PTQ）后的增强质量",
+        "采用显式的有状态流式推理：在推理时维护卷积 FIFO 状态（25 个张量，共 154 KiB），而不是每帧重算感受野",
+        "在 VoiceBank-DEMAND 上训练模型，使用 CMGAN 配方（复频谱、幅度谱和对抗损失加权 0.1、0.9、0.05，PESQ 近似判别器），优化 140 轮",
+        "使用 ONNX Runtime 进行后训练量化，采用有符号 int8 激活和逐通道有符号 int8 权重，基于百分位校准",
+        "部署使用 ST Edge AI Core 4.0.1，Neural-ART 运行于 1 GHz，Cortex-M55 运行于 800 MHz"
+      ],
+      "motivation": "现有语音增强网络虽然参数量和 MACs 已降至微控制器名义可承受的水平，但其操作符和执行模式（如循环层、LayerNorm、动态操作和非线性）往往与固定功能 NPU 支持的受限操作符集不兼容，导致编译失败、回退到主机处理器或引入主导算术成本的数据传输与调度开销。因此，仅靠模型压缩不足以在受限 NPU 上实现高效实时推理，需要架构与执行层面的协同设计。",
+      "primary_topic": "面向受限 NPU 的嵌入式实时语音增强模型架构与执行协同设计",
+      "relation_to_research": "该论文属于边缘 AI 与嵌入式推理方向，核心是硬件感知的模型架构重设计和算子系统协同，而非智能优化、生产调度或 AI4OR。论文事实部分：作者将循环结构替换为卷积混合器以满足 NPU 的静态 int8 操作符约束，并利用有界激活和持久卷积状态来权衡量化误差、内存与延迟。与生产调度等优化问题的直接关联较弱；推测而言，其‘硬件/编译器约束决定模型结构’的协同设计思想，可能启发在求解器调度或生产调度中面向特定硬件约束的算子选择与状态管理策略，但迁移需要将语音流式推理的约束条件映射到调度问题的决策变量与约束结构上，且原文未提供任何与调度或组合优化相关的证据。",
+      "relevance_score": 3,
+      "setting": "论文研究在资源受限微控制器（STM32N6570-DK 及其 Neural-ART NPU 加速器）上部署实时单通道语音增强模型的问题。决策对象是 LiSenNet 的架构与执行模式，目标是在严格的延迟（每个 16 ms 帧必须在 16 ms 内处理完）、内存和能耗约束下，使模型与 NPU 支持的操作符集合和静态整数图兼容，同时保持增强质量（PESQ）。关键约束包括：NPU 仅支持静态 int8 量化图与有限的操作符集合；模型不能使用动态张量操作、运行时归一化或不受支持的非线性；环境是流式（动态逐帧）推理，要求持久化的流式状态。信息假设方面，模型输入为含噪语音的 STFT 子带表示，输出为干净语音的掩蔽或增强表示，材料未说明其他具体信息假设。",
+      "tags": [
+        "嵌入式推理",
+        "NPU",
+        "语音增强",
+        "int8 量化",
+        "算子兼容性",
+        "流式状态",
+        "边缘AI",
+        "架构重设计"
+      ],
+      "title_zh": "超越模型规模：面向嵌入式语音增强的 LiSenNet 重新设计",
+      "uncertainty": "本次判断基于提供的摘要和全文节选，材料未提供完整的消融实验数据、所有对比方法的详细数字、训练开销分析以及泛化性验证，因此对方法优越性的全面评估存在不确定性。此外，论文未提供通讯作者和代码地址信息。",
+      "why_recommended": "如果当前研究者关注的是学习辅助求解或智能体优化，这篇论文的相关性有限，因为它并不涉及组合优化、生产调度或强化学习决策。但它提供了一个关于‘硬件约束与量化约束如何主导模型结构设计’的案例，其中操作符兼容性、量化范围控制和有状态流式推理的权衡分析，可能对研究受限部署条件下的学习模型设计有参考价值。不建议因为出现‘优化’或‘NPU’等词而将其纳入核心阅读列表。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-09-27T02:19:33.503580Z",
+      "input_hash": "5a9e98388d81e7000df8c2f7015c9160b32608a97a9607798acf558dec86d160",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
     }
   },
   "3a96c37a22ddd8357663e064d9c159624278112def2709d53135feeda3231bc9": {
@@ -12321,6 +12697,96 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
+    }
+  },
+  "6c83a6539a402edb7a7ab6416cd6f0e65f18bcc1b98447e7173da53041702b2a": {
+    "analysis": {
+      "analysis": "作者将架构发现过程建模为一棵持续增长的谱系树：每个节点代表一个完整可训练架构及其奖励，通过基于节点自身及全部后代奖励计算的top-percentile家族值来引导谱系选择（routing rule），从而决定后续变异所依赖的设计历史。理论部分将谱系生长刻画为谱系条件奖励律与实现奖励的联合序列，利用时间平移下的经验占用测度构造可达平稳变分 regime，并在指定变分假设下证明平稳选择-变分定理，进一步连接top-percentile家族值与高奖励架构生成概率，并区分均值规则与最大值规则的差异。",
+      "challenges": [
+        "大语言模型迭代生成无法自动保证累积进展与方向选择",
+        "新架构的完整训练评估计算代价高昂，限制探索范围",
+        "候选即时质量与后续开发潜力不一致，强设计可能产生弱变体而弱设计可能变强",
+        "需要在无种子架构和无人工搜索空间条件下实现开放式设计",
+        "评估失败或无效分数需要容错与重试机制"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究大语言模型智能体驱动的神经架构发现，而非生产调度或经典运筹优化问题。",
+          "location": "abstract",
+          "quote": "We introduce EvoTreeNAD, a genealogy-guided evolutionary algorithm that constructs trainable architectures without a supplied seed or a hand-specified search space."
+        },
+        {
+          "claim": "核心机制是基于节点及其后代的top-percentile家族值来引导谱系选择。",
+          "location": "abstract",
+          "quote": "Top-percentile values computed from each node and its descendants guide lineage selection."
+        },
+        {
+          "claim": "方法通过Idea Agent提出变体、Code Agent实现，并让每个评估变体成为子节点扩展谱系。",
+          "location": "abstract",
+          "quote": "Using the selected design history, an Idea Agent proposes a variant and a Code Agent implements it. Each evaluated variant becomes a child node, expanding the genealogy while providing evidence for subsequent lineage selection."
+        },
+        {
+          "claim": "实验在CIFAR-10/100和MedMNIST-v2六个任务上报告了结果，并优于所比较的NAS/NAD基线。",
+          "location": "abstract",
+          "quote": "EvoTreeNAD discovers architectures that outperform the compared NAS and NAD baselines, achieving CIFAR-10/100 test errors of $2.05{\\pm}0.06\\%$ and $15.09{\\pm}0.22\\%$. On all six MedMNIST-v2 tasks, the discovered architectures surpass the strongest listed baselines."
+        },
+        {
+          "claim": "理论分析建立了谱系增长过程中平稳变分regime的存在性。",
+          "location": "abstract",
+          "quote": "Our theoretical analysis establishes the existence of stationary variation regimes as the genealogy grows."
+        },
+        {
+          "claim": "作者指出候选即时质量不完全揭示后续开发潜力，强设计可能产生弱变体而弱设计可能变强。",
+          "location": "supplied_full_text",
+          "quote": "Strong designs may yield weak variants, while initially less successful designs may become competitive through further modification."
+        }
+      ],
+      "experiments": [
+        "在CIFAR-10上取得测试误差2.05±0.06%，在CIFAR-100上取得测试误差15.09±0.22%，优于所比较的NAS与NAD基线；",
+        "在MedMNIST-v2的全部六个任务上，发现的架构均超过所列最强基线；",
+        "在CIFAR-10上的受控研究显示，EvoTreeNAD优于直接生成、best-of-N贪心延续和全家族均值路由；",
+        "实验未提供具体基线名称、实例规模、训练开销、公平计算预算对比或消融细节，材料未说明。"
+      ],
+      "first_affiliation": "Department of Health Data Science and AI, McWilliams School of Biomedical Informatics, University of Texas Health Science Center at Houston",
+      "insight": "核心洞察在于：候选架构的即时质量并不完全揭示其后续可开发潜力——强设计可能产生弱变体，而初期不成功的设计可能通过进一步修改变得有竞争力。因此需要将架构发现建模为设计谱系的持续开发与重评估，而非仅对单个候选打分；通过基于节点及其后代计算的top-percentile家族值引导谱系选择，使选择信号同时反映当前表现与分支后代的累积证据，从而在无种子条件下实现可持续的开放式搜索。",
+      "limitations": [
+        "材料未说明作者明确陈述的局限。"
+      ],
+      "method": [
+        "从空根节点开始，生长一棵持久谱系树G_t，每个新节点代表一个完整可训练架构，并附带其奖励R；",
+        "对每个节点及其全部后代计算top-percentile家族值，作为谱系选择（routing）的依据；",
+        "Idea Agent基于被选中的设计历史提出一个架构变体，Code Agent将其实现为可执行代码；",
+        "生成的实现先经过可执行性与任务接口兼容性检查，再在固定任务协议下进行短预算训练与验证；",
+        "表现不佳的候选可提前停止，但仍记录验证结果用于计算发现分数与节点奖励；无有效分数的尝试触发有界的Code-Agent重试；",
+        "每个被评估的变体作为子节点加入谱系，同时更新后代家族记录，为后续谱系选择提供证据；",
+        "发现结束后，对最终谱系G_H应用相同routing规则提取主谱系（principal lineage），取该谱系上发现奖励最高的三个架构构成固定全保真候选集；",
+        "候选集固定后，使用完整保真报告协议从零训练并在官方测试集上评估，发现阶段仅使用发现训练与验证数据。"
+      ],
+      "motivation": "现有基于大语言模型的迭代式架构生成与评估虽支持持续改进，但重复循环本身无法保证累积进展，也无法判断哪些设计方向值得继续投入；同时高昂的评估成本进一步限制了探索广度与对潜力方向的深度开发。作者因此希望构建一种能保留完整分支设计历史、并利用累积实验证据来重新评估早期开发选择的机制。",
+      "primary_topic": "大语言模型智能体驱动的神经架构发现（NAS/NAD）",
+      "relation_to_research": "论文事实：该工作属于AI驱动的自动化架构发现，其核心机制是基于谱系树的后代家族奖励路由与大语言模型智能体协同生成-实现-评估，理论分析刻画了自适应谱系生长的平稳变分regime。与生产调度或运筹优化的关系为推测性迁移：将“谱系引导的进化搜索+LLM智能体生成候选+短预算评估+top-percentile家族路由”框架迁移到柔性作业车间、流水车间或分布式制造调度，需要满足若干条件——将调度解编码为可执行表示、设计能反映约束可行性与多目标权衡的奖励信号、将谱系树节点对应为调度方案或规则、在有限评估预算下保证约束可行性，并验证该路由机制在组合调度空间中的有效性；这些均为推测，论文本身未涉及调度问题。",
+      "relevance_score": 3,
+      "setting": "论文研究神经架构发现（Neural Architecture Discovery, NAD）问题：在无种子架构、无人工指定搜索空间的条件下，通过大语言模型智能体迭代生成、实现并评估可训练神经网络架构，目标是在CIFAR-10/100和MedMNIST-v2图像分类任务上获得低测试误差；关键约束是候选架构的完整训练评估代价高昂，信息假设为仅能通过短预算训练与验证获取奖励信号，环境为静态的图像分类基准任务，不涉及动态扰动或在线调度。",
+      "tags": [
+        "神经架构搜索",
+        "大语言模型智能体",
+        "进化算法",
+        "谱系引导",
+        "自动机器学习"
+      ],
+      "title_zh": "EvoTreeNAD：面向大语言模型驱动神经架构发现的谱系引导进化",
+      "uncertainty": "本次判断基于摘要与部分正文节选，全文中的实验细节（基线、计算预算、消融、失败案例分析）与理论假设A.4的具体形式未完整提供，因此对方法可迁移性和实验充分性的评估存在不确定性；此外，论文未涉及任何生产调度或组合优化问题，关联性判断主要为方法类比。",
+      "why_recommended": "尽管不涉及生产调度，该论文提出了一种可迁移的“谱系引导+后代家族路由”机制，用于在昂贵评估下平衡探索与开发，并配套了平稳变分regime的理论刻画。对于关注学习辅助搜索、进化算法与LLM智能体结合的研究者，其将历史分支证据纳入选择信号的思路可能启发设计调度优化中的自适应搜索算子或智能体协作框架；但在当前研究画像下，其直接相关性有限，仅在方法迁移层面具有参考价值。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-09-27T02:19:31.724581Z",
+      "input_hash": "d5e66c301caffb48d446492b36967684a97ac3950e65624e8a4c9757db1b2065",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
     }
   },
   "6d200ef76eff81aa6cb2d0e673b4a28b042d1f4a4ff6cb3db70d76d51cd10641": {
