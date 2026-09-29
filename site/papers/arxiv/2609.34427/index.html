@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>大语言模型作为自适应元求解器：面向工业级优化的策略多样性强化学习</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root {
+      --ink:#16211b; --muted:#5d6a62; --paper:#f3efe6; --card:#fffdfa;
+      --green:#1f5c42; --green-soft:#e8f0e9; --line:#d8d2c5; --accent:#b44d2f;
+      --shadow:0 16px 42px rgba(34,42,36,.07);
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; color:var(--ink); background:var(--paper); font:16px/1.7 system-ui,-apple-system,"Noto Sans SC",sans-serif; }
+    button,input,select { font:inherit; }
+    button { color:inherit; }
+    a { color:var(--green); }
+    [hidden] { display:none !important; }
+    main { width:min(1440px,94vw); margin:0 auto; padding:34px 0 96px; }
+
+    .page-header { border-bottom:1px solid var(--line); padding-bottom:30px; }
+    .masthead { display:flex; justify-content:space-between; gap:20px; align-items:center; color:var(--muted); font-size:.83rem; letter-spacing:.03em; }
+    .masthead nav { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px 16px; }
+    .masthead nav a { color:var(--muted); text-decoration:none; }
+    .masthead nav a:hover { color:var(--green); text-decoration:underline; }
+    h1 { max-width:1100px; margin:42px 0 20px; font:700 clamp(2.35rem,6vw,5.3rem)/1.04 Georgia,"Noto Serif SC",serif; overflow-wrap:anywhere; }
+    .lede { max-width:920px; color:var(--muted); font-size:1.08rem; }
+    .stats { display:grid; grid-template-columns:repeat(5,minmax(120px,1fr)); gap:12px; margin-top:30px; }
+    .stat { padding:14px 16px; border:1px solid var(--line); background:rgba(255,255,255,.45); }
+    .stat strong { display:block; color:var(--green); font-size:1.6rem; line-height:1.2; }
+
+    .gallery-intro { display:flex; justify-content:space-between; gap:30px; align-items:end; margin:50px 0 20px; }
+    .eyebrow { margin:0 0 5px; color:var(--accent); font-size:.78rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    .gallery-intro h2 { margin:0; font:700 clamp(1.8rem,3vw,2.8rem)/1.15 Georgia,"Noto Serif SC",serif; }
+    .gallery-intro > p { max-width:620px; margin:0; color:var(--muted); }
+
+    .portal-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,245px),1fr)); gap:14px; }
+    .portal-card { min-height:178px; display:flex; flex-direction:column; padding:20px; color:var(--ink); border:1px solid var(--line); background:var(--card); text-decoration:none; box-shadow:var(--shadow); transition:.18s ease; }
+    .portal-card:hover { transform:translateY(-3px); border-color:var(--green); }
+    .portal-card strong { font:700 1.28rem/1.35 Georgia,"Noto Serif SC",serif; }
+    .portal-card p { margin:10px 0 18px; color:var(--muted); font-size:.9rem; }
+    .portal-card span { margin-top:auto; color:var(--green); font-weight:800; font-size:.84rem; }
+    .portal-section { margin-top:58px; padding-top:34px; border-top:1px solid var(--line); }
+    .portal-section h2 { margin:0 0 8px; font:700 2rem/1.2 Georgia,"Noto Serif SC",serif; }
+    .portal-section > p { margin:0 0 20px; color:var(--muted); }
+    .portal-subtitle { margin:28px 0 12px; font-size:1rem; }
+
+    .topic-shelves { display:grid; grid-template-columns:repeat(auto-fit,minmax(185px,1fr)); gap:10px; margin-bottom:18px; }
+    .topic-filter { min-height:96px; padding:14px 16px; text-align:left; border:1px solid var(--line); background:rgba(255,253,250,.7); cursor:pointer; transition:.18s ease; }
+    .topic-filter:hover { transform:translateY(-2px); border-color:var(--green); }
+    .topic-filter[aria-pressed="true"] { color:#fff; border-color:var(--green); background:var(--green); box-shadow:0 8px 18px rgba(31,92,66,.18); }
+    .topic-filter strong { display:block; line-height:1.35; }
+    .topic-filter span { display:block; margin-top:6px; color:var(--muted); font-size:.82rem; }
+    .topic-filter[aria-pressed="true"] span { color:rgba(255,255,255,.78); }
+
+    .explorer-controls { position:sticky; top:0; z-index:20; display:grid; grid-template-columns:minmax(220px,2fr) repeat(4,minmax(125px,1fr)) auto; gap:10px; padding:14px; border:1px solid var(--line); background:rgba(243,239,230,.95); box-shadow:0 10px 25px rgba(34,42,36,.06); backdrop-filter:blur(12px); }
+    .control { display:grid; gap:4px; color:var(--muted); font-size:.76rem; font-weight:700; }
+    .control input,.control select { width:100%; min-height:42px; padding:8px 10px; color:var(--ink); border:1px solid var(--line); border-radius:0; background:var(--card); }
+    .explorer-actions { display:flex; gap:6px; align-items:end; }
+    .explorer-actions button { min-height:42px; padding:8px 12px; border:1px solid var(--line); background:var(--card); cursor:pointer; white-space:nowrap; }
+    .explorer-actions button:hover { border-color:var(--green); color:var(--green); }
+    .explorer-status { display:flex; justify-content:space-between; gap:20px; align-items:center; margin:18px 0 10px; color:var(--muted); }
+    .explorer-status strong { color:var(--green); font-size:1.2rem; }
+    .active-tag { color:var(--green); font-weight:800; }
+    .noscript-notice,.empty-state { padding:20px; border:1px solid var(--line); background:var(--card); }
+
+    .tier-section { margin-top:36px; }
+    .tier-heading { display:flex; justify-content:space-between; align-items:end; gap:20px; margin-bottom:14px; border-bottom:1px solid var(--line); }
+    .tier-heading h2 { margin:0 0 8px; font-size:1.45rem; }
+    .tier-heading p { margin:0 0 8px; color:var(--muted); }
+    .paper-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr)); gap:18px; align-items:start; }
+
+    .paper-card { min-width:0; overflow:hidden; border:1px solid var(--line); background:var(--card); box-shadow:var(--shadow); }
+    .paper-card__cover { position:relative; height:230px; display:grid; place-items:center; overflow:hidden; border-bottom:1px solid var(--line); background:#f7f7f2; }
+    .paper-card__cover > img { width:100%; height:100%; display:block; object-fit:contain; background:#fff; }
+    .paper-card__cover-caption { position:absolute; left:0; right:0; bottom:0; max-height:58px; overflow:hidden; margin:0; padding:9px 12px; color:#fff; background:linear-gradient(transparent,rgba(12,20,16,.88)); font-size:.76rem; line-height:1.35; }
+    .paper-card__placeholder { width:100%; height:100%; display:flex; flex-direction:column; justify-content:space-between; padding:22px; color:var(--green); background:linear-gradient(145deg,#edf3ed,#faf7ef 62%,#e8eee8); }
+    .paper-card__placeholder span { font-weight:800; }
+    .paper-card__placeholder strong { font:700 1.45rem/1.2 Georgia,serif; overflow-wrap:anywhere; }
+    .paper-card__placeholder small { color:var(--muted); }
+    .paper-card__body { display:flex; flex-direction:column; min-height:520px; padding:22px; }
+    .paper-card--compact .paper-card__body { min-height:285px; }
+    .paper-card__rubric { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:12px; color:var(--muted); font-size:.74rem; }
+    .paper-card__rubric span { padding:2px 7px; border:1px solid var(--line); }
+    .paper-card__rubric .topic-badge { color:var(--green); border-color:var(--green); font-weight:800; }
+    .paper-card h3 { margin:0 0 8px; font-size:1.3rem; line-height:1.38; }
+    .paper-card h3 a { color:var(--ink); text-decoration:none; }
+    .paper-card h3 a:hover { color:var(--green); text-decoration:underline; }
+    .original-title { display:-webkit-box; overflow:hidden; margin:0 0 8px; color:var(--muted); font:italic .88rem/1.45 Georgia,serif; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
+    .authors { overflow:hidden; margin:0 0 18px; color:var(--muted); font-size:.82rem; text-overflow:ellipsis; white-space:nowrap; }
+    .paper-card__takeaway { padding:14px; border-left:3px solid var(--green); background:var(--green-soft); }
+    .paper-card__takeaway p { margin:0; }
+    .paper-card__takeaway p:last-child { display:-webkit-box; overflow:hidden; -webkit-box-orient:vertical; -webkit-line-clamp:4; }
+    .field-label { margin-bottom:4px !important; color:var(--green); font-size:.75rem; font-weight:800; letter-spacing:.08em; }
+    .paper-card__recommendation { display:-webkit-box; overflow:hidden; margin:14px 0; color:var(--muted); font-size:.9rem; -webkit-box-orient:vertical; -webkit-line-clamp:3; }
+    .paper-card__recommendation strong { color:var(--ink); }
+    .paper-tags { display:flex; flex-wrap:wrap; gap:6px; margin:0 0 16px; padding:0; list-style:none; }
+    .paper-tags a { display:block; padding:3px 8px; color:var(--green); background:#edf3ed; font-size:.75rem; text-decoration:none; }
+    .paper-tags a:hover { text-decoration:underline; }
+
+    .paper-details { margin-top:auto; border-top:1px solid var(--line); }
+    .paper-details summary { display:flex; justify-content:space-between; gap:12px; align-items:center; padding:14px 0 0; color:var(--green); font-weight:800; cursor:pointer; list-style:none; }
+    .paper-details summary::-webkit-details-marker { display:none; }
+    .summary-close { display:none; }
+    .paper-details[open] .summary-open { display:none; }
+    .paper-details[open] .summary-close { display:inline; }
+    .paper-details[open] .summary-arrow { transform:rotate(180deg); }
+    .summary-arrow { transition:transform .2s ease; }
+    .paper-details__meta { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 18px; margin:22px 0; padding:16px; background:#f6f3ec; font-size:.9rem; }
+    .paper-details__meta p { margin:0; }
+    .paper-links { display:flex; flex-wrap:wrap; gap:14px; }
+    .research-note { display:grid; grid-template-columns:minmax(150px,210px) minmax(0,1fr); gap:10px 20px; margin:22px 0 0; }
+    .research-note dt { color:var(--muted); font-weight:800; }
+    .research-note dd { min-width:0; margin:0; }
+    .research-note ul { margin:0; padding-left:1.25rem; }
+    blockquote { margin:10px 0; padding:10px 14px; border-left:3px solid var(--green); background:#f2f5ef; }
+    .paper-figures { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr)); gap:14px; margin:22px 0 8px; }
+    .paper-figure { margin:0; border:1px solid var(--line); background:#f7f7f2; }
+    .paper-figure__media { min-height:180px; display:grid; place-items:center; background:#fff; overflow:hidden; }
+    .paper-figure img { display:block; width:100%; max-height:480px; object-fit:contain; }
+    .paper-figure figcaption { padding:11px 13px; color:var(--muted); font-size:.84rem; line-height:1.5; }
+    .figure-source { display:block; margin-top:5px; font-size:.8rem; }
+    .figure-error { padding:26px; color:var(--muted); text-align:center; }
+    .copyright,.analysis-scope { color:var(--muted); font-size:.78rem; }
+    .analysis-scope { margin-top:22px; padding-top:12px; border-top:1px solid var(--line); }
+    .detail-layout { margin-top:42px; }
+    .detail-layout .paper-card { width:min(1120px,100%); margin:0 auto; }
+    .detail-layout .paper-card__cover { height:min(520px,55vw); }
+    .detail-layout .paper-card__body { min-height:0; padding:clamp(24px,4vw,44px); }
+
+    .paper-card:has(.paper-details[open]) { grid-column:1/-1; }
+    .paper-card:has(.paper-details[open]) .paper-card__cover { display:none; }
+    .paper-card:has(.paper-details[open]) .paper-card__body { width:min(1120px,100%); min-height:0; margin:0 auto; padding:clamp(24px,4vw,44px); }
+    .paper-card:has(.paper-details[open]) .paper-card__takeaway p:last-child,
+    .paper-card:has(.paper-details[open]) .paper-card__recommendation { display:block; overflow:visible; }
+
+    @media (max-width:1100px) {
+      .stats { grid-template-columns:repeat(3,1fr); }
+      .explorer-controls { grid-template-columns:repeat(3,1fr); }
+      .control--query { grid-column:span 2; }
+    }
+    @media (max-width:760px) {
+      main { width:min(94vw,680px); padding-top:24px; }
+      .masthead,.gallery-intro,.explorer-status { align-items:flex-start; flex-direction:column; }
+      .masthead nav { justify-content:flex-start; }
+      h1 { margin-top:28px; font-size:clamp(1.85rem,9vw,2.5rem); }
+      .stats { grid-template-columns:repeat(2,1fr); }
+      .topic-shelves { display:flex; overflow-x:auto; padding-bottom:6px; scroll-snap-type:x proximity; }
+      .topic-filter { min-width:190px; scroll-snap-align:start; }
+      .explorer-controls { position:static; grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .control--query,.explorer-actions { grid-column:1/-1; }
+      .explorer-actions { flex-wrap:wrap; }
+      .paper-details__meta,.research-note { grid-template-columns:1fr; }
+      .research-note dt { margin-top:10px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header class="page-header">
+    <div class="masthead">
+      <span>PAPERDAILY · 智能优化与生产调度 · 2026-09-29 11:06</span>
+      <nav aria-label="站点导航">
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/">今日</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/daily/">每日日报</a>
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/library/">长期论文库</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/topics/">主题</a>
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/">标签</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/archive/">发表归档</a>
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/search/">搜索</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/feed.xml">订阅</a>
+      </nav>
+    </div>
+    <h1>大语言模型作为自适应元求解器：面向工业级优化的策略多样性强化学习</h1>
+<p class="lede">本次检索最近 3 天的论文版本，首次发表日期见各篇详情。</p><p class="lede">LLMs as Adaptive Meta-Solvers: Strategy-Diverse RL for Industrial-Scale Optimization</p>  </header>
+
+  <section class="detail-layout" aria-label="论文完整解读"><article
+  class="paper-card"
+  data-paper-card
+  data-paper-id="arxiv:2609.34427:v1"
+  data-topic="reinforcement-learning"
+>
+<div class="paper-card__cover">
+      <img
+        src="https://JiaqiTan111.github.io/Daily_Opt_Paper/figures/arxiv/2609.34427/v1/fig1-panel1.png"
+        alt="Figure 1：Motivating evidence for strategy complementarity. Left: Pass@8 success sets of DeepSeek-V4-Pro on MIPLIB-NL under three strategies. The partial overlap indicates that different strategies solve complementary subsets of instances. Right: a single TSP instance solved successfully by all three strategies, illustrating that one optimization problem can admit multiple valid computational solution paths."
+        loading="lazy"
+        decoding="async"
+        referrerpolicy="no-referrer"
+        data-paper-figure
+        data-original-url="https://arxiv.org/html/2609.34427v1/motivation_case_v8_cropped.png"
+      >
+      <div class="figure-error" hidden data-figure-error>论文图暂时无法加载，可从原文查看。</div>
+      <p class="paper-card__cover-caption"><strong>Figure 1</strong> Motivating evidence for strategy complementarity. Left: Pass@8 success sets of DeepSeek-V4-Pro on MIPLIB-NL under three strategies. The partial overlap indicates that different strategies solve complementary subsets of instances. Right: a single TSP instance solved successfully by all three strategies, illustrating that one optimization problem can admit multiple valid computational solution paths.</p>
+  </div>
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">强化学习求解</span>
+      <span>摘要级</span>
+      <span>相关性 8/10</span>
+      <span>v1</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2609.34427/">大语言模型作为自适应元求解器：面向工业级优化的策略多样性强化学习</a></h3>
+    <p class="original-title" lang="en">LLMs as Adaptive Meta-Solvers: Strategy-Diverse RL for Industrial-Scale Optimization</p>
+    <p class="authors">Shihao Zhang · Weiting Liu · Siyu Shao · Yitian Chen · Jianfeng Feng · Dongdong Ge · Yinyu Ye</p>
+
+<div class="paper-card__takeaway">
+      <p class="field-label">核心洞察</p>
+      <p>论文的核心洞察在于：求解器集成推理、精确组合算法和启发式搜索并非彼此替代，而是在不同问题结构和规模上呈现互补优势。因此，与其让大语言模型固守某一种求解范式，不如训练模型在策略层面进行多样化探索与自适应选择，并通过正确性门控的层次化多样性奖励防止策略过早坍缩，从而获得更强的跨问题、跨规模鲁棒性。</p>
+    </div>
+    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>论文针对大语言模型从教科书规模走向工业级优化的关键瓶颈，提出策略多样性强化学习与正确性门控层次化多样性奖励，直接回应了学习辅助搜索中策略选择与探索-利用平衡问题。其混合格式训练方案也贴近真实工业优化中文件化实例的输入形态。对于研究智能优化、生产调度和 AI4OR 的读者，该工作提供了将大语言模型作为元求解器、在多种求解范式间自适应切换的训练框架，具有明确的迁移参考价值，尤其在算法选择、求解器编排和跨规模泛化方面。</p>
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/reinforcement-learning/" data-tag-filter="reinforcement-learning">强化学习</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/benchmark/" data-tag-filter="benchmark">基准与泛化</a></li>
+    </ul>
+
+<details class="paper-details" open>
+      <summary>
+        <span class="summary-open">展开完整解读</span>
+        <span class="summary-close">收起完整解读</span>
+        <span aria-hidden="true" class="summary-arrow">↓</span>
+      </summary>
+
+      <div class="paper-details__meta">
+        <p><strong>模型细分主题：</strong>基于强化学习训练大语言模型作为自适应元求解器，用于工业级优化问题求解</p>
+        <p><strong>模型原始标签：</strong>大语言模型、强化学习、元求解器、工业级优化、策略多样性、求解器集成推理、启发式搜索、精确组合算法</p>
+        <p><strong>第一单位：</strong>证据未提供</p>
+        <p><strong>通讯作者：</strong>证据未提供</p>
+        <p><strong>首次上传：</strong>2026-09</p>
+        <p class="paper-links">
+          <a href="https://arxiv.org/abs/2609.34427">arXiv 摘要 ↗</a>
+<a href="https://arxiv.org/pdf/2609.34427">PDF ↗</a><a href="https://arxiv.org/html/2609.34427v1">官方 HTML ↗</a>        </p>
+      </div>
+
+      <div class="paper-figures">
+        <figure class="paper-figure">
+          <div class="paper-figure__media">
+            <img
+              src="https://JiaqiTan111.github.io/Daily_Opt_Paper/figures/arxiv/2609.34427/v1/fig1-panel1.png"
+              alt="Figure 1：Motivating evidence for strategy complementarity. Left: Pass@8 success sets of DeepSeek-V4-Pro on MIPLIB-NL under three strategies. The partial overlap indicates that different strategies solve complementary subsets of instances. Right: a single TSP instance solved successfully by all three strategies, illustrating that one optimization problem can admit multiple valid computational solution paths."
+              loading="lazy"
+              decoding="async"
+              referrerpolicy="no-referrer"
+              data-paper-figure
+              data-original-url="https://arxiv.org/html/2609.34427v1/motivation_case_v8_cropped.png"
+            >
+            <div class="figure-error" hidden data-figure-error>该论文图暂时无法加载，可从原文查看。</div>
+          </div>
+          <figcaption>
+            <strong>Figure 1.</strong> Motivating evidence for strategy complementarity. Left: Pass@8 success sets of DeepSeek-V4-Pro on MIPLIB-NL under three strategies. The partial overlap indicates that different strategies solve complementary subsets of instances. Right: a single TSP instance solved successfully by all three strategies, illustrating that one optimization problem can admit multiple valid computational solution paths.
+            <a class="figure-source" href="https://arxiv.org/html/2609.34427v1#S1.F1">来源：论文官方 arXiv HTML ↗</a>
+          </figcaption>
+        </figure>
+        <figure class="paper-figure">
+          <div class="paper-figure__media">
+            <img
+              src="https://JiaqiTan111.github.io/Daily_Opt_Paper/figures/arxiv/2609.34427/v1/fig2-panel1.png"
+              alt="Figure 2：Overview of the file-grounded data construction pipeline."
+              loading="lazy"
+              decoding="async"
+              referrerpolicy="no-referrer"
+              data-paper-figure
+              data-original-url="https://arxiv.org/html/2609.34427v1/data_construction.png"
+            >
+            <div class="figure-error" hidden data-figure-error>该论文图暂时无法加载，可从原文查看。</div>
+          </div>
+          <figcaption>
+            <strong>Figure 2.</strong> Overview of the file-grounded data construction pipeline.
+            <a class="figure-source" href="https://arxiv.org/html/2609.34427v1#S3.F2">来源：论文官方 arXiv HTML ↗</a>
+          </figcaption>
+        </figure>
+      </div>
+      <p class="copyright">图片来自论文官方 arXiv 页面，仅用于论文导航与学术阅读；版权归论文作者或相关权利人所有。</p>
+
+      <dl class="research-note">
+        <dt>研究设定</dt><dd>研究问题是如何将基于大语言模型的优化求解能力从教科书规模实例扩展到真实世界工业级任务。决策对象是大语言模型在面对不同优化问题时应采用的求解策略，目标是在跨问题结构、跨规模条件下提升求解的鲁棒性与泛化能力。关键约束包括实际优化工作负载的规模和结构多样性，以及现有方法多局限于小型自包含文本问题并固守求解器集成范式。信息假设方面，作者认为求解器集成推理、精确组合算法和启发式搜索在不同问题结构和规模上具有互补优势。环境被视为静态的基准与工业任务评测环境，动态扰动未在摘要中提及，材料未说明。</dd>
+        <dt>研究动机</dt><dd>现有基于大语言模型的优化方法主要在小型、自包含的文本问题上评测，并且往往固定采用求解器集成的单一范式，难以应对真实工业优化工作负载的规模和结构多样性。作者试图让开源大语言模型成为能自适应选择和组织多种求解策略的元求解器，从而弥合教科书规模与工业规模之间的差距。</dd>
+        <dt>核心洞察</dt><dd>论文的核心洞察在于：求解器集成推理、精确组合算法和启发式搜索并非彼此替代，而是在不同问题结构和规模上呈现互补优势。因此，与其让大语言模型固守某一种求解范式，不如训练模型在策略层面进行多样化探索与自适应选择，并通过正确性门控的层次化多样性奖励防止策略过早坍缩，从而获得更强的跨问题、跨规模鲁棒性。</dd>
+        <dt>技术挑战</dt><dd><ul><li>从教科书规模实例扩展到真实工业级优化任务时，问题规模与结构多样性显著增加，单一求解范式难以覆盖</li><li>现有方法多局限于小型自包含文本问题，且固守求解器集成范式，泛化能力受限</li><li>在强化学习训练中保持策略多样性、避免策略过早坍缩，同时保证求解正确性</li><li>需要同时支持自包含文本问题与基于文件的实例两种输入格式</li></ul></dd>
+        <dt>问题分析</dt><dd>作者首先通过经验性实验展示求解器集成推理、精确组合算法与启发式搜索在不同问题结构和规模上的互补优势，据此将大语言模型训练问题形式化为跨策略的自适应元求解问题，再通过强化学习中的正确性门控层次化多样性奖励来引导模型在策略间和策略内进行稳健探索。摘要未提供更细的形式化推导、下界分析或图表示设计，材料未说明。</dd>
+        <dt>方法</dt><dd><ul><li>训练开源大语言模型以应对真实世界工业级优化问题</li><li>提出策略多样性强化学习 SDRL，将大语言模型训练为自适应优化元求解器</li><li>设计正确性门控的层次化多样性奖励，促进跨不同策略以及同一策略内部的稳健探索，防止策略过早坍缩</li><li>引入混合格式训练方案，同时支持自包含文本问题和基于文件的实例</li><li>利用求解器集成推理、精确组合算法和启发式搜索之间的互补性来组织求解策略</li></ul></dd>
+        <dt>实验</dt><dd><ul><li>在综合评测中，该框架在基准平均表现和工业级优化任务上均优于现有微调方法以及包括 DeepSeek-V4-Pro 和 GPT-5.5 在内的前沿模型</li><li>摘要提到作者首先通过经验性实验展示了求解器集成推理、精确组合算法和启发式搜索在不同问题结构和规模上的互补优势，但未给出具体基线、实例规模、约束可行性、解质量数值、运行时间、训练开销、公平计算预算、泛化或消融的细节，材料未说明</li></ul></dd>
+        <dt>局限</dt><dd><ul><li>材料未说明</li></ul></dd>
+        <dt>与你的研究关系</dt><dd>论文直接研究大语言模型作为工业级优化元求解器，并利用强化学习训练策略选择能力，与 AI4OR、学习辅助搜索以及智能体优化高度相关。其策略多样性强化学习机制和正确性门控层次化多样性奖励，原则上可迁移到生产调度中的算法选择或求解器配置问题，例如在柔性作业车间、流水车间或分布式制造中让智能体在数学规划、启发式搜索与精确算法之间自适应切换。但论文并未直接研究生产调度问题，也未给出调度实例上的验证；迁移到生产调度需要重新定义状态、动作、奖励以及正确性门控信号，并验证约束可行性与动态扰动下的泛化能力，这些属于推测。</dd>
+        <dt>证据与不确定性</dt>
+        <dd>
+          <p>本次分析仅基于标题与摘要，未提供全文，因此方法细节、网络输入输出、状态动作奖励的具体定义、实验基线、实例规模、数值结果、运行时间、训练开销、消融实验和作者明确陈述的局限均无法核实。相关性评分是基于摘要中工业级优化、强化学习和元求解器主题作出的判断，若全文聚焦于纯语言任务或未涉及约束决策，评分可能偏高。</p>
+          <blockquote><strong>论文指出基于大语言模型的优化方法主要在小型自包含文本问题上评测，并且常固守求解器集成范式，难以应对工业级优化的规模与结构多样性。：</strong>Existing approaches are predominantly evaluated on small, self-contained textual problems and often commit to a solver-integrated paradigm, limiting their ability to handle the scale and structural diversity of practical optimization workloads.</blockquote>
+          <blockquote><strong>作者通过经验性实验表明求解器集成推理、精确组合算法和启发式搜索在不同问题结构和规模上具有互补优势。：</strong>We first show empirically that solver-integrated reasoning, exact combinatorial algorithm, and heuristic search exhibit complementary strengths across different problem structures and scales.</blockquote>
+          <blockquote><strong>论文提出策略多样性强化学习 SDRL，将大语言模型训练为自适应优化元求解器。：</strong>Motivated by this, we introduce Strategy-Diverse Reinforcement Learning (SDRL), which trains LLMs as adaptive optimization meta-solvers.</blockquote>
+          <blockquote><strong>SDRL 使用正确性门控的层次化多样性奖励来促进跨策略与策略内探索，防止策略过早坍缩。：</strong>SDRL leverages this complementarity through a correctness-gated hierarchical diversity reward that promotes robust exploration across varying strategies and within each strategy, effectively preventing premature strategy collapse.</blockquote>
+          <blockquote><strong>论文引入混合格式训练方案，同时支持自包含文本问题和基于文件的实例。：</strong>We further introduce a mixed-format training scheme that jointly supports both self-contained textual problems and file-grounded instances.</blockquote>
+          <blockquote><strong>论文声称其框架在基准平均表现和工业级优化任务上优于现有微调方法和包括 DeepSeek-V4-Pro 与 GPT-5.5 在内的前沿模型。：</strong>Across comprehensive evaluations, our framework outperforms existing fine-tuned methods and frontier models including DeepSeek-V4-Pro and GPT-5.5, both on average across benchmarks and on industrial-scale optimization tasks.</blockquote>
+        </dd>
+      </dl>
+      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；仅依据标题与摘要。证据范围不足的内容不应视为全文结论。</p>
+    </details>  </div>
+</article></section>
+</main>
+<script>
+(() => {
+  const explorer = document.querySelector('[data-explorer]');
+  if (!explorer) return;
+  const source = explorer.querySelector('[data-paper-json]');
+  let records = [];
+  try { records = JSON.parse(source?.textContent || '[]'); } catch { return; }
+  const byId = new Map(records.map((record) => [record.id, record]));
+  const validTopics = new Set(records.map((record) => record.topic));
+  const validTags = new Set(records.flatMap((record) => record.tags || []));
+  const validTiers = new Set(['deep_read', 'browse', 'explore']);
+  const validScopes = new Set(['full_text', 'abstract']);
+  const validFigures = new Set(['yes', 'no']);
+  const validScores = new Set([0, 8, 9]);
+  const form = explorer.querySelector('[data-filter-form]');
+  const queryInput = explorer.querySelector('[data-filter-query]');
+  const tierInput = explorer.querySelector('[data-filter-tier]');
+  const scopeInput = explorer.querySelector('[data-filter-scope]');
+  const scoreInput = explorer.querySelector('[data-filter-score]');
+  const figureInput = explorer.querySelector('[data-filter-figure]');
+  const topicButtons = [...explorer.querySelectorAll('[data-topic-choice]')];
+  const normalize = (value) => value.normalize('NFKC').toLocaleLowerCase('zh-CN').replace(/\s+/gu, ' ').trim();
+  let state = { query:'', topic:'', tag:'', tier:'', scope:'', score:0, figure:'' };
+
+  const canonicalState = (candidate) => ({
+    query: candidate.query.trim().length <= 200 ? candidate.query.trim() : '',
+    topic: validTopics.has(candidate.topic) ? candidate.topic : '',
+    tag: validTags.has(candidate.tag) ? candidate.tag : '',
+    tier: validTiers.has(candidate.tier) ? candidate.tier : '',
+    scope: validScopes.has(candidate.scope) ? candidate.scope : '',
+    score: validScores.has(Number(candidate.score)) ? Number(candidate.score) : 0,
+    figure: validFigures.has(candidate.figure) ? candidate.figure : '',
+  });
+  const readUrl = () => {
+    const params = new URLSearchParams(location.search);
+    return canonicalState({ query:params.get('q') || '', topic:params.get('topic') || '', tag:params.get('tag') || '', tier:params.get('tier') || '', scope:params.get('scope') || '', score:params.get('score') || 0, figure:params.get('figure') || '' });
+  };
+  const writeUrl = () => {
+    const params = new URLSearchParams();
+    if (state.query) params.set('q', state.query);
+    if (state.topic) params.set('topic', state.topic);
+    if (state.tag) params.set('tag', state.tag);
+    if (state.tier) params.set('tier', state.tier);
+    if (state.scope) params.set('scope', state.scope);
+    if (state.score) params.set('score', String(state.score));
+    if (state.figure) params.set('figure', state.figure);
+    const query = params.toString();
+    history.replaceState(null, '', `${location.pathname}${query ? `?${query}` : ''}${location.hash}`);
+  };
+  const syncControls = () => {
+    queryInput.value = state.query; tierInput.value = state.tier; scopeInput.value = state.scope;
+    scoreInput.value = String(state.score); figureInput.value = state.figure;
+    topicButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.topicChoice === state.topic)));
+    const activeTag = explorer.querySelector('[data-active-tag]');
+    if (activeTag) {
+      const label = explorer.querySelector(`[data-tag-filter="${CSS.escape(state.tag)}"]`)?.textContent?.trim();
+      activeTag.textContent = state.tag ? `· 标签：${label || state.tag}` : '';
+    }
+  };
+  const render = () => {
+    state = canonicalState(state);
+    const query = normalize(state.query);
+    let visibleCount = 0;
+    explorer.querySelectorAll('[data-paper-card]').forEach((card) => {
+      const record = byId.get(card.dataset.paperId);
+      const visible = Boolean(record) && (!query || normalize(record.searchText).includes(query)) && (!state.topic || record.topic === state.topic) && (!state.tag || record.tags.includes(state.tag)) && (!state.tier || record.tier === state.tier) && (!state.scope || record.scope === state.scope) && record.score >= state.score && (!state.figure || (record.hasFigure ? 'yes' : 'no') === state.figure);
+      card.hidden = !visible;
+      if (visible) visibleCount += 1;
+    });
+    explorer.querySelectorAll('[data-tier-section]').forEach((section) => {
+      const count = [...section.querySelectorAll('[data-paper-card]')].filter((card) => !card.hidden).length;
+      section.hidden = count === 0;
+      const counter = section.querySelector('[data-tier-count]');
+      if (counter) counter.textContent = String(count);
+    });
+    explorer.querySelector('[data-result-count]').textContent = String(visibleCount);
+    explorer.querySelector('[data-no-results]').hidden = visibleCount !== 0;
+    syncControls(); writeUrl();
+  };
+
+  state = readUrl(); syncControls(); render();
+  form?.addEventListener('input', () => { state = { ...state, query:queryInput.value, tier:tierInput.value, scope:scopeInput.value, score:Number(scoreInput.value), figure:figureInput.value }; render(); });
+  form?.addEventListener('submit', (event) => event.preventDefault());
+  form?.addEventListener('reset', () => queueMicrotask(() => { state = canonicalState({ query:'', topic:'', tag:'', tier:'', scope:'', score:0, figure:'' }); render(); }));
+  topicButtons.forEach((button) => button.addEventListener('click', () => { state.topic = button.dataset.topicChoice || ''; render(); }));
+  explorer.querySelectorAll('[data-tag-filter]').forEach((link) => link.addEventListener('click', (event) => { event.preventDefault(); state.tag = link.dataset.tagFilter || ''; render(); form?.scrollIntoView({ behavior:'smooth', block:'start' }); }));
+  explorer.querySelector('[data-expand-visible]')?.addEventListener('click', () => { explorer.querySelectorAll('[data-paper-card]:not([hidden]) .paper-details').forEach((details) => { details.open = true; }); });
+  explorer.querySelector('[data-collapse-visible]')?.addEventListener('click', () => { explorer.querySelectorAll('.paper-details[open]').forEach((details) => { details.open = false; }); });
+})();
+
+document.querySelectorAll('[data-paper-figure]').forEach((image) => {
+  const fail = () => {
+    const original = image.dataset.originalUrl;
+    if (original && image.dataset.remoteFallback !== 'used' && image.src !== original) { image.dataset.remoteFallback = 'used'; image.src = original; return; }
+    image.hidden = true; image.parentElement?.querySelector('[data-figure-error]')?.removeAttribute('hidden');
+  };
+  image.addEventListener('error', fail);
+  if (image.complete && image.naturalWidth === 0) fail();
+});
+</script>
+</body>
+</html>
