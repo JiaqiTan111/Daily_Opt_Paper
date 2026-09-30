@@ -230,6 +230,166 @@
       },
       "tier": "browse"
     },
+    "arxiv:2410.09166:v2": {
+      "analysis": {
+        "analysis": "作者将电池建模划分为非线性 ERM 与数据驱动 ICNN 近似两条路径：非线性 ERM 用积分形式描述 SoC 动态，其中充放电效率为功率的非线性函数；随后利用 ICNN 的层间结构约束保证输出对输入为凸，并将该凸函数以上图方式纳入优化，构造松弛 ICNN 凸规划。作者通过四种 ERM 表述（非线性、线性、松弛 ICNN、Big-M ICNN）的对比，分析非线性效率对 SoC 轨迹、调度决策与收益的影响，并借由 ICNN 近似曲线与真实非线性曲线的偏差区间说明建模误差的来源与量级。材料未说明作者是否使用了问题分解、下界推导或图表示等额外结构化手段。",
+        "challenges": [
+          "并网电池功率变换器的部分负载效率随功率非线性变化，直接嵌入优化会破坏凸性",
+          "线性或恒定效率 ERM 虽可解但存在模型失配，收益与 SoC 轨迹预测失真",
+          "非线性 ERM 与混合整数模型精度较高但计算可处理性差，难以扩展",
+          "ICNN 近似存在建模误差，可能导致 SoC 饱和或可行性问题",
+          "需要保证 ICNN 的凸性条件（非负权重与非减凸激活）同时具备足够表达能力"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文使用输入凸神经网络以凸函数近似非线性效率，并利用上机构造凸规划",
+            "location": "abstract",
+            "quote": "A data-driven approach is introduced with the input-convex neural network (ICNN) to approximate the nonlinear efficiency with a convex function. The epigraph of the convex function is used to engender a convex program for battery ERM optimization."
+          },
+          {
+            "claim": "ICNN 通过约束权重保证输出对输入为凸函数",
+            "location": "supplied_full_text",
+            "quote": "The ICNN is a neural network architecture with constraints on the neural network’s weights to ensure that the output is always a convex function of the input"
+          },
+          {
+            "claim": "ICNN 近似在给定功率区间内建模误差不超过 10%，可能导致 SoC 饱和",
+            "location": "supplied_full_text",
+            "quote": "For P c ∈ [ 0.05 , 1 ] P_{\\text{c}}\\in[0.05,1] , the modeling error does not exceed 10 % 10\\% . This modeling error may lead to SoC saturation."
+          },
+          {
+            "claim": "线性模型会高估系统能力，导致性能与收益预测误差",
+            "location": "supplied_full_text",
+            "quote": "the linear model overestimates the system’s capabilities, which results in errors in system performance and revenue projections."
+          },
+          {
+            "claim": "论文将 ICNN 方法与非线性、线性、混合整数三种 ERM 表述进行对比",
+            "location": "abstract",
+            "quote": "it is compared with three other ERM formulations (nonlinear, linear, and mixed-integer)"
+          }
+        ],
+        "experiments": [
+          "数据来源：DC 与 AC 功率的完整充放电过程，基于文献 [23] 的非线性效率函数生成数据",
+          "训练：采用 Adam 优化器，模型为两层 ICNN",
+          "近似误差：在 P_c∈[0.08,0.25] p.u. 低功率区，ICNN 低估非线性模型；在 P_c∈[0.25,0.8] p.u. 区间 ICNN 高估模型；在 P_c∈[0.05,1] 范围内建模误差不超过 10%，该误差可能导致 SoC 饱和",
+          "对照设置：非线性、线性、松弛 ICNN（λ=4.3×10⁻³）与 Big-M（M=4）四种 ERM 表述；测试用例为 24 小时价格信号下 5 分钟间隔的收益最大化",
+          "定性结果：线性模型产生不同的电池调度，导致 SoC 轨迹差异，从而高估系统能力并造成性能与收益预测误差；ICNN 方法在收益最大化用例中显示出可取的可行性与最优性表现",
+          "材料给出的参数包括充放电功率额定 P̄=50.0 kW、能量容量 C_batt=135.0 kWh、最大能量容量 Ē=0.9 C_batt、最小能量容量 E̲=0.1 C_batt",
+          "材料未给出具体的收益数值、最优性差距百分比、运行时间、训练开销、公平计算预算、多实例规模测试及消融实验数据"
+        ],
+        "first_affiliation": "佛蒙特大学电气与生物医学工程系",
+        "insight": "核心洞察在于：如果用一个输入凸神经网络学习从充放电功率到非线性效率相关量的映射，则所学函数对输入保持凸性；再借助该凸函数的上图（epigraph）表示，可以把原本非凸的非线性效率关系重构为一个凸规划。这样既避免了线性模型对系统能力的过度乐观或低估，也避免了直接非线性规划与混合整数模型带来的计算负担，从而在求解质量、可行性与可处理性之间取得折中。",
+        "limitations": [
+          "ICNN 近似存在建模误差，在低功率区间低估、中高功率区间高估，可能引起 SoC 饱和",
+          "作者在摘要中仅表述为“appear to be promising”，并未给出完整的量化优越性结论",
+          "材料未明确说明更长期、多电池、多场景下的扩展性与泛化表现"
+        ],
+        "method": [
+          "非线性 ERM：以 E(t)=E(t0)+(1/C_batt)∫[η_c(τ)P_c(τ)−P_d(τ)/η_d(τ)]dτ 描述 SoC 动态，效率 η_c、η_d 为功率的非线性函数",
+          "数据驱动：采集 DC 与 AC 功率的完整充电与放电过程数据，基于文献中的非线性效率函数生成训练数据",
+          "ICNN 架构：N 层结构 z_i=g_i(W_i z_{i−1}+D_i x+b_i)，f(x;θ)=z_N；约束 W_{2:N} 非负、激活函数凸且非减，以保证输出对输入 x 为凸函数",
+          "训练：使用 Adam 优化器训练两层 ICNN，选择两层以平衡模型复杂度与计算效率",
+          "优化嵌入：取凸函数的上图，构造松弛 ICNN 凸规划；另给出 ICNN 的 Big-M 表述作为对照",
+          "验证用例：以 24 小时收益最大化问题比较非线性、线性、松弛 ICNN 与 Big-M 四种 ERM 表述的电池调度与 SoC 轨迹"
+        ],
+        "motivation": "电池储能对可再生能源并网至关重要，但并网电池功率变换器的部分负载效率呈强非线性。精确非线性模型虽准确，却给优化带来非凸性与计算可处理性难题；而常用线性或恒定效率 ERM 模型会引入模型失配，导致计划与实际运行成本、收益和 SoC 轨迹出现偏差。作者希望找到一种既能保留非线性效率精度、又能保持优化凸性从而保证可处理性的建模途径。",
+        "primary_topic": "输入凸神经网络近似非线性效率并嵌入凸优化以求解电池储能调度",
+        "relation_to_research": "本文与智能优化和 AI4OR 的关联在于：它展示了如何用具有结构保证的神经网络（ICNN）替换优化模型中的非线性环节，再通过上图变换把数据驱动模型重新嵌入凸优化，从而兼顾精度与可处理性。这一“学习模型—凸化嵌入—求解器求解”的模式与学习辅助搜索、数学规划结合神经网络的思想一致，可迁移到生产调度中那些含非线性效率、非线性能耗或非线性速度-能耗关系的约束（例如机床能耗、变频设备效率、运输速度与能耗）。但需注意：本文对象是单电池、单目标、静态 24 小时调度，材料未涉及柔性作业车间、流水车间、分布式制造、多智能体或强化学习；能否迁移到多机、多约束、离散决策与大规模车间调度，取决于是否仍存在可用凸函数近似的非线性环节以及离散变量是否主导问题难度——该迁移属于推测。",
+        "relevance_score": 6,
+        "setting": "研究面向并网电池储能系统（BESS）的调度优化问题，决策对象为充放电功率（P_c 与 P_d）及由此导出的荷电状态（SoC）轨迹，目标是在给定价格信号下最大化收益或平滑光伏出力。关键约束包括 SoC 上下限 E(t)∈[E̲,Ē]、充放电功率范围 [0,P̄] 以及充放电效率 η_c、η_d∈(0,1] 的非线性关系；信息假设为效率随部分负载非线性变化且可由数据驱动方式学习。环境为静态的单电池 24 小时调度场景，材料未说明是否考虑动态扰动或实时反馈。",
+        "tags": [
+          "输入凸神经网络",
+          "凸优化",
+          "数据驱动建模",
+          "电池储能调度",
+          "非线性效率"
+        ],
+        "title_zh": "面向电力系统电池优化的输入凸神经网络建模探索",
+        "uncertainty": "证据范围仅包含摘要与部分全文节选，全文中的收益数值对比表、运行时间、训练代价、可行率与最优性差距等关键定量结果未完整呈现，因此无法在此基础上对方法优越性做量化判断。此外，论文与生产调度、多智能体、强化学习等主题没有直接关系，相关性评分主要基于方法论可迁移性而非领域一致性，存在一定主观性。",
+        "why_recommended": "对研究 AI 驱动运筹优化的读者而言，本文给出了一个清晰范式：用带凸性结构保证的神经网络学习物理非线性关系，并以上图方式将其无损地嵌入凸规划求解。该范式在方法论层面与学习辅助优化、数学规划与神经网络结合高度相关，可作为把学习模型安全嵌入优化求解器的参考案例。同时论文提供了与线性模型、非线性模型和混合整数模型的对照实验设计思路，对关注约束可行性、求解质量与公平比较的研究者有借鉴意义。尽管应用领域为电力系统而非生产调度，但其“保结构学习 + 凸化 + 求解器”的技术路线对生产调度中非线性约束的建模具有明确的迁移启发。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-30T10:48:47.044695+08:00",
+        "figures": [
+          {
+            "caption": "The block diagram of BESS",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2410.09166/v2/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2410.09166v2/Figures/BESS.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2410.09166v2#S2.F1"
+          },
+          {
+            "caption": "Efficiency curve for commercial inverters [ 20 ]",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2410.09166/v2/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2410.09166v2/Figures/Eff.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2410.09166v2#S2.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2410.09166v2",
+        "status": "available"
+      },
+      "final_score": 0.6257773836770109,
+      "provenance": {
+        "analyzed_at": "2026-09-30T02:50:22.198233Z",
+        "input_hash": "6bf7cba764807a85cf6c4a9487ae7219ca0a350366ea708c3590be1aa7f28bb2",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Battery energy storage systems (BESS) play an increasingly vital role in integrating renewable generation into power grids due to their ability to dynamically balance supply. Grid-tied batteries typically employ power converters, where part-load efficiencies vary non-linearly. While this non-linearity can be modeled with high accuracy, it poses challenges for optimization, particularly in ensuring computational tractability. In this paper, we consider a non-linear BESS formulation based on the Energy Reservoir Model (ERM). A data-driven approach is introduced with the input-convex neural network (ICNN) to approximate the nonlinear efficiency with a convex function. The epigraph of the convex function is used to engender a convex program for battery ERM optimization. This relaxed ICNN method is applied to two battery optimization use-cases: PV smoothing and revenue maximization, and it is compared with three other ERM formulations (nonlinear, linear, and mixed-integer). Specifically, ICNN-based methods appear to be promising for future battery optimization with desirable feasibility and optimality outcomes across both use-cases.",
+          "authors": [
+            "Arash Omidi",
+            "Tanmay Mishra",
+            "Mads R. Almassalkhi"
+          ],
+          "canonical_id": "2410.09166",
+          "categories": [
+            "eess.SY",
+            "cs.SY"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2410.09166",
+          "published_at": "2024-10-11T18:14:09Z",
+          "source": "arxiv",
+          "title": "Towards Input-Convex Neural Network Modeling for Battery Optimization in Power Systems",
+          "updated_at": "2026-09-28T20:49:09Z",
+          "url": "https://arxiv.org/abs/2410.09166",
+          "version": 2
+        },
+        "rank": 6,
+        "score": {
+          "base_score": 0.6468679703218377,
+          "exploration": 0.4759369857525378,
+          "matched_terms": [
+            "mixed integer",
+            "mixed-integer",
+            "neural network"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.73166210856038,
+          "topic": 0.6714784978449114
+        }
+      },
+      "tier": "deep_read"
+    },
     "arxiv:2502.20462:v2": {
       "analysis": {
         "analysis": "作者通过非常规的约束强化学习 formulation，将多智能体协调问题转化为对偶变量的分布式更新问题，利用单比特 gossip 通信和局部估计，并引入收缩因子控制误差传播，从而在理论上分析几乎必然可行性。材料未说明具体的分解或下界方法。",
@@ -610,6 +770,121 @@
           "personal": 0.0,
           "recency": 0.23865740426925958,
           "topic": 0.5039799041153716
+        }
+      },
+      "tier": "browse"
+    },
+    "arxiv:2508.01751:v3": {
+      "analysis": {
+        "analysis": "摘要未说明作者具体如何分析问题结构、分解或推导下界，仅指出其设计了一个通用的 Generalized Cumulative 约束以及专门处理条件时间区间任务的新时间表过滤算法。",
+        "challenges": [
+          "条件时间区间使任务的起止时间与资源贡献不再固定，过滤时需要同时推理时间区间选择与累积量",
+          "需要用一个通用全局约束覆盖生产者与消费者等异质资源贡献语义",
+          "开源求解器中缺乏可参考的实现与实现细节文档",
+          "需在大型问题上兼顾传播强度与可扩展性"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文提出用一个通用全局约束实现条件时间区间与累积函数建模",
+            "location": "abstract",
+            "quote": "we present an implementation of this modeling approach using a single, generic global constraint called the Generalized Cumulative"
+          },
+          {
+            "claim": "论文提出面向条件时间区间任务的新时间表过滤算法",
+            "location": "abstract",
+            "quote": "We also introduce a novel timetabling filtering algorithm specifically designed to handle tasks defined on conditional time-intervals"
+          },
+          {
+            "claim": "该建模方式可覆盖生产者与消费者等调度问题，但此前开源求解器不支持且实现细节未文档化",
+            "location": "abstract",
+            "quote": "However, it is unavailable in existing open-source solvers and practical implementation details remain undocumented"
+          },
+          {
+            "claim": "实验显示该方法与现有求解器性能相当并可扩展到大问题",
+            "location": "abstract",
+            "quote": "Experimental results demonstrate that this approach, combined with the new filtering algorithm, performs competitively with existing solvers enabling the modeling of producer and consumer scheduling problems and effectively scales to large-scale problems"
+          }
+        ],
+        "experiments": [
+          "摘要称实验结果表明该方法结合新过滤算法后，在支持生产者与消费者调度问题建模方面与现有求解器性能相当（competitive），并能有效扩展到大规模问题；具体基线、实例规模、解质量、运行时间、训练开销与消融实验在摘要中未给出数字，材料未说明。"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "将条件时间区间语义统一封装到一个广义累积全局约束中，并针对条件时间区间任务设计新的时间表过滤算法，使开源求解器也能以通用方式表达生产者—消费者类累积调度，而无需为每类问题单独建模；其有效性来自过滤算法能利用任务在可选区间上的累积贡献结构进行剪枝，而非简单堆叠模块。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "提出并实现一个单一的通用全局约束 Generalized Cumulative，用于表达基于条件时间区间和累积函数的调度模型",
+          "该约束支持生产者与消费者类任务的统一建模",
+          "设计一种新的时间表（timetabling）过滤算法，专门处理定义在条件时间区间上的任务",
+          "在开源求解器环境中实现上述约束与过滤算法，使原本商业求解器才具备的建模能力可用"
+        ],
+        "motivation": "现代商业约束编程求解器已普遍支持用条件时间区间和累积函数建模调度问题，可覆盖生产者与消费者等场景，但开源求解器缺乏该能力，且实际实现细节未被文档化，因此需要给出可落地的实现方案。",
+        "primary_topic": "约束编程中面向条件时间区间与累积函数的广义累积全局约束及其过滤算法",
+        "relation_to_research": "论文属于约束编程与调度求解方向，直接处理累积资源调度与生产者—消费者问题，与生产调度中的资源约束、条件时间区间建模高度相关。若迁移到柔性作业车间、分布式制造或生产运输协同，推测需要将机器/运输资源抽象为累积资源，并验证新过滤算法在多资源、多目标及动态扰动场景下的传播效率与约束可行性；这一迁移属于推测，并非作者结论。论文未涉及神经网络、强化学习或学习辅助搜索。",
+        "relevance_score": 7,
+        "setting": "论文研究约束编程求解器中的调度建模问题，决策对象是定义在条件时间区间上的任务及其对累积资源的贡献（包括生产者与消费者两类任务），目标是用单一通用全局约束表达广泛的累积调度问题，关键约束是任务对资源累积量的上下界，信息假设与动态或静态环境在摘要中未说明。",
+        "tags": [
+          "约束编程",
+          "全局约束",
+          "调度",
+          "累积函数",
+          "时间表过滤",
+          "生产者消费者调度"
+        ],
+        "title_zh": "使用广义累积约束实现累积函数",
+        "uncertainty": "仅有标题与摘要，无法确认第一单位、通讯作者、具体基线、实验规模、算法细节、开源实现与是否有消融或泛化验证；相关性判断基于论文明确涉及调度与累积约束这一事实，但未涉及学习或神经网络方法，故不给予更高分数。",
+        "why_recommended": "该工作提供了开源可用的累积调度全局约束实现与面向条件时间区间的过滤算法，对研究调度问题建模、约束传播以及将约束编程与智能优化结合的研究者具有参考价值，尤其有助于理解资源累积约束的底层机制与可扩展性。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-30T10:48:47.044695+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2508.01751v3",
+        "status": "not_found"
+      },
+      "final_score": 0.5864957244236708,
+      "provenance": {
+        "analyzed_at": "2026-09-30T02:51:29.387892Z",
+        "input_hash": "ecb75277bcdee0f63236c4c2d149ced76094c5933b65e55a8da31c46f0dac74c",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Modeling scheduling problems with conditional time intervals and cumulative functions has become a common approach when using modern commercial constraint programming solvers. This paradigm enables the modeling of a wide range of scheduling problems, including those involving producers and consumers. However, it is unavailable in existing open-source solvers and practical implementation details remain undocumented. In this work, we present an implementation of this modeling approach using a single, generic global constraint called the Generalized Cumulative. We also introduce a novel timetabling filtering algorithm specifically designed to handle tasks defined on conditional time-intervals. Experimental results demonstrate that this approach, combined with the new filtering algorithm, performs competitively with existing solvers enabling the modeling of producer and consumer scheduling problems and effectively scales to large-scale problems.",
+          "authors": [
+            "Pierre Schaus",
+            "Charles Thomas",
+            "Roger Kameugne"
+          ],
+          "canonical_id": "2508.01751",
+          "categories": [
+            "cs.AI"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2508.01751",
+          "published_at": "2025-08-03T13:29:44Z",
+          "source": "arxiv",
+          "title": "Implementing Cumulative Functions with Generalized Cumulative Constraints",
+          "updated_at": "2026-09-28T20:10:44Z",
+          "url": "https://arxiv.org/abs/2508.01751",
+          "version": 3
+        },
+        "rank": 30,
+        "score": {
+          "base_score": 0.49362858986121955,
+          "exploration": 0.5827957473610264,
+          "matched_terms": [
+            "constraint programming"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.726798481248715,
+          "topic": 0.40153229017913317
         }
       },
       "tier": "browse"
@@ -1074,6 +1349,140 @@
       },
       "tier": "deep_read"
     },
+    "arxiv:2510.09373:v2": {
+      "analysis": {
+        "analysis": "作者通过对比后继模型与head-tail序列变量指出前者的两大局限（可选访问表达困难、最近邻启发式导致搜索后期长边），以此论证序列变量的必要性。作者沿用并扩展其前期工作，将序列变量形式化为计算域：定义序列域及其更新操作，给出trail-based CP求解器所需的数据结构，并定义关联约束的一致性水平与面向路径问题的专用全局约束。在搜索层面，作者将relocate移动推广为多节点重插入，使搜索可在单个搜索树内高效探索类似k-opt或exchange的邻域；并将序列变量与大邻域搜索（LNS）结合，通过移除节点保留部分路径、再用CP重建。",
+        "challenges": [
+          "后继模型表达可选访问不自然（需自环/子回路，且约束需感知自环语义）",
+          "后继模型下最左分支解常依赖最近邻启发式，容易在搜索后期产生长边，难以快速得到好解",
+          "基于插入的搜索若放松所有潜在目标的后继会破坏路径结构、扩大搜索空间",
+          "需要将序列域与trail-based CP求解器、布尔变量及全局约束传播机制正确集成",
+          "需要为序列域定义一致性水平与专用全局约束，以支持取送、时间窗等约束的过滤"
+        ],
+        "corresponding_authors": [
+          "Augustin Delecluse"
+        ],
+        "evidence": [
+          {
+            "claim": "论文核心贡献是序列变量作为计算域的完整语义与操作形式化",
+            "location": "abstract",
+            "quote": "the main contribution of this article is the complete semantic and operational formalization of sequence variables as a computational domain"
+          },
+          {
+            "claim": "序列变量能够简化建模并在多类路径与排序问题上取得有竞争力的性能",
+            "location": "abstract",
+            "quote": "sequence variables simplify problem modeling while achieving competitive computational performance on Pickup and Delivery Problems with and without Time Windows, the Dial-a-Ride Problem, and a Prize-Collecting Scheduling Problem"
+          },
+          {
+            "claim": "现有CP方法难以处理可选访问与插入式搜索，而这些对快速获得高质量解至关重要",
+            "location": "supplied_full_text",
+            "quote": "However, existing CP approaches struggle to handle optional visits and insertion-based search strategies, which are crucial to quickly obtain high-quality solutions."
+          },
+          {
+            "claim": "后继模型的两大局限：可选访问表达不直接、最近邻启发式倾向在搜索后期产生长边",
+            "location": "supplied_full_text",
+            "quote": "This kind of model has two main limitations. First, representing the optional nature of visits with the successor model is not straightforward"
+          },
+          {
+            "claim": "序列变量通过保留部分路径，将relocate移动推广为多节点重插入，探索类似k-opt或exchange的邻域",
+            "location": "supplied_full_text",
+            "quote": "By preserving partial routes, sequence variables natively generalize the relocate move to multi-node re-insertions, exploring neighborhoods analogous to"
+          },
+          {
+            "claim": "LNS在VRP中的做法是放松部分路径、移除节点并用CP重建",
+            "location": "supplied_full_text",
+            "quote": "In the context of VRP, this algorithm consists of relaxing some tours by removing nodes from sequences."
+          }
+        ],
+        "experiments": [
+          "在DARP（带时间窗的拨召出行问题）、取送问题（有/无时间窗）、以及一个Prize-Collecting Scheduling Problem（PCSP）上进行评测",
+          "DARP对照对象为Gschwind与Drexl的自适应LNS（结合Ropke与Pisinger的随机/最差/Shaw移除与贪心/后悔插入等9种移除、5种插入算子），插入评估使用DARP专用可行性检查，并对接近当前最优的解使用Balas与Simonetti邻域进一步优化",
+          "PCSP结果以原间隙（primal gap）随时间变化曲线和15分钟后最终间隙分布展示，但材料未给出具体数值",
+          "材料未说明具体实例规模、训练开销、消融实验与公平计算预算的完整细节"
+        ],
+        "first_affiliation": "KU Leuven, Leuven, Belgium",
+        "insight": "贡献的有效性来自将“部分路径”提升为一等计算域：序列变量直接保留已插入节点之间的相对顺序，使插入式搜索无需放松所有潜在目标的后继变量即可复用已有路径结构。其本质在于域表示与传播机制与VRP的插入式邻域结构相匹配，从而在保持建模简洁的同时获得有竞争力的计算性能。",
+        "limitations": [
+          "材料未说明作者明确陈述的局限"
+        ],
+        "method": [
+          "形式化定义序列变量作为一个计算域，包括域表示与其更新操作",
+          "给出将序列变量集成到trail-based CP求解器所需的数据结构与实现细节",
+          "为序列域上的关联约束引入一致性水平（consistency levels）",
+          "提出面向车辆路径问题的专用全局约束（如插入与between/notBetween相关约束）",
+          "设计序列分支搜索（Algorithm 2）并针对取送请求实例化，支持插入式与多节点重插入邻域",
+          "将序列变量与LNS结合：通过移除节点保留部分路径，再在受限问题上用CP搜索重新插入节点",
+          "可选访问与布尔变量交互，支持可选访问建模"
+        ],
+        "motivation": "经典基于后继（successor）的CP模型虽然适用于VRP，但难以自然表达可选访问与基于插入的搜索策略；后继模型需要借助自环或子回路等技巧来表达“未访问”，并会破坏路径结构、扩大搜索空间，导致难以快速获得高质量解。作者因此主张序列变量在表达可选访问和插入式启发式方面更自然、更优雅。",
+        "primary_topic": "约束编程中面向车辆路径与排序问题的序列变量计算域建模",
+        "relation_to_research": "该工作直接属于智能优化与运筹优化中的约束编程求解方法，与生产调度、路径与排序问题共享大量结构（序列决策、插入式邻域、时间窗/容量约束、LNS重建）。事实层面：论文提出序列变量计算域、一致性水平、专用全局约束及与LNS结合的搜索方法，并在取送、DARP与排序问题上验证。迁移设想（推测）：若将其迁移到柔性作业车间、流水车间或生产运输协同调度，需要把机器上的工序序列或车辆-任务序列表示为序列变量，并将工序先后、机器容量、工件流与时间窗约束编码为序列域上的全局约束与一致性过滤；迁移是否有效取决于问题中是否存在天然的序列插入结构以及CP传播能否在可接受时间内收敛，这些在原文中未验证。",
+        "relevance_score": 7,
+        "setting": "研究问题是在约束编程（CP）框架下为车辆路径问题（VRP）及其变体提供一种更自然的建模与求解表示。决策对象是各车辆上的访问序列（含可选访问、取送配对与插入位置选择）；目标是在满足容量、时间窗、最大乘车时间、路径时长与规划时域等约束的前提下最小化路径相关成本（具体目标函数材料未展开说明）。关键约束包括：路径起止于仓库、车辆载重不超过容量、每条路径总时长受限、乘车时间限制与时间窗。信息假设为离线、确定的完整图与请求集合，环境为静态（材料未说明动态扰动情形）。",
+        "tags": [
+          "约束编程",
+          "序列变量",
+          "车辆路径问题",
+          "取送问题",
+          "大邻域搜索",
+          "插入式启发式",
+          "全局约束"
+        ],
+        "title_zh": "序列变量：面向路径与排序的约束编程计算域",
+        "uncertainty": "输入材料为全文节选，缺少具体实验数值、实例规模、训练与求解开销、消融与完整基线配置；标题作者单位与摘要之外的多处细节不完整，因此方法完整性判断与性能对比存在不确定性；相关性评分基于方法可迁移性而非论文直接研究生产调度。",
+        "why_recommended": "对研究生产调度与路径排序的博士生而言，本文提供了一种将“序列/顺序”作为一等决策对象的建模范式，其插入式搜索与LNS结合机制与调度问题中的工序插入、邻域构造高度同构，可作为学习辅助搜索与启发式设计的基础组件。同时论文对域表示、传播一致性与trail-based实现的形式化处理，有助于理解如何把智能搜索策略嵌入约束求解器并保持约束可行性。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-30T10:48:47.044695+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2510.09373v2",
+        "status": "not_found"
+      },
+      "final_score": 0.6521225785110026,
+      "provenance": {
+        "analyzed_at": "2026-09-30T02:50:33.789798Z",
+        "input_hash": "20e55c9f1b28b660619326b5bf836e3160e223347a2fdfe26ca5d412191f8b63",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Constraint Programming (CP) offers an intuitive, declarative framework for modeling Vehicle Routing Problems (VRP). While classical successor-based CP models can be adapted to handle optional visits or insertion-based heuristics, sequence variables provide a significantly more natural and elegant formulation for these requirements. Building upon our prior work that introduced the initial concept, the main contribution of this article is the complete semantic and operational formalization of sequence variables as a computational domain. Specifically, we formally define the sequence domain and its update operations, and detail the implementation and data structures required to integrate sequence variables into trail-based CP solvers. Furthermore, we introduce consistency levels for associated constraints on this domain alongside specialized global constraints tailored for routing problems. Finally, we demonstrate that sequence variables simplify problem modeling while achieving competitive computational performance on Pickup and Delivery Problems with and without Time Windows, the Dial-a-Ride Problem, and a Prize-Collecting Scheduling Problem.",
+          "authors": [
+            "Augustin Delecluse",
+            "Pierre Schaus",
+            "Pascal Van Hentenryck"
+          ],
+          "canonical_id": "2510.09373",
+          "categories": [
+            "cs.AI"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2510.09373",
+          "published_at": "2025-10-10T13:29:40Z",
+          "source": "arxiv",
+          "title": "Sequence Variables: A Constraint Programming Computational Domain for Routing and Sequencing",
+          "updated_at": "2026-09-29T08:30:46Z",
+          "url": "https://arxiv.org/abs/2510.09373",
+          "version": 2
+        },
+        "rank": 7,
+        "score": {
+          "base_score": 0.6129501427472774,
+          "exploration": 0.801178486938673,
+          "matched_terms": [
+            "constraint programming",
+            "vehicle routing"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.8264399477633748,
+          "topic": 0.4981735286879937
+        }
+      },
+      "tier": "deep_read"
+    },
     "arxiv:2510.10232:v2": {
       "analysis": {
         "analysis": "作者把自修改的采纳问题形式化为：候选相对现任在声明目标上的统计改进认证，并将每次打开的确认尝试按k索引，用轨迹级风险分配把误采纳概率约束在用户指定水平；证明在条件有效的确认检验与可预测、可求和的误差预算下，曾经接受非改进更新的概率有界。作者还用后验分解把合成实验中FWER的降低拆分为零效应承诺的减少与严格有害承诺的减少，并计算条件于候选效应和确认索引的确认功效诊断，用以解释弱效应接受率下降是证书功效与风险分配共同作用的结果。材料未说明作者是否使用问题结构分解、下界或图表示。",
@@ -1238,80 +1647,85 @@
     },
     "arxiv:2511.03448:v2": {
       "analysis": {
-        "analysis": "作者以综述方式分析双层优化：首先给出标准嵌套数学形式与术语，指出嵌套结构造成的非凸、不连通特性；然后按经典方法与进化方法两条路线梳理求解机制，涵盖单层化、下降法、惩罚函数和信赖域等经典机制，以及遗传算法、模拟退火等元启发式方法；针对下层问题评估昂贵的问题，分析用 Ψ-mapping 和 φ-mapping 的代理模型近似来降低嵌套评估开销；再分别讨论混合整数和多目标双层情形；最后通过双层分解和神经架构搜索两个新兴应用说明双层建模如何反哺一般优化与机器学习。",
+        "analysis": "材料未说明作者具体如何分析问题结构、分解方式或下界构造；摘要仅说明按双层问题的形式（线性、混合整数、单目标、多目标）以及求解方法（经典方法与进化方法）进行分类综述，并给出应用领域概览与两个近期应用示例。",
         "challenges": [
-          "嵌套结构导致可行域非凸且不连通，求解困难",
-          "下层问题必须对每个上层决策求解至最优，计算开销大",
-          "存在参数不确定性、变量不确定性和决策不确定性",
-          "混合整数与多目标双层问题进一步增加求解难度",
-          "传统数学规划方法依赖正则性条件，难以处理复杂双层问题",
-          "代理模型对复杂下层问题的全局映射近似困难"
+          "下层问题作为约束导致整体问题非凸、不可微，经典梯度方法难以直接应用",
+          "下层最优解可能不唯一或随上层变量不连续变化，影响可行性判断与算法收敛",
+          "混合整数与多目标形式会进一步增加求解复杂度",
+          "经典方法与进化方法在解质量、计算开销和可行性保证之间需要权衡",
+          "将双层优化用于神经网络架构搜索时，内外层训练的计算代价与近似误差需要控制"
         ],
         "corresponding_authors": [
           "证据未提供"
         ],
         "evidence": [
           {
-            "claim": "双层优化适用于需要预测其他利益相关者反应的层次化决策场景，并形成嵌套优化结构。",
+            "claim": "论文是一篇关于双层优化求解技术的综述，面向现实应用。",
+            "location": "abstract",
+            "quote": "This paper presents a comprehensive review of techniques proposed in the literature for solving bilevel optimization problems encountered in various real-life applications."
+          },
+          {
+            "claim": "双层优化建模的是分层决策场景，上层决策者需考虑利益相关者的可能响应。",
             "location": "abstract",
             "quote": "Bilevel optimization is an appropriate choice for hierarchical decision-making situations, where a decision-maker needs to consider a possible response from stakeholder(s) for each of its actions to achieve his own goals."
           },
           {
-            "claim": "论文综述了双层问题的多种形式，包括线性、混合整数、单目标和多目标。",
+            "claim": "双层问题在数学上表现为上层优化问题包含下层优化问题作为约束的嵌套结构。",
+            "location": "abstract",
+            "quote": "Mathematically, it leads to a nested optimization structure, in which a primary (leader's) optimization problem contains a secondary (follower's) optimization problem as a constraint."
+          },
+          {
+            "claim": "综述覆盖线性、混合整数、单目标和多目标等双层问题形式。",
             "location": "abstract",
             "quote": "Various forms of bilevel problems, including linear, mixed-integer, single-objective, and multiobjective, are covered."
           },
           {
-            "claim": "论文介绍了两类近期双层应用：用于一般优化问题的双层分解，以及机器学习中的神经架构搜索。",
-            "location": "abstract",
-            "quote": "two recent considerations of bilevel approach are introduced. The first application involves a bilevel decomposition approach for solving general optimization problems, and the second application involves Neural Architecture Search (NAS), which is a prime example of a bilevel optimization problem in the area of machine learning."
-          },
-          {
-            "claim": "论文从概要层面说明了综述涵盖经典和进化的双层求解方法，以及混合整数和多目标双层优化。",
+            "claim": "求解方法部分同时解释了经典方法和进化方法。",
             "location": "abstract",
             "quote": "For bilevel problem solving methods, various classical and evolutionary approaches are explained."
+          },
+          {
+            "claim": "论文介绍了双层分解用于求解一般优化问题，以及神经网络架构搜索作为双层优化在机器学习中的典型应用。",
+            "location": "abstract",
+            "quote": "The first application involves a bilevel decomposition approach for solving general optimization problems, and the second application involves Neural Architecture Search (NAS), which is a prime example of a bilevel optimization problem in the area of machine learning."
           }
         ],
         "experiments": [
-          "论文为综述，材料未提供作者自行开展的实验、基线、实例规模、解质量、运行时间或消融结果；摘要仅说明综述涵盖线性、混合整数、单目标、多目标双层问题及经典与进化方法。"
+          "本文为综述，摘要未给出具体实验、基线、实例规模、解质量、运行时间或消融结果；材料未说明是否有实验验证。"
         ],
         "first_affiliation": "证据未提供",
-        "insight": "双层问题的困难根源在于下层最优响应作为上层约束会破坏上层可行域的凸性与连通性；因此求解的关键在于如何处理这种嵌套依赖——要么通过单层化（如 KKT 条件）与下降、惩罚、信赖域等机制保持理论收敛性，要么借助进化算法与代理模型在复杂可行域中进行探索，或通过双层分解把一般优化问题转化为更易处理的子问题。",
+        "insight": "双层优化的核心困难在于下层问题作为约束时通常非凸、不可微，且下层最优解可能不唯一或随上层变量跳变，因此不能简单地把两层合并成单层问题求解。综述的价值在于把线性、混合整数、单目标和多目标等不同形式统一到“嵌套约束”这一视角下，并梳理经典方法与进化方法各自的适用条件；同时指出双层分解可以作为求解一般优化问题的框架，而神经网络架构搜索是将超参数/结构搜索与权重训练分层建模的典型实例，从而说明双层建模不仅是应用工具，也是一种可迁移的问题分解与学习信号组织方式。",
         "limitations": [
-          "作者在结论中指出双层问题的嵌套结构常导致非凸和不可连通的可行域，经典方法依赖正则性条件，混合整数与多目标双层问题仍需进一步关注；材料未给出针对具体应用的定量验证或统一基准。"
+          "材料未说明"
         ],
         "method": [
-          "给出双层优化标准定义：上层问题包含下层优化问题作为约束，记上层决策 x、下层决策 y，目标为求 (x*, y*)",
-          "经典方法路线：单层化约简（如 KKT 条件）、下降方法、惩罚函数方法、信赖域方法",
-          "进化方法路线：使用遗传算法、模拟退火等元启发式算法探索非凸、离散、不连续的可行域",
-          "混合方法：将进化算法与经典方法结合，处理特定类型的困难双层问题",
-          "代理模型机制：对 Ψ-mapping（由上层解映射到下层决策）和 φ-mapping（由上层解映射到下层最优值）进行近似，先求解少量上层解对应的下层问题，再用代理模型近似映射并迭代更新",
-          "针对混合整数双层优化和多目标双层优化分别讨论求解思路",
-          "新兴应用一：基于双层优化的分解方法求解一般单层优化问题",
-          "新兴应用二：神经架构搜索作为双层优化问题，包括基于信任域的 NAS 等变体"
+          "对双层优化问题进行形式化，指出其为一个主问题包含一个下级问题作为约束的嵌套优化结构",
+          "按问题形式分类覆盖线性、混合整数、单目标和多目标双层问题",
+          "梳理并解释已有的经典求解方法与进化求解方法",
+          "概述双层优化在各领域的应用",
+          "介绍双层分解方法用于求解一般优化问题",
+          "介绍神经网络架构搜索作为机器学习中双层优化的典型应用"
         ],
-        "motivation": "双层优化能够刻画现实中的层次化决策问题，但其嵌套结构导致可行域非凸甚至不连通，传统数学规划方法难以高效求解复杂双层问题，因此需要系统梳理经典方法与进化方法，并识别新的应用方向（如双层分解和神经架构搜索）以推动该领域发展。",
-        "primary_topic": "双层优化的求解方法、应用与新兴方向综述",
-        "relation_to_research": "该综述与智能优化和 AI4OR 有明确相邻关系：双层建模可用于生产调度中的层次决策（如上层产能/价格决策与下层车间调度响应）、分布式制造中的多主体协同，以及学习辅助搜索中的超参数或架构优化。论文中关于代理模型近似下层最优响应、进化算法与经典方法混合、混合整数与多目标双层求解的讨论，为生产调度中嵌套决策与约束可行性处理提供可迁移思路。但论文本身未涉及柔性作业车间、流水车间、生产运输协同或动态扰动等具体调度问题，迁移到这些场景需要重新定义上下层决策变量、目标与约束，并验证求解质量与公平计算预算，这属于推测而非作者结论。",
+        "motivation": "现实中的许多决策是层级化的：某一决策者的行动会引发其他利益相关者的响应，因此在优化自身目标时必须把对方的可能最优反应纳入考虑。这种结构自然形成嵌套优化，需要专门的建模与求解方法；同时双层优化在机器学习等领域出现了新的应用形式，例如神经网络架构搜索本身就是一个双层优化问题。",
+        "primary_topic": "双层优化问题的求解方法综述及其在分层决策、通用优化分解与神经网络架构搜索中的应用",
+        "relation_to_research": "该综述与智能优化和 AI4OR 的关系主要体现在方法论层面：双层优化为分层决策、超参数/结构搜索和问题分解提供了统一建模框架。其关于经典方法与进化方法的讨论可能对生产调度中的分层决策（如上层产能分配与下层车间调度）有迁移价值，但这属于推测。若要迁移到柔性作业车间、分布式制造或生产运输协同，需要解决下层调度问题的非凸、离散、多目标与动态扰动特性，并明确上下层信息假设、下层最优解唯一性与计算预算分配；这些条件在摘要中均未涉及。论文本身并未研究生产调度问题。",
         "relevance_score": 6,
-        "setting": "论文是一篇综述，研究对象为双层优化问题：上层（领导者）优化问题将下层（跟随者）优化问题作为约束，属于层次化决策场景。决策对象是上层决策向量 x 与下层响应向量 y 组成的解对；目标是寻找满足下层最优响应且使上层目标最优的解对 (x*, y*)。关键约束是下层问题必须对给定上层决策求解至最优。信息假设为领导者通常掌握跟随者策略的完整信息，而跟随者仅观察到领导者的决策后作出最优反应；论文还提到可能存在参数不确定性、变量不确定性和决策不确定性，环境可以是静态或动态，材料未进一步说明。",
+        "setting": "论文研究的是双层优化问题：一个上层（领导者）优化问题将下层（跟随者）优化问题作为约束嵌套其中，用于刻画领导者需预判利益相关者响应的分层决策场景。决策对象是嵌套结构中的上层与下层决策变量；目标是在下层问题最优响应条件下优化上层目标。摘要提到覆盖线性、混合整数、单目标和多目标等形式，但未说明具体约束类型、信息假设（如上下层是否共享全部信息）、下层是否唯一最优，也未说明环境是静态还是动态。",
         "tags": [
           "双层优化",
-          "嵌套优化",
+          "分层决策",
           "进化算法",
-          "经典数学规划",
-          "混合整数规划",
+          "混合整数优化",
           "多目标优化",
-          "代理模型",
-          "神经架构搜索",
-          "双层分解"
+          "神经网络架构搜索",
+          "问题分解"
         ],
         "title_zh": "双层优化综述：方法、新兴应用与近期进展",
-        "uncertainty": "本文是综述，且当前仅提供摘要和少量全文片段，缺少具体算法细节、实验数据和基准结果；相关性评分 6 是基于双层优化方法可能迁移至生产调度等层次决策场景的相邻关系，而非论文直接研究调度问题；第一单位和通讯作者信息在输入材料中未出现。",
-        "why_recommended": "可作为理解双层优化建模范式与求解方法谱系的入口文献，帮助判断生产调度或分布式制造中的层次化决策是否适合用双层模型刻画，并了解代理模型、进化算法与经典方法结合的思路，为探索学习辅助搜索与多目标约束优化提供参考。"
+        "uncertainty": "证据仅来自标题与摘要，无法确认综述覆盖的具体算法细节、实验对比、应用领域清单以及作者对局限性的讨论；第一单位、通讯作者和发表信息均未提供，因此上述判断在方法细节和相关性强度上存在不确定性。",
+        "why_recommended": "对于关注学习辅助搜索、进化算法与数学规划结合的读者，该综述可作为双层优化的入门地图：它把问题形式、经典与进化求解方法以及两个新兴应用（双层分解、神经网络架构搜索）放在同一框架下，有助于判断何时把分层决策建模为嵌套优化，以及进化方法在不可微嵌套结构中的切入点。但需注意它不直接处理生产调度或约束可行性验证，阅读时应重点提取建模视角而非照搬求解细节。"
       },
       "figure_gallery": {
-        "checked_at": "2026-09-29T11:06:50.221025+08:00",
+        "checked_at": "2026-09-30T10:48:47.044695+08:00",
         "figures": [
           {
             "caption": "A sketch of decision making mechanism in bilevel optimization problem",
@@ -1330,13 +1744,13 @@
         "html_url": "https://arxiv.org/html/2511.03448v2",
         "status": "available"
       },
-      "final_score": 0.6351126413478211,
+      "final_score": 0.5660118508364015,
       "provenance": {
-        "analyzed_at": "2026-09-29T03:08:20.437060Z",
-        "input_hash": "5d9e515b301d75a84e7cf02a0ec6c97a857244fadf7de9c4111e6e06b0a14e39",
+        "analyzed_at": "2026-09-30T02:50:49.372326Z",
+        "input_hash": "7debf6cb61994fc1ebc1d8be15799a969bd513ee5f2fe5455a2b95fd1e2a5235",
         "model": "deepseek-v4-flash",
         "prompt_version": "optimization-analysis-v1",
-        "reading_scope": "full_text"
+        "reading_scope": "abstract"
       },
       "ranked": {
         "paper": {
@@ -1358,21 +1772,21 @@
           "url": "https://arxiv.org/abs/2511.03448",
           "version": 2
         },
-        "rank": 5,
+        "rank": 17,
         "score": {
-          "base_score": 0.6638411660869473,
-          "exploration": 0.6649240570347664,
+          "base_score": 0.5382033651570935,
+          "exploration": 0.12342552343422668,
           "matched_terms": [
             "mixed integer",
             "mixed-integer"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.6834574230357092,
+          "recency": 0.5339480515220524,
           "topic": 0.6579271238307813
         }
       },
-      "tier": "deep_read"
+      "tier": "browse"
     },
     "arxiv:2511.19573:v2": {
       "analysis": {
@@ -2814,7 +3228,7 @@
         "why_recommended": "对研究学习与精确求解结合的读者，本文给出了一个清晰的接口设计范例：神经网络只需提出候选结构，符号求解器负责保证硬约束满足，并用新基准量化了 OOD 约束下的满足率差异（0% 对 64–86%）。这种“保证性约束交给求解器、分布建模交给网络”的分工可直接启发约束优化与调度中约束可行性与解质量难以兼得的痛点，且其 OOD 评测思路对评估算法泛化有参考价值。"
       },
       "figure_gallery": {
-        "checked_at": "2026-09-29T11:06:50.221025+08:00",
+        "checked_at": "2026-09-30T10:48:47.044695+08:00",
         "figures": [
           {
             "caption": "An overview of the NSGGM framework.",
@@ -2846,7 +3260,7 @@
         "html_url": "https://arxiv.org/html/2602.16954v3",
         "status": "available"
       },
-      "final_score": 0.5346233590168236,
+      "final_score": 0.4812078611126719,
       "provenance": {
         "analyzed_at": "2026-09-29T03:09:54.681701Z",
         "input_hash": "d234d753b217e4080aa6ccd875dbf51a7a983f0a3de03c2cf83ed9c3aafacafb",
@@ -2878,16 +3292,16 @@
           "url": "https://arxiv.org/abs/2602.16954",
           "version": 3
         },
-        "rank": 29,
+        "rank": 50,
         "score": {
-          "base_score": 0.4811333800305882,
-          "exploration": 0.7413743526345152,
+          "base_score": 0.38401429293213063,
+          "exploration": 0.37337955110258453,
           "matched_terms": [
             "constraint satisfaction"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.7595738352861997,
+          "recency": 0.5934136577766137,
           "topic": 0.3272244006421485
         }
       },
@@ -3930,7 +4344,7 @@
         "html_url": "https://arxiv.org/html/2605.05389v2",
         "status": "not_found"
       },
-      "final_score": 0.5807510538632501,
+      "final_score": 0.4805436294875458,
       "provenance": {
         "analyzed_at": "2026-09-29T03:09:11.576847Z",
         "input_hash": "b2fa115653db31d26282463a5f5d60eb9788b4012a70232359b0747765e527b6",
@@ -3960,21 +4374,21 @@
           "url": "https://arxiv.org/abs/2605.05389",
           "version": 2
         },
-        "rank": 16,
+        "rank": 52,
         "score": {
-          "base_score": 0.5650019161150002,
-          "exploration": 0.8527984943164534,
+          "base_score": 0.3828065990682651,
+          "exploration": 0.03618481969931344,
           "matched_terms": [
             "vehicle routing",
             "reinforcement learning"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.847802391086339,
+          "recency": 0.662341821946436,
           "topic": 0.40197418663705947
         }
       },
-      "tier": "explore"
+      "tier": "browse"
     },
     "arxiv:2605.06332:v2": {
       "analysis": {
@@ -4049,7 +4463,7 @@
         "why_recommended": "该论文与当前研究方向中的学习辅助搜索和神经组合优化直接相关，其核心机制——将确定性一步后果从隐藏匹配中解耦出来，并按候选级与可行集级角色分别使用——为在约束优化问题中设计解码器提供了可借鉴的结构性思路。尤其值得关注的是它在超出训练规模时优势更明显的现象，这与生产调度等领域对跨规模泛化的关切一致；虽然论文未涉及生产调度，但方法机制具有潜在的迁移价值。"
       },
       "figure_gallery": {
-        "checked_at": "2026-09-29T11:06:50.221025+08:00",
+        "checked_at": "2026-09-30T10:48:47.044695+08:00",
         "figures": [
           {
             "caption": "LINC decoder architecture: explicit local-consequence computation is separated from learned state-dependent scoring, with feasible-set summaries modulating the comparator and the retained global matching path.",
@@ -4081,7 +4495,7 @@
         "html_url": "https://arxiv.org/html/2605.06332v2",
         "status": "available"
       },
-      "final_score": 0.5825577460514937,
+      "final_score": 0.5466687746401292,
       "provenance": {
         "analyzed_at": "2026-09-29T03:09:03.958068Z",
         "input_hash": "8e97a8120a1eaff9647b58bc83f045b5dfda803660ff9561479b819bb0a71a34",
@@ -4109,18 +4523,139 @@
           "url": "https://arxiv.org/abs/2605.06332",
           "version": 2
         },
-        "rank": 15,
+        "rank": 26,
         "score": {
-          "base_score": 0.5682868110027156,
-          "exploration": 0.7580479741559909,
+          "base_score": 0.5030341357093258,
+          "exploration": 0.5492037266647629,
           "matched_terms": [
             "vehicle routing",
             "traveling salesman"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.6859080933704529,
+          "recency": 0.5358626267480366,
           "topic": 0.48046325513956906
+        }
+      },
+      "tier": "browse"
+    },
+    "arxiv:2605.06585:v2": {
+      "analysis": {
+        "analysis": "作者利用性能估计问题（PEP）这一凸优化算法分析的精确框架，将其扩展为 Wasserstein 分布式鲁棒版本，从而把分布不确定性显式建模进算法设计的优化目标中。通过分析鲁棒半径对目标函数的影响，作者证明该框架在极限情况下分别回退到经典 L2O 和 PEP 最坏情况设计，并给出高概率泛化界，刻画了样本内 L2O 最优值、样本量与最坏情况 PEP 界之间的关系。",
+        "challenges": [
+          "外层超参数优化与内层半定规划嵌套，需对内层 SDP 解进行微分，计算复杂",
+          "Wasserstein 分布式鲁棒 PEP 的精确刻画与可解性",
+          "在有限样本下同时获得强样本外性能与可证明鲁棒性保证",
+          "平滑地从 L2O 极端过渡到 PEP 最坏情况极端"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文提出对一阶方法超参数学习的分布式鲁棒方法，统一 L2O 与 PEP 最坏情况设计",
+            "location": "abstract",
+            "quote": "We propose a distributionally robust approach to learning hyperparameters (e.g., step sizes and momentum coefficients) for first-order methods in convex optimization."
+          },
+          {
+            "claim": "框架在鲁棒半径两端分别退化为经典 L2O 与 PEP 最坏情况算法设计",
+            "location": "abstract",
+            "quote": "As the robustness radius vanishes, we recover classical learning to optimize (L2O), and as it grows we recover the PEP worst-case algorithm design problem."
+          },
+          {
+            "claim": "使用随机梯度下降并对内层半定规划解进行微分",
+            "location": "abstract",
+            "quote": "We solve the resulting problem with stochastic gradient descent, differentiating through the solution of an inner semidefinite program at each step."
+          },
+          {
+            "claim": "给出高概率泛化界，真实风险不超过样本内 L2O 最优值加上随样本量收缩的松弛，且不劣于最坏情况 PEP 界",
+            "location": "abstract",
+            "quote": "We prove high-probability bounds showing that the true risk of the learned algorithm is at most the in-sample L2O optimum plus a slack that shrinks with the sample size, and is no worse than the worst-case PEP bound."
+          },
+          {
+            "claim": "在 logistic regression、LASSO 和线性规划上取得强样本外表现并优于基线",
+            "location": "abstract",
+            "quote": "On logistic regression, LASSO, and linear programming examples, our learned algorithms achieve strong out-of-sample performance with certifiable robustness, outperforming both worst-case optimal and vanilla L2O baselines."
+          }
+        ],
+        "experiments": [
+          "在 logistic regression、LASSO 与线性规划示例上进行实验",
+          "所学习算法取得强样本外性能并具有可证明鲁棒性",
+          "优于最坏情况最优基线与原始 L2O 基线",
+          "材料未提供具体实例规模、运行时间、训练开销与消融等数字"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "分布式鲁棒半径提供了一个从经典 L2O 到最坏情况 PEP 的统一插值：半径趋近 0 时退化为经验 L2O，半径增大时退化为 PEP 最坏情况设计。因此学习的算法既能有强样本外表现，又能获得不低于 PEP 最坏情况界的可证明保证，且真正风险被样本内 L2O 最优值加上随样本量收缩的松弛项所上界。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "构建 Wasserstein 分布式鲁棒版本的性能估计问题（PEP），决策变量为一阶方法的超参数（步长、动量系数）",
+          "将分布式鲁棒 PEP 统一框架化：鲁棒半径趋近 0 时退化为经典 L2O，鲁棒半径增大时退化为 PEP 最坏情况算法设计",
+          "使用随机梯度下降求解外层问题，并在每一步通过微分内层半定规划（SDP）的解来获得梯度",
+          "证明高概率泛化界：真实风险不超过样本内 L2O 最优值加上随样本量收缩的松弛项，且不劣于最坏情况 PEP 界"
+        ],
+        "motivation": "经典 L2O 在训练分布上表现好，但样本外鲁棒性无法保证；而 PEP 的最坏情况算法设计过于保守。作者希望在两者之间建立一个连续可调的谱系，用分布式鲁棒刻画分布漂移，从而在学习效率与鲁棒性之间取得平衡。",
+        "primary_topic": "学习型一阶优化算法的超参数学习与鲁棒性",
+        "relation_to_research": "本文属于 AI4OR 中“学习辅助优化”的算法机制研究：它用学习方式为一阶方法自动设计超参数，并用分布式鲁棒与 PEP 提供可证明保证，与关注约束可行性、求解质量、公平计算预算与泛化的研究关切直接相关。与生产调度/柔性作业车间等组合优化的迁移为推测：需要把 PEP 或分布式鲁棒学习框架扩展到组合或混合整数调度问题、定义合适的问题实例分布与性能度量、并处理内层问题不再是 SDP 而可能是 MILP 或组合结构时的可解性与微分。",
+        "relevance_score": 6,
+        "setting": "研究在凸优化问题族上为一阶方法（如步长与动量系数）自动学习超参数的问题：给定一组问题实例数据集，目标是最小化性能估计问题（PEP）的 Wasserstein 分布式鲁棒版本，使学到的算法在样本外实例上具有可证明的鲁棒性。决策对象是超参数（步长、动量系数），关键约束是子问题为半定规划，信息假设为存在有限问题实例数据集，环境为静态（非动态扰动）。",
+        "tags": [
+          "分布式鲁棒优化",
+          "Learning to Optimize",
+          "性能估计问题",
+          "一阶方法",
+          "半定规划",
+          "凸优化",
+          "超参数学习",
+          "Wasserstein 分布鲁棒"
+        ],
+        "title_zh": "学习分布式鲁棒的一阶凸优化方法",
+        "uncertainty": "仅有标题与摘要，缺少全文信息，无法确认实验规模、训练开销、SDP 求解可行性细节以及与调度问题的直接关联；相关性评分基于摘要中“学习优化算法设计与鲁棒泛化保证”的邻近性，而非直接的生产调度应用。",
+        "why_recommended": "该工作展示了如何把学习型优化算法的泛化与鲁棒性纳入统一的理论框架，并给出可证明的样本复杂度界与最坏情况保证，对于关心学习辅助搜索、算法超参数自动配置、公平比较学习型与最坏情况方法的研究者有直接方法借鉴价值。其“鲁棒半径插值 L2O 与 PEP”的思路，可启发生产调度中学习型求解器在分布漂移与动态扰动下的鲁棒设计。"
+      },
+      "figure_gallery": null,
+      "final_score": 0.555260157202722,
+      "provenance": {
+        "analyzed_at": "2026-09-30T02:51:22.670437Z",
+        "input_hash": "abaabd1ba535e5d68915f689f8d0d1a60123e408c88d05526a99f43ca3786077",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "We propose a distributionally robust approach to learning hyperparameters (e.g., step sizes and momentum coefficients) for first-order methods in convex optimization. Given a dataset of problem instances, we minimize a Wasserstein distributionally robust version of the performance estimation problem (PEP). Our framework unifies two extremes. As the robustness radius vanishes, we recover classical learning to optimize (L2O), and as it grows we recover the PEP worst-case algorithm design problem. We solve the resulting problem with stochastic gradient descent, differentiating through the solution of an inner semidefinite program at each step. We prove high-probability bounds showing that the true risk of the learned algorithm is at most the in-sample L2O optimum plus a slack that shrinks with the sample size, and is no worse than the worst-case PEP bound. On logistic regression, LASSO, and linear programming examples, our learned algorithms achieve strong out-of-sample performance with certifiable robustness, outperforming both worst-case optimal and vanilla L2O baselines.",
+          "authors": [
+            "Vinit Ranjan",
+            "Jisun Park",
+            "Bartolomeo Stellato"
+          ],
+          "canonical_id": "2605.06585",
+          "categories": [
+            "cs.LG",
+            "math.OC"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2605.06585",
+          "published_at": "2026-05-07T17:14:15Z",
+          "source": "arxiv",
+          "title": "Learning Distributionally Robust First-Order Methods for Convex Optimization",
+          "updated_at": "2026-09-29T04:14:11Z",
+          "url": "https://arxiv.org/abs/2605.06585",
+          "version": 2
+        },
+        "rank": 28,
+        "score": {
+          "base_score": 0.5186548312776763,
+          "exploration": 0.7735335665102561,
+          "matched_terms": [
+            "learning to optimize"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.7904335074351957,
+          "topic": 0.3681812851662193
         }
       },
       "tier": "explore"
@@ -4216,7 +4751,7 @@
         "why_recommended": "推荐给关注学习辅助组合优化、约束可行性、公平计算预算与跨规模泛化的研究者：论文展示了如何用对称性约束的网络与非自回归预测替代自回归构造，并用可微最优传输层显式处理容量约束；其在训练规模外无需重训练的泛化结果与嵌入插值处理新位置的做法，对生产调度中固定产线、需求变化场景下的可复用学习表示有直接借鉴意义。"
       },
       "figure_gallery": {
-        "checked_at": "2026-09-29T11:06:50.221025+08:00",
+        "checked_at": "2026-09-30T10:48:47.044695+08:00",
         "figures": [
           {
             "caption": "Histogram detailing the distribution of optimality gaps for Neural CFRS (exact) on the N = 100 N=100 dataset. The distribution highlights the 174 instances (left of 0 % 0\\% gap) where the proposed method successfully outperformed the LKH3 baseline. Notably, for all these instances, K min K_{\\text{min}} accurately matches the ground truth K K .",
@@ -4235,7 +4770,7 @@
         "html_url": "https://arxiv.org/html/2605.09301v2",
         "status": "available"
       },
-      "final_score": 0.6003043344694156,
+      "final_score": 0.5936395690202456,
       "provenance": {
         "analyzed_at": "2026-09-29T03:09:50.988479Z",
         "input_hash": "c5f7ff6fcc2a447caf5135b75cbfce433ed40a547d9a418c1330fafac07a018f",
@@ -4264,10 +4799,10 @@
           "url": "https://arxiv.org/abs/2605.09301",
           "version": 2
         },
-        "rank": 23,
+        "rank": 24,
         "score": {
-          "base_score": 0.5187351535807555,
-          "exploration": 0.28795343108869265,
+          "base_score": 0.5066173982186283,
+          "exploration": 0.37685956838921886,
           "matched_terms": [
             "vehicle routing",
             "traveling salesman",
@@ -4275,7 +4810,7 @@
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.7110884930182234,
+          "recency": 0.5555347012259974,
           "topic": 0.529714691596354
         }
       },
@@ -4283,88 +4818,77 @@
     },
     "arxiv:2605.14141:v3": {
       "analysis": {
-        "analysis": "作者将平均时间复杂度的算法设计问题形式化为统计学习理论框架下的经验风险最小化：在程序类 A 中寻找使期望风险 R_D(A)（含运行时间与正确性）最小的可执行求解器。通过引入分布遗忘复杂度 C_0、分布已知复杂度 C_known 与样本条件复杂度 C_m 三个量，分析样本访问如何在分布遗忘与分布知情算法设计之间插值，并给出何时离线专用化成本能被部署阶段更低的运行时间回收。作者进一步将求解器提示形式化为该分布可处理性的充分条件，用于指导从样本中提取结构信息。",
+        "analysis": "作者以分布感知编程的形式化框架分析问题，将样本访问视为在分布无关算法设计与分布知情算法设计之间的插值，并给出离线专用化成本被部署期更低成本回收的条件分析；方法层面通过 LLM 智能体提出结构假设、分析训练实例并合成专用求解代码来实例化该框架，材料未说明更细的问题结构分解、下界或图表示利用方式。",
         "challenges": [
-          "在未知部署分布下，如何从有限样本中识别可复用的结构假设，并保证合成程序的解质量与运行时间泛化到新实例",
-          "程序类有界时的样本复杂度刻画，以及离线合成成本与部署收益之间的摊销条件",
-          "大语言模型智能体提出的结构假设与合成代码需保证在外部分布和竞争求解器上的有效性与可行性",
-          "重复合成运行中解质量相对稳定但运行时间波动较大，程序搜索会产出精度相似但计算量不同的求解器",
-          "专用化在分布漂移下可能退化，且该方法并未在所有基线上占优"
+          "部署分布未知，只能通过样本近似，需要样本量到算法质量的插值分析",
+          "生成的求解器代码必须在未见实例上同时保证解质量与运行时泛化",
+          "需界定离线专用化开销何时被部署期节省回收",
+          "在多个结构不同的组合优化分布上同时保持高质量与低运行时",
+          "与专用竞赛求解器对比时需在更少运行时下保持竞争力"
         ],
         "corresponding_authors": [
           "证据未提供"
         ],
         "evidence": [
           {
-            "claim": "论文将问题形式化为分布感知编程：用未知部署分布的样本生成可执行求解器代码，且质量与运行时间泛化到新实例",
+            "claim": "论文形式化分布感知编程，用未知部署分布的样本产出可执行求解器代码，其质量与运行时需泛化到新实例",
             "location": "abstract",
             "quote": "We formalize this as \\emph{distribution-aware programming}: samples from an unknown deployment distribution are used to produce executable solver code whose quality and runtime generalize to new instances."
           },
           {
-            "claim": "系统使用大语言模型智能体提出结构假设、分析训练实例并合成专用求解器代码，且大语言模型仅在部署前使用",
+            "claim": "论文给出样本访问在分布无关与分布知情算法设计之间插值的分析，以及离线专用化成本何时被部署期更低成本回收",
+            "location": "abstract",
+            "quote": "A simple analysis shows how sample access interpolates between distribution-oblivious and distribution-informed algorithm design, and when the offline cost of specialization is recovered through lower deployment cost."
+          },
+          {
+            "claim": "方法实例化为一个 LLM 智能体，提出结构假设、分析训练实例并合成专用求解器代码，且 LLM 仅在部署前使用",
             "location": "abstract",
             "quote": "We instantiate this framework with an LLM agent that proposes structural hypotheses, analyzes training instances, and synthesizes specialized solver code; the LLM is used only before deployment."
           },
           {
-            "claim": "在PACE基准上方法保持竞争力且运行时间大幅降低",
+            "claim": "在 21 个结构化组合优化分布上，合成求解器质量高且常以更小的分布专用计算替代通用搜索",
+            "location": "abstract",
+            "quote": "Across \\(21\\) structured combinatorial-optimization distributions, the synthesized solvers achieve high quality while often replacing generic search or optimization with smaller distribution-specific computations."
+          },
+          {
+            "claim": "与公开 PACE 竞赛求解器相比保持竞争力，同时运行时大幅减少，并给出三个具体赛道的倍数",
             "location": "abstract",
             "quote": "Against released PACE competition solvers, our method remains competitive while using substantially less runtime: \\(75\\)--\\(125\\times\\) less on PACE 2025 Dominating Set, \\(80\\)--\\(96\\times\\) less on Hitting Set, and more than \\(34{,}000\\times\\) less on the PACE 2024 OCM exact track."
-          },
-          {
-            "claim": "作者明确列出若干局限，包括合成成本需摊销、分布漂移下专用化可能退化、方法并非在所有基线上占优",
-            "location": "supplied_full_text",
-            "quote": "Several limitations remain. Synthesis cost must be amortized over future instances, specialization may degrade under distribution shift, and the method does not dominate every baseline."
-          },
-          {
-            "claim": "作者提出求解器提示作为该分布问题可处理性的充分条件",
-            "location": "supplied_full_text",
-            "quote": "We formalize solver hints as a sufficient condition for tractability of our distribution of problems."
-          },
-          {
-            "claim": "大语言模型仅在部署前使用，部署阶段无需模型推理",
-            "location": "supplied_full_text",
-            "quote": "The resulting solver requires no LLM inference at deployment."
           }
         ],
         "experiments": [
-          "在21个结构化组合优化分布上，合成求解器达到高质量，且常以更小的分布特定计算替代通用搜索或优化",
-          "与发布的PACE竞赛求解器相比，方法在保持竞争力的同时运行时间大幅降低：PACE 2025 Dominating Set上少75至125倍，Hitting Set上少80至96倍，PACE 2024 OCM精确赛道少超过34,000倍",
-          "基线包括问题特定启发式（如DSATUR及贪心变体）、精确或认证方法（如DSATUR分支定界、EvalMaxSAT、MaxHS等）、通用求解器Gurobi（10秒单线程预算，可能返回可行解但未证明最优），以及每类一个架构匹配的学习基线（图神经网络用于着色、MIS、MDS；RUN-CSP风格模型用于MaxSAT；注意力模型用于TSP；学习型装箱方法用于MDKP与Packing LP）",
-          "基线还包括一次性Codex、一次性Claude Code和5取优的Gemma 4等大语言模型基线；所有基线使用相同公开实例协议，且不获得隐藏分布族或生成规则的信息",
-          "在四个PACE任务上，一次性Codex与Claude Code合成的求解器归一化质量略高，但本方法在三个任务上快得多，例外是Codex合成的Dominating Set求解器",
-          "重复合成运行中解质量相对稳定但运行时间波动更大"
+          "在 21 个结构化的组合优化分布上，合成的求解器取得高质量，并常常用更小的分布专用计算替代通用搜索或优化",
+          "与公开的 PACE 竞赛求解器相比保持竞争力，同时运行时显著更少：PACE 2025 Dominating Set 上少 75–125 倍，Hitting Set 上少 80–96 倍，PACE 2024 OCM 精确赛道少超过 34,000 倍",
+          "材料未说明具体基线细节、实例规模、约束可行性验证、训练开销、公平计算预算口径、泛化测试和消融实验"
         ],
-        "first_affiliation": "Texas A&M University",
-        "insight": "该工作的核心洞察是：将算法设计本身视为一个在程序假设类上的经验风险最小化问题，风险不仅包含解质量还包含运行时间。当学习到的假设是可执行程序时，运行时间就成为泛化目标的一部分，因此可以用分布样本训练出针对该分布的更廉价求解过程。通过定义‘求解器提示’作为该分布问题可处理性的充分条件，并刻画无分布信息、有分布信息与样本条件三种复杂度之间的关系，作者论证了样本量增大时样本条件复杂度趋近分布已知最优，且离线专用化成本可通过部署阶段降低的运行时间摊销。",
+        "first_affiliation": "证据未提供",
+        "insight": "贡献有效性来自一个关键判断：真正可迁移的不是单次解或参数，而是分布层面的结构假设与由此合成的专用求解代码。因为通用搜索被替换为针对分布结构的更小计算，运行时大幅下降；而 LLM 只在部署前做假设提出、训练实例分析和代码合成，避免了部署期的模型推理开销，使专用化的离线成本可以被重复部署中的运行节省所摊销。",
         "limitations": [
-          "合成成本必须在未来实例上摊销",
-          "专用化在分布漂移下可能退化",
-          "方法并未在所有基线上占优",
-          "重复合成运行中解质量相对稳定但运行时间波动较大，程序搜索会产出精度相似但计算量不同的求解器",
-          "对分布漂移的鲁棒性与合成变异性是重要的未来工作"
+          "材料未说明"
         ],
         "method": [
-          "在大语言模型智能体内，先由模型提出针对分布的结构假设，再由分析程序在训练实例上度量支持该假设的证据，最后合成并精炼部署求解器代码",
-          "大语言模型只在部署前使用，部署阶段运行的是合成出的可执行求解器，不调用任何模型推理",
-          "将样本实例转化为可复用摘要，并据此条件化求解器代码的生成",
-          "通过反复合成与完善获得针对该分布的专用求解器"
+          "形式化分布感知编程：从同一未知部署分布抽取样本，产出可执行求解器代码，其质量与运行时需泛化到新实例",
+          "给出样本访问如何在分布无关与分布知情算法设计之间插值的分析，并刻画离线专用化成本何时被部署期更低成本回收",
+          "用一个 LLM 智能体实例化框架：提出结构假设、分析训练实例、合成专用求解器代码",
+          "LLM 仅在部署前使用，部署期执行的是合成出的专用求解器代码，而非 LLM 推理"
         ],
-        "motivation": "优化与理论计算机科学通常关注最坏情况复杂度，但许多实际问题反复接收来自特定分布或子族的实例。此设定下，平均时间复杂度的设计问题可以借助统计学习理论来刻画：在算法假设类中寻找期望运行时间与正确性风险最小的可执行过程。作者因此提出从经验中学习专用求解器，以减少重复求解的累计计算开销。",
-        "primary_topic": "利用大语言模型在部署前从问题分布样本中合成专用求解器代码",
-        "relation_to_research": "论文事实：该工作将大语言模型智能体用于在部署前从分布样本合成专用求解器代码，属于学习辅助的算法设计与程序合成方向，与‘神经/学习辅助搜索’和‘AI4OR’中利用学习改进求解过程的思路互补但侧重点不同——学习的产物是求解器本身而非求解过程中的预测或分支。迁移设想（推测）：若将其迁移到生产调度，需要满足的前提包括：(1) 调度问题存在反复出现的实例分布（如柔性作业车间或流水车间的订单结构、工时分布）；(2) 存在可度量的结构假设与可合成的求解器代码模板（如针对特定约束结构的构造式或局部搜索规则）；(3) 离线合成所需的样本调度实例与计算预算可获得；(4) 分布漂移（如动态扰动）下的鲁棒性需要额外机制。迁移到动态扰动或多目标生产调度时，还需验证合成求解器在约束可行性与能效目标上的泛化能力，这些均为推测，未在作者实验中验证。",
+        "motivation": "许多优化问题被反复求解，实例来自同一底层分布，通用求解器每次都从头搜索，忽略了分布中可复用的结构规律；作者希望把这种从经验中学习专用求解方式的直觉形式化，并回答样本访问如何插值于分布无关与分布感知的算法设计之间、离线专用化的代价何时能通过更低的部署成本回收。",
+        "primary_topic": "从实例分布中学习专用求解器代码的分布感知编程框架",
+        "relation_to_research": "论文事实：该工作直接面向组合优化的求解器自动生成，用 LLM 智能体在部署前从分布样本中合成专用求解代码，并在多个 PACE 类分布上以更少运行时取得有竞争力的解质量。与智能优化、生产调度和 AI4OR 的关系：其分布感知编程范式可迁移到需要反复求解同一类调度或排产问题的场景，例如固定结构下的柔性作业车间或流水车间，从历史实例中学习专用求解策略以替代通用搜索。迁移设想（推测）：要在生产调度中复现该收益，需要具备可采样的历史实例分布、可表达调度约束与目标的求解器代码合成接口，并验证在动态扰动、多目标与能效约束下合成求解器的可行性与泛化性；论文未涉及调度问题、动态环境或约束编程的具体实现细节。",
         "relevance_score": 8,
-        "setting": "研究问题为：在反复接收来自同一未知部署分布 D 的组合优化实例时，如何在部署前利用少量样本实例合成可执行求解器代码，使其在新实例上的解质量与运行时间都能泛化。决策对象是求解器程序本身（而非逐实例的求解动作）；目标是最小化在所有未来实例上的累计计算量（期望运行时间与正确性构成的期望风险）；关键约束是样本来自未知分布、程序类有界、离线合成成本需通过部署阶段降低的运行时间摊销；信息假设是学习器仅能访问样本 S ~ D^m，不知道 D 本身；环境为部署前后分离的静态分布设定，作者在讨论中指出分布漂移下专用化可能退化，但未将该动态性纳入实验。",
+        "setting": "研究问题是在同一未知部署分布下反复求解同类优化问题时，如何利用历史实例经验生成比通用求解器更廉价的可执行求解器代码；决策对象是求解器代码本身（结构假设与专用算法），目标是在保证解质量与运行时对新实例泛化的前提下降低部署期计算开销，关键约束包括只能访问分布样本、LLM仅在部署前使用、代码质量与运行时需泛化到未见实例；环境为静态离线训练加在线部署的设定，部署分布未知。材料未说明是否涉及动态扰动、多目标或具体生产场景。",
         "tags": [
-          "大模型智能体",
-          "程序合成",
+          "AI4OR",
+          "LLM智能体",
+          "专用求解器合成",
           "组合优化",
-          "分布感知编程",
-          "求解器专用化",
-          "统计学习理论"
+          "分布泛化",
+          "PACE竞赛",
+          "求解器自动生成"
         ],
         "title_zh": "分布感知编程：从经验中学习专用求解器",
-        "uncertainty": "输入材料为全文节选，缺少完整的方法细节、21个分布的完整清单、训练样本量、合成时间开销的具体数值以及统计显著性检验；摘要与节选中未提供通讯作者信息；运行时间倍数的具体实验设置和公平预算对齐细节未完整给出；因此对方法可复现性和实验结论的稳健性存在一定不确定性。",
-        "why_recommended": "该论文提出了一种与主流‘将学习模型嵌入求解循环’不同的范式：把大语言模型作为部署前的求解器工程师，把分布知识编译为可执行程序，从而在部署时获得远低于通用求解器的运行时间。其样本复杂度分析和求解器提示概念对理解‘何时值得为特定问题分布做专用化’具有理论价值；其实验在PACE竞赛基准上与专用求解器对比并报告了数量级的运行时间优势，对关注学习辅助搜索、自动建模与求解器自动设计的博士研究者具有直接的机制启发和方法迁移潜力。"
+        "uncertainty": "仅依据标题与摘要，未提供全文；无法核验具体基线设置、实例规模、训练与推理开销、约束可行性、公平计算预算口径以及消融与泛化实验；相关性评分基于其分布感知求解器合成范式对调度与 AI4OR 的可迁移性，而非论文直接研究生产调度问题。",
+        "why_recommended": "该工作为学习辅助求解提供了与强化学习、图神经网络互补的思路：不直接学习策略或值函数，而是用 LLM 在离线阶段合成专用求解代码。其样本访问插值分析与离线/在线成本权衡，对关注公平计算预算、泛化和可复现性的生产调度研究者具有直接参考价值，特别是需要反复求解同一分布实例的场景；同时它在 PACE 竞赛上的运行时对比提供了一个较清晰的专用化收益边界。"
       },
       "figure_gallery": {
         "checked_at": "2026-09-29T11:06:50.221025+08:00",
@@ -4372,13 +4896,13 @@
         "html_url": "https://arxiv.org/html/2605.14141v3",
         "status": "not_found"
       },
-      "final_score": 0.6942072795584168,
+      "final_score": 0.6500101738552085,
       "provenance": {
-        "analyzed_at": "2026-09-29T03:08:32.971985Z",
-        "input_hash": "67a3dd2eb07536c1228d8a7a2af400466a1713e697fa0acffe693b10adfe7f5c",
+        "analyzed_at": "2026-09-30T02:50:56.833688Z",
+        "input_hash": "10ea6a44dce5b7f4b2da752268b171d64836f2d06502eb2e92fb120d254d541a",
         "model": "deepseek-v4-flash",
         "prompt_version": "optimization-analysis-v1",
-        "reading_scope": "full_text"
+        "reading_scope": "abstract"
       },
       "ranked": {
         "paper": {
@@ -4402,20 +4926,20 @@
           "url": "https://arxiv.org/abs/2605.14141",
           "version": 3
         },
-        "rank": 8,
+        "rank": 19,
         "score": {
-          "base_score": 0.6076495991971212,
-          "exploration": 0.9160280821283483,
+          "base_score": 0.5272912251912881,
+          "exploration": 0.6491706216960456,
           "matched_terms": [
             "combinatorial optimization"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.8005029133552835,
+          "recency": 0.6253893167555044,
           "topic": 0.46444051431443845
         }
       },
-      "tier": "deep_read"
+      "tier": "browse"
     },
     "arxiv:2605.24437:v2": {
       "analysis": {
@@ -18415,7 +18939,7 @@
         "why_recommended": "该工作直接处理非凸约束优化层的可微性、约束满足和前后向开销问题，其增广拉格朗日外层加一阶内层求解器加无矩阵灵敏度反向的结构，对研究学习与数学规划结合、以及把优化层嵌入调度或控制流水线的 AI4OR 研究者具有方法层面的参考价值；但本文不属于生产调度本身，相关性主要来自可迁移的求解与反向机制。"
       },
       "figure_gallery": {
-        "checked_at": "2026-09-29T11:06:50.221025+08:00",
+        "checked_at": "2026-09-30T10:48:47.044695+08:00",
         "figures": [
           {
             "caption": "Overview of the lapanda framework.",
@@ -18434,7 +18958,7 @@
         "html_url": "https://arxiv.org/html/2609.33630v1",
         "status": "available"
       },
-      "final_score": 0.6505935845737407,
+      "final_score": 0.5995551006726373,
       "provenance": {
         "analyzed_at": "2026-09-29T03:09:07.485877Z",
         "input_hash": "dc91cb969929844612cf2c2aebc050d312f1a85ed0681a6a9cac9c19e486956e",
@@ -18468,17 +18992,17 @@
           "url": "https://arxiv.org/abs/2609.33630",
           "version": 1
         },
-        "rank": 13,
+        "rank": 31,
         "score": {
-          "base_score": 0.6101701537704375,
-          "exploration": 0.5010494680334417,
+          "base_score": 0.5173729103138859,
+          "exploration": 0.14053436410143896,
           "matched_terms": [
             "mathematical optimization",
             "constraint satisfaction"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.6851047656153244,
+          "recency": 0.5352350305362943,
           "topic": 0.6199376034538969
         }
       },
@@ -18558,7 +19082,7 @@
         "why_recommended": "推荐给关注大模型智能体、学习辅助搜索和黑盒优化的研究者阅读。它展示了一种不微调语言模型、而是通过隐藏状态低维干预空间连接离散提议与连续优化的思路，并给出覆盖与插值控制最优分数的理论视角。虽然不直接研究生产调度，但其“学习连续搜索域 + 外部黑盒评分 + 自适应搜索”的框架对 AI4OR 中需要平衡探索与约束可行性的问题具有概念迁移价值。"
       },
       "figure_gallery": {
-        "checked_at": "2026-09-29T11:06:50.221025+08:00",
+        "checked_at": "2026-09-30T10:48:47.044695+08:00",
         "figures": [
           {
             "caption": "Interpolation in the learned code space. PCA of the 3072 3072 Semantle training posterior means. Color denotes interpolation weight t t .",
@@ -18577,7 +19101,7 @@
         "html_url": "https://arxiv.org/html/2609.33722v1",
         "status": "available"
       },
-      "final_score": 0.596468444336467,
+      "final_score": 0.5872401113039389,
       "provenance": {
         "analyzed_at": "2026-09-29T03:08:50.569196Z",
         "input_hash": "b4afa1f050e5644753de5c1ab9ad1ca6089bfb3f4b78c17f66072267cb9613fd",
@@ -18612,16 +19136,16 @@
           "url": "https://arxiv.org/abs/2609.33722",
           "version": 1
         },
-        "rank": 12,
+        "rank": 11,
         "score": {
-          "base_score": 0.593578989702667,
-          "exploration": 0.774202693507055,
+          "base_score": 0.5768002023707981,
+          "exploration": 0.8343325531243774,
           "matched_terms": [
             "black-box optimization"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.6967317498576131,
+          "recency": 0.5443185599150121,
           "topic": 0.5125
         }
       },
@@ -18717,7 +19241,7 @@
         "html_url": "https://arxiv.org/html/2609.33879v1",
         "status": "not_found"
       },
-      "final_score": 0.6862299939212471,
+      "final_score": 0.6868723314419088,
       "provenance": {
         "analyzed_at": "2026-09-29T03:08:54.521855Z",
         "input_hash": "bf1831c91888b7bb538be742dba1c0d6b21c8b3cdeb2ae06c3355683e0cf7ad7",
@@ -18749,17 +19273,17 @@
           "url": "https://arxiv.org/abs/2609.33879",
           "version": 1
         },
-        "rank": 6,
+        "rank": 4,
         "score": {
-          "base_score": 0.6749636253113583,
-          "exploration": 0.7310416024561067,
+          "base_score": 0.6761315117125615,
+          "exploration": 0.8955644234279827,
           "matched_terms": [
             "mixed integer",
             "mixed-integer"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.7227255301265642,
+          "recency": 0.5646260843613061,
           "topic": 0.6452950876085142
         }
       },
@@ -19101,7 +19625,7 @@
         "why_recommended": "对于研究智能优化和生产调度中自动建模、LLM 辅助求解的研究者，该论文提供了一种不依赖人工标注数据的自博弈训练范式，其求解器接地和自动课程思想可被借鉴到调度问题的自动形式化与求解中。同时，论文对泛化性和能力锚定的讨论对构建可扩展的 AI4OR 系统具有方法论参考价值。"
       },
       "figure_gallery": {
-        "checked_at": "2026-09-29T11:06:50.221025+08:00",
+        "checked_at": "2026-09-30T10:48:47.044695+08:00",
         "figures": [
           {
             "caption": "The overall framework of OPT-Zero .",
@@ -19120,7 +19644,7 @@
         "html_url": "https://arxiv.org/html/2609.34205v1",
         "status": "available"
       },
-      "final_score": 0.738546961469277,
+      "final_score": 0.7373599124192408,
       "provenance": {
         "analyzed_at": "2026-09-29T03:07:59.230014Z",
         "input_hash": "fd938576385dca40e1c19ad6eb121383591776fbb79ec12c6886ea69b4b335fa",
@@ -19154,8 +19678,8 @@
         },
         "rank": 3,
         "score": {
-          "base_score": 0.6882672026714127,
-          "exploration": 0.6783718557211832,
+          "base_score": 0.6861089316713468,
+          "exploration": 0.8370701406711634,
           "matched_terms": [
             "learning to optimize",
             "optimization modeling",
@@ -19163,7 +19687,7 @@
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.7797270133598235,
+          "recency": 0.6091582379094804,
           "topic": 0.6649630701747894
         }
       },
@@ -19249,7 +19773,7 @@
         "why_recommended": "论文针对大语言模型从教科书规模走向工业级优化的关键瓶颈，提出策略多样性强化学习与正确性门控层次化多样性奖励，直接回应了学习辅助搜索中策略选择与探索-利用平衡问题。其混合格式训练方案也贴近真实工业优化中文件化实例的输入形态。对于研究智能优化、生产调度和 AI4OR 的读者，该工作提供了将大语言模型作为元求解器、在多种求解范式间自适应切换的训练框架，具有明确的迁移参考价值，尤其在算法选择、求解器编排和跨规模泛化方面。"
       },
       "figure_gallery": {
-        "checked_at": "2026-09-29T11:06:50.221025+08:00",
+        "checked_at": "2026-09-30T10:48:47.044695+08:00",
         "figures": [
           {
             "caption": "Motivating evidence for strategy complementarity. Left: Pass@8 success sets of DeepSeek-V4-Pro on MIPLIB-NL under three strategies. The partial overlap indicates that different strategies solve complementary subsets of instances. Right: a single TSP instance solved successfully by all three strategies, illustrating that one optimization problem can admit multiple valid computational solution paths.",
@@ -19281,7 +19805,7 @@
         "html_url": "https://arxiv.org/html/2609.34427v1",
         "status": "available"
       },
-      "final_score": 0.6532597769324564,
+      "final_score": 0.6599062128806248,
       "provenance": {
         "analyzed_at": "2026-09-29T03:09:35.368255Z",
         "input_hash": "4aa440a584bcbf018e0a48c84479d251155d215975c106951aefad2198510bd5",
@@ -19315,17 +19839,17 @@
           "url": "https://arxiv.org/abs/2609.34427",
           "version": 1
         },
-        "rank": 20,
+        "rank": 13,
         "score": {
-          "base_score": 0.5331995944226479,
-          "exploration": 0.14815928281857188,
+          "base_score": 0.5452840234193178,
+          "exploration": 0.3915278696781832,
           "matched_terms": [
             "heuristic search",
             "reinforcement learning"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.8086884865059915,
+          "recency": 0.6317842591280644,
           "topic": 0.5645
         }
       },
@@ -19428,7 +19952,7 @@
         "html_url": "https://arxiv.org/html/2609.34585v1",
         "status": "not_found"
       },
-      "final_score": 0.6972580636544441,
+      "final_score": 0.6605094821314133,
       "provenance": {
         "analyzed_at": "2026-09-29T03:08:18.492761Z",
         "input_hash": "0a1e6b380386620e7aa58614c2e71fa2caaaf150ecb6226134e585bd1d24a2d9",
@@ -19456,17 +19980,17 @@
           "url": "https://arxiv.org/abs/2609.34585",
           "version": 1
         },
-        "rank": 4,
+        "rank": 8,
         "score": {
-          "base_score": 0.6950146611898984,
-          "exploration": 0.8843110932456326,
+          "base_score": 0.6281990584207514,
+          "exploration": 0.6968890440975534,
           "matched_terms": [
             "combinatorial optimization",
             "traveling salesman"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.8231317963732016,
+          "recency": 0.6430680302909728,
           "topic": 0.6043250705501733
         }
       },
@@ -19553,13 +20077,8 @@
         "uncertainty": "仅依据标题与摘要，无法确认网络结构、状态与动作的具体表示、CW 信号与神经策略的融合方式、训练细节、基线集合、计算预算是否公平，以及 ruin-and-reconstruct 的具体实现；作者也未在摘要中列出明确局限，因此关于迁移到生产调度的判断属于推测。",
         "why_recommended": "推荐阅读的理由在于：其一，它提出了一种去除逐条路径早期承诺的构造范式，对生产调度中“部分解并行维护与合并”的求解设计有直接启发；其二，它展示了如何用经典启发式（Clarke-Wright 节约）的精确成本差来构造神经策略的学习信号，这与学习辅助搜索、学习与数学规划结合的研究路线高度一致；其三，它系统评估了零样本容量紧约束下的泛化，并探讨了路径闭合行为与紧约束退化的关系，对关注约束可行性、泛化和公平比较的调度研究具有方法论参考价值。"
       },
-      "figure_gallery": {
-        "checked_at": "2026-09-29T11:06:50.221025+08:00",
-        "figures": [],
-        "html_url": "https://arxiv.org/html/2609.35066v1",
-        "status": "not_found"
-      },
-      "final_score": 0.5693671921400947,
+      "figure_gallery": null,
+      "final_score": 0.583394928532172,
       "provenance": {
         "analyzed_at": "2026-09-29T03:10:32.728472Z",
         "input_hash": "38434b53fc86100affe328d52c65aebf4beb3344a0d99cf543687d8029124a2c",
@@ -19587,22 +20106,749 @@
           "url": "https://arxiv.org/abs/2609.35066",
           "version": 1
         },
-        "rank": 40,
+        "rank": 36,
         "score": {
-          "base_score": 0.4624858038910812,
-          "exploration": 0.4990307721232601,
+          "base_score": 0.4879907791494036,
+          "exploration": 0.828023717390808,
           "matched_terms": [
             "vehicle routing"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.862682142317551,
+          "recency": 0.6739665609707766,
           "topic": 0.33770257341718146
         }
       },
+      "tier": "explore"
+    },
+    "arxiv:2609.35328:v1": {
+      "analysis": {
+        "analysis": "摘要表明作者将 MetaBBO 的设计循环形式化为编码任务，利用代码演化对目标 MetaBBO 代码库进行迭代修改，并通过执行评估反馈驱动智能体递归自我改进。问题被拆分为任务智能体与超智能体两层：任务智能体负责改进目标算法代码，超智能体负责改进任务智能体与自身。摘要未说明是否使用下界、图表示或具体分解策略，也未说明如何形式化搜索空间或约束可行性。",
+        "challenges": [
+          "MetaBBO 设计目前高度依赖人工定制，难以自动适配不同优化问题",
+          "开放式代码演化需要同时保证候选 MetaBBO 代码可执行、可评估且不退化",
+          "双层结构中的任务智能体与超智能体需要协同，避免搜索停滞或无效修改",
+          "需要把执行中信息有效反馈给智能体以支持递归自我指涉改进",
+          "跨不同优化域的快速适配与泛化难以保证"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "MetaBBO 目前依赖人工逐问题定制，限制性能上界和实用性",
+            "location": "abstract",
+            "quote": "While MetaBBO helps advance the performance lower bound of the resulted optimization system, it is currently handcrafted and customized case by case to adapt different optimization problems, which inevitably introduces inherent subjectivity and hence restricts the performance upper bound and usability in practice."
+          },
+          {
+            "claim": "作者将 MetaBBO 的设计循环视为编码任务，以引入开放式递归自我改进",
+            "location": "abstract",
+            "quote": "In this paper, we address this issue by regarding MetaBBO's design loop as coding task, where we could introduce openendedness into MetaBBO with recursive self-improvement capability of advanced coding agents."
+          },
+          {
+            "claim": "论文提出双智能体框架，任务智能体演化目标 MetaBBO 代码库，超智能体修改任务智能体及其自身",
+            "location": "abstract",
+            "quote": "Specifically, we propose a dual-agent framework: i) a task agent continuously refines the codebase of a target MetaBBO approach through code evolution; ii) a hyper agent progressively modifies the task agent and itself to provide open-ended design behavior; iii) the evolved MetaBBO codebase is evaluated and all in-execution information is fed back to the agents for recursive self-referential improvement."
+          },
+          {
+            "claim": "摘要称从朴素模板出发可找到优于人工 MetaBBO 基线的新变体，并支持跨域快速适配",
+            "location": "abstract",
+            "quote": "As a result, given a naive MetaBBO template, our framework automates a design evolution and finds novel variants superior to up-to-date human-made MetaBBO baselines. Surprisingly, the experimental results also demonstrate that our framework supports fast adaption across different optimization domains."
+          },
+          {
+            "claim": "作者称该工作是自动化设计复杂学习辅助优化算法的首次探索",
+            "location": "abstract",
+            "quote": "This work serves as the first exploration on automating design of complex learning-assisted optimization algorithms."
+          }
+        ],
+        "experiments": [
+          "摘要称，给定一个朴素 MetaBBO 模板，该框架可自动完成设计演化，并找到优于当前人工 MetaBBO 基线的新变体",
+          "摘要称实验结果还表明该框架支持跨不同优化域的快速适配",
+          "摘要称解释性分析揭示了开放式过程中涌现出的有趣设计原则",
+          "摘要未提供具体基线名称、实例规模、约束可行性、解质量数值、运行时间、训练开销、公平计算预算、泛化测试细节或消融实验数字"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "核心洞察在于：MetaBBO 的设计过程本身可以被当作一个可被智能体搜索和修改的代码空间，而不只是人工设定超参数或模块组合。若让任务智能体演化目标 MetaBBO 代码库，同时让超智能体修改任务智能体及其自身，就能形成开放式、自指式的设计循环；执行中产生的评估信息再反馈给智能体，使设计能力与候选算法一起递归改进。因此，该方法有望突破人工定制带来的性能上界，并产生新的设计原则。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "将 MetaBBO 的设计循环视为编码任务，引入开放式代码演化",
+          "提出双智能体框架：任务智能体通过代码演化持续改进目标 MetaBBO 方法的代码库",
+          "超智能体逐步修改任务智能体及自身，以提供开放式设计行为",
+          "对演化得到的 MetaBBO 代码库进行评估，并将执行中的所有信息反馈给智能体，用于递归自我指涉改进",
+          "从朴素 MetaBBO 模板出发，自动进行设计演化并寻找优于当前人工 MetaBBO 基线的新变体"
+        ],
+        "motivation": "MetaBBO 通过元层可学习算法设计策略提升低层优化任务的性能与泛化，但其设计目前仍按不同优化问题手工定制，引入主观性并限制性能上界与实用性。作者希望把 MetaBBO 的设计循环视为编码任务，借助先进编码智能体的开放式递归自我改进能力，减少人工设计瓶颈。",
+        "primary_topic": "用编码智能体自动演化 MetaBBO（元黑箱优化）可学习优化器的双层设计框架",
+        "relation_to_research": "该论文直接处于 AI4OR 与学习辅助优化算法的交叉点：它不直接求解柔性作业车间、流水车间或生产调度问题，而是自动设计 MetaBBO 这类可学习优化器。对于智能优化、生产调度和人工智能驱动运筹优化研究，其潜在价值在于提供一种自动演化学习辅助优化算法的机制，可能迁移到生产调度问题上的元启发式或学习辅助搜索算法设计。但迁移需要满足若干条件，属于推测：首先需要把调度问题实例、约束和评估器封装成可供 MetaBBO 评估的低层任务；其次需要让代码演化空间覆盖调度领域常用的编码、解码、邻域和约束处理模块；还需要验证演化出的优化器在柔性作业车间、分布式制造、动态扰动或多目标约束下仍可保持约束可行性与求解质量。论文本身未给出任何生产调度实验，因此这些迁移路径只是基于摘要的设想。",
+        "relevance_score": 8,
+        "setting": "论文研究的问题是如何自动设计 MetaBBO 这类学习辅助优化算法，而非继续依赖人工逐问题定制。决策对象是 MetaBBO 的算法代码与其元层设计策略，目标是让一个朴素 MetaBBO 模板通过开放式代码演化得到性能更好、可跨优化域快速适配的变体。摘要未说明低层优化任务的具体类型、目标函数形式、约束条件、问题规模、静态或动态环境，也未给出元层与低层的信息假设。",
+        "tags": [
+          "MetaBBO",
+          "AI4OR",
+          "编码智能体",
+          "算法自动设计",
+          "递归自我改进",
+          "学习辅助优化"
+        ],
+        "title_zh": "超算法设计智能体：从零演化可学习优化器",
+        "uncertainty": "本次分析仅基于标题与摘要，未提供全文。因此无法确认低层优化问题的具体类型、实验基线、实例规模、计算预算、约束可行性处理、跨域适配的评估方式、消融结果或代码可复现性。第一单位和通讯作者信息在摘要中未提供。相关性评分为 8，是因为论文核心是 AI4OR 中的学习辅助优化算法自动设计，方法机制可能迁移到生产调度中的优化器设计，但论文未直接研究生产调度问题。",
+        "why_recommended": "对关注 AI4OR、学习辅助搜索和算法自动设计的研究者而言，该工作提出了一个值得跟踪的范式：用编码智能体递归演化 MetaBBO 算法，而不是只调参或固定人工模块。它可能为生产调度中的学习辅助优化器自动设计提供方法启发，尤其是将问题结构、评估反馈和代码演化结合起来的思路。但当前仅有摘要，缺少基线、计算预算和调度场景验证，阅读时需重点核对其低层任务类型、评估协议和泛化证据。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-30T10:48:47.044695+08:00",
+        "figures": [
+          {
+            "caption": "Left : The general workflow of our proposed HADA framework, which allows coordination between hyper agent and task agent for automatic MetaBBO design. Right : Essential differences between human-based design in BBO/MetaBBO and fully automated design in HADA.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2609.35328/v1/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2609.35328v1/intro.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2609.35328v1#S1.F1"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2609.35328v1",
+        "status": "available"
+      },
+      "final_score": 0.6738534527568028,
+      "provenance": {
+        "analyzed_at": "2026-09-30T02:50:41.137362Z",
+        "input_hash": "0a40e6dc1de94c93e60219198c2d6f2a9973765828b79363ff46c2e2c2be9bbf",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Meta-Black-Box Optimization (MetaBBO) is one of the highlights in the recent AI for Optimization trend. This paradigm's bi-level workflow leverages the learnable algorithm design policy at meta level to ensure the performance and generalization improvement on the low-level optimization task. While MetaBBO helps advance the performance lower bound of the resulted optimization system, it is currently handcrafted and customized case by case to adapt different optimization problems, which inevitably introduces inherent subjectivity and hence restricts the performance upper bound and usability in practice. In this paper, we address this issue by regarding MetaBBO's design loop as coding task, where we could introduce openendedness into MetaBBO with recursive self-improvement capability of advanced coding agents. Specifically, we propose a dual-agent framework: i) a task agent continuously refines the codebase of a target MetaBBO approach through code evolution; ii) a hyper agent progressively modifies the task agent and itself to provide open-ended design behavior; iii) the evolved MetaBBO codebase is evaluated and all in-execution information is fed back to the agents for recursive self-referential improvement. As a result, given a naive MetaBBO template, our framework automates a design evolution and finds novel variants superior to up-to-date human-made MetaBBO baselines. Surprisingly, the experimental results also demonstrate that our framework supports fast adaption across different optimization domains. Solid interpretation analysis further reveals interesting design principles emerge in such open-ended process. This work serves as the first exploration on automating design of complex learning-assisted optimization algorithms.",
+          "authors": [
+            "Zipei Yu",
+            "Yue-Jiao Gong",
+            "Zeyuan Ma",
+            "Yuncheng Jiang",
+            "Zhiguang Cao"
+          ],
+          "canonical_id": "2609.35328",
+          "categories": [
+            "cs.AI"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2609.35328",
+          "published_at": "2026-09-28T14:53:06Z",
+          "source": "arxiv",
+          "title": "Hyper Algorithm Design Agent: Evolving Learnable Optimizer from Zero",
+          "updated_at": "2026-09-28T14:53:06Z",
+          "url": "https://arxiv.org/abs/2609.35328",
+          "version": 1
+        },
+        "rank": 12,
+        "score": {
+          "base_score": 0.570642641376005,
+          "exploration": 0.680740420845041,
+          "matched_terms": [
+            "black-box optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.6878044521124849,
+          "topic": 0.5057113298887146
+        }
+      },
       "tier": "browse"
+    },
+    "arxiv:2609.35657:v1": {
+      "analysis": {
+        "analysis": "作者通过分析搜索轨迹来论证记忆机制的作用，指出依赖情境的回忆改变了实际执行的搜索行为分布，并且失败经验仍作为负证据保留下来影响后续决策。材料未说明作者是否使用问题结构分解、下界、图表示或数学规划等分析工具；其分析路径更偏向行为层面的经验统计与消融式轨迹分析。",
+        "challenges": [
+          "如何定义并量化“搜索情境”，使其可比较、可检索且对搜索状态有判别力",
+          "如何跨工作记忆、情景记忆与巩固记忆组织经验，并决定何时巩固、遗忘或调用负证据",
+          "如何从当前种群重构探索、定向和局部搜索行为，并自适应调整搜索几何",
+          "如何避免检索经验退化为简单重放旧解或过度依赖历史而损害探索",
+          "在有限评估预算下验证记忆机制相对于成熟基线的实际收益与稳定性"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文提出 CMDO，一种将经验表示为搜索情境、搜索行为与观测结果之间关系的无导数种群优化器",
+            "location": "abstract",
+            "quote": "We introduce Cognitive Memory-Driven Optimization (CMDO), a derivative-free population-based optimizer that represents experience as the relationship between search context, search behavior, and observed outcome."
+          },
+          {
+            "claim": "CMDO 使用工作记忆、情景记忆和巩固记忆三类记忆，并按与当前搜索状态的相似性检索经验",
+            "location": "abstract",
+            "quote": "CMDO organizes these experiences across working, episodic, and consolidated memory, retrieves them according to similarity with the current search state, and uses both positive and negative evidence to guide subsequent search."
+          },
+          {
+            "claim": "检索经验不重放旧候选位置，而是选择由当前种群重构的搜索配方",
+            "location": "abstract",
+            "quote": "Retrieved experience does not replay previous candidate locations; instead, it selects search recipes that are reconstructed from the current population through exploratory, directed, and local search behaviors with adaptive search geometry."
+          },
+          {
+            "claim": "实验在 BBOB/COCO 与 CEC2017 上对比 DE、CMA-ES、SHADE、GWO、HHO 和 ORCA，并在 CEC2017 F10 上取得最低中位误差",
+            "location": "abstract",
+            "quote": "We evaluate CMDO on selected Blackbox Optimization Benchmarking test suite on COCO (BBOB/COCO) and Congress on Evolutionary Computation 2017 (CEC2017) problems against DE, CMA-ES, SHADE, GWO, HHO, and ORCA, and further study its application to seven-parameter photovoltaic model estimation using measured current--voltage data. The results show problem-dependent but competitive optimization performance, including the lowest median error among the compared methods on CEC2017 F10."
+          },
+          {
+            "claim": "轨迹分析表明情境相关回忆改变了搜索行为分布，失败经验保留为负证据",
+            "location": "abstract",
+            "quote": "analysis of the search traces shows that context-dependent recall changes the distribution of executed search behaviors, while unsuccessful experiences remain available as negative evidence for later decisions"
+          }
+        ],
+        "experiments": [
+          "在 COCO 的 BBOB 测试套件与 CEC2017 问题上评估 CMDO",
+          "对比方法包括 DE、CMA-ES、SHADE、GWO、HHO 和 ORCA",
+          "在 CEC2017 F10 上取得所比较方法中最低的中位误差",
+          "整体结果表现为问题依赖但具有竞争力",
+          "进一步将方法用于基于实测电流—电压数据的七参数光伏模型估计",
+          "搜索轨迹分析显示情境相关回忆改变了执行的搜索行为分布，失败经验仍可作为负证据影响后续决策",
+          "材料未说明具体实例规模、评估预算、运行时间、训练开销、统计检验、公平计算预算与完整消融设置"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "核心洞察在于：对种群搜索真正有价值的经验不是“哪个解好”或“哪个算子平均表现好”，而是“在什么搜索情境下采用什么行为导致了什么结果”。将经验组织为工作记忆、情景记忆和巩固记忆，并按当前搜索状态的相似性进行检索，可以同时利用正证据与负证据来调整后续行为分布；由于检索到的经验并不重放旧候选位置，而是用于选择由当前种群重构的搜索配方，因此经验迁移不会破坏当前种群的多样性或搜索几何，而是改变搜索行为的执行分布。",
+        "limitations": [
+          "材料未说明作者明确陈述的局限"
+        ],
+        "method": [
+          "将经验表示为搜索情境、搜索行为与观测结果之间的关系",
+          "把经验分别组织到工作记忆、情景记忆和巩固记忆三类记忆中",
+          "根据当前搜索状态与历史经验的相似性检索经验",
+          "同时利用正证据与负证据来指导后续搜索行为选择",
+          "检索到的经验不重放旧候选位置，而是用于选择搜索配方",
+          "搜索配方由当前种群通过探索、定向和局部搜索行为重构，并具有自适应搜索几何",
+          "CMDO 为无导数、基于种群的优化器，其整体流程围绕经验检索与行为重构交替进行"
+        ],
+        "motivation": "现有种群式优化方法虽然会利用成功解、参数自适应或算子性能等历史信息，但很少保留“某种搜索行为在何种搜索情境下成功或失败”的上下文，因此无法区分同一行为在不同状态下的适用性，也难以把失败经验系统性地转化为后续决策依据。作者因此希望把经验显式表示为搜索情境、搜索行为与观测结果之间的关系，使历史经验成为主动控制种群搜索的机制。",
+        "primary_topic": "基于认知记忆的种群式无导数黑盒优化",
+        "relation_to_research": "论文事实层面，CMDO 研究的是无导数种群式黑盒优化中的经验记忆与自适应搜索行为控制，属于智能优化与学习辅助搜索的相邻方向，并未直接涉及生产调度、柔性作业车间、分布式制造或约束优化建模。迁移设想（推测）：其“情境—行为—结果”记忆机制有潜力被移植到生产调度中，将调度状态特征视为情境、局部搜索或邻域算子视为行为、调度目标改善视为结果，从而学习何时调用何种邻域或修复策略；但迁移需要把连续黑盒搜索情境改造为调度状态表示，明确约束可行性判定与修复机制，并在公平评估预算下验证对解质量和可行性的影响，这些均非原文已验证结论。",
+        "relevance_score": 6,
+        "setting": "论文研究无导数、基于种群的连续黑盒优化问题：决策对象是种群中候选解的位置以及每次迭代所执行的搜索行为；目标是在不利用梯度信息的前提下，通过经验记忆自适应地控制搜索行为以提升优化性能；关键约束与信息假设是仅能通过黑盒函数评估获得目标值，作者未说明是否存在显式等式/不等式约束、是否动态环境或噪声评估；环境被隐含为静态黑盒优化基准与参数估计任务，材料未说明动态扰动或在线变化。",
+        "tags": [
+          "种群优化",
+          "认知记忆",
+          "无导数优化",
+          "黑盒优化",
+          "自适应搜索",
+          "进化计算"
+        ],
+        "title_zh": "CMDO：一种面向自适应种群搜索的认知记忆驱动优化算法",
+        "uncertainty": "仅依据标题与摘要，无法确认搜索情境的具体定义、记忆检索相似度度量、三类记忆的更新与巩固规则、搜索配方的参数化方式以及自适应搜索几何的具体实现；实验部分缺少实例规模、评估预算、运行时间、统计显著性和完整消融信息，因此对方法实际收益、计算开销与公平性判断存在不确定性；作者机构、通讯作者与明确局限均未提供。",
+        "why_recommended": "该工作提供了一个可迁移的经验组织范式：不重放旧解，而是用正负经验选择由当前种群重构的搜索行为，并区分工作、情景与巩固记忆。对研究学习辅助搜索、自适应算子选择、智能体记忆机制以及进化算法与学习机制结合的研究者而言，它可作为设计“状态—行为—结果”记忆模块、负经验利用和搜索行为分布控制的参考；若进一步结合调度状态编码与约束修复，可能为生产调度中的自适应邻域选择提供思路，但这属于需要验证的推测。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-30T10:48:47.044695+08:00",
+        "figures": [
+          {
+            "caption": "Overall architecture of Cognitive Memory-Driven Optimization (CMDO).",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2609.35657/v1/fig1-panel1.jpg",
+                "original_url": "https://arxiv.org/html/2609.35657v1/Cogmi.jpg"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2609.35657v1#S3.F1"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2609.35657v1",
+        "status": "available"
+      },
+      "final_score": 0.5538343261870198,
+      "provenance": {
+        "analyzed_at": "2026-09-30T02:51:14.590425Z",
+        "input_hash": "99be173b38a7ed0a9d7db7adccd2ec00b1a4847dc04d7cad6dcf8adc12e20efa",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Population-based optimization methods often use previous search information through successful solutions, parameter adaptation, or operator performance, but they rarely retain the context in which a search behavior succeeded or failed. We introduce Cognitive Memory-Driven Optimization (CMDO), a derivative-free population-based optimizer that represents experience as the relationship between search context, search behavior, and observed outcome. CMDO organizes these experiences across working, episodic, and consolidated memory, retrieves them according to similarity with the current search state, and uses both positive and negative evidence to guide subsequent search. Retrieved experience does not replay previous candidate locations; instead, it selects search recipes that are reconstructed from the current population through exploratory, directed, and local search behaviors with adaptive search geometry. We evaluate CMDO on selected Blackbox Optimization Benchmarking test suite on COCO (BBOB/COCO) and Congress on Evolutionary Computation 2017 (CEC2017) problems against DE, CMA-ES, SHADE, GWO, HHO, and ORCA, and further study its application to seven-parameter photovoltaic model estimation using measured current--voltage data. The results show problem-dependent but competitive optimization performance, including the lowest median error among the compared methods on CEC2017 F10. More importantly, analysis of the search traces shows that context-dependent recall changes the distribution of executed search behaviors, while unsuccessful experiences remain available as negative evidence for later decisions, showing that accumulated experience directly influences subsequent search behavior. These results support the use of explicit context--behavior--outcome memory as an active mechanism for controlling population-based search.",
+          "authors": [
+            "Mohammed Yusuf Mujawar",
+            "Shahram Rahimi",
+            "Noorbakhsh Amiri Golilarz"
+          ],
+          "canonical_id": "2609.35657",
+          "categories": [
+            "cs.NE",
+            "cs.AI"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2609.35657",
+          "published_at": "2026-09-28T17:21:43Z",
+          "source": "arxiv",
+          "title": "CMDO: A Cognitive Memory-Driven Optimization Algorithm for Adaptive Population-Based Search",
+          "updated_at": "2026-09-28T17:21:43Z",
+          "url": "https://arxiv.org/abs/2609.35657",
+          "version": 1
+        },
+        "rank": 27,
+        "score": {
+          "base_score": 0.5160624112491268,
+          "exploration": 0.15681149644270884,
+          "matched_terms": [
+            "evolutionary computation",
+            "local search"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.7057817654274886,
+          "topic": 0.5645
+        }
+      },
+      "tier": "browse"
+    },
+    "arxiv:2609.36063:v1": {
+      "analysis": {
+        "analysis": "作者通过行为分析、表示探测和因果干预三类手段分析问题：行为层面跟踪生成路径的几何性质（如相对于起始节点的角度位移、onion 层振荡频率与强度）；表示层面使用探测方法检查各层表示中可线性访问的信息以及跨实例对齐情况；因果层面使用均值消融等干预手段检验特定节点表示（当前节点、起始节点、未来节点）对下一步决策的因果作用。",
+        "challenges": [
+          "神经组合优化模型的内部决策机制缺乏可解释性",
+          "重编码器-轻解码器架构的轻量解码导致上下文感知不足与几何策略僵化",
+          "模型在训练分布之外的大规模和聚簇分布上的泛化能力受限",
+          "需要在公平的贪心单轨迹解码协议下比较不同架构的内在决策行为，避免测试时增强混淆机制分析"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文研究自回归 NCO 模型的内部决策机制，覆盖 AM、POMO 与 LEHD 两种编码器-解码器配置",
+            "location": "abstract",
+            "quote": "we investigate three representative autoregressive NCO models spanning two encoder-decoder configurations: AM and POMO (heavy-encoder, light-decoder), and LEHD (light-encoder, heavy-decoder)."
+          },
+          {
+            "claim": "评估使用贪心单轨迹解码且不使用测试时增强",
+            "location": "supplied_full_text",
+            "quote": "all models are evaluated using greedy, single-trajectory decoding without model-specific test-time enhancements, such as POMO’s rotational augmentation or LEHD’s RRC."
+          },
+          {
+            "claim": "行为分析显示 AM 与 POMO 主要遵循持久几何模式，而 LEHD 包含关于多个未来动作的线性可访问信息",
+            "location": "abstract",
+            "quote": "Our results suggest that AM and POMO predominantly follow a persistent geometric pattern throughout solution construction, whereas LEHD contains linearly accessible information about multiple future actions."
+          },
+          {
+            "claim": "因果实验表明 LEHD 依赖编码的前瞻轨迹决定局部动作",
+            "location": "supplied_full_text",
+            "quote": "This provides causal evidence that LEHD relies on its encoded look-ahead trajectory to determine its local actions."
+          },
+          {
+            "claim": "POMO 倾向于顺时针构造路径而 AM 倾向于逆时针",
+            "location": "supplied_full_text",
+            "quote": "POMO exhibits a systematic tendency to construct tours in a clockwise manner while AM constructs in an anti-clockwise manner"
+          },
+          {
+            "claim": "LEHD 将当前节点表示映射到相对共享的潜在区域",
+            "location": "abstract",
+            "quote": "Cross-instance alignment analyses additionally indicate that LEHD maps current-node representations into a relatively shared latent region, which may provide a stable reference for evaluating subsequent decisions."
+          },
+          {
+            "claim": "模型在 Uniform TSP-100 上训练并在 TSP-500 等七种分布上评估泛化",
+            "location": "supplied_full_text",
+            "quote": "All models are trained on Uniform TSP-100 and evaluated in Figure 2 on TSP-500 across seven distributions, thereby testing both size and distribution generalization."
+          },
+          {
+            "claim": "L2C-Insert 推理成本更高且未持续提升解质量，LEHD 解质量有竞争力且推理成本显著更低",
+            "location": "supplied_full_text",
+            "quote": "L2C-Insert incurs substantially higher inference costs without consistently improving solution quality over LEHD. LEHD achieves competitive solution quality across diverse distributions while maintaining substantially lower inference cost than the insertion-based baseline."
+          }
+        ],
+        "experiments": [
+          "所有模型在 Uniform TSP-100 上训练，并在 TSP-500 上的七种分布评估，以测试规模与分布泛化；报告最优性间隙、凸包违反率和推理运行时间（对数刻度）。",
+          "L2C-Insert 的推理成本显著更高，且相对 LEHD 并未持续提升解质量；LEHD 在多种分布上取得有竞争力的解质量并保持显著更低的推理成本。",
+          "行为结果显示：POMO 系统性地按顺时针方向构造路径，AM 按逆时针方向构造；两者在不同 onion 层深度间振荡的频率和强度显著高于对比求解器，且这种空间差异在更大问题规模上更明显。",
+          "AM 与 POMO 在聚簇分布上性能退化，作者归因于其仅用均匀点分布训练带来的刚性几何策略，以及轻量解码器架构导致上下文感知不足。",
+          "LEHD 的因果实验表明其依赖编码的前瞻轨迹决定局部动作；对 TSP-100 的 LCS 与 Rev. LCS 相似度比较按角度区间给出了数值（如 0°–30° 时 LEHD 的 LCS 为 0.769、Rev. LCS 为 0.147，POMO 的 LCS 为 0.963、Rev. LCS 为 0.030）。",
+          "逐层跨实例对齐表显示 LEHD 的当前节点表示在较深解码层具有更高的对齐度（如 Dec. 4 为 0.886 ± 0.046），起始节点次之，随机节点最低。",
+          "作者表明测试时多起点采样的有效性直接源于对抗 POMO 的刚性几何策略，但由于采样灵活性受限，随实例规模增大 POMO 与 LEHD 的性能差距扩大。"
+        ],
+        "first_affiliation": "Sharif University of Technology 计算机工程系",
+        "insight": "不同编码器-解码器资源分配会导致本质不同的决策模式：重编码器-轻解码器（AM、POMO）主要依赖一种贯穿解构造过程的持久几何模式，因此对当前节点周围局部几何不敏感、在更大规模与聚簇分布上表现退化；而轻编码器-重解码器（LEHD）在其解码器表示中线性可访问关于多个未来动作的信息，并同时依赖当前节点表示做即时局部决策、依赖起始节点表示做更全局的导航，这解释了它为何能更动态地适应局部实例几何。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "选取三个代表性自回归 NCO 模型并覆盖两种编码器-解码器配置：AM 与 POMO 为重编码器-轻解码器，LEHD 为轻编码器-重解码器；另纳入基于插入的 L2C-Insert 作为参考。",
+          "统一评估协议：所有模型使用贪心、单轨迹解码，不使用模型特定的测试时增强，以研究学习策略的内在决策行为。",
+          "行为分析：跟踪路径构造过程中的角度位移和 onion 层振荡，比较不同求解器的几何构造策略。",
+          "表示探测：对 LEHD 各编码器/解码器层进行逐层探测，检验当前节点、起始节点和随机节点表示中可线性访问的信息量，并做跨实例对齐分析。",
+          "因果干预：使用均值消融等手段分别消融当前节点、起始节点和未来节点表示，观察干净下一步节点概率的变化，以建立表示与决策之间的因果关系。",
+          "在 TSP 和 CVRP 上验证上述分析，模型在 Uniform TSP-100 上训练并在 TSP-500 等七种分布上评估泛化。",
+          "作者提供代码与额外可视化：https://github.com/NCO-Interpretability/NCO-Interpretability。"
+        ],
+        "motivation": "NCO 已在经验上取得较强性能，但驱动模型决策的内部机制仍 largely unexplored；作者希望弄清这些模型如何构造解、如何在解码过程中使用内部表示，从而为更可解释的 NCO 求解器分析奠定基础。",
+        "primary_topic": "神经组合优化求解器的可解释性与决策机制分析",
+        "relation_to_research": "论文事实：该工作直接研究 TSP/CVRP 上自回归 NCO 求解器的内部决策机制，涉及 Transformer 编码器-解码器、强化学习训练（AM、POMO）与监督学习训练（LEHD），并分析不同架构对局部与全局几何信息的利用方式。与智能优化、学习辅助搜索、神经网络辅助求解方向高度相关，因为其结论说明表示容量分配如何影响求解器的泛化与几何适应性。迁移设想（推测）：若要把这类机制分析迁移到生产调度，例如柔性作业车间、流水车间或生产运输协同问题，需要将路径构造的几何/角度分析替换为调度解构造中的序列决策结构（如机器分配、工序排序），并重新设计探测与因果干预对象（机器表示、工序表示、剩余加工时间表示等）；其可解释性方法本身可能可迁移，但结论不能直接外推。",
+        "relevance_score": 7,
+        "setting": "论文研究自回归神经组合优化（NCO）求解器在构造路径解时的内部决策机制，决策对象是 TSP 与 CVRP 这类路径问题中每一步应追加的下一个节点；目标不是提升求解性能，而是刻画不同编码器-解码器配置的模型如何利用内部表示做出决策；关键约束与信息假设包括：所有模型采用贪心单轨迹解码、不使用测试时增强（如 POMO 的旋转增强或 LEHD 的 RRC），模型主要在 Uniform TSP-100 上训练，静态环境，材料未说明在线或动态扰动设定。",
+        "tags": [
+          "神经组合优化",
+          "路径问题",
+          "可解释性",
+          "探测",
+          "因果干预",
+          "Transformer",
+          "TSP",
+          "CVRP"
+        ],
+        "title_zh": "理解神经路径求解器的决策机制",
+        "uncertainty": "本次判断基于摘要和全文节选；节选未完整覆盖方法细节、全部实验设置与作者明确陈述的局限，因此对方法完备性、训练开销、消融覆盖度以及结论在 CVRP 之外问题上的适用性存在不确定性；通讯作者身份在给定材料中未明确标注。",
+        "why_recommended": "对关注学习辅助优化求解的研究者，该文提供了少见的对 NCO 求解器决策机制的系统性分析框架（行为分析 + 探测 + 因果干预），有助于理解为何不同架构在规模和分布泛化上表现不同；同时其公平评估协议（无测试时增强的贪心单轨迹解码）和对照设计对生产调度中可解释性与泛化研究具有方法论借鉴价值。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-30T10:48:47.044695+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2609.36063v1",
+        "status": "not_found"
+      },
+      "final_score": 0.7060659173414867,
+      "provenance": {
+        "analyzed_at": "2026-09-30T02:50:08.484637Z",
+        "input_hash": "7240217a2c53ad9f4ce2d1ac682814d5b6bdd689938c034cb097ad7a50b6b412",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Neural Combinatorial Optimization (NCO) has achieved strong empirical success, yet the internal mechanisms driving model decisions remain largely unexplored. In this paper, we investigate three representative autoregressive NCO models spanning two encoder-decoder configurations: AM and POMO (heavy-encoder, light-decoder), and LEHD (light-encoder, heavy-decoder). Through behavioral analyses, representation probing, and causal interventions, we examine how these models construct solutions and use internal representations during decoding. Our results suggest that AM and POMO predominantly follow a persistent geometric pattern throughout solution construction, whereas LEHD contains linearly accessible information about multiple future actions. Causal experiments further provide evidence for the role of future-node representations in LEHD's decision-making. We also observe that LEHD relies strongly on the current-node representation for immediate local decisions, while the start-node representation plays a broader navigational role over the subsequent route. Cross-instance alignment analyses additionally indicate that LEHD maps current-node representations into a relatively shared latent region, which may provide a stable reference for evaluating subsequent decisions. Across the Traveling Salesman Problem and the Capacitated Vehicle Routing Problem, these results reveal distinct decision-making patterns across these architecturally distinct solvers and provide a foundation for more interpretable analyses of NCO solvers. Code and additional visualizations are provided in the https://github.com/NCO-Interpretability/NCO-Interpretability.",
+          "authors": [
+            "Fatemeh Askari",
+            "Mazdak Teymourian",
+            "Mohammad Izadi",
+            "Mahdieh Soleymani Baghshah"
+          ],
+          "canonical_id": "2609.36063",
+          "categories": [
+            "cs.LG",
+            "cs.AI"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2609.36063",
+          "published_at": "2026-09-28T18:18:45Z",
+          "source": "arxiv",
+          "title": "Understanding Decision-Making Mechanisms in Neural Routing Solvers",
+          "updated_at": "2026-09-28T18:18:45Z",
+          "url": "https://arxiv.org/abs/2609.36063",
+          "version": 1
+        },
+        "rank": 2,
+        "score": {
+          "base_score": 0.711028940620885,
+          "exploration": 0.4069305317888646,
+          "matched_terms": [
+            "combinatorial optimization",
+            "neural combinatorial",
+            "vehicle routing",
+            "traveling salesman"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.7128048611671817,
+          "topic": 0.7974067944168058
+        }
+      },
+      "tier": "deep_read"
+    },
+    "arxiv:2609.36472:v1": {
+      "analysis": {
+        "analysis": "材料未说明作者如何具体分析问题结构或进行分解；摘要层面仅能看出作者通过引入 Distributional Conformance Score（DisCo）把概率电路条件采样与形式化不确定性框架联系起来，并据此设计 DisCoMBO 框架，且证明其为零遗憾算法。",
+        "challenges": [
+          "标准采集函数重加权对专家知识的引导不透明且融合保真度低",
+          "概率电路等生成式代理缺乏形式化探索-利用语义",
+          "需要一种有界、归一化且高效可计算的不确定性度量",
+          "在注入外部知识的同时保证优化算法的理论遗憾保证"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "标准采集函数重加权存在引导不透明与融合保真度低的问题，概率电路作为生成式代理虽可注入知识但缺乏形式化探索-利用语义",
+            "location": "abstract",
+            "quote": "To overcome the opaque guidance and diminished integration fidelity of standard acquisition re-weighting, Probabilistic Circuits (PCs) have emerged as a generative surrogate alternative, enabling direct knowledge injection via conditional sampling. However, these generative routines lack the formal exploration-exploitation semantics required for rigorous optimization."
+          },
+          {
+            "claim": "DisCo 是一个有界且 [0,1] 归一化的模型惊讶度度量，可恢复核方法不确定性性质并保持线性时间推断，同时评估外部知识与模型证据的一致性",
+            "location": "abstract",
+            "quote": "We introduce the Distributional Conformance Score (DisCo), a novel metric that unifies the flexibility and efficiency of PCs with a formal uncertainty framework. DisCo provides a bounded, $[0, 1]$-normalized measure of model \"surprise\" that (1) recovers properties comparable to kernel-based uncertainty known from, e.g., Gaussian Processes, while maintaining linear-time inference, and (2) enables accurate assessment of conformance of external knowledge w.r.t. model evidence."
+          },
+          {
+            "claim": "DisCoMBO 利用上述性质实现知识感知优化，并被证明为零遗憾算法",
+            "location": "abstract",
+            "quote": "We then present DisCoMBO, a framework leveraging these properties for robust, knowledge-aware optimization. We prove that DisCoMBO is a zero-regret algorithm and demonstrate its effectiveness across diverse benchmarks from AutoML, material optimization, and wind park optimization."
+          }
+        ],
+        "experiments": [
+          "在 AutoML、材料优化和风电场优化等多个基准上展示 DisCoMBO 的有效性",
+          "摘要未提供具体基线、实例规模、求解质量、运行时间、训练开销或消融结果等数字"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "核心洞察在于：用模型对候选点的“惊讶度”（surprise）构造一个有界且归一化的分布一致性度量，可以同时扮演类似高斯过程核不确定性所具备的探索信号，并充当外部知识是否与模型证据相符的评判尺度。由于该度量可由概率电路在近似线性时间内计算，它使生成式代理能够在不牺牲效率的前提下获得形式化探索-利用语义，从而让知识注入不再是启发式重加权，而是可证明零遗憾的决策依据。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "提出 Distributional Conformance Score（DisCo）：一个有界、[0,1] 归一化的模型“惊讶度”度量",
+          "DisCo 旨在恢复类似高斯过程等核方法不确定性的性质，同时保持线性时间推断",
+          "DisCo 可评估外部知识相对于模型证据的一致性程度",
+          "构建 DisCoMBO 框架，利用 DisCo 的性质实现稳健、知识感知的黑盒优化",
+          "理论证明 DisCoMBO 是零遗憾算法"
+        ],
+        "motivation": "传统SMBO依赖贝叶斯或集成代理模型进行不确定性量化，近期越来越多地引入外部领域专家知识以加速发现。但标准采集函数重加权方式存在引导不透明、知识融合保真度低的问题；概率电路作为生成式代理虽能通过条件采样直接注入知识，却缺乏严格的探索-利用语义，无法支撑严谨的优化过程。因此作者希望把概率电路的灵活性与形式化不确定性框架统一起来。",
+        "primary_topic": "专家知识注入的序贯基于模型的黑盒优化（SMBO），以及基于概率电路的分布一致性不确定性度量",
+        "relation_to_research": "论文属于黑盒优化与专家知识注入方向，与智能优化、学习辅助搜索有交集：DisCo 提供了一种由概率电路导出的不确定性度量，可用于代理模型驱动的候选点选择，理论上的零遗憾性质对学习辅助搜索的可靠性有参考价值。与生产调度、柔性作业车间、流水车间、分布式制造、生产运输协同、动态扰动、能效或多目标约束优化的直接联系，摘要未提供证据。推测：若将 DisCo 迁移到生产调度，需要把调度决策编码为候选点或解表示，定义与调度约束可行性兼容的外部知识形式，并验证概率电路代理在离散/混合调度空间上的线性推断与一致性度量是否仍然成立；这些均为迁移设想，并非作者结论。",
+        "relevance_score": 6,
+        "setting": "论文研究的是序贯基于模型的黑盒优化（SMBO）问题：决策对象是每一步为昂贵黑盒目标函数选取的候选查询点，目标是在有限评估预算内尽可能快地找到高质量解；关键约束是黑盒函数只能通过序贯采样观测且评估代价高，同时需要将外部领域专家知识以可靠方式注入优化过程。信息假设方面，作者假设外部知识可被表达为某种条件约束或偏好，并通过概率电路（PC）的条件采样进行注入；环境为静态的黑盒优化环境，摘要未提及动态扰动或在线环境变化。",
+        "tags": [
+          "SMBO",
+          "黑盒优化",
+          "概率电路",
+          "专家在环",
+          "不确定性量化",
+          "分布一致性",
+          "零遗憾",
+          "AutoML",
+          "材料优化",
+          "风电场优化"
+        ],
+        "title_zh": "DisCoMBO：通过分布一致性引导专家在环的黑盒优化",
+        "uncertainty": "仅有标题与摘要，未提供全文，无法核实概率电路的具体结构、DisCo 的精确定义、基线选择、实验规模和计算预算公平性，也无法确认其对离散约束优化问题的适用性；作者单位与通讯作者信息未提供。",
+        "why_recommended": "该工作聚焦于把外部专家知识可靠地注入黑盒优化，并给出有界归一化的不确定性度量与零遗憾保证，对研究学习辅助搜索、代理模型选择和约束可行性判断的读者具有方法层面的迁移潜力；同时其应用基准涵盖 AutoML 与工程优化，可启发将类似机制引入含多目标与约束的生产调度场景。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-30T10:48:47.044695+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2609.36472v1",
+        "status": "not_found"
+      },
+      "final_score": 0.5145264248891057,
+      "provenance": {
+        "analyzed_at": "2026-09-30T02:51:40.963708Z",
+        "input_hash": "fb5bf369aedb867f253b52f93275681eed006a5c2239864cbb7a06149c1c5ac7",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Sequential Model-Based Optimization (SMBO) traditionally relies on Bayesian or ensembling surrogates for uncertainty quantification. While historically treated as fully data-driven, SMBO increasingly integrates external domain expertise to accelerate discovery. To overcome the opaque guidance and diminished integration fidelity of standard acquisition re-weighting, Probabilistic Circuits (PCs) have emerged as a generative surrogate alternative, enabling direct knowledge injection via conditional sampling. However, these generative routines lack the formal exploration-exploitation semantics required for rigorous optimization. We introduce the Distributional Conformance Score (DisCo), a novel metric that unifies the flexibility and efficiency of PCs with a formal uncertainty framework. DisCo provides a bounded, $[0, 1]$-normalized measure of model \"surprise\" that (1) recovers properties comparable to kernel-based uncertainty known from, e.g., Gaussian Processes, while maintaining linear-time inference, and (2) enables accurate assessment of conformance of external knowledge w.r.t. model evidence. We then present DisCoMBO, a framework leveraging these properties for robust, knowledge-aware optimization. We prove that DisCoMBO is a zero-regret algorithm and demonstrate its effectiveness across diverse benchmarks from AutoML, material optimization, and wind park optimization.",
+          "authors": [
+            "Jonas Seng",
+            "Bennet Wittelsbach",
+            "Kristian Kersting"
+          ],
+          "canonical_id": "2609.36472",
+          "categories": [
+            "cs.LG"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2609.36472",
+          "published_at": "2026-09-29T01:32:10Z",
+          "source": "arxiv",
+          "title": "DisCoMBO: Steering Expert-in-the-Loop Black Box Optimization via Distributional Conformance",
+          "updated_at": "2026-09-29T01:32:10Z",
+          "url": "https://arxiv.org/abs/2609.36472",
+          "version": 1
+        },
+        "rank": 45,
+        "score": {
+          "base_score": 0.44459349979837387,
+          "exploration": 0.19650445123320937,
+          "matched_terms": [
+            "black-box optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.7685100536196847,
+          "topic": 0.4229284982966176
+        }
+      },
+      "tier": "browse"
+    },
+    "arxiv:2609.36735:v1": {
+      "analysis": {
+        "analysis": "作者利用分支变量选择问题的结构，将强分支示范数据构造为离线数据对 (X_t, a*_t)，其中 X_t 为候选变量特征、a*_t 为强分支选出的变量，从而把“分支决策与专家示范的一致性”定义为低保真目标 F_LF 的指标。基于此，作者用 F_LF 与 F_HF（真实实例上的求解表现）之间的散点关系来诊断分布漂移，指出在 MIS 与 CA 等基准上从最佳 F_LF 到最佳 F_HF 的性能退化最严重，并恰好对应 EoH 与 ReEvo 的失败案例，据此论证必须保留 F_HF 作为细粒度验证器，并据此设计双保真度评估分配机制。",
+        "challenges": [
+          "在 LLM 代码空间中搜索分支规则时，完整 B&B 评估代价极高，无法对所有候选逐一评估",
+          "仅依赖离线模仿学习会因分布漂移导致评估失准，在部分基准上出现明显性能崩塌",
+          "需要在低保真预筛选的召回与高保真验证的精度之间分配有限计算预算",
+          "既要保持 CPU 上的近符号级低推理开销，又要具备超越简单符号规则的逻辑表达能力",
+          "所发现的规则目前依赖具体基准分布，跨问题分布的泛化尚未解决"
+        ],
+        "corresponding_authors": [
+          "Guoliang Fan"
+        ],
+        "evidence": [
+          {
+            "claim": "论文提出双保真度演化框架 BiFE，用低保真模仿分数做快速预筛选、仅对精英候选做高保真在线评估",
+            "location": "abstract",
+            "quote": "It employs low-fidelity imitation scores as a rapid pre-screener and selectively applies high-fidelity on-instance evaluation only to elite candidates, effectively balancing search efficiency with performance reliability."
+          },
+          {
+            "claim": "所发现规则在 CPU 上优于 SCIP 求解器与其他基线，甚至超过某些 GPU 神经策略",
+            "location": "abstract",
+            "quote": "Experiments validate both the search efficiency of BiFE and the competitiveness of its discovered rules, which outperform the SCIP solver and other baselines on CPUs, and even surpass certain GPU-based neural policies."
+          },
+          {
+            "claim": "低保真目标是候选规则在离线强分支示范数据集上的模仿准确率",
+            "location": "supplied_full_text",
+            "quote": "the low-fidelity surrogate is defined as follows"
+          },
+          {
+            "claim": "作者指出仅依赖 F_LF 会因分布漂移在部分基准上失效",
+            "location": "supplied_full_text",
+            "quote": "This directly validates our core argument: due to distribution shift"
+          },
+          {
+            "claim": "BiFE 相比 LLM4Branch 大幅减少规则设计时间",
+            "location": "supplied_full_text",
+            "quote": "BiFE requires 3.9"
+          },
+          {
+            "claim": "所发现策略仍为基准特定、跨问题分布泛化不足",
+            "location": "supplied_full_text",
+            "quote": "the discovered policies remain benchmark-specific"
+          }
+        ],
+        "experiments": [
+          "基线分四类：手工启发式 SCIP 默认可靠伪代价分支 RPB；CPU 高效策略 FiLM、Symb4CO、GS4CO；通用神经策略 GNN（模仿学习）与 tMDP（强化学习），后缀 -GPU 表示 GPU 评估；LLM 算法设计方法 EoH、ReEvo、LLM4Branch",
+          "评测在 5 个随机种子、20 个实例上进行，共 100 次求解尝试，每次时间上限 1000 秒，所有评估在同一硬件上进行",
+          "摘要与正文报告所发现规则在 CPU 上优于 SCIP 求解器和其他基线，甚至超过某些基于 GPU 的神经策略",
+          "搜索效率方面：与 LLM4Branch 相比，BiFE 在全部基准上所需时间少 3.9 倍至 20.6 倍，在 NNV 上达 9.2 倍，该预算包含演化搜索与一次性强分支样本采集开销，且两者规则性能无显著差异",
+          "散点分析显示从最佳 F_LF 到最佳 F_HF 的性能退化在 MIS 和 CA 上最严重，与 EoH（MIS）和 ReEvo（CA）的失败案例相对应，验证了仅依赖 F_LF 的不足",
+          "与 Symb4CO 和 GS4CO 相比，后者因官方实现将 RPB 与符号规则结合而增加推理成本，BiFE 仅依赖轻量规则，取得最佳时间效率"
+        ],
+        "first_affiliation": "Institute of Automation, Chinese Academy of Sciences",
+        "insight": "论文的核心洞察在于：低保真模仿分数与高保真在线求解表现之间存在由分布漂移导致的系统性偏差，因此低保真代理不能完全替代真实评估。将低保真评估用作快速预筛选、把昂贵的高保真评估仅保留给少数精英个体作为细粒度校正器，可以在不牺牲最终规则质量的前提下大幅压缩搜索预算；其有效性来源于把评估资源按照“筛选—验证”分工重新分配，而非简单叠加两个评估模块。",
+        "limitations": [
+          "所发现的策略仍是基准特定的，演化搜索针对每个问题分布（如 CA、SC、MIS）独立进行与定制，某一基准上演化出的策略可能无法很好泛化到结构不同的 MILP 实例，迁移到新问题域需重新运行搜索过程",
+          "未来工作方向是设计跨实例泛化的 LLM 分支规则，探索可适应或在多样 MILP 基准间共享的通用算法逻辑"
+        ],
+        "method": [
+          "使用 LLM 生成分支规则代码作为搜索空间，规则为轻量级、可在 CPU 上快速执行的程序",
+          "采用双保真度演化框架 BiFE：F_LF 为低保真代理，F_HF 为高保真在线评估",
+          "低保真 F_LF 定义为候选规则在离线强分支示范数据集 D 上的模仿准确率，即 arg max 分支变量与 a* 一致的比例，输入为 72 维候选变量特征（18 静态 + 54 动态），输出为标量分数",
+          "F_LF 作为快速预筛选器，仅对存活的精英候选选择性执行昂贵的真实实例 B&B 高保真评估",
+          "高保真评估用于校正低保真代理因分布漂移带来的不准确，作为细粒度验证器",
+          "实验在 SCIP 7.0.3 中实现，仅修改分支规则，根节点允许生成割平面，关闭求解器重启，其余参数为默认值",
+          "LLM 骨干模型为 DeepSeek-V4-Flash，各 LLM 方法使用一致的演化参数"
+        ],
+        "motivation": "已有神经分支策略通常需要 GPU 推理，而 CPU 高效的符号表达式表达能力有限、难以刻画复杂逻辑。LLM 生成的代码提供了灵活且轻量的分支规则搜索空间，但在 LLM 演化框架中用真实实例做完整 B&B 评估代价过高，而纯离线模仿学习又存在分布漂移问题，因此需要在搜索效率与性能可靠性之间取得平衡。",
+        "primary_topic": "MILP 分支变量选择策略的 LLM 代码演化与双保真度评估分配",
+        "relation_to_research": "论文事实层面：该工作研究 MILP 分支定界中的分支变量选择，属于数学规划与学习辅助搜索的结合，使用 LLM 生成代码作为策略表示、以双保真度机制分配评估预算，与“大模型智能体用于自动算法设计”“学习辅助搜索”“模仿学习与求解器反馈结合”等方向直接相关。迁移设想（推测）：其双保真度评估分配思想（廉价代理预筛选 + 昂贵真实评估仅用于精英校正）原则上可迁移到柔性作业车间、流水车间或分布式生产调度的启发式/优先级规则自动设计中，例如以离线调度示范作为低保真模仿信号、以真实调度仿真或求解器结果作为高保真评估；但迁移需要满足若干条件，包括存在可离线采集的高质量专家示范、低保真与高保真目标之间存在可度量且可校正的偏差、以及高保真评估成本确实构成搜索瓶颈；此外该框架在动态扰动、多目标约束或生产运输协同等更复杂设定下的有效性尚未被验证，需进一步实验。",
+        "relevance_score": 6,
+        "setting": "研究问题为混合整数线性规划（MILP）分支定界（B&B）中的分支变量选择，决策对象是每个分支步上从候选变量集合 C 中选取哪个变量进行分支；目标是在纯 CPU 环境下以低推理开销获得可竞争的分支策略，使求解效率（节点数与时间）优于默认启发式和已有 CPU 高效策略；关键约束包括不得使用 GPU 推理、在线评估开销必须可控、分支规则只修改分支规则而其余求解器设置保持默认（仅根节点允许生成割平面、关闭重启）；信息假设为可离线用强分支（strong branching）收集专家示范数据对 (X_t, a*_t)，并可在线调用求解器做昂贵的实例评估；环境为静态的离线演化搜索加在线求解评估，材料未说明是否涉及动态扰动。",
+        "tags": [
+          "分支定界",
+          "分支变量选择",
+          "MILP",
+          "大语言模型代码生成",
+          "演化搜索",
+          "双保真度评估",
+          "模仿学习",
+          "CPU 高效推理"
+        ],
+        "title_zh": "BiFE：基于大语言模型的双保真度演化实现纯 CPU 分支策略的高效搜索",
+        "uncertainty": "所提供的全文节选存在明显的文本截断与排版错乱（公式、表格、部分实验数据缺失或断裂），因此对方法细节、实验结果的完整数字、消融设置以及附录内容的把握有限；通讯作者依据节选中出现多次的邮箱 guoliang.fan@ia.ac.cn 推断为 Guoliang Fan，但通讯作者标注本身在节选中未被明确声明；相关性评分基于该文属于通用 MILP 分支策略设计而非直接面向生产调度问题，迁移价值需要额外条件。",
+        "why_recommended": "对于关注 AI4OR、学习辅助搜索与自动算法设计的研究者，该文提供了一个可复用的评估资源分配范式：在搜索昂贵目标函数时，用离线代理做筛选、用真实评估做校正，并通过散点分析显式诊断代理与真实目标之间的分布漂移，这种诊断与预算分配思路可迁移到生产调度中的规则或启发式自动生成；同时它给出了纯 CPU 轻量策略与 GPU 神经策略、符号规则之间的公平对比和计算预算讨论，对约束可行性、求解质量与运行时间的权衡分析具有方法论参考价值。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-09-30T10:48:47.044695+08:00",
+        "figures": [
+          {
+            "caption": "The overall framework of BiFE. To balance search efficiency and rule quality, F H ​ F F_{HF} evaluates heuristics via expensive MILP solving while F L ​ F F_{LF} offers a cheap surrogate by measuring consistency with strong-branching decisions. An LLM generator produces new heuristics through three operations: initialization, crossover, and mutation. The evolutionary process has two stages: (1) Initialization: the LLM generates an initial population, ranked by F L ​ F F_{LF} with the top α \\alpha forming the elite set ℰ \\mathcal{E} for F H ​ F F_{HF} evaluation. (2) Evolutionary Loop: parent selection is elite-prioritized, where elites are ranked by F H ​ F F_{HF} and others by F L ​ F F_{LF} , and selected parents are passed to the LLM for crossover or mutation. New candidates with F L ​ F F_{LF} exceeding threshold τ \\tau undergo F H ​ F F_{HF} evaluation and are admitted into ℰ \\mathcal{E} . Survival selection retains all elites and fills the remaining slots from the general population. This selective allocation lets BiFE explore broadly with F L ​ F F_{LF} while using F H ​ F F_{HF} to correct the surrogate on promising candidates.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2609.36735/v1/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2609.36735v1/overall_framework_4.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2609.36735v1#S4.F1"
+          },
+          {
+            "caption": "LLM-based rule generator. Given an operation instruction (initialization, crossover, or mutation), a problem description, and a rule template, the LLM generates a new rule. The LLM-generated rules undergo evolution and selection within the BiFE framework to yield an optimal rule.",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2609.36735/v1/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2609.36735v1/LLM_Rule_Generator.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2609.36735v1#S4.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2609.36735v1",
+        "status": "available"
+      },
+      "final_score": 0.6769484935969112,
+      "provenance": {
+        "analyzed_at": "2026-09-30T02:50:10.614423Z",
+        "input_hash": "13e2d53f064c4454f9885939136fe95709ef362165ccef321dbf4acbbcc5dc2f",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "In branch-and-bound (B&B) for mixed-integer linear programming (MILP), branching variable selection critically impacts efficiency. Existing neural branching policies often require GPU inference, while CPU-efficient symbolic expressions lack the representational capacity for complex logic. Large Language Model (LLM)-generated code provides a flexible search space for designing lightweight branching rules with diverse algorithmic logic. To discover effective rules within LLM-based evolutionary frameworks, a core challenge arises: full B&B evaluation on real instances is prohibitively expensive, whereas offline imitation learning suffers from distribution shift. To address this, we introduce a Bi-Fidelity Evolutionary framework (BiFE). It employs low-fidelity imitation scores as a rapid pre-screener and selectively applies high-fidelity on-instance evaluation only to elite candidates, effectively balancing search efficiency with performance reliability. Experiments validate both the search efficiency of BiFE and the competitiveness of its discovered rules, which outperform the SCIP solver and other baselines on CPUs, and even surpass certain GPU-based neural policies.",
+          "authors": [
+            "Ce Zhang",
+            "Bin Zhang",
+            "Zhiwei Xu",
+            "Hao Chen",
+            "Xinyue Lu",
+            "Shanwei Fan",
+            "Yingxuan Teng",
+            "Guoliang Fan"
+          ],
+          "canonical_id": "2609.36735",
+          "categories": [
+            "cs.AI"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2609.36735",
+          "published_at": "2026-09-29T05:08:02Z",
+          "source": "arxiv",
+          "title": "BiFE: Search-Efficient Discovery of CPU-Only Branching Policies via LLM-based Bi-Fidelity Evolution",
+          "updated_at": "2026-09-29T05:08:02Z",
+          "url": "https://arxiv.org/abs/2609.36735",
+          "version": 1
+        },
+        "rank": 1,
+        "score": {
+          "base_score": 0.739906351994384,
+          "exploration": 0.5850000762449964,
+          "matched_terms": [
+            "mixed integer",
+            "mixed-integer",
+            "large language model",
+            "branch and bound",
+            "branch-and-bound"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.797857888399589,
+          "topic": 0.7676077060927218
+        }
+      },
+      "tier": "deep_read"
     }
   },
   "schema_version": 1,
-  "updated_at": "2026-09-29T11:06:50.221025+08:00"
+  "updated_at": "2026-09-30T10:48:47.044695+08:00"
 }

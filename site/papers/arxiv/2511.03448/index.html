@@ -161,7 +161,7 @@
 <main>
   <header class="page-header">
     <div class="masthead">
-      <span>PAPERDAILY · 智能优化与生产调度 · 2026-09-29 11:06</span>
+      <span>PAPERDAILY · 智能优化与生产调度 · 2026-09-30 10:48</span>
       <nav aria-label="站点导航">
         <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/">今日</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/daily/">每日日报</a>
         <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/library/">长期论文库</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/topics/">主题</a>
@@ -176,7 +176,7 @@
   class="paper-card"
   data-paper-card
   data-paper-id="arxiv:2511.03448:v2"
-  data-topic="mathematical-programming"
+  data-topic="evolutionary-optimization"
 >
 <div class="paper-card__cover">
       <img
@@ -193,8 +193,8 @@
   </div>
   <div class="paper-card__body">
     <div class="paper-card__rubric">
-      <span class="topic-badge">数学规划与混合求解</span>
-      <span>正文节选</span>
+      <span class="topic-badge">进化与智能优化</span>
+      <span>摘要级</span>
       <span>相关性 6/10</span>
       <span>v2</span>
     </div>
@@ -205,14 +205,13 @@
 
 <div class="paper-card__takeaway">
       <p class="field-label">核心洞察</p>
-      <p>双层问题的困难根源在于下层最优响应作为上层约束会破坏上层可行域的凸性与连通性；因此求解的关键在于如何处理这种嵌套依赖——要么通过单层化（如 KKT 条件）与下降、惩罚、信赖域等机制保持理论收敛性，要么借助进化算法与代理模型在复杂可行域中进行探索，或通过双层分解把一般优化问题转化为更易处理的子问题。</p>
+      <p>双层优化的核心困难在于下层问题作为约束时通常非凸、不可微，且下层最优解可能不唯一或随上层变量跳变，因此不能简单地把两层合并成单层问题求解。综述的价值在于把线性、混合整数、单目标和多目标等不同形式统一到“嵌套约束”这一视角下，并梳理经典方法与进化方法各自的适用条件；同时指出双层分解可以作为求解一般优化问题的框架，而神经网络架构搜索是将超参数/结构搜索与权重训练分层建模的典型实例，从而说明双层建模不仅是应用工具，也是一种可迁移的问题分解与学习信号组织方式。</p>
     </div>
-    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>可作为理解双层优化建模范式与求解方法谱系的入口文献，帮助判断生产调度或分布式制造中的层次化决策是否适合用双层模型刻画，并了解代理模型、进化算法与经典方法结合的思路，为探索学习辅助搜索与多目标约束优化提供参考。</p>
+    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>对于关注学习辅助搜索、进化算法与数学规划结合的读者，该综述可作为双层优化的入门地图：它把问题形式、经典与进化求解方法以及两个新兴应用（双层分解、神经网络架构搜索）放在同一框架下，有助于判断何时把分层决策建模为嵌套优化，以及进化方法在不可微嵌套结构中的切入点。但需注意它不直接处理生产调度或约束可行性验证，阅读时应重点提取建模视角而非照搬求解细节。</p>
     <ul class="paper-tags" aria-label="研究标签">
       <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/multi-objective/" data-tag-filter="multi-objective">约束多目标</a></li>
       <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/evolutionary/" data-tag-filter="evolutionary">进化与群智能</a></li>
       <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/mathematical-programming/" data-tag-filter="mathematical-programming">数学规划</a></li>
-      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/transfer-surrogate/" data-tag-filter="transfer-surrogate">迁移与代理模型</a></li>
     </ul>
 
 <details class="paper-details" open>
@@ -223,8 +222,8 @@
       </summary>
 
       <div class="paper-details__meta">
-        <p><strong>模型细分主题：</strong>双层优化的求解方法、应用与新兴方向综述</p>
-        <p><strong>模型原始标签：</strong>双层优化、嵌套优化、进化算法、经典数学规划、混合整数规划、多目标优化、代理模型、神经架构搜索、双层分解</p>
+        <p><strong>模型细分主题：</strong>双层优化问题的求解方法综述及其在分层决策、通用优化分解与神经网络架构搜索中的应用</p>
+        <p><strong>模型原始标签：</strong>双层优化、分层决策、进化算法、混合整数优化、多目标优化、神经网络架构搜索、问题分解</p>
         <p><strong>第一单位：</strong>证据未提供</p>
         <p><strong>通讯作者：</strong>证据未提供</p>
         <p><strong>首次上传：</strong>2025-11</p>
@@ -256,25 +255,27 @@
       <p class="copyright">图片来自论文官方 arXiv 页面，仅用于论文导航与学术阅读；版权归论文作者或相关权利人所有。</p>
 
       <dl class="research-note">
-        <dt>研究设定</dt><dd>论文是一篇综述，研究对象为双层优化问题：上层（领导者）优化问题将下层（跟随者）优化问题作为约束，属于层次化决策场景。决策对象是上层决策向量 x 与下层响应向量 y 组成的解对；目标是寻找满足下层最优响应且使上层目标最优的解对 (x*, y*)。关键约束是下层问题必须对给定上层决策求解至最优。信息假设为领导者通常掌握跟随者策略的完整信息，而跟随者仅观察到领导者的决策后作出最优反应；论文还提到可能存在参数不确定性、变量不确定性和决策不确定性，环境可以是静态或动态，材料未进一步说明。</dd>
-        <dt>研究动机</dt><dd>双层优化能够刻画现实中的层次化决策问题，但其嵌套结构导致可行域非凸甚至不连通，传统数学规划方法难以高效求解复杂双层问题，因此需要系统梳理经典方法与进化方法，并识别新的应用方向（如双层分解和神经架构搜索）以推动该领域发展。</dd>
-        <dt>核心洞察</dt><dd>双层问题的困难根源在于下层最优响应作为上层约束会破坏上层可行域的凸性与连通性；因此求解的关键在于如何处理这种嵌套依赖——要么通过单层化（如 KKT 条件）与下降、惩罚、信赖域等机制保持理论收敛性，要么借助进化算法与代理模型在复杂可行域中进行探索，或通过双层分解把一般优化问题转化为更易处理的子问题。</dd>
-        <dt>技术挑战</dt><dd><ul><li>嵌套结构导致可行域非凸且不连通，求解困难</li><li>下层问题必须对每个上层决策求解至最优，计算开销大</li><li>存在参数不确定性、变量不确定性和决策不确定性</li><li>混合整数与多目标双层问题进一步增加求解难度</li><li>传统数学规划方法依赖正则性条件，难以处理复杂双层问题</li><li>代理模型对复杂下层问题的全局映射近似困难</li></ul></dd>
-        <dt>问题分析</dt><dd>作者以综述方式分析双层优化：首先给出标准嵌套数学形式与术语，指出嵌套结构造成的非凸、不连通特性；然后按经典方法与进化方法两条路线梳理求解机制，涵盖单层化、下降法、惩罚函数和信赖域等经典机制，以及遗传算法、模拟退火等元启发式方法；针对下层问题评估昂贵的问题，分析用 Ψ-mapping 和 φ-mapping 的代理模型近似来降低嵌套评估开销；再分别讨论混合整数和多目标双层情形；最后通过双层分解和神经架构搜索两个新兴应用说明双层建模如何反哺一般优化与机器学习。</dd>
-        <dt>方法</dt><dd><ul><li>给出双层优化标准定义：上层问题包含下层优化问题作为约束，记上层决策 x、下层决策 y，目标为求 (x*, y*)</li><li>经典方法路线：单层化约简（如 KKT 条件）、下降方法、惩罚函数方法、信赖域方法</li><li>进化方法路线：使用遗传算法、模拟退火等元启发式算法探索非凸、离散、不连续的可行域</li><li>混合方法：将进化算法与经典方法结合，处理特定类型的困难双层问题</li><li>代理模型机制：对 Ψ-mapping（由上层解映射到下层决策）和 φ-mapping（由上层解映射到下层最优值）进行近似，先求解少量上层解对应的下层问题，再用代理模型近似映射并迭代更新</li><li>针对混合整数双层优化和多目标双层优化分别讨论求解思路</li><li>新兴应用一：基于双层优化的分解方法求解一般单层优化问题</li><li>新兴应用二：神经架构搜索作为双层优化问题，包括基于信任域的 NAS 等变体</li></ul></dd>
-        <dt>实验</dt><dd><ul><li>论文为综述，材料未提供作者自行开展的实验、基线、实例规模、解质量、运行时间或消融结果；摘要仅说明综述涵盖线性、混合整数、单目标、多目标双层问题及经典与进化方法。</li></ul></dd>
-        <dt>局限</dt><dd><ul><li>作者在结论中指出双层问题的嵌套结构常导致非凸和不可连通的可行域，经典方法依赖正则性条件，混合整数与多目标双层问题仍需进一步关注；材料未给出针对具体应用的定量验证或统一基准。</li></ul></dd>
-        <dt>与你的研究关系</dt><dd>该综述与智能优化和 AI4OR 有明确相邻关系：双层建模可用于生产调度中的层次决策（如上层产能/价格决策与下层车间调度响应）、分布式制造中的多主体协同，以及学习辅助搜索中的超参数或架构优化。论文中关于代理模型近似下层最优响应、进化算法与经典方法混合、混合整数与多目标双层求解的讨论，为生产调度中嵌套决策与约束可行性处理提供可迁移思路。但论文本身未涉及柔性作业车间、流水车间、生产运输协同或动态扰动等具体调度问题，迁移到这些场景需要重新定义上下层决策变量、目标与约束，并验证求解质量与公平计算预算，这属于推测而非作者结论。</dd>
+        <dt>研究设定</dt><dd>论文研究的是双层优化问题：一个上层（领导者）优化问题将下层（跟随者）优化问题作为约束嵌套其中，用于刻画领导者需预判利益相关者响应的分层决策场景。决策对象是嵌套结构中的上层与下层决策变量；目标是在下层问题最优响应条件下优化上层目标。摘要提到覆盖线性、混合整数、单目标和多目标等形式，但未说明具体约束类型、信息假设（如上下层是否共享全部信息）、下层是否唯一最优，也未说明环境是静态还是动态。</dd>
+        <dt>研究动机</dt><dd>现实中的许多决策是层级化的：某一决策者的行动会引发其他利益相关者的响应，因此在优化自身目标时必须把对方的可能最优反应纳入考虑。这种结构自然形成嵌套优化，需要专门的建模与求解方法；同时双层优化在机器学习等领域出现了新的应用形式，例如神经网络架构搜索本身就是一个双层优化问题。</dd>
+        <dt>核心洞察</dt><dd>双层优化的核心困难在于下层问题作为约束时通常非凸、不可微，且下层最优解可能不唯一或随上层变量跳变，因此不能简单地把两层合并成单层问题求解。综述的价值在于把线性、混合整数、单目标和多目标等不同形式统一到“嵌套约束”这一视角下，并梳理经典方法与进化方法各自的适用条件；同时指出双层分解可以作为求解一般优化问题的框架，而神经网络架构搜索是将超参数/结构搜索与权重训练分层建模的典型实例，从而说明双层建模不仅是应用工具，也是一种可迁移的问题分解与学习信号组织方式。</dd>
+        <dt>技术挑战</dt><dd><ul><li>下层问题作为约束导致整体问题非凸、不可微，经典梯度方法难以直接应用</li><li>下层最优解可能不唯一或随上层变量不连续变化，影响可行性判断与算法收敛</li><li>混合整数与多目标形式会进一步增加求解复杂度</li><li>经典方法与进化方法在解质量、计算开销和可行性保证之间需要权衡</li><li>将双层优化用于神经网络架构搜索时，内外层训练的计算代价与近似误差需要控制</li></ul></dd>
+        <dt>问题分析</dt><dd>材料未说明作者具体如何分析问题结构、分解方式或下界构造；摘要仅说明按双层问题的形式（线性、混合整数、单目标、多目标）以及求解方法（经典方法与进化方法）进行分类综述，并给出应用领域概览与两个近期应用示例。</dd>
+        <dt>方法</dt><dd><ul><li>对双层优化问题进行形式化，指出其为一个主问题包含一个下级问题作为约束的嵌套优化结构</li><li>按问题形式分类覆盖线性、混合整数、单目标和多目标双层问题</li><li>梳理并解释已有的经典求解方法与进化求解方法</li><li>概述双层优化在各领域的应用</li><li>介绍双层分解方法用于求解一般优化问题</li><li>介绍神经网络架构搜索作为机器学习中双层优化的典型应用</li></ul></dd>
+        <dt>实验</dt><dd><ul><li>本文为综述，摘要未给出具体实验、基线、实例规模、解质量、运行时间或消融结果；材料未说明是否有实验验证。</li></ul></dd>
+        <dt>局限</dt><dd><ul><li>材料未说明</li></ul></dd>
+        <dt>与你的研究关系</dt><dd>该综述与智能优化和 AI4OR 的关系主要体现在方法论层面：双层优化为分层决策、超参数/结构搜索和问题分解提供了统一建模框架。其关于经典方法与进化方法的讨论可能对生产调度中的分层决策（如上层产能分配与下层车间调度）有迁移价值，但这属于推测。若要迁移到柔性作业车间、分布式制造或生产运输协同，需要解决下层调度问题的非凸、离散、多目标与动态扰动特性，并明确上下层信息假设、下层最优解唯一性与计算预算分配；这些条件在摘要中均未涉及。论文本身并未研究生产调度问题。</dd>
         <dt>证据与不确定性</dt>
         <dd>
-          <p>本文是综述，且当前仅提供摘要和少量全文片段，缺少具体算法细节、实验数据和基准结果；相关性评分 6 是基于双层优化方法可能迁移至生产调度等层次决策场景的相邻关系，而非论文直接研究调度问题；第一单位和通讯作者信息在输入材料中未出现。</p>
-          <blockquote><strong>双层优化适用于需要预测其他利益相关者反应的层次化决策场景，并形成嵌套优化结构。：</strong>Bilevel optimization is an appropriate choice for hierarchical decision-making situations, where a decision-maker needs to consider a possible response from stakeholder(s) for each of its actions to achieve his own goals.</blockquote>
-          <blockquote><strong>论文综述了双层问题的多种形式，包括线性、混合整数、单目标和多目标。：</strong>Various forms of bilevel problems, including linear, mixed-integer, single-objective, and multiobjective, are covered.</blockquote>
-          <blockquote><strong>论文介绍了两类近期双层应用：用于一般优化问题的双层分解，以及机器学习中的神经架构搜索。：</strong>two recent considerations of bilevel approach are introduced. The first application involves a bilevel decomposition approach for solving general optimization problems, and the second application involves Neural Architecture Search (NAS), which is a prime example of a bilevel optimization problem in the area of machine learning.</blockquote>
-          <blockquote><strong>论文从概要层面说明了综述涵盖经典和进化的双层求解方法，以及混合整数和多目标双层优化。：</strong>For bilevel problem solving methods, various classical and evolutionary approaches are explained.</blockquote>
+          <p>证据仅来自标题与摘要，无法确认综述覆盖的具体算法细节、实验对比、应用领域清单以及作者对局限性的讨论；第一单位、通讯作者和发表信息均未提供，因此上述判断在方法细节和相关性强度上存在不确定性。</p>
+          <blockquote><strong>论文是一篇关于双层优化求解技术的综述，面向现实应用。：</strong>This paper presents a comprehensive review of techniques proposed in the literature for solving bilevel optimization problems encountered in various real-life applications.</blockquote>
+          <blockquote><strong>双层优化建模的是分层决策场景，上层决策者需考虑利益相关者的可能响应。：</strong>Bilevel optimization is an appropriate choice for hierarchical decision-making situations, where a decision-maker needs to consider a possible response from stakeholder(s) for each of its actions to achieve his own goals.</blockquote>
+          <blockquote><strong>双层问题在数学上表现为上层优化问题包含下层优化问题作为约束的嵌套结构。：</strong>Mathematically, it leads to a nested optimization structure, in which a primary (leader&#39;s) optimization problem contains a secondary (follower&#39;s) optimization problem as a constraint.</blockquote>
+          <blockquote><strong>综述覆盖线性、混合整数、单目标和多目标等双层问题形式。：</strong>Various forms of bilevel problems, including linear, mixed-integer, single-objective, and multiobjective, are covered.</blockquote>
+          <blockquote><strong>求解方法部分同时解释了经典方法和进化方法。：</strong>For bilevel problem solving methods, various classical and evolutionary approaches are explained.</blockquote>
+          <blockquote><strong>论文介绍了双层分解用于求解一般优化问题，以及神经网络架构搜索作为双层优化在机器学习中的典型应用。：</strong>The first application involves a bilevel decomposition approach for solving general optimization problems, and the second application involves Neural Architecture Search (NAS), which is a prime example of a bilevel optimization problem in the area of machine learning.</blockquote>
         </dd>
       </dl>
-      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；读取了全文节选。证据范围不足的内容不应视为全文结论。</p>
+      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；仅依据标题与摘要。证据范围不足的内容不应视为全文结论。</p>
     </details>  </div>
 </article></section>
 </main>

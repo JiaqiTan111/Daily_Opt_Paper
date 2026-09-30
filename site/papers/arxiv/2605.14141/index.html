@@ -161,7 +161,7 @@
 <main>
   <header class="page-header">
     <div class="masthead">
-      <span>PAPERDAILY · 智能优化与生产调度 · 2026-09-29 11:06</span>
+      <span>PAPERDAILY · 智能优化与生产调度 · 2026-09-30 10:48</span>
       <nav aria-label="站点导航">
         <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/">今日</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/daily/">每日日报</a>
         <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/library/">长期论文库</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/topics/">主题</a>
@@ -188,7 +188,7 @@
   <div class="paper-card__body">
     <div class="paper-card__rubric">
       <span class="topic-badge">智能体与自动建模</span>
-      <span>正文节选</span>
+      <span>摘要级</span>
       <span>相关性 8/10</span>
       <span>v3</span>
     </div>
@@ -199,12 +199,12 @@
 
 <div class="paper-card__takeaway">
       <p class="field-label">核心洞察</p>
-      <p>该工作的核心洞察是：将算法设计本身视为一个在程序假设类上的经验风险最小化问题，风险不仅包含解质量还包含运行时间。当学习到的假设是可执行程序时，运行时间就成为泛化目标的一部分，因此可以用分布样本训练出针对该分布的更廉价求解过程。通过定义‘求解器提示’作为该分布问题可处理性的充分条件，并刻画无分布信息、有分布信息与样本条件三种复杂度之间的关系，作者论证了样本量增大时样本条件复杂度趋近分布已知最优，且离线专用化成本可通过部署阶段降低的运行时间摊销。</p>
+      <p>贡献有效性来自一个关键判断：真正可迁移的不是单次解或参数，而是分布层面的结构假设与由此合成的专用求解代码。因为通用搜索被替换为针对分布结构的更小计算，运行时大幅下降；而 LLM 只在部署前做假设提出、训练实例分析和代码合成，避免了部署期的模型推理开销，使专用化的离线成本可以被重复部署中的运行节省所摊销。</p>
     </div>
-    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>该论文提出了一种与主流‘将学习模型嵌入求解循环’不同的范式：把大语言模型作为部署前的求解器工程师，把分布知识编译为可执行程序，从而在部署时获得远低于通用求解器的运行时间。其样本复杂度分析和求解器提示概念对理解‘何时值得为特定问题分布做专用化’具有理论价值；其实验在PACE竞赛基准上与专用求解器对比并报告了数量级的运行时间优势，对关注学习辅助搜索、自动建模与求解器自动设计的博士研究者具有直接的机制启发和方法迁移潜力。</p>
+    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>该工作为学习辅助求解提供了与强化学习、图神经网络互补的思路：不直接学习策略或值函数，而是用 LLM 在离线阶段合成专用求解代码。其样本访问插值分析与离线/在线成本权衡，对关注公平计算预算、泛化和可复现性的生产调度研究者具有直接参考价值，特别是需要反复求解同一分布实例的场景；同时它在 PACE 竞赛上的运行时对比提供了一个较清晰的专用化收益边界。</p>
     <ul class="paper-tags" aria-label="研究标签">
       <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/agents/" data-tag-filter="agents">多智能体</a></li>
-      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/llm/" data-tag-filter="llm">大模型辅助优化</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/benchmark/" data-tag-filter="benchmark">基准与泛化</a></li>
     </ul>
 
 <details class="paper-details" open>
@@ -215,9 +215,9 @@
       </summary>
 
       <div class="paper-details__meta">
-        <p><strong>模型细分主题：</strong>利用大语言模型在部署前从问题分布样本中合成专用求解器代码</p>
-        <p><strong>模型原始标签：</strong>大模型智能体、程序合成、组合优化、分布感知编程、求解器专用化、统计学习理论</p>
-        <p><strong>第一单位：</strong>Texas A&amp;M University</p>
+        <p><strong>模型细分主题：</strong>从实例分布中学习专用求解器代码的分布感知编程框架</p>
+        <p><strong>模型原始标签：</strong>AI4OR、LLM智能体、专用求解器合成、组合优化、分布泛化、PACE竞赛、求解器自动生成</p>
+        <p><strong>第一单位：</strong>证据未提供</p>
         <p><strong>通讯作者：</strong>证据未提供</p>
         <p><strong>首次上传：</strong>2026-05</p>
         <p class="paper-links">
@@ -227,27 +227,26 @@
 
 
       <dl class="research-note">
-        <dt>研究设定</dt><dd>研究问题为：在反复接收来自同一未知部署分布 D 的组合优化实例时，如何在部署前利用少量样本实例合成可执行求解器代码，使其在新实例上的解质量与运行时间都能泛化。决策对象是求解器程序本身（而非逐实例的求解动作）；目标是最小化在所有未来实例上的累计计算量（期望运行时间与正确性构成的期望风险）；关键约束是样本来自未知分布、程序类有界、离线合成成本需通过部署阶段降低的运行时间摊销；信息假设是学习器仅能访问样本 S ~ D^m，不知道 D 本身；环境为部署前后分离的静态分布设定，作者在讨论中指出分布漂移下专用化可能退化，但未将该动态性纳入实验。</dd>
-        <dt>研究动机</dt><dd>优化与理论计算机科学通常关注最坏情况复杂度，但许多实际问题反复接收来自特定分布或子族的实例。此设定下，平均时间复杂度的设计问题可以借助统计学习理论来刻画：在算法假设类中寻找期望运行时间与正确性风险最小的可执行过程。作者因此提出从经验中学习专用求解器，以减少重复求解的累计计算开销。</dd>
-        <dt>核心洞察</dt><dd>该工作的核心洞察是：将算法设计本身视为一个在程序假设类上的经验风险最小化问题，风险不仅包含解质量还包含运行时间。当学习到的假设是可执行程序时，运行时间就成为泛化目标的一部分，因此可以用分布样本训练出针对该分布的更廉价求解过程。通过定义‘求解器提示’作为该分布问题可处理性的充分条件，并刻画无分布信息、有分布信息与样本条件三种复杂度之间的关系，作者论证了样本量增大时样本条件复杂度趋近分布已知最优，且离线专用化成本可通过部署阶段降低的运行时间摊销。</dd>
-        <dt>技术挑战</dt><dd><ul><li>在未知部署分布下，如何从有限样本中识别可复用的结构假设，并保证合成程序的解质量与运行时间泛化到新实例</li><li>程序类有界时的样本复杂度刻画，以及离线合成成本与部署收益之间的摊销条件</li><li>大语言模型智能体提出的结构假设与合成代码需保证在外部分布和竞争求解器上的有效性与可行性</li><li>重复合成运行中解质量相对稳定但运行时间波动较大，程序搜索会产出精度相似但计算量不同的求解器</li><li>专用化在分布漂移下可能退化，且该方法并未在所有基线上占优</li></ul></dd>
-        <dt>问题分析</dt><dd>作者将平均时间复杂度的算法设计问题形式化为统计学习理论框架下的经验风险最小化：在程序类 A 中寻找使期望风险 R_D(A)（含运行时间与正确性）最小的可执行求解器。通过引入分布遗忘复杂度 C_0、分布已知复杂度 C_known 与样本条件复杂度 C_m 三个量，分析样本访问如何在分布遗忘与分布知情算法设计之间插值，并给出何时离线专用化成本能被部署阶段更低的运行时间回收。作者进一步将求解器提示形式化为该分布可处理性的充分条件，用于指导从样本中提取结构信息。</dd>
-        <dt>方法</dt><dd><ul><li>在大语言模型智能体内，先由模型提出针对分布的结构假设，再由分析程序在训练实例上度量支持该假设的证据，最后合成并精炼部署求解器代码</li><li>大语言模型只在部署前使用，部署阶段运行的是合成出的可执行求解器，不调用任何模型推理</li><li>将样本实例转化为可复用摘要，并据此条件化求解器代码的生成</li><li>通过反复合成与完善获得针对该分布的专用求解器</li></ul></dd>
-        <dt>实验</dt><dd><ul><li>在21个结构化组合优化分布上，合成求解器达到高质量，且常以更小的分布特定计算替代通用搜索或优化</li><li>与发布的PACE竞赛求解器相比，方法在保持竞争力的同时运行时间大幅降低：PACE 2025 Dominating Set上少75至125倍，Hitting Set上少80至96倍，PACE 2024 OCM精确赛道少超过34,000倍</li><li>基线包括问题特定启发式（如DSATUR及贪心变体）、精确或认证方法（如DSATUR分支定界、EvalMaxSAT、MaxHS等）、通用求解器Gurobi（10秒单线程预算，可能返回可行解但未证明最优），以及每类一个架构匹配的学习基线（图神经网络用于着色、MIS、MDS；RUN-CSP风格模型用于MaxSAT；注意力模型用于TSP；学习型装箱方法用于MDKP与Packing LP）</li><li>基线还包括一次性Codex、一次性Claude Code和5取优的Gemma 4等大语言模型基线；所有基线使用相同公开实例协议，且不获得隐藏分布族或生成规则的信息</li><li>在四个PACE任务上，一次性Codex与Claude Code合成的求解器归一化质量略高，但本方法在三个任务上快得多，例外是Codex合成的Dominating Set求解器</li><li>重复合成运行中解质量相对稳定但运行时间波动更大</li></ul></dd>
-        <dt>局限</dt><dd><ul><li>合成成本必须在未来实例上摊销</li><li>专用化在分布漂移下可能退化</li><li>方法并未在所有基线上占优</li><li>重复合成运行中解质量相对稳定但运行时间波动较大，程序搜索会产出精度相似但计算量不同的求解器</li><li>对分布漂移的鲁棒性与合成变异性是重要的未来工作</li></ul></dd>
-        <dt>与你的研究关系</dt><dd>论文事实：该工作将大语言模型智能体用于在部署前从分布样本合成专用求解器代码，属于学习辅助的算法设计与程序合成方向，与‘神经/学习辅助搜索’和‘AI4OR’中利用学习改进求解过程的思路互补但侧重点不同——学习的产物是求解器本身而非求解过程中的预测或分支。迁移设想（推测）：若将其迁移到生产调度，需要满足的前提包括：(1) 调度问题存在反复出现的实例分布（如柔性作业车间或流水车间的订单结构、工时分布）；(2) 存在可度量的结构假设与可合成的求解器代码模板（如针对特定约束结构的构造式或局部搜索规则）；(3) 离线合成所需的样本调度实例与计算预算可获得；(4) 分布漂移（如动态扰动）下的鲁棒性需要额外机制。迁移到动态扰动或多目标生产调度时，还需验证合成求解器在约束可行性与能效目标上的泛化能力，这些均为推测，未在作者实验中验证。</dd>
+        <dt>研究设定</dt><dd>研究问题是在同一未知部署分布下反复求解同类优化问题时，如何利用历史实例经验生成比通用求解器更廉价的可执行求解器代码；决策对象是求解器代码本身（结构假设与专用算法），目标是在保证解质量与运行时对新实例泛化的前提下降低部署期计算开销，关键约束包括只能访问分布样本、LLM仅在部署前使用、代码质量与运行时需泛化到未见实例；环境为静态离线训练加在线部署的设定，部署分布未知。材料未说明是否涉及动态扰动、多目标或具体生产场景。</dd>
+        <dt>研究动机</dt><dd>许多优化问题被反复求解，实例来自同一底层分布，通用求解器每次都从头搜索，忽略了分布中可复用的结构规律；作者希望把这种从经验中学习专用求解方式的直觉形式化，并回答样本访问如何插值于分布无关与分布感知的算法设计之间、离线专用化的代价何时能通过更低的部署成本回收。</dd>
+        <dt>核心洞察</dt><dd>贡献有效性来自一个关键判断：真正可迁移的不是单次解或参数，而是分布层面的结构假设与由此合成的专用求解代码。因为通用搜索被替换为针对分布结构的更小计算，运行时大幅下降；而 LLM 只在部署前做假设提出、训练实例分析和代码合成，避免了部署期的模型推理开销，使专用化的离线成本可以被重复部署中的运行节省所摊销。</dd>
+        <dt>技术挑战</dt><dd><ul><li>部署分布未知，只能通过样本近似，需要样本量到算法质量的插值分析</li><li>生成的求解器代码必须在未见实例上同时保证解质量与运行时泛化</li><li>需界定离线专用化开销何时被部署期节省回收</li><li>在多个结构不同的组合优化分布上同时保持高质量与低运行时</li><li>与专用竞赛求解器对比时需在更少运行时下保持竞争力</li></ul></dd>
+        <dt>问题分析</dt><dd>作者以分布感知编程的形式化框架分析问题，将样本访问视为在分布无关算法设计与分布知情算法设计之间的插值，并给出离线专用化成本被部署期更低成本回收的条件分析；方法层面通过 LLM 智能体提出结构假设、分析训练实例并合成专用求解代码来实例化该框架，材料未说明更细的问题结构分解、下界或图表示利用方式。</dd>
+        <dt>方法</dt><dd><ul><li>形式化分布感知编程：从同一未知部署分布抽取样本，产出可执行求解器代码，其质量与运行时需泛化到新实例</li><li>给出样本访问如何在分布无关与分布知情算法设计之间插值的分析，并刻画离线专用化成本何时被部署期更低成本回收</li><li>用一个 LLM 智能体实例化框架：提出结构假设、分析训练实例、合成专用求解器代码</li><li>LLM 仅在部署前使用，部署期执行的是合成出的专用求解器代码，而非 LLM 推理</li></ul></dd>
+        <dt>实验</dt><dd><ul><li>在 21 个结构化的组合优化分布上，合成的求解器取得高质量，并常常用更小的分布专用计算替代通用搜索或优化</li><li>与公开的 PACE 竞赛求解器相比保持竞争力，同时运行时显著更少：PACE 2025 Dominating Set 上少 75–125 倍，Hitting Set 上少 80–96 倍，PACE 2024 OCM 精确赛道少超过 34,000 倍</li><li>材料未说明具体基线细节、实例规模、约束可行性验证、训练开销、公平计算预算口径、泛化测试和消融实验</li></ul></dd>
+        <dt>局限</dt><dd><ul><li>材料未说明</li></ul></dd>
+        <dt>与你的研究关系</dt><dd>论文事实：该工作直接面向组合优化的求解器自动生成，用 LLM 智能体在部署前从分布样本中合成专用求解代码，并在多个 PACE 类分布上以更少运行时取得有竞争力的解质量。与智能优化、生产调度和 AI4OR 的关系：其分布感知编程范式可迁移到需要反复求解同一类调度或排产问题的场景，例如固定结构下的柔性作业车间或流水车间，从历史实例中学习专用求解策略以替代通用搜索。迁移设想（推测）：要在生产调度中复现该收益，需要具备可采样的历史实例分布、可表达调度约束与目标的求解器代码合成接口，并验证在动态扰动、多目标与能效约束下合成求解器的可行性与泛化性；论文未涉及调度问题、动态环境或约束编程的具体实现细节。</dd>
         <dt>证据与不确定性</dt>
         <dd>
-          <p>输入材料为全文节选，缺少完整的方法细节、21个分布的完整清单、训练样本量、合成时间开销的具体数值以及统计显著性检验；摘要与节选中未提供通讯作者信息；运行时间倍数的具体实验设置和公平预算对齐细节未完整给出；因此对方法可复现性和实验结论的稳健性存在一定不确定性。</p>
-          <blockquote><strong>论文将问题形式化为分布感知编程：用未知部署分布的样本生成可执行求解器代码，且质量与运行时间泛化到新实例：</strong>We formalize this as \emph{distribution-aware programming}: samples from an unknown deployment distribution are used to produce executable solver code whose quality and runtime generalize to new instances.</blockquote>
-          <blockquote><strong>系统使用大语言模型智能体提出结构假设、分析训练实例并合成专用求解器代码，且大语言模型仅在部署前使用：</strong>We instantiate this framework with an LLM agent that proposes structural hypotheses, analyzes training instances, and synthesizes specialized solver code; the LLM is used only before deployment.</blockquote>
-          <blockquote><strong>在PACE基准上方法保持竞争力且运行时间大幅降低：</strong>Against released PACE competition solvers, our method remains competitive while using substantially less runtime: \(75\)--\(125\times\) less on PACE 2025 Dominating Set, \(80\)--\(96\times\) less on Hitting Set, and more than \(34{,}000\times\) less on the PACE 2024 OCM exact track.</blockquote>
-          <blockquote><strong>作者明确列出若干局限，包括合成成本需摊销、分布漂移下专用化可能退化、方法并非在所有基线上占优：</strong>Several limitations remain. Synthesis cost must be amortized over future instances, specialization may degrade under distribution shift, and the method does not dominate every baseline.</blockquote>
-          <blockquote><strong>作者提出求解器提示作为该分布问题可处理性的充分条件：</strong>We formalize solver hints as a sufficient condition for tractability of our distribution of problems.</blockquote>
-          <blockquote><strong>大语言模型仅在部署前使用，部署阶段无需模型推理：</strong>The resulting solver requires no LLM inference at deployment.</blockquote>
+          <p>仅依据标题与摘要，未提供全文；无法核验具体基线设置、实例规模、训练与推理开销、约束可行性、公平计算预算口径以及消融与泛化实验；相关性评分基于其分布感知求解器合成范式对调度与 AI4OR 的可迁移性，而非论文直接研究生产调度问题。</p>
+          <blockquote><strong>论文形式化分布感知编程，用未知部署分布的样本产出可执行求解器代码，其质量与运行时需泛化到新实例：</strong>We formalize this as \emph{distribution-aware programming}: samples from an unknown deployment distribution are used to produce executable solver code whose quality and runtime generalize to new instances.</blockquote>
+          <blockquote><strong>论文给出样本访问在分布无关与分布知情算法设计之间插值的分析，以及离线专用化成本何时被部署期更低成本回收：</strong>A simple analysis shows how sample access interpolates between distribution-oblivious and distribution-informed algorithm design, and when the offline cost of specialization is recovered through lower deployment cost.</blockquote>
+          <blockquote><strong>方法实例化为一个 LLM 智能体，提出结构假设、分析训练实例并合成专用求解器代码，且 LLM 仅在部署前使用：</strong>We instantiate this framework with an LLM agent that proposes structural hypotheses, analyzes training instances, and synthesizes specialized solver code; the LLM is used only before deployment.</blockquote>
+          <blockquote><strong>在 21 个结构化组合优化分布上，合成求解器质量高且常以更小的分布专用计算替代通用搜索：</strong>Across \(21\) structured combinatorial-optimization distributions, the synthesized solvers achieve high quality while often replacing generic search or optimization with smaller distribution-specific computations.</blockquote>
+          <blockquote><strong>与公开 PACE 竞赛求解器相比保持竞争力，同时运行时大幅减少，并给出三个具体赛道的倍数：</strong>Against released PACE competition solvers, our method remains competitive while using substantially less runtime: \(75\)--\(125\times\) less on PACE 2025 Dominating Set, \(80\)--\(96\times\) less on Hitting Set, and more than \(34{,}000\times\) less on the PACE 2024 OCM exact track.</blockquote>
         </dd>
       </dl>
-      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；读取了全文节选。证据范围不足的内容不应视为全文结论。</p>
+      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；仅依据标题与摘要。证据范围不足的内容不应视为全文结论。</p>
     </details>  </div>
 </article></section>
 </main>
