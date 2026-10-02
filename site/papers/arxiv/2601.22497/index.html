@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>面向多主体多目标优化的公平感知性能评估</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root {
+      --ink:#16211b; --muted:#5d6a62; --paper:#f3efe6; --card:#fffdfa;
+      --green:#1f5c42; --green-soft:#e8f0e9; --line:#d8d2c5; --accent:#b44d2f;
+      --shadow:0 16px 42px rgba(34,42,36,.07);
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; color:var(--ink); background:var(--paper); font:16px/1.7 system-ui,-apple-system,"Noto Sans SC",sans-serif; }
+    button,input,select { font:inherit; }
+    button { color:inherit; }
+    a { color:var(--green); }
+    [hidden] { display:none !important; }
+    main { width:min(1440px,94vw); margin:0 auto; padding:34px 0 96px; }
+
+    .page-header { border-bottom:1px solid var(--line); padding-bottom:30px; }
+    .masthead { display:flex; justify-content:space-between; gap:20px; align-items:center; color:var(--muted); font-size:.83rem; letter-spacing:.03em; }
+    .masthead nav { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px 16px; }
+    .masthead nav a { color:var(--muted); text-decoration:none; }
+    .masthead nav a:hover { color:var(--green); text-decoration:underline; }
+    h1 { max-width:1100px; margin:42px 0 20px; font:700 clamp(2.35rem,6vw,5.3rem)/1.04 Georgia,"Noto Serif SC",serif; overflow-wrap:anywhere; }
+    .lede { max-width:920px; color:var(--muted); font-size:1.08rem; }
+    .stats { display:grid; grid-template-columns:repeat(5,minmax(120px,1fr)); gap:12px; margin-top:30px; }
+    .stat { padding:14px 16px; border:1px solid var(--line); background:rgba(255,255,255,.45); }
+    .stat strong { display:block; color:var(--green); font-size:1.6rem; line-height:1.2; }
+
+    .gallery-intro { display:flex; justify-content:space-between; gap:30px; align-items:end; margin:50px 0 20px; }
+    .eyebrow { margin:0 0 5px; color:var(--accent); font-size:.78rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    .gallery-intro h2 { margin:0; font:700 clamp(1.8rem,3vw,2.8rem)/1.15 Georgia,"Noto Serif SC",serif; }
+    .gallery-intro > p { max-width:620px; margin:0; color:var(--muted); }
+
+    .portal-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,245px),1fr)); gap:14px; }
+    .portal-card { min-height:178px; display:flex; flex-direction:column; padding:20px; color:var(--ink); border:1px solid var(--line); background:var(--card); text-decoration:none; box-shadow:var(--shadow); transition:.18s ease; }
+    .portal-card:hover { transform:translateY(-3px); border-color:var(--green); }
+    .portal-card strong { font:700 1.28rem/1.35 Georgia,"Noto Serif SC",serif; }
+    .portal-card p { margin:10px 0 18px; color:var(--muted); font-size:.9rem; }
+    .portal-card span { margin-top:auto; color:var(--green); font-weight:800; font-size:.84rem; }
+    .portal-section { margin-top:58px; padding-top:34px; border-top:1px solid var(--line); }
+    .portal-section h2 { margin:0 0 8px; font:700 2rem/1.2 Georgia,"Noto Serif SC",serif; }
+    .portal-section > p { margin:0 0 20px; color:var(--muted); }
+    .portal-subtitle { margin:28px 0 12px; font-size:1rem; }
+
+    .topic-shelves { display:grid; grid-template-columns:repeat(auto-fit,minmax(185px,1fr)); gap:10px; margin-bottom:18px; }
+    .topic-filter { min-height:96px; padding:14px 16px; text-align:left; border:1px solid var(--line); background:rgba(255,253,250,.7); cursor:pointer; transition:.18s ease; }
+    .topic-filter:hover { transform:translateY(-2px); border-color:var(--green); }
+    .topic-filter[aria-pressed="true"] { color:#fff; border-color:var(--green); background:var(--green); box-shadow:0 8px 18px rgba(31,92,66,.18); }
+    .topic-filter strong { display:block; line-height:1.35; }
+    .topic-filter span { display:block; margin-top:6px; color:var(--muted); font-size:.82rem; }
+    .topic-filter[aria-pressed="true"] span { color:rgba(255,255,255,.78); }
+
+    .explorer-controls { position:sticky; top:0; z-index:20; display:grid; grid-template-columns:minmax(220px,2fr) repeat(4,minmax(125px,1fr)) auto; gap:10px; padding:14px; border:1px solid var(--line); background:rgba(243,239,230,.95); box-shadow:0 10px 25px rgba(34,42,36,.06); backdrop-filter:blur(12px); }
+    .control { display:grid; gap:4px; color:var(--muted); font-size:.76rem; font-weight:700; }
+    .control input,.control select { width:100%; min-height:42px; padding:8px 10px; color:var(--ink); border:1px solid var(--line); border-radius:0; background:var(--card); }
+    .explorer-actions { display:flex; gap:6px; align-items:end; }
+    .explorer-actions button { min-height:42px; padding:8px 12px; border:1px solid var(--line); background:var(--card); cursor:pointer; white-space:nowrap; }
+    .explorer-actions button:hover { border-color:var(--green); color:var(--green); }
+    .explorer-status { display:flex; justify-content:space-between; gap:20px; align-items:center; margin:18px 0 10px; color:var(--muted); }
+    .explorer-status strong { color:var(--green); font-size:1.2rem; }
+    .active-tag { color:var(--green); font-weight:800; }
+    .noscript-notice,.empty-state { padding:20px; border:1px solid var(--line); background:var(--card); }
+
+    .tier-section { margin-top:36px; }
+    .tier-heading { display:flex; justify-content:space-between; align-items:end; gap:20px; margin-bottom:14px; border-bottom:1px solid var(--line); }
+    .tier-heading h2 { margin:0 0 8px; font-size:1.45rem; }
+    .tier-heading p { margin:0 0 8px; color:var(--muted); }
+    .paper-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr)); gap:18px; align-items:start; }
+
+    .paper-card { min-width:0; overflow:hidden; border:1px solid var(--line); background:var(--card); box-shadow:var(--shadow); }
+    .paper-card__cover { position:relative; height:230px; display:grid; place-items:center; overflow:hidden; border-bottom:1px solid var(--line); background:#f7f7f2; }
+    .paper-card__cover > img { width:100%; height:100%; display:block; object-fit:contain; background:#fff; }
+    .paper-card__cover-caption { position:absolute; left:0; right:0; bottom:0; max-height:58px; overflow:hidden; margin:0; padding:9px 12px; color:#fff; background:linear-gradient(transparent,rgba(12,20,16,.88)); font-size:.76rem; line-height:1.35; }
+    .paper-card__placeholder { width:100%; height:100%; display:flex; flex-direction:column; justify-content:space-between; padding:22px; color:var(--green); background:linear-gradient(145deg,#edf3ed,#faf7ef 62%,#e8eee8); }
+    .paper-card__placeholder span { font-weight:800; }
+    .paper-card__placeholder strong { font:700 1.45rem/1.2 Georgia,serif; overflow-wrap:anywhere; }
+    .paper-card__placeholder small { color:var(--muted); }
+    .paper-card__body { display:flex; flex-direction:column; min-height:520px; padding:22px; }
+    .paper-card--compact .paper-card__body { min-height:285px; }
+    .paper-card__rubric { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:12px; color:var(--muted); font-size:.74rem; }
+    .paper-card__rubric span { padding:2px 7px; border:1px solid var(--line); }
+    .paper-card__rubric .topic-badge { color:var(--green); border-color:var(--green); font-weight:800; }
+    .paper-card h3 { margin:0 0 8px; font-size:1.3rem; line-height:1.38; }
+    .paper-card h3 a { color:var(--ink); text-decoration:none; }
+    .paper-card h3 a:hover { color:var(--green); text-decoration:underline; }
+    .original-title { display:-webkit-box; overflow:hidden; margin:0 0 8px; color:var(--muted); font:italic .88rem/1.45 Georgia,serif; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
+    .authors { overflow:hidden; margin:0 0 18px; color:var(--muted); font-size:.82rem; text-overflow:ellipsis; white-space:nowrap; }
+    .paper-card__takeaway { padding:14px; border-left:3px solid var(--green); background:var(--green-soft); }
+    .paper-card__takeaway p { margin:0; }
+    .paper-card__takeaway p:last-child { display:-webkit-box; overflow:hidden; -webkit-box-orient:vertical; -webkit-line-clamp:4; }
+    .field-label { margin-bottom:4px !important; color:var(--green); font-size:.75rem; font-weight:800; letter-spacing:.08em; }
+    .paper-card__recommendation { display:-webkit-box; overflow:hidden; margin:14px 0; color:var(--muted); font-size:.9rem; -webkit-box-orient:vertical; -webkit-line-clamp:3; }
+    .paper-card__recommendation strong { color:var(--ink); }
+    .paper-tags { display:flex; flex-wrap:wrap; gap:6px; margin:0 0 16px; padding:0; list-style:none; }
+    .paper-tags a { display:block; padding:3px 8px; color:var(--green); background:#edf3ed; font-size:.75rem; text-decoration:none; }
+    .paper-tags a:hover { text-decoration:underline; }
+
+    .paper-details { margin-top:auto; border-top:1px solid var(--line); }
+    .paper-details summary { display:flex; justify-content:space-between; gap:12px; align-items:center; padding:14px 0 0; color:var(--green); font-weight:800; cursor:pointer; list-style:none; }
+    .paper-details summary::-webkit-details-marker { display:none; }
+    .summary-close { display:none; }
+    .paper-details[open] .summary-open { display:none; }
+    .paper-details[open] .summary-close { display:inline; }
+    .paper-details[open] .summary-arrow { transform:rotate(180deg); }
+    .summary-arrow { transition:transform .2s ease; }
+    .paper-details__meta { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 18px; margin:22px 0; padding:16px; background:#f6f3ec; font-size:.9rem; }
+    .paper-details__meta p { margin:0; }
+    .paper-links { display:flex; flex-wrap:wrap; gap:14px; }
+    .research-note { display:grid; grid-template-columns:minmax(150px,210px) minmax(0,1fr); gap:10px 20px; margin:22px 0 0; }
+    .research-note dt { color:var(--muted); font-weight:800; }
+    .research-note dd { min-width:0; margin:0; }
+    .research-note ul { margin:0; padding-left:1.25rem; }
+    blockquote { margin:10px 0; padding:10px 14px; border-left:3px solid var(--green); background:#f2f5ef; }
+    .paper-figures { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr)); gap:14px; margin:22px 0 8px; }
+    .paper-figure { margin:0; border:1px solid var(--line); background:#f7f7f2; }
+    .paper-figure__media { min-height:180px; display:grid; place-items:center; background:#fff; overflow:hidden; }
+    .paper-figure img { display:block; width:100%; max-height:480px; object-fit:contain; }
+    .paper-figure figcaption { padding:11px 13px; color:var(--muted); font-size:.84rem; line-height:1.5; }
+    .figure-source { display:block; margin-top:5px; font-size:.8rem; }
+    .figure-error { padding:26px; color:var(--muted); text-align:center; }
+    .copyright,.analysis-scope { color:var(--muted); font-size:.78rem; }
+    .analysis-scope { margin-top:22px; padding-top:12px; border-top:1px solid var(--line); }
+    .detail-layout { margin-top:42px; }
+    .detail-layout .paper-card { width:min(1120px,100%); margin:0 auto; }
+    .detail-layout .paper-card__cover { height:min(520px,55vw); }
+    .detail-layout .paper-card__body { min-height:0; padding:clamp(24px,4vw,44px); }
+
+    .paper-card:has(.paper-details[open]) { grid-column:1/-1; }
+    .paper-card:has(.paper-details[open]) .paper-card__cover { display:none; }
+    .paper-card:has(.paper-details[open]) .paper-card__body { width:min(1120px,100%); min-height:0; margin:0 auto; padding:clamp(24px,4vw,44px); }
+    .paper-card:has(.paper-details[open]) .paper-card__takeaway p:last-child,
+    .paper-card:has(.paper-details[open]) .paper-card__recommendation { display:block; overflow:visible; }
+
+    @media (max-width:1100px) {
+      .stats { grid-template-columns:repeat(3,1fr); }
+      .explorer-controls { grid-template-columns:repeat(3,1fr); }
+      .control--query { grid-column:span 2; }
+    }
+    @media (max-width:760px) {
+      main { width:min(94vw,680px); padding-top:24px; }
+      .masthead,.gallery-intro,.explorer-status { align-items:flex-start; flex-direction:column; }
+      .masthead nav { justify-content:flex-start; }
+      h1 { margin-top:28px; font-size:clamp(1.85rem,9vw,2.5rem); }
+      .stats { grid-template-columns:repeat(2,1fr); }
+      .topic-shelves { display:flex; overflow-x:auto; padding-bottom:6px; scroll-snap-type:x proximity; }
+      .topic-filter { min-width:190px; scroll-snap-align:start; }
+      .explorer-controls { position:static; grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .control--query,.explorer-actions { grid-column:1/-1; }
+      .explorer-actions { flex-wrap:wrap; }
+      .paper-details__meta,.research-note { grid-template-columns:1fr; }
+      .research-note dt { margin-top:10px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header class="page-header">
+    <div class="masthead">
+      <span>PAPERDAILY · 智能优化与生产调度 · 2026-10-02 10:57</span>
+      <nav aria-label="站点导航">
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/">今日</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/daily/">每日日报</a>
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/library/">长期论文库</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/topics/">主题</a>
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/">标签</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/archive/">发表归档</a>
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/search/">搜索</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/feed.xml">订阅</a>
+      </nav>
+    </div>
+    <h1>面向多主体多目标优化的公平感知性能评估</h1>
+<p class="lede">本次检索最近 3 天的论文版本，首次发表日期见各篇详情。</p><p class="lede">Fairness-Aware Performance Evaluation for Multi-Party Multi-Objective Optimization</p>  </header>
+
+  <section class="detail-layout" aria-label="论文完整解读"><article
+  class="paper-card"
+  data-paper-card
+  data-paper-id="arxiv:2601.22497:v2"
+  data-topic="evolutionary-optimization"
+>
+<div class="paper-card__cover">
+      <img
+        src="https://JiaqiTan111.github.io/Daily_Opt_Paper/figures/arxiv/2601.22497/v2/fig2-panel1.png"
+        alt="Figure 2：Illustration of concession rates and the mutually acceptable region. γ m \gamma_{m} quantifies the normalized deviation from it. The intersection 𝒜 \mathcal{A} indicates solutions meeting all DMs’ concession thresholds."
+        loading="lazy"
+        decoding="async"
+        referrerpolicy="no-referrer"
+        data-paper-figure
+        data-original-url="https://arxiv.org/html/2601.22497v2/concession_rate.png"
+      >
+      <div class="figure-error" hidden data-figure-error>论文图暂时无法加载，可从原文查看。</div>
+      <p class="paper-card__cover-caption"><strong>Figure 2</strong> Illustration of concession rates and the mutually acceptable region. γ m \gamma_{m} quantifies the normalized deviation from it. The intersection 𝒜 \mathcal{A} indicates solutions meeting all DMs’ concession thresholds.</p>
+  </div>
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">进化与智能优化</span>
+      <span>摘要级</span>
+      <span>相关性 6/10</span>
+      <span>v2</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2601.22497/">面向多主体多目标优化的公平感知性能评估</a></h3>
+    <p class="original-title" lang="en">Fairness-Aware Performance Evaluation for Multi-Party Multi-Objective Optimization</p>
+    <p class="authors">Zifan Zhao · Peilan Xu · Wenjian Luo</p>
+
+<div class="paper-card__takeaway">
+      <p class="field-label">核心洞察</p>
+      <p>公平评估的关键不在于对各DM指标做平均，而在于把每个DM可接受的让步纳入解质量定义：以让步率向量刻画各方愿意承受的妥协，再用纳什乘积把各DM的评估值耦合成一个整体分数。纳什乘积对任一DM得分下降极为敏感，因而天然要求各主体相对收益均衡，避免均值聚合掩盖某一方被牺牲。同时，让步率使共识解从“严格共同Pareto最优”扩展为“各方均可接受的区域”，使评估框架既能奖励严格共同解，也能在没有严格共同解时识别有效覆盖公共可接受区域的算法。</p>
+    </div>
+    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>对研究多目标生产调度、分布式制造中多决策者利益平衡的读者，该文提供了评估层面的公平性公理化视角和纳什乘积聚合机制，可启发如何避免均值指标掩盖某一方被牺牲；其让步率与广义共识解概念也可迁移到多工厂、多运输方协同场景的解选择与基准设计。但该文不直接涉及调度求解算法，价值主要在评估与概念层面。</p>
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/multi-objective/" data-tag-filter="multi-objective">约束多目标</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/benchmark/" data-tag-filter="benchmark">基准与泛化</a></li>
+    </ul>
+
+<details class="paper-details" open>
+      <summary>
+        <span class="summary-open">展开完整解读</span>
+        <span class="summary-close">收起完整解读</span>
+        <span aria-hidden="true" class="summary-arrow">↓</span>
+      </summary>
+
+      <div class="paper-details__meta">
+        <p><strong>模型细分主题：</strong>多主体多目标优化中的公平感知性能评估与共识解定义</p>
+        <p><strong>模型原始标签：</strong>多主体多目标优化、性能评估指标、合作博弈论、纳什乘积、共识解、让步率</p>
+        <p><strong>第一单位：</strong>证据未提供</p>
+        <p><strong>通讯作者：</strong>证据未提供</p>
+        <p><strong>首次上传：</strong>2026-01</p>
+        <p class="paper-links">
+          <a href="https://arxiv.org/abs/2601.22497">arXiv 摘要 ↗</a>
+<a href="https://arxiv.org/pdf/2601.22497">PDF ↗</a><a href="https://arxiv.org/html/2601.22497v2">官方 HTML ↗</a>        </p>
+      </div>
+
+      <div class="paper-figures">
+        <figure class="paper-figure">
+          <div class="paper-figure__media">
+            <img
+              src="https://JiaqiTan111.github.io/Daily_Opt_Paper/figures/arxiv/2601.22497/v2/fig2-panel1.png"
+              alt="Figure 2：Illustration of concession rates and the mutually acceptable region. γ m \gamma_{m} quantifies the normalized deviation from it. The intersection 𝒜 \mathcal{A} indicates solutions meeting all DMs’ concession thresholds."
+              loading="lazy"
+              decoding="async"
+              referrerpolicy="no-referrer"
+              data-paper-figure
+              data-original-url="https://arxiv.org/html/2601.22497v2/concession_rate.png"
+            >
+            <div class="figure-error" hidden data-figure-error>该论文图暂时无法加载，可从原文查看。</div>
+          </div>
+          <figcaption>
+            <strong>Figure 2.</strong> Illustration of concession rates and the mutually acceptable region. γ m \gamma_{m} quantifies the normalized deviation from it. The intersection 𝒜 \mathcal{A} indicates solutions meeting all DMs’ concession thresholds.
+            <a class="figure-source" href="https://arxiv.org/html/2601.22497v2#S4.F2">来源：论文官方 arXiv HTML ↗</a>
+          </figcaption>
+        </figure>
+      </div>
+      <p class="copyright">图片来自论文官方 arXiv 页面，仅用于论文导航与学术阅读；版权归论文作者或相关权利人所有。</p>
+
+      <dl class="research-note">
+        <dt>研究设定</dt><dd>研究多主体多目标优化问题（MPMOP）：多个决策者（DM）各自具有异质偏好或多目标，求解算法需输出解决方案集；研究目标不是直接设计新优化算法，而是提出评估这类解集质量的公平感知度量，并据此重新定义“共识最优解”。关键约束是不同DM的Pareto前沿（PF）接近质量不应被简单均值聚合，因为各DM所重视的目标维度、可接受的让步程度不同；信息假设是每个DM可给出一个让步率向量以量化其可接受的妥协，静态多目标优化环境，材料未说明动态扰动。</dd>
+        <dt>研究动机</dt><dd>经典性能指标在MPMOP中先对每个DM计算指标再跨DM求均值，隐含假设不同DM上相同的几何逼近质量具有可比评估意义，从而可能偏向某些主体，无法反映异质DM之间的平衡相对收益或真正共识。同时主流MPMOP最优解概念仅限严格共同Pareto最优解，合作形式过窄，掩盖了不存在严格共同解时各方通过让步达成可接受共识的情形。</dd>
+        <dt>核心洞察</dt><dd>公平评估的关键不在于对各DM指标做平均，而在于把每个DM可接受的让步纳入解质量定义：以让步率向量刻画各方愿意承受的妥协，再用纳什乘积把各DM的评估值耦合成一个整体分数。纳什乘积对任一DM得分下降极为敏感，因而天然要求各主体相对收益均衡，避免均值聚合掩盖某一方被牺牲。同时，让步率使共识解从“严格共同Pareto最优”扩展为“各方均可接受的区域”，使评估框架既能奖励严格共同解，也能在没有严格共同解时识别有效覆盖公共可接受区域的算法。</dd>
+        <dt>技术挑战</dt><dd><ul><li>如何在多主体异质偏好下定义既公平又满足合理公理的评估函数</li><li>如何量化每个决策者可接受的妥协程度并纳入共识解定义</li><li>经典Pareto最优解概念过窄，无法覆盖无严格共同解时的合作情形</li><li>如何构造能体现共识缺失与协商结构的基准测试问题以验证评估框架</li></ul></dd>
+        <dt>问题分析</dt><dd>作者从合作博弈论视角分析问题，先形式化公平感知评估函数应满足的四条公理，再引入让步率向量刻画各DM可接受的妥协，据此推广经典MPMOP最优解定义，并将经典性能指标嵌入基于纳什乘积的评估框架，理论上证明该框架满足全部公理。为进行实证验证，作者在已有MPMOP基准套件基础上构造包含共识缺失协商结构的基准问题。具体如何利用问题结构或分解进行求解，材料未说明。</dd>
+        <dt>方法</dt><dd><ul><li>形式化多主体多目标优化中公平感知评估函数应满足的四条公理</li><li>引入让步率向量，量化每个决策者可接受的妥协程度</li><li>基于让步率推广经典MPMOP最优解定义，得到广义共识解概念</li><li>将经典性能指标嵌入基于纳什乘积的评估框架，将各DM评估值耦合成整体公平分数</li><li>从理论上证明所提评估框架满足全部四条公理</li><li>构造扩展已有MPMOP套件的基准问题，加入共识缺失的协商结构，用于实证验证</li></ul></dd>
+        <dt>实验</dt><dd><ul><li>实验表明所提评估框架能够以与共识感知公平考虑一致的方式区分算法性能</li><li>当严格共同解存在时，收敛到严格共同解的算法获得更高评估分数</li><li>当严格共同解不存在时，有效覆盖公共可接受区域的算法获得更有利评价</li><li>具体基线算法、实例规模、运行时间、训练开销、公平计算预算、泛化与消融等细节，材料未说明</li></ul></dd>
+        <dt>局限</dt><dd><ul><li>材料未说明</li></ul></dd>
+        <dt>与你的研究关系</dt><dd>该论文属于多主体多目标优化的评估与解概念层面，而非直接求解生产调度问题。它与智能优化、多目标进化算法和分布式制造中的多决策者协同有概念联系：在分布式制造或生产运输协同中，不同工厂、运输方常可视为异质决策者，各自有目标与可接受妥协范围。论文事实是：作者提出以让步率和纳什乘积评估多主体解集公平性并推广共识解。迁移到生产调度或其他约束优化问题需要条件：需将调度方案映射为各决策者的目标向量，定义各方的让步率或可接受阈值，并将纳什乘积评估嵌入算法选择或搜索引导；这些属于推测，并非作者结论。对强化学习或神经网络辅助求解，该框架可作为多智能体奖励聚合或解选择的公平评价模块，但同样需额外验证。</dd>
+        <dt>证据与不确定性</dt>
+        <dd>
+          <p>仅依据标题、摘要和作者列表判断，未提供全文，无法核验四公理的具体内容、让步率向量的数学定义、纳什乘积嵌入的细节、基准问题的规模与算法基线，也无法判断实验是否使用公平计算预算或是否可复现。相关性评分基于评估框架与多主体多目标优化的关联，但因不直接处理生产调度或强化学习求解，评分存在主观区间。</p>
+          <blockquote><strong>经典均值式评估可能偏向某些主体，因为其假设不同主体上相同几何逼近质量具有可比评估意义：</strong>such mean-based evaluations may be unfair by favoring certain parties, as they assume identical geometric approximation quality to each party&#39;s PF carries comparable evaluative significance</blockquote>
+          <blockquote><strong>作者提出基于广义共识解概念的公平感知性能评估框架：</strong>this paper develops a fairness-aware performance evaluation framework grounded in a generalized notion of consensus solutions</blockquote>
+          <blockquote><strong>作者从合作博弈论视角形式化四条公理：</strong>From a cooperative game-theoretic perspective, we formalize four axioms that a fairness-aware evaluation function for MPMOPs should satisfy</blockquote>
+          <blockquote><strong>作者引入让步率向量量化各决策者可接受的妥协，并推广经典最优解定义：</strong>By introducing a concession rate vector to quantify acceptable compromises by individual DMs, we generalize the classical definition of MPMOP optimal solutions</blockquote>
+          <blockquote><strong>作者将经典性能指标嵌入基于纳什乘积的评估框架并证明满足全部公理：</strong>embed classical performance metrics into a Nash-product-based evaluation framework, which is theoretically shown to satisfy all axioms</blockquote>
+          <blockquote><strong>作者构造了加入共识缺失协商结构的扩展基准问题：</strong>we further construct benchmark problems that extend existing MPMOP suites by incorporating consensus-deficient negotiation structures</blockquote>
+          <blockquote><strong>实验表明严格共同解存在时收敛到该解的算法得分更高，不存在时有效覆盖公共可接受区域的算法评价更好：</strong>algorithms converging toward strictly common solutions are assigned higher evaluation scores when such solutions exist, whereas in the absence of strictly common solutions, algorithms that effectively cover the commonly acceptable region are more favorably evaluated</blockquote>
+        </dd>
+      </dl>
+      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；仅依据标题与摘要。证据范围不足的内容不应视为全文结论。</p>
+    </details>  </div>
+</article></section>
+</main>
+<script>
+(() => {
+  const explorer = document.querySelector('[data-explorer]');
+  if (!explorer) return;
+  const source = explorer.querySelector('[data-paper-json]');
+  let records = [];
+  try { records = JSON.parse(source?.textContent || '[]'); } catch { return; }
+  const byId = new Map(records.map((record) => [record.id, record]));
+  const validTopics = new Set(records.map((record) => record.topic));
+  const validTags = new Set(records.flatMap((record) => record.tags || []));
+  const validTiers = new Set(['deep_read', 'browse', 'explore']);
+  const validScopes = new Set(['full_text', 'abstract']);
+  const validFigures = new Set(['yes', 'no']);
+  const validScores = new Set([0, 8, 9]);
+  const form = explorer.querySelector('[data-filter-form]');
+  const queryInput = explorer.querySelector('[data-filter-query]');
+  const tierInput = explorer.querySelector('[data-filter-tier]');
+  const scopeInput = explorer.querySelector('[data-filter-scope]');
+  const scoreInput = explorer.querySelector('[data-filter-score]');
+  const figureInput = explorer.querySelector('[data-filter-figure]');
+  const topicButtons = [...explorer.querySelectorAll('[data-topic-choice]')];
+  const normalize = (value) => value.normalize('NFKC').toLocaleLowerCase('zh-CN').replace(/\s+/gu, ' ').trim();
+  let state = { query:'', topic:'', tag:'', tier:'', scope:'', score:0, figure:'' };
+
+  const canonicalState = (candidate) => ({
+    query: candidate.query.trim().length <= 200 ? candidate.query.trim() : '',
+    topic: validTopics.has(candidate.topic) ? candidate.topic : '',
+    tag: validTags.has(candidate.tag) ? candidate.tag : '',
+    tier: validTiers.has(candidate.tier) ? candidate.tier : '',
+    scope: validScopes.has(candidate.scope) ? candidate.scope : '',
+    score: validScores.has(Number(candidate.score)) ? Number(candidate.score) : 0,
+    figure: validFigures.has(candidate.figure) ? candidate.figure : '',
+  });
+  const readUrl = () => {
+    const params = new URLSearchParams(location.search);
+    return canonicalState({ query:params.get('q') || '', topic:params.get('topic') || '', tag:params.get('tag') || '', tier:params.get('tier') || '', scope:params.get('scope') || '', score:params.get('score') || 0, figure:params.get('figure') || '' });
+  };
+  const writeUrl = () => {
+    const params = new URLSearchParams();
+    if (state.query) params.set('q', state.query);
+    if (state.topic) params.set('topic', state.topic);
+    if (state.tag) params.set('tag', state.tag);
+    if (state.tier) params.set('tier', state.tier);
+    if (state.scope) params.set('scope', state.scope);
+    if (state.score) params.set('score', String(state.score));
+    if (state.figure) params.set('figure', state.figure);
+    const query = params.toString();
+    history.replaceState(null, '', `${location.pathname}${query ? `?${query}` : ''}${location.hash}`);
+  };
+  const syncControls = () => {
+    queryInput.value = state.query; tierInput.value = state.tier; scopeInput.value = state.scope;
+    scoreInput.value = String(state.score); figureInput.value = state.figure;
+    topicButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.topicChoice === state.topic)));
+    const activeTag = explorer.querySelector('[data-active-tag]');
+    if (activeTag) {
+      const label = explorer.querySelector(`[data-tag-filter="${CSS.escape(state.tag)}"]`)?.textContent?.trim();
+      activeTag.textContent = state.tag ? `· 标签：${label || state.tag}` : '';
+    }
+  };
+  const render = () => {
+    state = canonicalState(state);
+    const query = normalize(state.query);
+    let visibleCount = 0;
+    explorer.querySelectorAll('[data-paper-card]').forEach((card) => {
+      const record = byId.get(card.dataset.paperId);
+      const visible = Boolean(record) && (!query || normalize(record.searchText).includes(query)) && (!state.topic || record.topic === state.topic) && (!state.tag || record.tags.includes(state.tag)) && (!state.tier || record.tier === state.tier) && (!state.scope || record.scope === state.scope) && record.score >= state.score && (!state.figure || (record.hasFigure ? 'yes' : 'no') === state.figure);
+      card.hidden = !visible;
+      if (visible) visibleCount += 1;
+    });
+    explorer.querySelectorAll('[data-tier-section]').forEach((section) => {
+      const count = [...section.querySelectorAll('[data-paper-card]')].filter((card) => !card.hidden).length;
+      section.hidden = count === 0;
+      const counter = section.querySelector('[data-tier-count]');
+      if (counter) counter.textContent = String(count);
+    });
+    explorer.querySelector('[data-result-count]').textContent = String(visibleCount);
+    explorer.querySelector('[data-no-results]').hidden = visibleCount !== 0;
+    syncControls(); writeUrl();
+  };
+
+  state = readUrl(); syncControls(); render();
+  form?.addEventListener('input', () => { state = { ...state, query:queryInput.value, tier:tierInput.value, scope:scopeInput.value, score:Number(scoreInput.value), figure:figureInput.value }; render(); });
+  form?.addEventListener('submit', (event) => event.preventDefault());
+  form?.addEventListener('reset', () => queueMicrotask(() => { state = canonicalState({ query:'', topic:'', tag:'', tier:'', scope:'', score:0, figure:'' }); render(); }));
+  topicButtons.forEach((button) => button.addEventListener('click', () => { state.topic = button.dataset.topicChoice || ''; render(); }));
+  explorer.querySelectorAll('[data-tag-filter]').forEach((link) => link.addEventListener('click', (event) => { event.preventDefault(); state.tag = link.dataset.tagFilter || ''; render(); form?.scrollIntoView({ behavior:'smooth', block:'start' }); }));
+  explorer.querySelector('[data-expand-visible]')?.addEventListener('click', () => { explorer.querySelectorAll('[data-paper-card]:not([hidden]) .paper-details').forEach((details) => { details.open = true; }); });
+  explorer.querySelector('[data-collapse-visible]')?.addEventListener('click', () => { explorer.querySelectorAll('.paper-details[open]').forEach((details) => { details.open = false; }); });
+})();
+
+document.querySelectorAll('[data-paper-figure]').forEach((image) => {
+  const fail = () => {
+    const original = image.dataset.originalUrl;
+    if (original && image.dataset.remoteFallback !== 'used' && image.src !== original) { image.dataset.remoteFallback = 'used'; image.src = original; return; }
+    image.hidden = true; image.parentElement?.querySelector('[data-figure-error]')?.removeAttribute('hidden');
+  };
+  image.addEventListener('error', fail);
+  if (image.complete && image.naturalWidth === 0) fail();
+});
+</script>
+</body>
+</html>
