@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>学习局部覆盖：硬信息视界下的图神经组合优化</title>
+  <title>局部学习覆盖：硬信息视野下的图神经组合优化</title>
   <link rel="icon" href="data:,">
   <style>
     :root {
@@ -161,7 +161,7 @@
 <main>
   <header class="page-header">
     <div class="masthead">
-      <span>PAPERDAILY · 智能优化与生产调度 · 2026-10-02 10:57</span>
+      <span>PAPERDAILY · 智能优化与生产调度 · 2026-10-03 10:43</span>
       <nav aria-label="站点导航">
         <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/">今日</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/daily/">每日日报</a>
         <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/library/">长期论文库</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/topics/">主题</a>
@@ -169,7 +169,7 @@
         <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/search/">搜索</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/feed.xml">订阅</a>
       </nav>
     </div>
-    <h1>学习局部覆盖：硬信息视界下的图神经组合优化</h1>
+    <h1>局部学习覆盖：硬信息视野下的图神经组合优化</h1>
 <p class="lede">本次检索最近 3 天的论文版本，首次发表日期见各篇详情。</p><p class="lede">Learning to Cover Locally: Graph Neural Combinatorial Optimization under a Hard Information Horizon</p>  </header>
 
   <section class="detail-layout" aria-label="论文完整解读"><article
@@ -188,20 +188,20 @@
   <div class="paper-card__body">
     <div class="paper-card__rubric">
       <span class="topic-badge">神经组合优化</span>
-      <span>摘要级</span>
+      <span>正文节选</span>
       <span>相关性 8/10</span>
       <span>v1</span>
     </div>
 
-    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2610.00422/">学习局部覆盖：硬信息视界下的图神经组合优化</a></h3>
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2610.00422/">局部学习覆盖：硬信息视野下的图神经组合优化</a></h3>
     <p class="original-title" lang="en">Learning to Cover Locally: Graph Neural Combinatorial Optimization under a Hard Information Horizon</p>
     <p class="authors">Johannes F. Loevenich · Thies Moehlenhof · Laurin Holz · Maxime Schwarzer · Tobias Huerten · Roberto Rigolin F. Lopes</p>
 
 <div class="paper-card__takeaway">
       <p class="field-label">核心洞察</p>
-      <p>贡献之所以成立，是因为信息视界而非模型容量才是决定局部选择器性能的根本变量。作者通过理论刻画表明：确定性选择器若视界比所需少一跳，要么无法完成覆盖，要么最优性差距达到因子 Δ；而 L 层 GNN 在决策节点读出恰好等价于 L 跳选择器，因此加深网络无法买回半径。反向地，当视界足够时，O(Δ) 深度的 GNN 能复现 RFC 7181 的覆盖贪心，O(c_max Δ) 宽度可复现其度量感知加权版本，并继承 (1+ln Δ_2) 近似比。这一“视界—容量”对应关系解释了为何限制视界会造成性能崩溃，而非通过增加参数可弥补。</p>
+      <p>信息视野半径而非模型容量是决定性能的主导变量。在硬信息视野下，深度只能购买计算量而不能扩展可观测半径：L层GNN在决策节点读出时恰好等价于L跳选择器，任何确定性选择器若视野少一跳，则必然要么覆盖失败要么与最优解相差Δ倍。恰好达到2跳视野时，GNN可以精确复现RFC 7181的贪心规则及其(1+ln Δ₂)近似保证，因为2跳球正是协议提供的信息边界。因此，将学习组件置于该视野内的贪心骨架上，仅让网络学习代价感知的排序，就能在加权目标上超越经典局部贪心并维持构造性可行覆盖。</p>
     </div>
-    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>该论文提供了关于 GNN 表达力与信息视界之间关系的理论刻画，并配以严格的实证，对关注学习式方法在受限信息下求解组合优化问题的研究者具有直接参考价值。其“信息视界比模型容量更重要”的结论，对多智能体生产调度中局部观测约束下的算法设计具有警示与启发意义，也提供了行为克隆自精确求解器（CP-SAT）的实用训练范式。</p>
+    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>该论文将信息视野作为核心变量，从理论上澄清了图神经网络深度与可观测半径的区别，并把可行性保障下沉到构造性解码器，这与生产调度中约束可行性优先、公平计算预算和泛化能力的研究关切高度一致。其实验设计包含严格的精确最优基线、视野消融、结构可行性验证和真实网络迁移，可为智能优化研究者提供方法论参考：在局部决策不可撤销且必须组合成全局可行解时，如何分离可行性保证与代价优化，以及如何评估有限信息下学习辅助搜索的真实收益。</p>
     <ul class="paper-tags" aria-label="研究标签">
       <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/graph-neural/" data-tag-filter="graph-neural">图神经网络</a></li>
     </ul>
@@ -214,10 +214,10 @@
       </summary>
 
       <div class="paper-details__meta">
-        <p><strong>模型细分主题：</strong>图神经网络在硬信息视界约束下的组合优化（局部集合覆盖/MPR选择）</p>
-        <p><strong>模型原始标签：</strong>神经组合优化、图神经网络、GATv2、局部信息视界、集合覆盖、OLSRv2、MPR选择、近似算法、行为克隆、CP-SAT</p>
-        <p><strong>第一单位：</strong>证据未提供</p>
-        <p><strong>通讯作者：</strong>证据未提供</p>
+        <p><strong>模型细分主题：</strong>硬信息视野下的图神经组合优化：以加权MPR选择为实例的局部集合覆盖</p>
+        <p><strong>模型原始标签：</strong>图神经网络、组合优化、局部集合覆盖、信息视野、行为克隆、OLSRv2 MPR、路由协议、加权覆盖</p>
+        <p><strong>第一单位：</strong>cortAIx Labs, Thales Deutschland, Ditzingen, Germany</p>
+        <p><strong>通讯作者：</strong>Johannes F. Loevenich</p>
         <p><strong>首次上传：</strong>2026-09</p>
         <p class="paper-links">
           <a href="https://arxiv.org/abs/2610.00422">arXiv 摘要 ↗</a>
@@ -226,29 +226,28 @@
 
 
       <dl class="research-note">
-        <dt>研究设定</dt><dd>研究在“硬信息视界”（hard information horizon）约束下的组合优化问题：每个节点只能观察到自身的 k 跳邻域，必须独立地对全局解做出自己的承诺，且这些局部承诺必须组合成一个全局可行的解。作者将此形式化为局部集合覆盖，并以 OLSRv2 路由协议（RFC 7181）中的加权多点中继（MPR）选择作为实例——这是一个 NP-hard 的 2 跳覆盖问题，其视界由协议强制规定而非建模者自选。决策对象是每个节点从其邻居中选择的中继集合；目标是在满足覆盖约束的前提下最小化总代价（加权版本）；关键约束是覆盖必须完整且局部承诺可组合为全局可行解。信息假设为每个节点仅可见 k 跳邻域；环境为静态实例（文中未讨论动态扰动）。</dd>
-        <dt>研究动机</dt><dd>主流神经组合优化通常假设一个能读取整个实例的集中式求解器。作者研究相反的情形：当信息获取被硬性限制在局部邻域时，学习式方法是否仍然有效，以及信息视界与模型容量各自扮演何种角色。这一问题由路由协议等实际场景驱动，其中视界是协议规定的、不可协商的。</dd>
-        <dt>核心洞察</dt><dd>贡献之所以成立，是因为信息视界而非模型容量才是决定局部选择器性能的根本变量。作者通过理论刻画表明：确定性选择器若视界比所需少一跳，要么无法完成覆盖，要么最优性差距达到因子 Δ；而 L 层 GNN 在决策节点读出恰好等价于 L 跳选择器，因此加深网络无法买回半径。反向地，当视界足够时，O(Δ) 深度的 GNN 能复现 RFC 7181 的覆盖贪心，O(c_max Δ) 宽度可复现其度量感知加权版本，并继承 (1+ln Δ_2) 近似比。这一“视界—容量”对应关系解释了为何限制视界会造成性能崩溃，而非通过增加参数可弥补。</dd>
-        <dt>技术挑战</dt><dd><ul><li>局部承诺必须组合为全局可行解，节点间缺乏全局协调机制</li><li>硬信息视界不能通过模型容量或深度来弥补</li><li>需要在仅局部可观测的条件下保持覆盖可行性</li><li>加权版本需在局部信息下逼近有理论保证的贪心近似比</li></ul></dd>
-        <dt>问题分析</dt><dd>作者通过理论分析建立信息视界与 GNN 表达能力之间的精确对应：将 L 层 GNN 在决策节点的读出识别为 L 跳选择器，并证明视界不足时的下界（覆盖失败或 Δ 因子差距）；随后在视界充分时构造性地展示 GNN 可复现 RFC 7181 贪心及其加权类比，从而继承近似保证。实验上则通过对比同一学习器在不同视界下的表现，以及冻结模型在真实移动性实例上的迁移，分离视界与容量的影响。</dd>
-        <dt>方法</dt><dd><ul><li>将问题形式化为局部集合覆盖，并实例化到 OLSRv2 的加权 MPR 选择</li><li>证明确定性选择器在视界少一跳时的两个不可能性结果：覆盖失败或距最优达 Δ 因子</li><li>证明 L 层 GNN 在决策节点读出等价于 L 跳选择器，故容量无法补偿半径</li><li>构造性地证明 O(Δ) 深度 GNN 可复现 RFC 7181 覆盖贪心，O(c_max Δ) 宽度可复现其度量感知加权类比，均继承 (1+ln Δ_2) 近似比</li><li>采用 3 层 GATv2，并配以“覆盖完成”解码器，从 CP-SAT 最优解进行行为克隆训练</li></ul></dd>
-        <dt>实验</dt><dd><ul><li>3 层 GATv2 配合覆盖完成解码器，行为克隆自 CP-SAT 最优解，达到 cost/opt = 1.030±0.001，而贪心为 1.138，在 100% 覆盖下弥合了 79.1% 的差距</li><li>将同一学习器限制为一跳视界，在相同实例、相同解码器与演示下，性能崩溃至 1.344，远差于贪心</li><li>OLSRv2 未修改的选择代码在 200/200 个单位代价实例上与作者的红基数贪心一致</li><li>在 40,308 个真实营级移动性实例上，冻结模型在全覆盖下弥合了 48% 的差距</li></ul></dd>
-        <dt>局限</dt><dd><ul><li>材料未说明（摘要未明确陈述局限）</li></ul></dd>
-        <dt>与你的研究关系</dt><dd>该论文直接研究图神经网络在组合优化中的表达能力与信息约束的交互，属于 AI4OR 与神经组合优化的核心议题，与“学习辅助搜索”“图表示”方向高度相关。其“视界—容量”理论对分布式制造、生产运输协同等多智能体局部决策场景具有潜在迁移价值：在这些场景中，单个智能体往往也只能观测局部状态，且局部决策必须组合为全局可行调度。迁移到柔性作业车间或分布式调度时，推测需要将“节点—k 跳邻域”映射为“机器/智能体—局部工序窗口”，并验证局部承诺能否组合为可行的全局调度，且需重新考察该文的下界是否仍成立。上述迁移为推测，非作者结论。</dd>
+        <dt>研究设定</dt><dd>研究在硬信息视野约束下的组合优化问题：全局目标是一个集合覆盖，但每个节点只能看到自身的k跳邻域并据此独立提交其局部选择，这些局部承诺必须组合成一个全局可行的覆盖。论文形式化为局部集合覆盖，并实例化在加权多点中继（MPR）选择上——这是OLSRv2路由协议（RFC 7181）中NP难的2跳覆盖问题，其视野由协议决定而非模型设计者选择。目标是使所选中继集的代价（如ETX或能量等链路度量）最小化，同时保证2跳邻域全覆盖。决策是每个节点的局部选择，约束是每个2跳邻居必须被至少一个被选中继覆盖，信息假设是每个节点仅能获知其k跳邻域，静态环境（随机几何单位圆盘图与真实营级机动网络）。</dd>
+        <dt>研究动机</dt><dd>主流神经组合优化假设集中式求解器能读取整个实例，但在链路状态路由等真实网络中，每个节点只能依据有限视野做出不可撤销的局部选择，且这些选择必须组合成全局可行解。作者以此逆向设定为研究对象，探讨信息视野本身对可学习性与可解质量的根本限制，并利用路由协议提供的真实问题场景验证。</dd>
+        <dt>核心洞察</dt><dd>信息视野半径而非模型容量是决定性能的主导变量。在硬信息视野下，深度只能购买计算量而不能扩展可观测半径：L层GNN在决策节点读出时恰好等价于L跳选择器，任何确定性选择器若视野少一跳，则必然要么覆盖失败要么与最优解相差Δ倍。恰好达到2跳视野时，GNN可以精确复现RFC 7181的贪心规则及其(1+ln Δ₂)近似保证，因为2跳球正是协议提供的信息边界。因此，将学习组件置于该视野内的贪心骨架上，仅让网络学习代价感知的排序，就能在加权目标上超越经典局部贪心并维持构造性可行覆盖。</dd>
+        <dt>技术挑战</dt><dd><ul><li>信息视野硬约束下，确定性局部选择器可能因视野不足而无法同时满足覆盖可行性与接近最优。</li><li>加权MPR目标上，即使公平的代价有效性贪心也留下明显经验差距，学习策略需在极局部视野内超越手工启发式。</li><li>局部承诺必须组合成全局可行覆盖，需要构造性解码器将神经评分转化为保证覆盖的离散决策。</li><li>在真实营级机动网络等分布外拓扑上保持泛化能力与100%可行性。</li></ul></dd>
+        <dt>问题分析</dt><dd>作者通过理论分析与实证归因相结合的方式剖析问题。首先将问题形式化为局部集合覆盖，定义局部选择器的视野半径与全局可行性组合条件。随后证明两个理论结果：确定性选择器若视野少一跳，则必然覆盖失败或与最优解相差Δ倍；L层GNN在决策节点读出时恰好是L跳选择器，说明深度不能扩展半径。反过来，在恰好2跳视野下，O(Δ)深度的GNN可复现RFC 7181覆盖贪心，O(c_max Δ)宽度可复现度量感知的加权贪心，并继承(1+ln Δ₂)近似保证。实证上，作者将可行性分析与优化解耦，通过构造性解码器保证100%覆盖，使神经编码器专注于代价优化；并通过消融、泛化与真实网络迁移检查定位视野而非容量为主要变量。</dd>
+        <dt>方法</dt><dd><ul><li>问题形式化：将分布式局部承诺组合问题建模为局部集合覆盖，并实例化为加权MPR选择。</li><li>理论边界：证明视野不足一小时的Δ倍最优性差距或不可行性，以及L层GNN等价于L跳选择器的容量-半径关系。</li><li>构造性覆盖解码器：将神经评分贪婪地转化为每个节点的中继选择，保证组合后100%覆盖可行性。</li><li>GATv2编码器：在2跳视野内读取局部拓扑与链路度量，输出代价感知的中继排序。</li><li>行为克隆训练：从CP-SAT整数规划最优解中克隆加权MPR决策，避免稀疏奖励与信用分配问题。</li><li>模型选择：以解码后的验证集代价比作为选择标准，直接度量部署解码而非代理损失。</li></ul></dd>
+        <dt>实验</dt><dd><ul><li>实验设置：随机几何单位圆盘图，n个节点均匀分布于单位正方形，半径r内连边，链路带与长度相关的整数度量；加权MPR目标为所选中继面向中心链路度量之和；CP-SAT整数规划求解每个实例至最优，定义cost/opt=1.0。</li><li>主要结果：3层GATv2覆盖完成解码器，从CP-SAT最优行为克隆，达到cost/opt=1.030±0.001，贪心为1.138，在100%覆盖率下弥合79.1%的差距。</li><li>视野消融：将同一学习器限制为1跳，在相同实例、解码器和示范下，性能坍缩至1.344，远逊于贪心。</li><li>消融梯（E1，n=3200测试集）：随机可行1.641，无图MLP（DeepMPR式）1.218，贪心参考1.138，节点摘要代价GNN 1.057，完整GNN 1.029，CP-SAT最优1.000。</li><li>结构可行性验证（E2）：解码器包装任意评分生成启发式（包括随机与MLP）均达到完美覆盖比1.0，而原始神经输出独立无法满足覆盖约束。</li><li>泛化与迁移（E3）：n=80,r=0.30训练模型应用于n=160时弥合差距从约79%小幅降至约74%；密集网络r=0.46下降至51%，仍显著优于贪心且100%可行。</li><li>真实网络迁移：OLSRv2未修改选择代码在200/200单位代价实例上与基数贪心匹配；在40,308个真实营级机动实例上，冻结模型在完全覆盖下弥合48%的差距。</li></ul></dd>
+        <dt>局限</dt><dd><ul><li>信息视野设定了性能上限，深度只能购买计算量而不能扩展可观测半径。</li><li>基数目标下贪心已近最优，改进空间主要在加权目标。</li><li>加权优化剩余差距可能对特定架构选择敏感。</li><li>全局所选集合的并集形成耦合网络结构，可能受益于更大的观测半径。</li></ul></dd>
+        <dt>与你的研究关系</dt><dd>本文直接研究信息受限下的局部组合优化与神经求解器设计，属于AI4OR中学习辅助搜索与图神经网络组合优化的交叉方向。其构造性解码器保证覆盖可行性的机制，对生产调度中需严格满足工件-机器覆盖约束的场景具有迁移参考价值。作者明确将视野视为硬约束并理论刻画容量-半径关系，提示在分布式制造或生产运输协同中若决策者仅有局部信息，单纯增加网络深度可能无法弥补信息缺失。迁移设想（推测）：若将局部集合覆盖框架用于分布式车间调度，需将2跳覆盖约束替换为工件-机器-运输资源的局部可行性约束，并重新证明相应视野下的近似边界，同时验证构造性解码器能否保证调度解的全覆盖且不违反时间窗与产能约束。</dd>
         <dt>证据与不确定性</dt>
         <dd>
-          <p>仅能依据标题与摘要分析，全文未提供。方法细节（如覆盖完成解码器的具体结构、训练开销、超参数）无法确认；实验中的公平计算预算、消融细节与泛化性证据未在摘要中说明；作者是否明确讨论局限性亦未知。因此对方法迁移到生产调度的可行性判断具有较高不确定性。</p>
-          <blockquote><strong>论文研究硬信息视界下的组合优化，每个节点仅能看到 k 跳邻域并必须做出可组合为全局可行解的局部承诺：</strong>combinatorial optimization under a hard information horizon, where every node commits to its share of a global solution seeing only its $k$-hop neighborhood, and those commitments must compose into a globally feasible solution</blockquote>
-          <blockquote><strong>论文形式化为局部集合覆盖并实例化到 OLSRv2 的加权 MPR 选择问题：</strong>We formalize this as local set cover and instantiate it on weighted multipoint relay (MPR) selection, the NP-hard 2-hop covering problem of the Optimized Link State Routing Protocol version 2 (OLSRv2) routing protocol (RFC~7181)</blockquote>
-          <blockquote><strong>确定性选择器视界少一跳则要么覆盖失败要么距最优达 Δ 因子，且 L 层 GNN 等价于 L 跳选择器：</strong>Any deterministic selector whose horizon is one hop short must either fail coverage or land a factor $\Delta$ from optimal, and an $L$-layer graph neural network (GNN) read out at the deciding node is exactly an $L$-hop selector, so capacity cannot buy back radius</blockquote>
-          <blockquote><strong>视界充分时 GNN 可复现 RFC 7181 贪心及其加权类比并继承近似比：</strong>at the horizon a \ac{GNN} of depth $O(\Delta)$ reproduces the RFC~7181 covering greedy, and at width $O(c_{\max}\Delta)$ its metric-aware weighted analogue, inheriting the $(1+\ln\Delta_2)$-approximation in both cases</blockquote>
-          <blockquote><strong>3 层 GATv2 加覆盖完成解码器，行为克隆自 CP-SAT 最优解，达到 cost/opt = 1.030±0.001，贪心为 1.138，弥合 79.1% 差距：</strong>a 3-layer \ac{GATv2} with a coverage-completing decoder, behavior-cloned from the CP-SAT optimum, reaches $\text{cost}/\text{opt}=1.030\pm0.001$ against greedy&#39;s $1.138$, closing $79.1\%$ of the gap at $100\%$ coverage</blockquote>
-          <blockquote><strong>将同一学习器限制为一跳视界后性能崩溃至 1.344：</strong>Restricting the same learner to one hop, on identical instances with the same decoder and demonstrations, collapses it to $1.344$, far worse than greedy</blockquote>
-          <blockquote><strong>OLSRv2 未修改选择代码在 200/200 个单位代价实例上与红基数贪心一致，冻结模型在 40,308 个真实营级移动性实例上弥合 48% 差距：</strong>OLSRv2&#39;s unmodified selection code matches our cardinality greedy on $200/200$ unit-cost instances, and on $40{,}308$ instances of real battalion mobility the frozen model closes $48\%$ of the gap at full coverage</blockquote>
-          <blockquote><strong>信息视界而非模型容量是最重要的变量：</strong>The information horizon, not the model capacity, is the most significant variable</blockquote>
+          <p>全文节选覆盖了摘要、引言、实验与方法表格及结论，但部分理论证明细节、网络架构超参数、训练开销与公平计算预算的完整对比在节选中缺失，因此对理论保证的适用条件和训练成本无法完全核实。此外，真实营级机动基准的具体拓扑特性与分布外泛化机制的证据仅限于节选描述，需查阅原文补充。</p>
+          <blockquote><strong>论文研究在硬信息视野下每个节点仅依据其k跳邻域提交局部承诺并组合成全局可行覆盖的组合优化问题。：</strong>We study the opposite: combinatorial optimization under a hard information horizon, where every node commits to its share of a global solution seeing only its $k$-hop neighborhood, and those commitments must compose into a globally feasible solution.</blockquote>
+          <blockquote><strong>论文实例化在OLSRv2的加权MPR选择上，其视野由协议施加而非模型设计者选择。：</strong>We formalize this as local set cover and instantiate it on weighted multipoint relay (MPR) selection, the NP-hard 2-hop covering problem of the Optimized Link State Routing Protocol version 2 (OLSRv2) routing protocol (RFC~7181), whose horizon is imposed by the protocol, not chosen by the modeler.</blockquote>
+          <blockquote><strong>论文证明L层GNN在决策节点读出时恰好是L跳选择器，容量无法买回半径。：</strong>an $L$-layer graph neural network (GNN) read out at the deciding node is exactly an $L$-hop selector, so capacity cannot buy back radius.</blockquote>
+          <blockquote><strong>论文证明在恰好2跳视野下O(Δ)深度的GNN可复现RFC 7181覆盖贪心并继承(1+ln Δ₂)近似。：</strong>Conversely, at the horizon a \ac{GNN} of depth $O(\Delta)$ reproduces the RFC~7181 covering greedy, and at width $O(c_{\max}\Delta)$ its metric-aware weighted analogue, inheriting the $(1+\ln\Delta_2)$-approximation in both cases.</blockquote>
+          <blockquote><strong>3层GATv2覆盖完成解码器从CP-SAT最优行为克隆达到cost/opt=1.030±0.001，贪心为1.138，弥合79.1%差距。：</strong>Empirically, a 3-layer \ac{GATv2} with a coverage-completing decoder, behavior-cloned from the CP-SAT optimum, reaches $\text{cost}/\text{opt}=1.030\pm0.001$ against greedy&#39;s $1.138$, closing $79.1\%$ of the gap at $100\%$ coverage.</blockquote>
+          <blockquote><strong>将同一学习器限制为1跳时性能坍缩至1.344，远差于贪心。：</strong>Restricting the same learner to one hop, on identical instances with the same decoder and demonstrations, collapses it to $1.344$, far worse than greedy.</blockquote>
+          <blockquote><strong>在200/200单位代价实例上OLSRv2未修改选择代码与基数贪心匹配，在40,308个真实营级机动实例上冻结模型在完全覆盖下弥合48%差距。：</strong>OLSRv2&#39;s unmodified selection code matches our cardinality greedy on $200/200$ unit-cost instances, and on $40{,}308$ instances of real battalion mobility the frozen model closes $48\%$ of the gap at full coverage.</blockquote>
         </dd>
       </dl>
-      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；仅依据标题与摘要。证据范围不足的内容不应视为全文结论。</p>
+      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；读取了全文节选。证据范围不足的内容不应视为全文结论。</p>
     </details>  </div>
 </article></section>
 </main>
