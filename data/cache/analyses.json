@@ -662,6 +662,91 @@
       "reading_scope": "abstract"
     }
   },
+  "05a6fbf449dcc7b8eaf99e5e03c7abe7b491268bb6ddb89e6b022211f24207e4": {
+    "analysis": {
+      "analysis": "作者通过构建带时间截止与防泄漏过滤的历史预测市场环境，把预测问题转化为可验证的多轮决策问题；利用已解决问题提供的可验证答案作为奖励信号，用 rollout 轨迹分析智能体搜索行为与校准误差的变化，并设计相同工具与轮次预算的评估框架来隔离策略本身的贡献。材料未说明作者对问题结构、下界或图表示等更形式化的分析。",
+      "challenges": [
+        "历史问题中后验信息可能泄漏进 rollout，需要多层过滤保证时间有效性",
+        "多轮工具调用的动作空间大且稀疏奖励，训练稳定性与探索困难",
+        "仅凭公开信息预测市场事件本身具有内在不确定性，难以可靠超越市场",
+        "评估需保证不同模型在相同工具、过滤和轮次预算下比较公平"
+      ],
+      "corresponding_authors": [
+        "Yusuf Afifi"
+      ],
+      "evidence": [
+        {
+          "claim": "作者把多轮搜索与预测脚手架直接纳入强化学习训练循环。",
+          "location": "supplied_full_text",
+          "quote": "We close the frozen-context gap by folding a multi-turn search-and-forecast scaffold directly into the RL training loop"
+        },
+        {
+          "claim": "训练后校准改善且搜索次数下降。",
+          "location": "abstract",
+          "quote": "calibration improves 30-40%, and search attempts fall from 3.8 to 2.25 per rollout"
+        },
+        {
+          "claim": "在相同 harness 下训练策略以 soft-Brier 0.254 对 0.256 略胜 Claude Opus 4.5，n=265。",
+          "location": "abstract",
+          "quote": "including Claude Opus 4.5 (soft-Brier 0.254 vs. 0.256, n=265)"
+        },
+        {
+          "claim": "环境使用三层防泄漏过滤限制信息发布时间。",
+          "location": "supplied_full_text",
+          "quote": "Retrieved content therefore passes three layers before the model sees it: a domain blocklist"
+        },
+        {
+          "claim": "未来工作可扩展到分类结果和更广动作空间。",
+          "location": "supplied_full_text",
+          "quote": "Future work should explore scaling this environment beyond binary prediction markets to categorical outcomes, as well as expanding the action space"
+        }
+      ],
+      "experiments": [
+        "训练后校准改善 30–40%",
+        "每次 rollout 的搜索尝试从 3.8 降到 2.25",
+        "在 n=265 的留出问题上，训练策略以 soft-Brier 0.254 对比 Claude Opus 4.5 的 0.256，并领先所有测试的前沿模型，推理成本约为其 5%",
+        "在最难问题上优势最大，即市场本身尚未决定的问题",
+        "仓库变体运行中校准改善在不同训练-评估对中一致出现（有市场价格可见时 0.099→0.065；无搜索无市场时 0.170→0.103），但材料未给出完整基线列表、训练开销、消融细节和泛化实验的完整结果"
+      ],
+      "first_affiliation": "Future Principle",
+      "insight": "贡献之所以有效，关键在于把“证据获取”本身变成可被 Brier 分数奖励直接优化的行为：智能体在训练中反复经历“搜索—过滤—更新信念”的闭环，从而内化何时搜索、何时停止搜索以及在证据不足时如何保守给出概率，因此校准改善与搜索次数下降同时出现，而不是单纯依赖外部检索脚手架。",
+      "limitations": [
+        "材料未以专门章节明确陈述局限；结论中提及未来工作应扩展到分类结果并扩大动作空间允许智能体运行沙箱定量模型，但未将其表述为现有方法的局限"
+      ],
+      "method": [
+        "构建基于 2100+ 已解决 Polymarket 问题的智能体预测环境、数据集和 harness",
+        "每个回合给一个二分类问题、解决标准和预测截止日期，智能体在最多 10 轮内进行网页搜索、URL 阅读与摘要、截止日期截断的财经时间序列查询、修订日期 Wikipedia 访问、趋势外推，最后提交概率和理由",
+        "系统提示要求显式维护信念状态，每次工具调用携带更新后的概率和证据列表，并保留可审计的更新轨迹",
+        "三层防泄漏：域名黑名单、启发式日期过滤、由 Claude Haiku 逐条判断保留或丢弃",
+        "用 Qwen3.5-35B-A3B（3B 激活参数）进行单轮 GRPO 训练，奖励为 Brier 分数",
+        "在相同 harness 下与四个前沿模型以及未训练版本对比，并收集逐 rollout 记录和 trace 级审计"
+      ],
+      "motivation": "已有的基于结果强化学习的预测工作要么在训练前冻结研究上下文，要么只在测试时部署智能体研究，导致收集证据的技能从未被奖励塑造；作者认为冻结上下文限制了性能上限，因为策略改进无法恢复提示中缺失的信息，因此需要把检索纳入训练循环。",
+      "primary_topic": "将多轮搜索智能体纳入强化学习训练回路，用于事件预测的概率校准",
+      "relation_to_research": "该论文核心是 LLM 智能体在预测市场中的搜索与强化学习训练，不直接研究生产调度、柔性作业车间或分布式制造等约束优化问题，也未涉及数学规划与进化算法的结合。其可迁移之处在于“把检索/证据获取纳入训练回路并用可验证结果奖励优化”的机制，推测可迁移到生产调度中的在线信息获取或动态扰动下的重调度决策，但需要将预测市场替换为调度仿真环境、将 Brier 奖励替换为调度目标函数，并处理时间截断与防泄漏等条件；这些迁移均属推测，并非作者结论。",
+      "relevance_score": 4,
+      "setting": "研究设定为二分类事件概率预测：每个回合给定一个已解决的历史 Polymarket 问题及其解决标准与预测截止日期，决策对象是智能体如何在多轮工具循环（最多 10 轮）中选择搜索、读取网页、拉取时间序列等动作并最终输出事件发生概率，目标是提高预测校准与准确度；关键约束是三层防泄漏过滤，只允许模型访问截止日期前发布的信息，信息假设为智能体在 rollout 时自行获取上下文而非使用冻结上下文，环境为历史静态评估但交互过程为多轮动态决策。",
+      "tags": [
+        "强化学习",
+        "智能体",
+        "搜索",
+        "概率预测",
+        "GRPO",
+        "LLM",
+        "预测市场"
+      ],
+      "title_zh": "做你自己的研究：通过学习搜索来学习预测",
+      "uncertainty": "该论文分类为 cs.LG，核心是 LLM 预测智能体与预测市场，与生产调度和智能优化距离较远；全文节选只覆盖摘要、引言、实验要点和结论，缺少完整方法细节、基线表和消融实验，因此对方法内部机制和实验全面性的判断存在不确定性。",
+      "why_recommended": "对于关注学习辅助搜索、强化学习智能体训练与检索增强决策的研究者，该工作提供了一个把搜索行为直接纳入 RL 训练回路并以可验证奖励优化的完整环境与评估框架，其防泄漏设计、相同 harness 公平比较和搜索次数下降的纪律性指标对生产调度中动态信息获取与智能体训练有方法层面的参考价值；但它不直接涉及生产调度或组合优化，相关性有限。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-04T03:16:22.383969Z",
+      "input_hash": "3cfeedbfb1611b81a4584663a7e8737845c8fc944679af99a2f56f7ed898557d",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "0653d27e085545d6bd91ea6a4e2f3ac2e2cf01252e0be9307c1311e91d8aaf8a": {
     "analysis": {
       "analysis": "材料未说明作者具体如何分析问题结构，仅从摘要可知作者将融合建模为在树宽约束下最大化保留无约束融合信息的组合优化问题，并采用遗传算法进行搜索。",
@@ -15522,6 +15607,96 @@
       "reading_scope": "abstract"
     }
   },
+  "59d1f706beb81c5291205689b5a0c75ee1951b9d9e3ee70fcc798196935efa30": {
+    "analysis": {
+      "analysis": "作者将优化目标当作一等设计变量，通过三种超参数优化机制来对比同一组模型架构的预后行为：单目标R2最大化、单目标NASA评分最小化，以及同时优化两者的多目标形式。多目标搜索采用NSGA-II获得Pareto前沿，再用Entropy-CRITIC加权进行有原则的事后选择。作者在五个异构架构和两个跨域数据集上评估了七十五个模型-数据集-策略组合，使用标准指标、不对称评分和方向性指标进行评价，并遵循严格的无泄漏时间验证协议。",
+      "challenges": [
+        "标准回归指标对提前和滞后预测误差等同对待，与运营中的不对称成本结构不匹配",
+        "多目标优化中缺乏有原则的Pareto前沿最终选择步骤",
+        "模拟基准C-MAPSS与真实工业数据BackBlaze之间的退化动态差异导致目标关系可能从互补转为冲突",
+        "固定计算预算可能不利于搜索空间更大的深层架构",
+        "多目标框架仅限制为两个目标，未纳入模型复杂度、推理延迟和校准质量"
+      ],
+      "corresponding_authors": [
+        "Tuğrul Cabir Hakyemez"
+      ],
+      "evidence": [
+        {
+          "claim": "作者将优化目标本身视为设计变量，并在三个优化模式下评估五个架构",
+          "location": "supplied_full_text",
+          "quote": "This study treats the optimization objective as a first-class design variable. Five machine learning architectures—MLP, XGBoost, LSTM, TCN"
+        },
+        {
+          "claim": "多目标搜索采用NSGA-II并结合Entropy-CRITIC加权进行Pareto选择",
+          "location": "abstract",
+          "quote": "The multi-objective search employs NSGA-II with Entropy-CRITIC weighting for Pareto selection."
+        },
+        {
+          "claim": "在C-MAPSS上所有策略精度可比，但多目标优化将方向不平衡降低约33%",
+          "location": "abstract",
+          "quote": "On C-MAPSS, all strategies achieve comparable accuracy ($R^2 \\approx 0.89$), yet multi-objective optimization reduces directional imbalance by approximately 33%, improving calibration of early versus late predictions."
+        },
+        {
+          "claim": "在BackBlaze上目标从互补转为冲突，出现显著泛化差距",
+          "location": "abstract",
+          "quote": "On BackBlaze, the objectives shift from complementary to conflicting, producing divergent Entropy-CRITIC weights and a substantial generalization gap (best $R^2 \\approx 0.34$)."
+        },
+        {
+          "claim": "作者明确列出固定计算预算可能不利于深层架构等局限",
+          "location": "supplied_full_text",
+          "quote": "The fixed computational budget may have disadvantaged deeper architectures with larger search spaces"
+        }
+      ],
+      "experiments": [
+        "在C-MAPSS上，所有策略达到可比精度（R2约0.89），但多目标优化将方向不平衡降低约33%，改善提前与滞后预测的校准",
+        "模型排名具有配置依赖性，更简单的架构经常优于更深的时序模型",
+        "在BackBlaze上，两个目标从互补转为冲突，产生不同的Entropy-CRITIC权重和显著的泛化差距（最佳R2约0.34）",
+        "实验覆盖七十五个模型-数据集-策略组合，使用NASA C-MAPSS和BackBlaze两个基准",
+        "比较了单目标R2最大化、单目标NASA评分最小化和NSGA-II多目标优化三种策略",
+        "材料未说明训练开销、推理延迟、公平计算预算的具体对比细节"
+      ],
+      "first_affiliation": "伊斯坦布尔比尔吉大学管理信息系统系",
+      "insight": "论文的核心洞察在于：优化目标的选择本身会实质性地塑造预测模型的预后行为，而不仅仅影响聚合精度。即使不同优化策略在R2等对称指标上表现相当，多目标搜索仍可通过同时优化R2和惩罚滞后预测的NASA评分来降低预测方向的不平衡，从而在精度没有明显损失的条件下校准提前与滞后预测的比例。这说明在RUL建模中，目标函数的设计是控制预测及时性的一个可行手段，而非仅追求单一精度指标。",
+      "limitations": [
+        "固定计算预算可能使搜索空间更大的深层架构处于劣势",
+        "多目标框架仅限两个目标，未纳入模型复杂度、推理延迟和校准质量",
+        "BackBlaze仅代表单一工业领域",
+        "每种架构独立评估，未考虑混合或集成组合",
+        "Entropy-CRITIC机制是静态事后程序，不融入领域专家偏好"
+      ],
+      "method": [
+        "选择五种代表性预测架构：MLP、LSTM、XGBoost、TCN和Transformer，覆盖不同模型复杂度与架构哲学",
+        "定义三种超参数优化机制：单目标R2最大化、单目标NASA评分最小化、以及基于NSGA-II同时优化R2和NASA评分的多目标形式",
+        "多目标搜索采用NSGA-II生成Pareto前沿，再使用Entropy-CRITIC加权进行有原则的最终Pareto解选择",
+        "在NASA C-MAPSS涡扇发动机和BackBlaze硬盘驱动器两个基准数据集上评估七十五个模型-数据集-策略组合",
+        "所有实验遵循严格的无泄漏时间验证协议进行超参数搜索与评估",
+        "评价体系结合标准回归指标、不对称的NASA评分和方向性指标来刻画预测及时性"
+      ],
+      "motivation": "在预测性维护中，提前预测和滞后预测的RUL误差具有不对称后果：滞后预测可能导致灾难性损坏和安全事故，而提前预测主要带来过早维护成本。然而标准回归指标（如RMSE和R2）对两个方向等同对待，造成优化目标与运营成本之间的错位。现有RUL超参数优化大多只针对单一准确率指标，多目标优化研究又常缺乏有原则的最终选择机制，且过度依赖模拟基准，因此作者将优化目标本身视为设计变量来研究其如何影响预测行为。",
+      "primary_topic": "剩余使用寿命预测中的多目标超参数优化",
+      "relation_to_research": "该论文属于AI4OR中学习辅助搜索与多目标优化的交叉方向，其多目标超参数搜索框架、NSGA-II结合Entropy-CRITIC的Pareto选择机制以及不对称代价指标的设计，与智能优化和生产调度中关注的约束可行性、多目标权衡和公平计算预算有方法层面的关联。不过论文聚焦于RUL预测而非调度问题，与生产调度的迁移需要将超参数搜索空间替换为调度决策空间、将NASA评分替换为调度领域的不对称目标，并将时间验证协议适配为动态调度场景下的滚动评估，这些均为推测，需要额外验证。",
+      "relevance_score": 5,
+      "setting": "研究问题为预测性维护中的剩余使用寿命（RUL）预测，决策对象是RUL预测模型的超参数配置；目标是在单一准确率目标与兼顾预测方向偏差的多目标之间进行权衡，关键约束包括严格的无泄漏时间验证协议和固定的计算预算；信息假设为使用历史与实时监测数据进行序贯预测；环境为静态基准数据集上的离线实验，材料未说明在线动态扰动或实时自适应场景。",
+      "tags": [
+        "剩余使用寿命预测",
+        "多目标优化",
+        "超参数优化",
+        "NSGA-II",
+        "预测性维护",
+        "Entropy-CRITIC"
+      ],
+      "title_zh": "面向剩余使用寿命预测的多目标超参数优化：校准预测的及时性",
+      "uncertainty": "本次判断的不确定性主要来自：全文节选不完整，缺少方法细节、实验设置的具体参数、统计显著性检验和可复现性信息；论文主题为RUL预测而非生产调度，与当前研究画像的直接相关性有限；其多目标超参数搜索机制向调度问题的迁移路径属于推测，尚未被论文验证。",
+      "why_recommended": "推荐阅读的原因在于：论文将优化目标本身作为设计变量进行系统对比，其多目标搜索加事后加权的范式可迁移到生产调度中的多目标超参数或策略选择问题；论文展示了方向性偏差校准的量化方法，对关注约束可行性与多目标权衡的研究者有方法参考价值；同时论文同时使用模拟和真实数据验证，并诚实报告了目标关系从互补转为冲突的现象，对理解多目标优化在不同数据分布下的泛化行为有帮助。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-04T03:16:20.837847Z",
+      "input_hash": "1d1a207fa24deef63f1482b6d911150dee3a6e75c97a124be1a9653843fa0f06",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "59fc9ba7cb62d7f02cc8486bc72a5e6057d0f7b9fd6650b4b501498b8c2ae42d": {
     "analysis": {
       "analysis": "作者从优化问题的结构出发，将候选程序分解为约束维度与决策变量维度，对每个约束构造规范化形式 e(V)≤0 并生成三种变异（严格小于、等于、严格大于）以探测可行性与最优性属性；通过在固定全局上下文下改变局部约束或变量取值，将全局正确性判断分解为可局部推理的子问题，并聚合多个验证信号进行候选程序排序。",
@@ -26009,6 +26184,107 @@
       "reading_scope": "abstract"
     }
   },
+  "9077faee615c5b3a7972643b6ef7db7354f0b42c5636fd689c10cef39d16d677": {
+    "analysis": {
+      "analysis": "作者沿用 Flow Density Control（FDC）与 TFFT 的确定性流生成框架记号，将生成模型视为策略、将分布校正问题写成关于占用度量的散度正则优化；随后利用效用函数的变分结构与 Fenchel 对偶，把非线性效用下“有效奖励依赖未知目标分布”的耦合问题转化为联合求解边际奖励与归一化密度比权重，并以端点归一化替代强化学习占用流约束，从而给出闭式权重；材料未说明其如何利用问题的图结构或其他结构化表示。",
+      "challenges": [
+        "非线性效用的函数梯度依赖未知的生成分布，导致奖励与目标分布相互耦合",
+        "在有限样本库上估计密度比权重会引入估计误差",
+        "要在一次性加权拟合中同时保证目标分布的正确性与生成器拟合质量",
+        "推导一般效用与一般 f-散度下的精确对偶需要合适的凹性与正则性条件"
+      ],
+      "corresponding_authors": [
+        "Maksim Bobrin"
+      ],
+      "evidence": [
+        {
+          "claim": "FTFC 将效用优化与生成模型拟合解耦，先确定目标分布权重再冻结权重拟合生成器",
+          "location": "abstract",
+          "quote": "FTFC first optimizes for a target distribution by jointly fitting an effective reward and density-ratio weights on pretrained samples."
+        },
+        {
+          "claim": "该方法基于效用变分结构与 Fenchel 对偶，支持一般 f-散度惩罚",
+          "location": "abstract",
+          "quote": "Method combines the utility's variational structure with Fenchel duality, supporting general $f$-divergence penalties that determine how rewards are transformed into an distribution-correction weights."
+        },
+        {
+          "claim": "权重冻结后只需一次重要性加权去噪或流匹配，无需对采样轨迹求导",
+          "location": "abstract",
+          "quote": "These weights are then frozen and used to modify a diffusion or flow model in a single stage of importance-weighted denoising or flow matching, without differentiating through sampling trajectories."
+        },
+        {
+          "claim": "作者声称在凹效用与适当条件下建立了精确对偶",
+          "location": "abstract",
+          "quote": "We establish exact duality for concave utilities under suitable conditions and show that weighted fitting reproduces the optimal target distribution for a given utility."
+        },
+        {
+          "claim": "实验覆盖图像与分子生成，效率提升最高 20 倍",
+          "location": "abstract",
+          "quote": "Across image and molecule generation benchmarks, FTFC improves over baselines on diverse preference functions, while also being up to $20\\times$ more efficient."
+        },
+        {
+          "claim": "QM9 实验中 FTFC 训练耗时 0.04 天且上尾奖励最高",
+          "location": "supplied_full_text",
+          "quote": "FTFC\n0.04\n\\bm{0.04}\n29.1\n±\n0.1\n\\bm{29.1}\\,{\\color[rgb]{0.5,0.5,0.5}\\scriptstyle\\pm 0.1}\n39.4\n±\n0.3"
+        },
+        {
+          "claim": "作者明确列举了三项局限",
+          "location": "supplied_full_text",
+          "quote": "FTFC remains limited by the coverage of the pretrained distribution and its assumptions on finite sample bank. Moreover, the theoretical target-optimization guarantees do not account for finite-bank estimation or imperfect generator fitting, and the general dual requires suitable concavity and regularity conditions."
+        },
+        {
+          "claim": "该方法源自离线强化学习中的分布校正估计思想",
+          "location": "supplied_full_text",
+          "quote": "Motivated by distribution correction estimation (DICE) in off-policy reinforcement learning"
+        }
+      ],
+      "experiments": [
+        "分子生成（QM9 / FlowMol）：以负 GFN1-xTB 能量为目标，采用上超分位数（upper-superquantile）目标，针对奖励最好的 0.2% 样本；每个种子 50,000 次 ODE 评估；基线为预训练 FlowMol、期望奖励的 Adjoint Matching（AM）、FDC、TFFT。结果显示 FTFC 训练时间 0.04 天，低于 AM 0.5、FDC 1.4、TFFT 0.6；均值奖励 29.1±0.1、SQ.998 39.4±0.3、上 10% 35.5±0.1、有效性 96.1±1.8%、SA 4.4±0.1、拓扑奖励 0.8±0.0，在均值与两个上尾奖励上为最佳观测值。",
+        "图像生成（Stable Diffusion v1.5）：以 ImageReward 为唯一微调奖励，EXP-FT 优化其期望，FDC 与 L-TFFT 在 β=0.2 下优化下尾 CVaR 并带 KL 正则；CLIP、HPSv2.1、DreamSim 仅作评估指标；对 100 条公开提示各生成 10 张图，共 1,000 张，报告 5 个种子的均值±标准误。FTFC 的 ImageReward 均值为 0.9±0.1，为最佳观测均值；训练时间 2.8 天，低于 EXP-FT 3.4 天、FDC 3.6 天、L-TFFT 2.8 天（与 L-TFFT 相同）。摘要称相较基线最高提升 20 倍效率，但节选中未提供该倍数的逐项计算依据。",
+        "材料未说明约束可行性检验、泛化到未见效用类别的实验、公平计算预算的统一定义与完整消融实验细节；实验环境、指标定义和不确定性估计据称见附录 B.4，但附录内容未在节选中提供。"
+      ],
+      "first_affiliation": "证据未提供（作者署名处仅出现 Affiliation: AXXX 与 Applied AI Institute，未指明具体第一单位名称）",
+      "insight": "核心洞察是把“应该生成什么分布”与“如何拟合该分布”解耦：借助 Fenchel 对偶，可先将效用与 f-散度惩罚转化为支撑奖励和闭式密度比权重，即确定目标分布相对预训练分布的概率质量偏移，而权重的确定不依赖生成器当前拟合状态；一旦权重被冻结，生成器仅需执行一次标准的重要性加权去噪或流匹配回归即可复现最优目标分布，从而避免对采样轨迹求导和反复求解奖励优化。",
+      "limitations": [
+        "FTFC 仍受预训练分布的覆盖范围限制，并受其对有限样本库的假设限制。",
+        "理论上的目标优化保证未考虑有限样本库估计误差与生成器拟合不完美。",
+        "一般对偶需要合适的凹性与正则性条件；将 FTFC 扩展到固定样本库之外以及更广泛的非凹效用是有待探索的方向。"
+      ],
+      "method": [
+        "FTFC 分两阶段：先在预训练样本上联合拟合有效奖励与密度比权重，确定相对预训练模型的目标分布（即分布校正）；第二阶段冻结权重，用重要性加权的原生生去噪或流匹配损失微调生成器。",
+        "权重由效用变分结构与 Fenchel 对偶导出，支持一般 f-散度惩罚，散度形式决定奖励如何变换为分布校正权重。",
+        "在凹效用与合适条件下建立精确对偶，并证明加权拟合可复现给定效用下的最优目标分布（文中称为 exact duality 与 weighted fitting 复现最优目标分布）。",
+        "生成器训练使用预计算端点（endpoint）与奖励，配合重新采样的原生噪声，避免奖励梯度与穿越采样轨迹的反向传播。",
+        "算法伪码显示训练目标为按权重 ŵ_i 加权的原生气流匹配/去噪回归损失 L(θ)=1/B Σ w_i‖m_θ(Y_t,t)−A_t‖²，再做梯度更新 θ←θ−η_k∇L(θ)。",
+        "对 KL 正则化 CVaR 情形，FTFC 可恢复 TFFT 的目标函数；扩散-DICE 的样本内估计器仅被用于可选的引导（guidance），不是主算法。",
+        "分子实验中使用 FlowMol3，保留其原生时间与模态权重、类别掩码、假原子处理与随机自条件化，fresh-prior 拟合不加入奖励梯度或有效性损失。",
+        "材料未说明具体网络结构（如去噪网络骨干、权重拟合网络的输入输出维度）、状态-动作-奖励的强化学习式划分以及多智能体分工，因为该方法并非智能体式建模。"
+      ],
+      "motivation": "现有奖励微调方法在通用性与计算成本之间存在权衡：要么限制支持的偏好类别以简化优化，要么为保持通用性付出高昂优化代价；对非线性效用，函数梯度依赖生成分布本身，需要外层镜像下降加内层控制求解的交替过程，且已有分解（如针对 KL 正则下 CVaR 的 TFFT）无法覆盖更广泛的结构化效用与散度。",
+      "primary_topic": "基于效用函数的生成模型微调（扩散/流匹配模型的分布校正）",
+      "relation_to_research": "论文事实：该工作属于生成模型微调与分布校正，直接源自离线强化学习中的分布校正估计（DICE）思想，利用 Fenchel 对偶与 f-散度正则把效用优化转化为加权回归，与智能优化、生产调度没有直接联系。迁移设想（推测）：其“先确定目标分布权重、再用冻结权重执行一次重要性加权拟合”的范式，原则上可类比到带分布性或风险敏感目标的生产调度学习中，例如对尾部完工时间（CVaR）敏感的调度策略微调、或在给定离线调度样本库下修正策略分布；但迁移需要满足若干条件：需要存在可评估的效用函数与离线样本库、需要调度问题的可行域与约束可行性可在加权拟合中被显式处理、需要论证密度比权重估计在组合约束下的偏差可控，并且需要重新设计实验以在公平预算下与数学规划或进化算法基线比较。以上均为推测，不是作者结论。",
+      "relevance_score": 3,
+      "setting": "研究问题为将预训练扩散或流匹配生成模型适配到由效用函数（utility function）表达的任意偏好，目标是在保持与预训练模型接近的前提下优化整个输出分布的效用而非仅平均奖励；决策对象为生成器参数以及目标分布相对预训练分布的密度比权重；关键约束是需支持一般形式的效用（包括非线性、风险敏感、尾部敏感的效用）与一般 f-散度惩罚；信息假设是拥有预训练模型和有限样本库（finite sample bank），效用可在预训练样本上评估；环境为静态的离线生成建模设定，材料未说明涉及在线交互或动态环境。",
+      "tags": [
+        "生成模型微调",
+        "Fenchel 对偶",
+        "分布校正估计",
+        "f-散度正则",
+        "重要性加权流匹配",
+        "非期望效用优化"
+      ],
+      "title_zh": "Fenchel 倾斜：面向生成模型高效微调的加权校正方法",
+      "uncertainty": "证据仅为摘要与部分全文节选，附录中关于权重拟合实现细节、理论条件、公平计算预算定义与消融实验的内容缺失；作者单位以 AXXX 占位，无法确认第一单位与通讯作者之外的署名信息；摘要中“最高 20× 效率提升”的具体对照计算未在节选中给出，故对该数字的完整性存在不确定性；本文与生产调度/智能优化的关联属于研究者侧面的迁移设想，而非论文自身主张，因此相关性评分较低。",
+      "why_recommended": "对以 AI4OR 为方向的研究者，本文的价值不在生成任务本身，而在于提供了一种用对偶与散度正则把“风险敏感/非线性目标”转化为固定权重重加权回归的通用机制，这为处理调度问题中的尾部性能（如最差完工时间、超分位数）和离线数据分布偏移提供了一种可能的思路；同时其训练开销与解质量的对照实验写法，对关注公平计算预算与基线对比的调度研究者在实验设计上有参考意义。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-04T03:16:13.440259Z",
+      "input_hash": "1f2cbb0a68e80e34521b5ccda7163f50810d787fea3bb483022e35c3d7d3ad7c",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "908d2baaf8298ee3d05062bcd22095be969bb626012a4ff3c92b5cdaf47f6489": {
     "analysis": {
       "analysis": "作者以 isoteleia 映射为出发点，按句法、语义、实用三层级逐层抽象，把与任务无关的区分剔除；随后在动作层面定义实用熵、上下行实用互信息、信道容量与率失真，并证明与 Shannon 结果对应的编码定理；进而引入实用信息价值（VoI）与实用信息成本（CoI）作为率失真与容量的决策论对偶，用 Lagrangian 对偶框架处理跨层优化，导出实用效率界 E_p(λ)；对连续消息给出高斯信道与源的闭式表达，对动态设定使用 Bellman 方程。",
@@ -35145,6 +35421,94 @@
       "reading_scope": "abstract"
     }
   },
+  "bdd84a337eec81af87090d72ef8459d24e080065e1aafef1ea86782b7e38595c": {
+    "analysis": {
+      "analysis": "作者将问题分解为两个可分别优化的层面：架构层面由每个客户端独立执行个性化QNAS，在设备约束下搜索客户端特定的QNN架构α_i；语义协作层面由服务器聚合各类别全局原型，客户端利用全局原型作为语义锚点，通过对比原型损失对本地隐表示进行精炼。分析中引入原型边界（prototype margin）指标，定义为样本隐表示与正确类原型相似度减去与最近错误类原型相似度的差，正值表示表示更接近正确原型，用以直接度量类一致表示对齐是否改善。作者据此论证参数聚合在异构架构下受限，而原型级语义对齐可绕过参数空间不可加性问题。",
+      "challenges": [
+        "设备异构导致单一共享QNN架构不适用于所有客户端",
+        "结构不同的QNN架构之间参数平均会混合语义不一致的电路操作",
+        "客户端数据为非独立同分布（Dirichlet分布），影响原型语义一致性",
+        "资源受限设备上需在电路深度、门类型等约束下搜索紧凑且表达力足够的QNN",
+        "在不聚合参数的前提下实现有效的联邦知识共享"
+      ],
+      "corresponding_authors": [
+        "Soohyun Park",
+        "Joongheon Kim"
+      ],
+      "evidence": [
+        {
+          "claim": "论文提出原型引导的个性化QNAS用于虚拟联邦学习，模型参数从不在客户端间聚合，联邦协作通过类别级原型共享实现。",
+          "location": "abstract",
+          "quote": "prototype-guided personalized QNAS for virtual FL (vFedProtoQNAS) is proposed, where model parameters are never aggregated across clients and federated collaboration is achieved through class-wise prototype sharing."
+        },
+        {
+          "claim": "实验显示vFedProtoQNAS相比FedAvg准确率提升3.70%并增强类一致表示对齐。",
+          "location": "abstract",
+          "quote": "Experiments demonstrate that vFedProtoQNAS improves accuracy by 3.70\\% over FedAvg and enhances class-consistent representation alignment."
+        },
+        {
+          "claim": "结构不同的QNN架构间平均参数会混合语义不一致的电路操作。",
+          "location": "abstract",
+          "quote": "averaging parameters across structurally different QNN architectures mixes semantically inconsistent circuit operations"
+        },
+        {
+          "claim": "设备能力差异使得单一共享QNN架构不适合所有客户端。",
+          "location": "abstract",
+          "quote": "However, differences in device capabilities make a single shared QNN architecture unsuitable for all clients."
+        },
+        {
+          "claim": "vFedProtoQNAS在MNIST四分类任务上取得准确率91.25±0.74%和F1分数91.24±0.74%。",
+          "location": "supplied_full_text",
+          "quote": "vFedProtoQNAS achieves the highest performance among all methods. It obtains an accuracy of\n91.25\n±\n0.74\n%\n91.25\\pm 0.74\\%\nand an F1-score of\n91.24\n±\n0.74\n%\n91.24\\pm 0.74\\%\n."
+        }
+      ],
+      "experiments": [
+        "在MNIST四分类任务上进行，非IID数据经Dirichlet分布分配到五个客户端，每个QNN使用四个隐令牌和最多四层，操作集与电路深度按客户端设备约束配置，所有实验重复五次随机种子，结果以均值±标准差报告。",
+        "vFedProtoQNAS取得最高性能：准确率91.25±0.74%，F1分数91.24±0.74%。",
+        "FedAvg准确率为87.55±2.38%，表明参数平均在异构QFL设定下受限，因为所有客户端被迫使用相同架构。",
+        "FixedQNN LocalOnly和PersonalQNAS准确率分别为90.31±1.01%和90.45±0.70%，显示本地专门化重要但单独本地个性化未充分利用联邦协作。",
+        "vFedProtoQNAS w/o QNAS和RandomQNAS + FedProto准确率分别为90.01±0.76%和90.17±0.92%，表明原型共享即使没有优化架构也有效，但性能低于完整方法，说明原型共享与个性化QNAS互补。",
+        "摘要报告相比FedAvg准确率提升3.70%。",
+        "实验仅进行一次原型聚合与一次原型引导精炼，而非多轮联邦通信，材料未说明多轮通信下的表现。",
+        "材料未说明训练开销、通信开销、更复杂数据集或更大规模客户端下的泛化结果。"
+      ],
+      "first_affiliation": "Korea University",
+      "insight": "作者的核心洞察在于：当客户端架构异质时，参数空间不具备语义可加性，直接平均参数会混合语义不一致的电路操作；但类别级隐表示原型位于语义空间而非参数空间，可以作为跨架构的联邦语义锚点。通过共享类原型而非参数，客户端在保留各自个性化架构的同时，仍能利用全局类别语义信息对本地隐表示进行校正，从而在不破坏架构个性化的前提下获得联邦协作收益。原型共享与个性化QNAS被实验验证为互补：去掉任一组件性能均下降。",
+      "limitations": [
+        "材料未明确陈述局限性。实验仅在MNIST四分类任务、五个客户端、非IID Dirichlet分布下进行，原型聚合与精炼仅执行一次而非多轮联邦通信，但作者未将这些表述为局限。"
+      ],
+      "method": [
+        "每个客户端独立执行个性化量子神经架构搜索（QNAS），在设备特定约束（操作集与电路深度）下搜索客户端特定的QNN架构α_i，并独立训练本地参数θ_i。",
+        "客户端从本地QNN的隐表示计算类别级本地原型，服务器聚合得到全局原型。",
+        "客户端使用来自服务器的全局原型作为联邦语义锚点，对本地原型进行精炼，精炼阶段仅更新本地参数θ_i，个性化架构α_i保持固定。",
+        "采用对比原型损失（contrastive prototype loss），权重β_proto=0.10；本地训练100轮，随后一次原型聚合和100轮原型引导精炼，使用Adam优化器，批大小64。",
+        "模型参数从不在客户端间聚合，联邦协作完全通过类别级原型共享实现。"
+      ],
+      "motivation": "联邦学习通常假设客户端共享相同模型架构并依赖参数平均构造全局模型，但实际中客户端在计算资源、内存和能量预算上差异很大，高容量架构可能超出低资源客户端预算，而过度轻量架构又限制高资源客户端学习能力。量子神经网络作为紧凑模型被引入分布式学习，但不同客户端部署相同QNN架构同样不合适，设备特定因素如电路深度和门类型影响性能与效率。神经架构搜索（尤其是量子神经架构搜索QNAS）可自动化客户端特定QNN设计，然而在结构不同的QNN架构间平均参数会混合语义不一致的电路操作。因此需要一种既能保留个性化架构又能实现联邦知识共享的机制。",
+      "primary_topic": "量子联邦学习中的个性化量子神经架构搜索与原型引导协作",
+      "relation_to_research": "论文事实：该工作研究量子联邦学习中的个性化架构搜索与类原型共享，核心机制是在结构异构模型之间用类别原型替代参数聚合实现知识共享，并引入原型边界度量表示对齐。与智能优化、生产调度和AI4OR的关联：该论文不涉及生产调度、柔性作业车间、流水车间、分布式制造或生产运输协同等目标领域问题，也未使用强化学习、多智能体优化或数学规划求解器。迁移设想的可能性（推测）：其“在异构模型间共享语义原型而非聚合参数”的机制，可能在概念上迁移到多工厂或多车间协同学习中，当各站点模型结构或数据分布不同、参数无法直接平均时，可用类别级或任务级语义统计量作为协作信号；但迁移需要目标问题存在可定义的有意义语义表示与类别或任务原型，并需验证原型对齐是否对调度决策质量有实质帮助。以上迁移属于推测，不是作者结论。",
+      "relevance_score": 2,
+      "setting": "研究设定为量子联邦学习（QFL）场景：多个客户端在资源受限设备上分布式持有私有数据，设备能力（电路深度、门类型、计算与存储预算）存在异构性，单一共享QNN架构不适合所有客户端。决策对象是每个客户端的量子神经架构α_i与本地参数θ_i；目标是在不聚合结构不同架构参数的前提下实现联邦协作，提升各客户端分类性能并保持类别一致的表示对齐。关键约束包括设备特定的电路深度与操作集限制、数据非独立同分布（Dirichlet分布）。动态/静态环境：材料未说明环境是否动态，仅描述一次原型聚合与一次原型引导精炼。",
+      "tags": [
+        "量子联邦学习",
+        "量子神经架构搜索",
+        "原型学习",
+        "虚拟联邦学习",
+        "设备异构性",
+        "个性化模型"
+      ],
+      "title_zh": "vFedProtoQNAS：面向虚拟联邦学习的原型引导个性化量子神经架构搜索",
+      "uncertainty": "全文节选不完整，缺少QNAS搜索空间细节、原型计算与聚合公式、对比原型损失的完整定义、原型边界分析的具体数值以及多轮联邦通信的消融。摘要与正文节选在任务规模、客户端数量与实验设置上信息有限，无法判断该方法在更大规模、更复杂数据集或多轮通信下的表现。因此对方法完整性和迁移价值的判断存在不确定性。",
+      "why_recommended": "相关性较低，不推荐当前研究者作为核心阅读材料。该论文的主题是量子联邦学习与QNAS，与智能优化、生产调度、AI4OR的目标问题和方法栈（强化学习、图神经网络、数学规划结合、约束可行性等）没有直接关系。仅在研究者关心“异构模型间无法参数聚合时的语义级协作机制”这一抽象问题时，其原型共享思路可能提供有限的跨领域类比，但论文本身未提供生产调度或运筹优化相关的证据，不应因出现“搜索”“异构”等词语而给予高分。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-04T03:17:01.683594Z",
+      "input_hash": "436d319166516cf6ea4988d198f3efe545575a5d3d15bfa7a18f1d473f789ad0",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "be265a0528c74c0a5d3bc76d740e0429de20aeff7e36c033d0ffd62211124da4": {
     "analysis": {
       "analysis": "作者将问题定位为从非结构化工业规格到数学模型的翻译与建模任务，指出通用 LLM 在连续多物理动力学场景下会生成无效约束，因此主张引入领域知识库约束 LLM 的生成过程；为系统评估，作者把评估拆分为自动化结构评估与双盲人类评估两部分，并以 50 个需文本与工艺图联合推理的典型场景构建多模态基准。材料未说明作者是否使用问题分解、下界或图表示等具体分析工具。",
@@ -35779,6 +36143,103 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
+    }
+  },
+  "c20e109e6649fac84af54c22dae3434c83a7b0e6f01eb60f1b549bfebc5e4991": {
+    "analysis": {
+      "analysis": "作者通过将不确定参数分解为预测值和残差两部分，利用残差的零均值高斯假设，将机会约束转化为确定性等价形式。具体地，不确定性通过局部运行变量及其在配电网中传播的标准差项嵌入调度问题，形成解析安全裕度。这种转化保持了原问题的混合整数线性结构。在物理调度确定后，作者将可用社区能量池（聚合的PV发电和BESS放电）按照预定义的参与系数分配给用户，识别分配后的盈余和缺额，并最大化内部匹配，同时保持CCO获得的聚合电网交换不变。作者通过在206节点欧洲低压馈线系统上对比确定性完美信息基准、两阶段随机规划（TSSP）和另一种CCO变体来验证框架性能。",
+      "challenges": [
+        "光伏发电和电力需求的双重不确定性同时影响净注入功率，且不确定性在配电网中传播",
+        "机会约束的确定性等价转化需要保留原问题的混合整数线性结构以避免计算负担剧增",
+        "在保证与上游电网承诺交换可行性的同时，协调PV和BESS运行、配电网约束以及社区内部能量共享",
+        "事后分配阶段需要在保持聚合电网交换不变的前提下最大化内部匹配，识别并匹配分配后的盈余与缺额"
+      ],
+      "corresponding_authors": [
+        "Fernando García-Muñoz"
+      ],
+      "evidence": [
+        {
+          "claim": "论文提出基于预测残差的机会约束优化框架，通过预测值和残差分布刻画不确定参数",
+          "location": "abstract",
+          "quote": "This paper proposes a forecast-residual-based chance-constrained optimization (CCO) framework that characterizes uncertain parameters through their forecasts and associated residual distributions."
+        },
+        {
+          "claim": "在高斯假设下，机会约束可精确转化为确定性等价形式，保持混合整数线性结构",
+          "location": "abstract",
+          "quote": "Under the adopted zero-mean Gaussian assumption, the resulting chance constraints admit an exact deterministic-equivalent reformulation in which uncertainty is embedded through analytical safety margins, preserving the mixed-integer linear structure of the original scheduling problem."
+        },
+        {
+          "claim": "模型联合协调光伏和电池储能运行、低压配电网约束、内部能量共享和日前电网交换承诺",
+          "location": "abstract",
+          "quote": "The model jointly coordinates PV and BESS operation, low-voltage distribution network constraints, internal energy sharing, and day-ahead grid-exchange commitments."
+        },
+        {
+          "claim": "事后分配阶段在保持CCO聚合电网交换的前提下最大化内部匹配",
+          "location": "abstract",
+          "quote": "Once the physical schedule is determined, an ex-post allocation stage distributes the available community energy pool among users according to predefined participation coefficients, identifies post-allocation surpluses and deficits, and maximizes their internal matching while preserving the aggregate grid exchanges obtained from the CCO."
+        },
+        {
+          "claim": "在预测误差接近5%时，CCO操作结果与随机规划基准相当，计算需求接近确定性公式",
+          "location": "abstract",
+          "quote": "Results show that, for forecast-error levels close to 5%, the proposed CCO achieves operating outcomes comparable to the stochastic benchmark while retaining computational requirements close to the deterministic formulation."
+        },
+        {
+          "claim": "实验在减少的206节点欧洲低压馈线系统上进行，最多55个社区用户，与两阶段随机规划对比",
+          "location": "abstract",
+          "quote": "The framework is evaluated on a reduced 206-node European low-voltage feeder with up to 55 community users and benchmarked against a two-stage stochastic programming formulation."
+        },
+        {
+          "claim": "CCO平均求解时间约19.7秒，TSSP约40.1秒，PI约19.4秒",
+          "location": "supplied_full_text",
+          "quote": "In terms of computational burden, both CCO formulations have solution times comparable to the deterministic PI case, requiring an average of 19.7 s for the"
+        }
+      ],
+      "experiments": [
+        "在减少的206节点欧洲低压馈线系统上评估，最多55个社区用户，与两阶段随机规划（TSSP）基准对比",
+        "为每个季节运行25次模拟，四个季节共100次模拟，使用5%预测误差水平和95%置信水平",
+        "结果显示：在预测误差水平接近5%时，提出的CCO达到与随机基准相当的操作结果，同时计算需求接近确定性公式（平均约19.7秒，而TSSP约40秒）",
+        "事后分配结果表明社区内部匹配可以减少需要与上游电网结算的总能量交换",
+        "整体平均目标值：PI为-12.4，CCO为-4.0，TSSP为-3.7，CCO*为2.1；CCO的MAE相对PI为8.3，TSSP为10.0，CCO*为14.5",
+        "计算时间：CCO和CCO*平均约19.7秒和19.1秒，接近确定性PI的19.4秒；TSSP平均约40.1秒"
+      ],
+      "first_affiliation": "智利圣地亚哥大学（USACH）工程学院工业工程系",
+      "insight": "核心洞察在于：若不确定参数可通过预测值及其残差分布刻画，且残差服从零均值高斯分布，则机会约束可精确转化为确定性等价形式，将不确定性通过解析安全裕度嵌入到原混合整数线性调度问题中。这样既保留了原问题的混合整数线性结构（从而保持求解效率），又能以规定的置信水平强制交换承诺的可行性。此外，将物理调度与事后能量分配分离，使得社区内部匹配可以在不改变聚合电网交换的前提下降低需要结算的总能量。",
+      "limitations": [
+        "采用零均值高斯假设来表征预测残差分布，材料未说明该假设在真实数据下的验证情况",
+        "在数值设置中，空间交叉协方差项近似采用对角协方差结构，材料未说明该近似的敏感性分析",
+        "实验在减少的206节点系统上进行，材料未说明在更大规模系统上的可扩展性验证",
+        "材料未说明在预测误差水平显著高于5%时的性能表现"
+      ],
+      "method": [
+        "将不确定参数（PV发电和需求）表征为预测值加残差，假设残差服从零均值高斯分布",
+        "基于高斯假设将机会约束转化为确定性等价形式，通过解析安全裕度嵌入不确定性，保持混合整数线性结构",
+        "建立联合优化模型，协调PV和BESS运行、低压配电网约束、内部能量共享和日前电网交换承诺",
+        "物理调度确定后，执行事后分配阶段：将可用社区能量池按预定义参与系数分配给用户，识别分配后盈余和缺额，最大化内部匹配，同时保持聚合电网交换不变",
+        "在减少的206节点欧洲低压馈线系统上，对最多55个社区用户进行测试，与两阶段随机规划基准对比"
+      ],
+      "motivation": "局部能源社区整合到上游电力市场需要提前承诺与主网交换的总能量，以支持供应商和配电网运营商（DSO）的规划与网络管理。然而，光伏发电和电力需求的不确定性可能危及这些承诺交换的可行性。现有基于市场的能量共享方法往往忽略配电网物理约束，导致经济最优但运行不可行的调度；而考虑不确定性的方法（如随机规划）又带来较高计算负担。因此，需要一种既能保证交换承诺可行性、又保持计算可处理性的调度框架。",
+      "primary_topic": "机会约束优化在局部能源社区日前调度中的应用",
+      "relation_to_research": "该论文直接涉及不确定性下的优化调度问题，与智能优化和生产调度领域在方法论层面有明确关联：机会约束的确定性等价转化、混合整数线性结构的保持、以及不确定性通过安全裕度嵌入模型的方式，可迁移到生产调度中处理加工时间、需求或能源供应不确定性。此外，物理调度与事后分配的分离思路，对生产运输协同调度中主调度与资源分配的分层设计有参考价值。论文将不确定性量化和机会约束求解与数学规划结合，属于AI4OR中学习辅助/数据驱动优化与数学规划结合的相邻方向，但未涉及神经网络、强化学习或多智能体方法。迁移到柔性作业车间或流水车间调度需要将预测残差框架适配到加工时间或设备故障的不确定性建模，并验证高斯假设的适用性，这属于推测，需进一步研究。",
+      "relevance_score": 5,
+      "setting": "论文研究局部能源社区（LEC）的日前运行调度问题，决策对象包括光伏（PV）发电、电池储能系统（BESS）的充放电操作、低压配电网约束、社区内部能量共享以及日前与上游电网的交换承诺。目标是在光伏发电和电力需求不确定的情况下，保证与上游电网承诺交换的可行性，同时优化社区运行经济性。关键约束包括低压配电网物理约束、机会约束形式的交换承诺可行性以及BESS运行约束。信息假设为不确定参数可通过预测值及其残差分布（假设为零均值高斯分布）来表征，属于静态日前调度环境。",
+      "tags": [
+        "机会约束优化",
+        "局部能源社区",
+        "光伏不确定性",
+        "需求不确定性",
+        "混合整数线性规划",
+        "能量共享"
+      ],
+      "title_zh": "基于预测残差的局部能源社区在光伏与需求不确定性下的机会约束调度",
+      "uncertainty": "本次分析基于提供的摘要和全文节选，全文节选仅包含引言、文献综述、部分方法描述、实验设置和结果表格片段，未包含完整的模型公式、算法伪代码和全部实验结果。因此对方法的细节描述、实验的完整基线设置和消融研究可能存在遗漏。局限性部分主要基于作者在结论中的表述和实验设置中的近似处理，材料未明确列出所有局限性。相关性评分定为5，因为论文属于不确定性优化调度在能源系统中的应用，与生产调度领域是相邻方向，具有明确迁移路径但非直接研究目标领域。",
+      "why_recommended": "该论文提供了机会约束优化的一种实用转化路径，在保持混合整数线性结构的前提下处理不确定性，对研究生产调度中不确定性建模和约束可行性保障的研究者有方法借鉴价值。其实验设计包含与随机规划的公平对比（相同实例、相同预测误差水平、计算时间报告），符合对公平计算预算和可复现性的重视。此外，论文提供了公开代码和数据，便于复现和迁移验证。尽管不直接涉及神经网络或强化学习，但其对不确定性传播和确定性等价转化的处理方式，可为学习辅助搜索中约束处理模块的设计提供思路。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-04T03:17:23.288600Z",
+      "input_hash": "b5a64efde26931719ea2aa1cc3c450b3a09e76bef2b812cdd2e16dc411ad4310",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
     }
   },
   "c228133f93b11ac55fd08f76476e48edd8ec9b9649becfae7b24c22f72954443": {
