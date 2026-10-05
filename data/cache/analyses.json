@@ -5473,6 +5473,94 @@
       "reading_scope": "abstract"
     }
   },
+  "1eb47892141c68dd98953a1efe259d115df07dc4960ea9bc492376847f0cd193": {
+    "analysis": {
+      "analysis": "作者将问题分解为标称轨迹重规划与反馈控制器设计两个子问题，通过基于协方差的机会约束退让（backoff）耦合交替求解；利用系统级综合参数化闭环响应，借助Cholesky变换按列处理跨时间相关协方差，并共享Riccati递推；另外基于无相位修正的修正赤道元素中的最小能量注入后修正推导面向任务的终端权重。",
+      "challenges": [
+        "在保留持续不确定性跨时间相关性的同时保持Riccati结构化计算",
+        "避免依赖高精度在线参数估计",
+        "将最小机动/控制距离指标转化为可直接指导协方差反馈设计的二次终端权重"
+      ],
+      "corresponding_authors": [
+        "Shengping Gong"
+      ],
+      "evidence": [
+        {
+          "claim": "论文提出快速机会约束随机上升段轨迹重规划器，显式处理持续推进不确定性",
+          "location": "abstract",
+          "quote": "This paper develops a fast chance-constrained stochastic ascent trajectory replanner that explicitly accounts for persistent propulsion uncertainty."
+        },
+        {
+          "claim": "不确定性模型结合跨预测时域共享的持续随机不确定性与区间独立扰动",
+          "location": "abstract",
+          "quote": "The uncertainty model combines persistent random uncertainties shared across the prediction horizon with interval-wise independent disturbances."
+        },
+        {
+          "claim": "基于Cholesky变换将跨时间相关反馈设计分解为共享Riccati递推的逐列仿射递推",
+          "location": "abstract",
+          "quote": "A Cholesky-based transformation of the system responses converts the resulting cross-time correlated feedback design problem into column-wise affine recursions that share a common Riccati recursion."
+        },
+        {
+          "claim": "采用交替确定性轨迹重规划与反馈控制器设计，并由协方差退让耦合",
+          "location": "abstract",
+          "quote": "The stochastic replanning problem is solved by alternating deterministic trajectory replanning and feedback controller design, with covariance-based chance-constraint backoffs coupling the two updates."
+        },
+        {
+          "claim": "作者明确说明未假设完整非线性交替迭代的全局收敛性",
+          "location": "supplied_full_text",
+          "quote": "The present algorithm is evaluated without assuming global convergence of the complete nonlinear alternating iteration."
+        },
+        {
+          "claim": "不收敛时机会约束要求可能未满足",
+          "location": "supplied_full_text",
+          "quote": "the newly evaluated stochastic backoffs are not satisfied and the corresponding chance-constraint requirements therefore remain unmet"
+        }
+      ],
+      "experiments": [
+        "通过非线性蒙特卡洛仿真验证：降低等效修正需求、有效满足机会约束、在多种不确定性水平和故障条件下实现快速在线重规划",
+        "考察候选修正机会数量对等效修正需求的影响并直接验证轨道修正结果",
+        "以代表性故障后案例展示轨迹与终端散布行为及协方差重塑",
+        "变化扰动水平比较不同反馈设计的Δv降低效果并量化不同不确定性来源的贡献",
+        "考虑不同故障条件，考察原目标与降级目标结果及计算性能",
+        "载具模型基于Falcon 9 Full Thrust，含两个动力段和一个无动力辅助段；通用参数见Table 2；具体数值未在节选中给出"
+      ],
+      "first_affiliation": "北京航空航天大学宇航学院",
+      "insight": "通过系统级综合参数化闭环响应，并利用基于Cholesky的系统响应变换，可将跨时间相关的反馈设计问题分解为共享同一Riccati递推的逐列仿射递推，从而在保留持续不确定性建模的同时维持Riccati结构化计算的快速性；同时，将终端协方差整形与注入后最小能量轨道修正需求直接关联，使反馈设计面向实际修正代价而非单纯缩小终端协方差。",
+      "limitations": [
+        "作者明确说明本算法未假设完整非线性交替迭代的全局收敛性；随机外层迭代不收敛时不否定最后接受的标称轨迹，但新评估的随机退让不满足，机会约束要求未满足"
+      ],
+      "method": [
+        "基于系统级综合参数化从外源扰动到状态与输入的闭环响应",
+        "对系统响应进行基于Cholesky的变换，将跨时间相关反馈设计转化为逐列仿射递推并共享Riccati递推",
+        "在无相位修正赤道元素下由最小能量注入后轨道修正推导面向任务的终端权重，将终端协方差整形与修正需求关联",
+        "采用交替优化：确定性轨迹重规划（采用一次热启动凸SCP子问题的实时迭代RTI）与反馈控制器设计交替，由基于协方差的机会约束退让耦合",
+        "在qα边界远离时使用三级同伦；若随机外层迭代不收敛，可并行求解无随机退让的确定性重规划分支作为回退",
+        "采用创新实现以减少在线构造全因果增益矩阵的开销"
+      ],
+      "motivation": "现有故障后重规划方法大多将识别出的推进能力视为精确已知，忽略残余不确定性，可能导致路径约束违反与终端注入散布；而现有快速Riccati类方法通常假设时间独立的过程噪声，无法刻画持续偏差导致的跨时间相关性，且依赖高精度在线参数估计的方法实现困难。",
+      "primary_topic": "航天器上升段轨迹的机会约束随机重规划与反馈控制器设计",
+      "relation_to_research": "该论文属于航天轨迹优化与随机最优控制领域，使用Riccati递推、系统级综合与机会约束，未涉及神经网络、图神经网络、强化学习、多智能体或大模型智能体，也未涉及生产调度。其求解框架与智能优化方向的关联较弱，但对学习辅助搜索与数学规划结合的研究者而言，其交替优化、Riccati结构化计算与约束退让机制在生产调度等约束优化问题中可能具有迁移价值（推测：需将系统级综合的线性时变动力系统替换为调度问题的离散决策模型，并将机会约束替换为生产约束与不确定性处理，迁移条件较为苛刻）。",
+      "relevance_score": 4,
+      "setting": "研究运载火箭在非致命推进故障后的上升段轨迹快速重规划问题；决策对象为标称轨迹与闭环反馈控制律；目标是在存在持续推进能力不确定性（跨预测时域共享的持续随机偏差与区间独立扰动）的条件下，满足路径约束的机会约束并降低终端注入散布与等效修正需求；关键约束包括路径约束、机会约束及航程终点条件；信息假设为故障已被诊断但识别出的推进能力仍存在残余不确定性，且不依赖高精度在线参数估计；环境为动态（故障后剩余燃烧段）。",
+      "tags": [
+        "系统级综合",
+        "机会约束优化",
+        "轨迹重规划",
+        "协方差控制",
+        "航天制导"
+      ],
+      "title_zh": "面向持续推进不确定性下快速机会约束故障后上升段重规划的系統级综合方法",
+      "uncertainty": "论文分类为math.OC，全文节选仅包含引言、部分方法概述和实验概述，缺失具体数值结果、完整算法细节与基线对比；对迁移到生产调度的可行性判断属于推测；实验规模的定量信息未提供。",
+      "why_recommended": "该论文的强约束可行性处理、交替优化架构与Riccati结构化快速求解策略，对关注约束优化与不确定性下快速重规划的AI4OR研究者有方法层面的参考价值；但其应用领域与生产调度、神经网络辅助求解的直接关联有限，适合作为数学规划与递推结构化方法结合的相邻案例阅读。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-05T02:51:11.984280Z",
+      "input_hash": "03b9e71f532971e97eaaac15acc9d07fbe95e9b43967e3e5734e059985b86bcd",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "1f4775157cd7d296f6e9fa9b31eb62e48e2b39ed6e292bf393a449b0a986017c": {
     "analysis": {
       "analysis": "作者将探索策略的管理与改进问题形式化为在元搜索空间上的策略优化问题，指出其受延迟和昂贵反馈制约。分析思路是把已完成探索产生的发现历史组织为发现树，并以此构建回放模拟器，从而将在线、昂贵、长时程的反馈转化为离线、低成本、即时的反馈，用于策略评估与精炼。材料未说明是否使用问题结构分解、下界或图表示等更具体的分析工具。",
@@ -12164,6 +12252,85 @@
       "reading_scope": "abstract"
     }
   },
+  "439856f56c8140af2538fd2ceeadf95fcd8cdc8d8da444516ff6da788f830dcc": {
+    "analysis": {
+      "analysis": "作者通过以公开可用的轻量方法构建四类检测器并在HaluEval三个任务上统一评测，使用留出的验证集进行校准、每任务2000个测试实例并报告bootstrap置信区间，从而分析任务依赖性；随后通过提高前提字符预算和将单次打分替换为句子级分块聚合，探究摘要任务失败是否源于单次通过设计。材料未说明作者是否利用问题结构分解、下界或图表示。",
+      "challenges": [
+        "在无GPU、无专有API和无白盒访问的约束下实现有效检测",
+        "不同任务间检测性能差异大，摘要任务尤其困难",
+        "相似度与NLI集成需要在验证集上校准",
+        "提升前提预算或分块聚合会显著增加推理开销"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究在仅使用CPU可行轻量方法时幻觉检测的性能",
+          "location": "abstract",
+          "quote": "how well can hallucination detection perform using only lightweight, CPU-feasible methods built on public models?"
+        },
+        {
+          "claim": "相似度-NLI集成是最一致的方法但绝对性能高度依赖任务",
+          "location": "abstract",
+          "quote": "The similarity-NLI ensemble is the most consistent method, but absolute performance is highly task-dependent."
+        },
+        {
+          "claim": "摘要任务上所有方法接近随机水平",
+          "location": "abstract",
+          "quote": "on summarisation every method performs near chance (AUC-ROC between 0.469 and 0.574)"
+        },
+        {
+          "claim": "提高前提预算和句子级分块聚合可显著提升摘要检测性能",
+          "location": "abstract",
+          "quote": "Raising the premise budget from 800 to 1600 characters lifts summarisation AUC-ROC from 0.567 to 0.629, and replacing single-pass scoring with sentence-level chunk aggregation reaches 0.683, still on CPU with the same model, though at roughly twenty times the NLI inference."
+        }
+      ],
+      "experiments": [
+        "相似度-NLI集成在问答上F1=0.792、AUC-ROC=0.873，在对话上F1=0.694、AUC-ROC=0.749，是性能最一致的方法；NLI在问答和对话上是最强的独立方法",
+        "在摘要任务上所有方法均接近随机水平，AUC-ROC在0.469到0.574之间",
+        "将前提预算从800字符提高到1600字符使摘要AUC-ROC从0.567提升到0.629",
+        "将单次通过打分替换为句子级分块聚合使摘要AUC-ROC达到0.683，仍使用CPU和相同模型，但NLI推理量约为原来的二十倍",
+        "材料未说明基线是否包含GPU密集型方法、训练开销、公平计算预算的详细比较或消融研究细节"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "轻量级检测的性能高度依赖任务类型，而非在所有任务上本质失效；作者通过提升前提预算与采用句子级分块聚合，证明摘要任务上的失败在很大程度上是单次通过设计的产物而非轻量级方法的固有局限，说明输入表示粒度与前提覆盖范围是决定轻量检测上限的关键因素。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "构建四种CPU可行的检测器：ROUGE-L、语义相似度、BERTScore、基于FEVER训练的DeBERTa的NLI检测器",
+        "构建相似度与NLI的分数级集成检测器",
+        "在留出的验证集上进行校准",
+        "在HaluEval的问答、对话和摘要三个任务上各评测2000个测试实例并报告bootstrap置信区间",
+        "将前提预算从800字符提升至1600字符以检验对摘要性能的影响",
+        "将单次通过打分替换为句子级分块聚合以检验对摘要性能的影响"
+      ],
+      "motivation": "最准确的幻觉检测方法依赖GPU密集型推理、专有API调用或对生成模型的白盒访问，使资源受限的研究者和实践者难以使用，因此需要探索仅用公开模型和CPU可行方法的实用替代方案。",
+      "primary_topic": "轻量级幻觉检测基准评测（CPU可行方法在问答、对话与摘要任务上的比较）",
+      "relation_to_research": "该论文属于自然语言处理中的幻觉检测评测，未涉及智能优化、生产调度或AI4OR中的约束决策问题。其轻量级CPU可行评测、分数级集成、任务依赖性分析以及通过调整输入粒度与前提预算来诊断性能瓶颈的实验思路，可能对资源受限场景下的学习辅助搜索或检测式辅助模块设计有间接启发，但迁移到生产调度或其他优化问题需要重新定义检测对象、前提表示与任务目标，属于推测而非作者结论。",
+      "relevance_score": 3,
+      "setting": "研究问题是在无GPU、无专有API、无白盒模型访问的资源受限条件下，轻量级幻觉检测能达到多好的效果；决策对象是给定生成文本判断是否包含幻觉的二分类检测；目标是比较四种轻量检测器及其集成的检测性能；关键约束是仅使用CPU可行方法与公开模型；信息假设是检测器仅基于生成文本和参考前提，不具备对生成模型的白盒访问；环境为静态离线评测，使用HaluEval基准的问答、对话和摘要三类任务。材料未说明是否涉及动态扰动或在线部署。",
+      "tags": [
+        "幻觉检测",
+        "轻量级方法",
+        "基准评测",
+        "CPU推理",
+        "自然语言推理",
+        "语义相似度"
+      ],
+      "title_zh": "没有GPU能走多远？跨问答、对话与摘要的轻量级幻觉检测系统性基准",
+      "uncertainty": "仅提供标题与摘要，缺少全文，无法确认实验细节、基线选择、统计检验方法、模型版本以及是否有更深入的消融分析；第一单位和通讯作者信息未提供；相关性判断基于摘要中未出现任何调度或优化决策内容。",
+      "why_recommended": "对当前研究者的直接相关性较低，不涉及调度、优化求解或智能体决策。但其在严格资源约束下进行统一基准评测、报告置信区间、区分任务依赖性与设计局限、通过受控实验诊断性能瓶颈的方法论，对AI4OR中的公平计算预算比较与消融设计具有方法论参考价值。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-05T02:51:46.584506Z",
+      "input_hash": "50d318a85b4b5c78eb8e6f40cc1fa8088c321444f3fe3b8cf42fdb8bf77bead2",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
   "453018ea0a62679f94b3eded74b9e1eaf393e91f1dd2cb216ff851ea30bcc80b": {
     "analysis": {
       "analysis": "材料未说明。",
@@ -13696,6 +13863,108 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
+    }
+  },
+  "4e1ea3d7e4361d5766af1ed5b095411105775850b623383c714b8ac2236786a5": {
+    "analysis": {
+      "analysis": "作者通过对比实验量化现实差距：以IndicWav2Vec为基线，在干净朗读印地语Kathbath与农村电话语料Gram Vaani之间观察到词错率大幅退化，从而定位问题为声学失配；随后将适应问题建模为在预训练冻结骨干上注入LoRA矩阵的持续学习问题，通过经验回放维持数据分布、通过基于稳定重要性估计（Absolute Fisher）的弹性权重巩固约束参数更新区域，形成数据驱动与参数驱动两类稳定化策略的权衡分析；并用语言模型抽查验证核心失配处于声学层面。",
+      "challenges": [
+        "预训练模型在干净朗读印地语上的词错率11.60%到电话语音数据上恶化至41.72%的现实差距",
+        "医疗数据本地化约束使原始音频不能离开设备，排除云端集中式训练",
+        "端侧算力受限，全量微调计算代价过高且易过拟合",
+        "标注音频因隐私与标注成本而稀缺，且以小批量增量方式收集",
+        "序贯适应中的灾难性遗忘会侵蚀先前学到的通用语言能力"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究的核心问题是清晰训练语料与嘈杂、隐私受限真实临床电话环境之间的现实差距，导致先进语音识别模型实际不可用",
+          "location": "supplied_full_text",
+          "quote": "The \"reality gap\", representing the disparity between clean training corpora and the chaotic, noisy, and privacy-constrained environments of real-world clinical telephony, renders these state-of-the-art models practically unusable."
+        },
+        {
+          "claim": "基线模型在干净朗读印地语与电话语音数据之间词错率从11.60%恶化到41.72%",
+          "location": "supplied_full_text",
+          "quote": "degrade from 11.60% WER on clean read Hindi (Kathbath)\nJaved et al. (2023)\nto a prohibitively high\n41.72% Word Error Rate (WER)\non rural telephony speech from Gram Vaani"
+        },
+        {
+          "claim": "采用LoRA在端侧进行低秩适配以应对算力受限与数据本地化约束",
+          "location": "supplied_full_text",
+          "quote": "To address this, we adopt Low-Rank Adaptation (LoRA)\n(\nHu et al., 2022\n)\n, which enables local fine-tuning on modest clinical hardware."
+        },
+        {
+          "claim": "多域经验回放相对朴素自适应使目标域词错率相对改善18.2%，灾难性遗忘减少54%",
+          "location": "abstract",
+          "quote": "Multi-domain Experience Replay (ER) yields the primary gains, improving target WER by 18.2% relative and reducing catastrophic forgetting by 54% compared to naive adaptation"
+        },
+        {
+          "claim": "回放与基于Absolute Fisher的EWC结合获得最强保持能力但损失少量可塑性",
+          "location": "abstract",
+          "quote": "Combining replay with Elastic Weight Consolidation based on a stabilized importance estimate (Absolute Fisher) yields the strongest retention at a small cost in plasticity."
+        },
+        {
+          "claim": "语言模型抽查验证核心失配处于声学层面，无法仅靠语言模型解决",
+          "location": "abstract",
+          "quote": "a language model spot check empirically verifies that the core mismatch lies at the acoustic level and cannot be resolved by language models alone."
+        },
+        {
+          "claim": "数据本地化本身不构成形式化隐私保证，未研究差分隐私或安全聚合等防御",
+          "location": "supplied_full_text",
+          "quote": "We emphasize that data residency alone is not a formal privacy guarantee: we do not study differential privacy, secure aggregation, or defenses against model-based attacks such as membership inference or model inversion."
+        }
+      ],
+      "experiments": [
+        "所有结果以三个随机种子报告均值与标准差",
+        "基线为IndicWav2Vec在Gram Vaani上41.72% WER、Kathbath上11.60% WER、FLEURS上18.16% WER，每个模型训练3个epoch",
+        "评估使用官方3小时Gram Vaani评估集GV_Eval_3h，103小时训练数据被划分为顺序分段以模拟实时数据流",
+        "多域经验回放为主带来增益：相对朴素自适应，目标域WER相对改善18.2%，灾难性遗忘减少54%，BERTScore显示语义保真度持续提升",
+        "回放与基于Absolute Fisher的EWC结合获得最强保持能力，但以少量可塑性为代价",
+        "全量微调取得最强目标域性能，回放式流式自适应的目标域WER与离线LoRA相当而遗忘显著更少",
+        "语言模型抽查实证验证核心失配处于声学层面，无法仅靠语言模型解决",
+        "学习率预热对比：10步激进预热相比100步保守预热显著加速每段早期收敛且不增加灾难性遗忘（所有运行间差异小于0.05%）"
+      ],
+      "first_affiliation": "BITS Pilani, Pilani Campus, India",
+      "insight": "核心洞察在于：该现实差距主要源于声学层面的不匹配，而非语言层面，因此单靠语言模型无法解决；在端侧无法全量微调、且数据以流式方式增量到达的条件下，同时维持可塑性与稳定性的有效路径是用多域经验回放维持数据分布、用正则化保护关键适配器参数，从而在少量可训练参数上实现兼顾目标域适应与通用知识保持的持续自适应。",
+      "limitations": [
+        "评估指标WER、CER与BERTScore均对临床关键区分不敏感，如否定、数值量级错误或医学实体替换，且不显式加权错误的临床重要性；由于Gram Vaani未提供命名实体或疾病名称标注，无法开展面向临床的评估",
+        "使用Gram Vaani作为临床电话语音的最近似代理，尽管反映农村电话的信道与方言条件，真实临床对话内容可能不同；采集与评估真实临床电话数据需要伦理批准与患者同意框架",
+        "持续学习设置假设存在校正转写文本（如来自医疗专业人员）的流，在人员不足的农村诊所中这种监督可能稀疏或延迟",
+        "仅进行声学训练，未整合语言模型",
+        "数据本地化本身不构成形式化隐私保证，未研究差分隐私、安全聚合或针对成员推断、模型反演等基于模型的攻击的防御"
+      ],
+      "method": [
+        "以IndicWav2Vec（Wav2Vec 2.0架构，卷积特征编码器加Transformer上下文网络，CTC损失训练）为基座声学骨干，冻结基座模型",
+        "在query和value投影层注入可训练LoRA矩阵，将优化限制在低维子空间，同时作为防止大规模破坏预训练权重的稳定保障",
+        "构建端侧流式持续自适应框架，按序处理分段的训练数据流，原始音频不离开本地设备",
+        "采用多域经验回放（ER）缓冲，从源域通用数据池抽取回放样本与目标域流数据共同训练",
+        "引入基于Absolute Fisher稳定重要性估计的弹性权重巩固（EWC）正则项，与经验回放联合构成总损失，联合损失等于回放损失加EWC惩罚项",
+        "对比四种持续学习范式，并以全量微调与离线LoRA微调作为性能上界"
+      ],
+      "motivation": "自监督学习虽使语音识别在标准基准上接近人类水平，但在农村健康热线和远程临床服务等专业高影响场景中，清晰训练语料与嘈杂、隐私受限的真实临床电话环境之间存在现实差距，使得先进模型实际不可用；同时医疗数据本地化要求排除云端服务，形成了数据不能离开本地因而模型无法改进的死锁。",
+      "primary_topic": "语音识别模型的端侧持续学习与自适应",
+      "relation_to_research": "该论文属于语音识别领域的端侧持续学习研究，与智能优化、生产调度或AI4OR的核心问题没有直接关联，其决策对象是模型参数更新而非生产调度决策或约束优化解。其中经验回放缓冲、基于Fisher重要性的正则化、LoRA低秩适配与流式序贯适应等机制，在方法论层面与学习辅助搜索、在线自适应优化有可迁移的相似性：推测而言，若将流式到达的实例分布漂移问题映射为调度环境中的动态扰动适应，其回放加正则化的稳定性—可塑性权衡思路或可迁移，但迁移到生产调度需要重新定义状态、动作与奖励并验证约束可行性，本文未提供任何此类证据。",
+      "relevance_score": 2,
+      "setting": "研究问题是在数据本地化与算力受限的端侧设备上，对预训练语音识别模型进行持续自适应，以缩小干净实验室语音与嘈杂真实临床电话语音之间的现实差距；决策对象为注入LoRA矩阵后的模型可训练参数；目标是在不把原始音频传出本地设备的前提下，依次利用流式到达的小批量校正文本提升目标域识别准确率，同时不遗忘通用域知识；关键约束包括原始音频不得离开本地、8kHz带限电话信道、标注数据稀缺且增量到达、端侧算力有限；信息假设为存在医疗人员提供校正转写文本的监督流；环境为静态预训练模型之上的序贯在线（流式分段）自适应环境。",
+      "tags": [
+        "持续学习",
+        "端侧自适应",
+        "LoRA",
+        "经验回放",
+        "灾难性遗忘",
+        "语音识别"
+      ],
+      "title_zh": "跨越现实差距：面向临床电话语音的端侧持续自适应语音识别",
+      "uncertainty": "本文为语音识别领域的论文，与智能优化、生产调度及AI4OR的核心议题仅有方法论层面的弱关联，相关性评分较低。第一通讯作者信息在提供的材料中未明确标注，因此通讯作者填写证据未提供。部分方法细节（如LoRA秩的具体取值、回放缓冲的具体容量）在提供的节选中未出现，未能纳入。",
+      "why_recommended": "对于关注AI4OR中学习方法可靠性、持续学习稳定性与资源受限部署的研究者，本文提供了一个在严格数据本地化与增量数据流条件下权衡可塑性与稳定性的实证案例，其关于回放与参数正则化联合使用、以及基于稳定重要性估计的EWC的分析，可作为设计在线自适应求解器时防止遗忘的参考。但需注意本文与生产调度或约束优化无直接关系，价值主要在方法论类比层面。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-05T02:51:57.626441Z",
+      "input_hash": "8c70b440b3c0f5acd2987aed6ec03b8048d89968b04098c3ff04345dbc15c4d5",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
     }
   },
   "4fb2c4276d82a830066a7db29063959aa2a4110c1d5876c00269e13a540afd1d": {
@@ -17631,6 +17900,86 @@
       "reading_scope": "abstract"
     }
   },
+  "64bf5848a93fc684a4187bdaaf363a7346e887508a8972b98e089988c93f54c6": {
+    "analysis": {
+      "analysis": "材料未说明作者如何具体分析问题结构、分解或推导下界；摘要仅说明作者观察到现有推测解码和自推测方法的权衡，并提出通过位嵌套和残差精炼来共享权重表示。",
+      "challenges": [
+        "在资源受限设备上避免额外草稿模型或权重表示带来的内存开销",
+        "在草稿质量、目标质量和存储效率之间取得平衡",
+        "将渐进式精度设计扩展到 KV 缓存以支持长上下文推理",
+        "在保持高精度模型质量的同时实现端到端解码加速"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "现有推测解码方法需要额外草稿模型或权重表示，在资源受限设备上带来不可忽视的内存开销。",
+          "location": "abstract",
+          "quote": "However, existing methods often require an additional draft model or weight representation, introducing non-negligible memory overhead on resource-constrained devices."
+        },
+        {
+          "claim": "BitNest 将低精度草稿直接嵌入高精度目标表示，使两个模型共享单一物理权重表示。",
+          "location": "abstract",
+          "quote": "We propose BitNest, a bit-nested speculative decoding framework that embeds a low-precision draft directly into the higher-precision target representation."
+        },
+        {
+          "claim": "BitNest 先构建强的低精度基础模型，再通过残差精炼恢复高精度目标，而非从预定义目标派生草稿。",
+          "location": "abstract",
+          "quote": "Instead of deriving a draft from a predefined target, BitNest first constructs a strong low-precision base and then recovers the higher-precision target through residual refinement, enabling both models to share a single physical weight representation."
+        },
+        {
+          "claim": "BitNest 将渐进式精度设计扩展到 KV 缓存以支持长上下文推理。",
+          "location": "abstract",
+          "quote": "BitNest further extends this progressive-precision design to the KV cache for long-context inference."
+        },
+        {
+          "claim": "在多个 7B–8B 边缘友好 LLM 和多样工作负载上，BitNest 达到平均 95.2% 的推测接受率，并实现 1.48–1.61 倍端到端加速。",
+          "location": "abstract",
+          "quote": "Across multiple 7B--8B edge-friendly LLMs and diverse workloads, BitNest achieves an average speculative acceptance rate of 95.2% while closely preserving higher-precision model quality, and delivers 1.48--1.61x end-to-end speedup over FP16 autoregressive decoding."
+        }
+      ],
+      "experiments": [
+        "在多个 7B–8B 边缘友好 LLM 和多样工作负载上，BitNest 达到平均 95.2% 的推测接受率，并紧密保持高精度模型质量",
+        "相比 FP16 自回归解码，BitNest 实现 1.48–1.61 倍端到端加速",
+        "在所有代表性自推测基线均支持的 LLaMA 模型上，BitNest 也取得一致有竞争力或更高的解码加速",
+        "摘要未提供基线细节、实例规模、约束可行性、训练开销、公平计算预算、泛化或消融实验的具体数字"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "BitNest 的核心洞察在于改变草稿模型与目标模型的构建顺序：不是从预定义的高精度目标中派生草稿，而是先构建一个强的低精度基础模型，再通过残差精炼恢复高精度目标，使两个模型共享同一份物理权重表示。这种渐进式精度设计之所以有效，是因为它把高低精度表示统一到同一存储结构中，从而在消除额外草稿模型内存开销的同时，保留低精度草稿的快速提议能力和高精度目标的验证质量；摘要还指出该设计可扩展到 KV 缓存以支持长上下文推理。",
+      "limitations": [
+        "摘要未明确陈述局限；材料未说明"
+      ],
+      "method": [
+        "BitNest 是一种位嵌套推测解码框架，将低精度草稿直接嵌入高精度目标表示中",
+        "先构建强的低精度基础模型，再通过残差精炼恢复高精度目标，使草稿模型与目标模型共享单一物理权重表示",
+        "将该渐进式精度设计扩展到 KV 缓存，以支持长上下文推理",
+        "使用低精度草稿提议多个 token，再由高精度目标并行验证"
+      ],
+      "motivation": "现有推测解码方法通常需要额外的草稿模型或权重表示，在资源受限设备上带来不可忽视的内存开销；自推测方法虽降低了内存开销，但在草稿质量、目标质量和存储效率之间仍存在权衡。因此需要一种能同时兼顾内存效率、草稿质量和目标模型质量的推测解码框架。",
+      "primary_topic": "大语言模型推理加速与内存高效推测解码",
+      "relation_to_research": "该论文研究的是大语言模型推理加速中的推测解码与内存高效表示，属于 AI 系统与模型推理优化方向。它与智能优化、生产调度、神经网络辅助求解、强化学习或智能体优化的核心问题没有直接关系；推测其位嵌套与残差精炼思想可能对学习辅助搜索中的多精度模型表示有启发，但这需要迁移到约束决策或调度求解场景并重新验证，且属于推测而非作者结论。",
+      "relevance_score": 2,
+      "setting": "该研究面向资源受限设备上的大语言模型自回归推理加速问题，决策对象是如何在不引入额外草稿模型或权重表示的前提下生成高质量的草稿 token，目标是在保持高精度模型输出质量的同时降低内存开销并提升端到端解码速度。关键约束包括边缘设备的内存限制、草稿质量与目标质量之间的权衡以及存储效率；信息假设方面，BitNest 认为高低精度模型可以共享同一份物理权重表示。环境为静态的模型推理与权重存储环境，但摘要未说明具体硬件平台或是否涉及动态扰动。",
+      "tags": [
+        "推测解码",
+        "LLM推理加速",
+        "低精度量化",
+        "KV缓存",
+        "边缘设备部署"
+      ],
+      "title_zh": "BitNest：面向内存高效LLM推理加速的位嵌套推测解码",
+      "uncertainty": "仅依据标题和摘要进行判断，未提供全文，无法确认方法细节、实验设置、基线公平性、局限性和可复现性；相关性评分主要基于论文主题与智能优化/生产调度的匹配程度，存在因信息不足而低估其潜在迁移价值的可能。",
+      "why_recommended": "该论文与当前研究的直接相关性较低，不建议作为智能优化或生产调度方向的核心阅读材料。若研究者关注大模型推理加速、边缘部署或低精度表示与高精度恢复的通用机制，可将其作为跨领域技术参考，但需注意其并未涉及约束优化、调度决策或强化学习求解。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-05T02:51:34.898113Z",
+      "input_hash": "fc9cefc4e343c641a09964e7a138abea2ed70cdc8e3430228c6610a99f967651",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
   "64ff943b2561b592715646275e35bb3c84e455c0af4008ad71b8c585ef73e3cd": {
     "analysis": {
       "analysis": "作者通过分析JSP和FJSP的结构性质（密集且目标对齐的奖励、所有启发式轨迹等长）提出覆盖度比数据质量更重要的假设，并据此设计实验比较不同质量数据集（PDR、GA、PDR-GA、Random）的训练效果；同时使用分位数评论家学习回报分布，结合CQL保守正则化防止分布外动作高估，并用延迟策略更新防止早期噪声传播。",
@@ -21200,6 +21549,105 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
+    }
+  },
+  "78ff4a23b56c8560d6562b64408f30daf3e2c9ef410933f66f8670b4d6222e41": {
+    "analysis": {
+      "analysis": "作者从问题结构出发，把每个查询的任务图编码为节点级执行器与验证的联合二值变量 z_t^i(a,η)，先将已知质量/成本/延迟统计下的 oracle 情形建模为每查询 MILP（目标为期望执行与验证成本之和，约束含预算、每查询延迟机会约束与变量域）；再在质量未知时把节点级质量估计替换为在线学习得到的估计值，并加入信息增益 bonus 以刻画验证对学习的价值，从而将原问题分解为逐查询求解的 MILP 序列加上在线估计更新；理论上在自然假设下证明当验证足够频繁但不挤占执行时，质量学习 regret 为次线性。",
+      "challenges": [
+        "LLM 对子任务的服务质量事前未知且随机，反馈需付费",
+        "需在长期预算与每查询延迟约束下做在线序列决策",
+        "执行与验证需联合决策，验证还承担学习信号角色",
+        "既要保证每轮延迟可行性，又要为未来学习预留预算",
+        "需在理论上保证质量学习 regret 不随轮数线性增长"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究在长期预算与每查询延迟约束下联合分配执行器并选择付费验证的在线框架",
+          "location": "abstract",
+          "quote": "We propose JOVE, an online framework that jointly assigns executor LLMs and selects intermediate outputs for paid verification."
+        },
+        {
+          "claim": "验证异步运行并用于改进未来分配，需要平衡当前执行支出与未来学习",
+          "location": "abstract",
+          "quote": "Verification runs asynchronously and is used to improve future allocations, so the system must balance spending on execution now against learning for later."
+        },
+        {
+          "claim": "JOVE 通过求解一系列每查询混合整数线性规划来做出执行与验证决策",
+          "location": "abstract",
+          "quote": "JOVE makes execution and verification decisions by solving a sequence of per-query mixed-integer linear programs."
+        },
+        {
+          "claim": "在线学习基于验证反馈更新任务相关质量估计，并用信息增益 bonus 把学习价值纳入分配决策",
+          "location": "abstract",
+          "quote": "Online learning updates task-dependent estimates of LLM quality based on verification feedback, while an information-gain bonus incorporates the value of learning into allocation decisions."
+        },
+        {
+          "claim": "作者在自然假设下建立了次线性质量学习 regret",
+          "location": "abstract",
+          "quote": "Under a natural set of assumptions, we establish sublinear quality-learning regret for JOVE."
+        },
+        {
+          "claim": "实验报告在四个推理基准上取得有竞争力准确率，且平均成本与延迟至少降低 3.17 倍",
+          "location": "abstract",
+          "quote": "Across four reasoning benchmarks, JOVE achieves competitive accuracy against standard inference baselines while reducing average cost and latency by at least 3.17 times."
+        },
+        {
+          "claim": "问题设定包含长期预算、每查询延迟机会约束以及随机且初始未知的质量、成本与执行时间",
+          "location": "abstract",
+          "quote": "with stochastic, initially unknown LLM service quality, invocation costs, and execution times."
+        }
+      ],
+      "experiments": [
+        "在四个推理基准（Bamboogle、MMLU-Pro、LiveBench-Reasoning、GPQA）上评估，结果为三个随机种子的均值±标准差",
+        "与标准推理基线（Direct、CoT、SoT、Plato）及资源感知方法（WR-Online、Knapsack-ascend、Knapsack-descend）比较",
+        "报告 JOVE 在四个基准上取得有竞争力的准确率（如 GPQA 52.7±2.8，MMLU-Pro 54.8±1.1，LiveBench-Reasoning 41.3±1.2，Bamboogle 49.3±1.0）",
+        "摘要称相对标准推理基线平均成本与延迟至少降低 3.17 倍；正文称成本降低 3.7–16.3 倍、延迟降低 8.3–17.0 倍",
+        "包含消融研究考察不同验证权重与资源约束的影响；材料提到 JOVE single-node 变体，并指出经验上在测试范围内对验证权重 k_v 敏感度有限",
+        "材料未说明训练开销、公平计算预算细节与泛化实验的完整设置"
+      ],
+      "first_affiliation": "得克萨斯大学奥斯汀分校（University of Texas at Austin）",
+      "insight": "贡献有效性来自将“当前执行”与“未来学习”的权衡显式编码进每轮决策：验证虽然增加当前成本且不改变本轮响应，但当模型质量未知时它能提供标签、改善后续分配；通过在 MILP 目标中加入信息增益奖励项，把验证的探索价值与执行成本/质量估计统一在同一优化框架中，并利用验证异步执行不阻塞响应的特性，从而在长期预算内实现质量学习与资源节省。",
+      "limitations": [
+        "材料提到条件 T ≥ 8d log(8n_max) 是保守的，减小 d 可降低该阈值并可能加速学习，但会限制质量模型表达能力、可能降低预测精度；并指出未给出最优 k_v 的确定方法，但经验上在测试范围内对验证权重敏感度有限",
+        "其余局限材料未说明"
+      ],
+      "method": [
+        "输入：每个查询由 planner 分解出的 DAG 任务图，节点为子任务，边为依赖，并为每个节点给出候选执行器 LLM 集合",
+        "决策变量：z_t^i(a,η) 联合编码节点 i 选择执行器 a 且验证标志 η∈{0,1}，每节点恰好选一个组合",
+        "目标：最小化期望执行成本与付费验证成本之和（加 planner 成本），质量以中间结果可靠性的加性代理刻画，并叠加信息增益奖励项",
+        "约束：长期执行/验证预算、每查询延迟机会约束、变量取值域",
+        "求解：每轮查询求解一个混合整数线性规划（MILP）得到分配与验证选择",
+        "学习：验证异步执行产生的反馈用于更新任务相关的 LLM 质量估计，信息增益 bonus 把学习价值纳入分配决策",
+        "理论：在自然假设下证明质量学习的次线性 regret，并指出验证频率需足够学习但不应挤占执行"
+      ],
+      "motivation": "复杂推理查询可分解为 DAG 并分布到异构 LLM 上以并行降低延迟、让小模型处理子任务，但某个 LLM 对某子任务是否合适事前未知，且仅执行并不能揭示输出正确性；在现实中获取质量反馈需要裁判模型或人工评估并产生额外成本。已有路由与图感知分配方法通常从离线数据学习或假设每次调用后免费获得质量反馈，因此作者提出在资源约束下联合选择执行器并决定付费验证哪些节点输出，以平衡当前查询性能与为未来分配而学习。",
+      "primary_topic": "资源受限下 LLM 任务图的在线执行器分配与付费验证联合决策（MILP + 在线学习）",
+      "relation_to_research": "该论文事实层面研究的是 LLM 任务图上的资源受限执行器分配与付费验证联合在线决策，使用每查询 MILP 与在线学习/信息增益奖励，理论上给出子线性 regret。它与智能优化、生产调度、AI4OR 的关系主要体现在可迁移的机制：长期预算 + 每查询延迟机会约束下的在线分配、把“为未来学习而付出的探索”显式建模为决策变量、以及用 MILP 求解带组合选择的序列决策，这些与生产调度中的资源受限任务分配、机器选择与验证/质检决策在结构上相似。推测上，若要迁移到柔性作业车间、分布式制造或生产运输协同，需要把任务图节点替换为工序/运输任务、执行器替换为机器/车辆、验证替换为抽检或质量反馈，并重新定义质量估计与延迟/工期约束，且需验证质量学习反馈在生产场景中是否可低成本获得；这些迁移属于推测，并非作者结论。",
+      "relevance_score": 6,
+      "setting": "研究问题为：给定一个由 planner 将复杂推理查询分解得到的 DAG 任务图，系统需要在长期执行/验证预算约束与每查询延迟机会约束下，为每个子任务节点选择执行器 LLM，并决定哪些节点的中间输出送付费验证。决策对象是每轮查询的节点级执行器分配与验证选择；目标是最小化成本/提升最终答案质量（用中间结果可靠性的加性代理刻画），同时满足每查询延迟约束；关键约束包括长期预算上限、每查询延迟机会约束、每个节点只能选一个执行器且验证变量为二值；信息假设是各 LLM 对给定子任务的服务质量、调用成本与执行时间初始未知且随机，只能通过付费验证反馈逐步学习；环境是随时间到达查询序列的在线动态环境（每轮查询图与候选执行器可能不同），验证异步进行不阻塞当前响应。",
+      "tags": [
+        "LLM 路由",
+        "任务图 DAG 调度",
+        "混合整数线性规划",
+        "在线学习",
+        "预算与延迟约束",
+        "信息增益",
+        "子线性 regret"
+      ],
+      "title_zh": "JOVE：面向资源感知 LLM 任务图的联合执行与验证",
+      "uncertainty": "全文为节选，缺少完整的 MILP 公式细节、在线学习更新规则、完整实验表格与消融数字，因此对方法的具体实现、理论假设的完整表述、训练开销与公平计算预算等判断存在不确定性；相关性评分基于其约束决策与在线学习机制的可迁移性，而非其研究对象（LLM 推理）与生产调度的直接重合度。",
+      "why_recommended": "对做 AI4OR 与生产调度的研究者而言，该文提供了一个把“当前执行 vs 未来学习”的探索-利用权衡形式化为每轮 MILP 并附信息增益奖励的清晰范例，其长期预算与每查询延迟机会约束的建模方式、验证作为学习信号的设定、以及子线性 regret 的理论分析，可启发资源受限调度中质检/验证决策与在线学习的结合；即便对象是 LLM 任务图而非车间任务，其约束结构（预算、延迟、组合分配）与求解框架具有可迁移的参考价值。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-05T02:50:53.492365Z",
+      "input_hash": "69f9dc4582dfde6ed8e7aa57807b0a5c2f2008fd4769c9807d14b0e97225434c",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
     }
   },
   "797fa6ebb7cbe3f143387aa280fa3db2eedf0208c7449ca4323701bde52ab25c": {
@@ -25517,6 +25965,86 @@
       "reading_scope": "full_text"
     }
   },
+  "8d08e3a686c5b8ac382b19b2beb506831681c664b358992b3b1987e48c89c69f": {
+    "analysis": {
+      "analysis": "作者将问题分解为三个相互衔接的组件：合成数据生成、量化感知训练和移动端部署。在数值格式层面，作者通过共享质心索引将三个带符号权重打包进一个字节，并根据权重的符号和聚类中心最小化重构误差；在训练层面，作者使用原始全精度模型作为教师，通过知识蒸馏让量化模型匹配其输出，并使用模型自身生成的多模态合成数据作为训练分布；在部署层面，作者围绕 Arm CPU 的 SIMD 解码路径设计解码器，并对比不同数值格式和量化流程对下游任务表现的影响。",
+      "challenges": [
+        "低于 3 比特的权重压缩会在多模态场景下造成严重的模型退化",
+        "量化感知训练的效果对训练数据分布高度敏感，但原始训练数据不可获得",
+        "需要设计既能保持模型质量又能在 Arm CPU 上高效解码的数值格式",
+        "多模态设置下已有的文本数据生成方法不能直接适用",
+        "需要在压缩率、下游任务性能和实际推理速度之间做联合权衡"
+      ],
+      "corresponding_authors": [
+        "Douglas Orr"
+      ],
+      "evidence": [
+        {
+          "claim": "该论文研究视觉语言模型的量化压缩以支持移动端高效推理，而非生产调度或组合优化问题。",
+          "location": "abstract",
+          "quote": "Deploying vision-language models (VLMs) on mobile devices is challenging due to their significant memory and compute requirements."
+        },
+        {
+          "claim": "论文提出使用模型自身生成训练数据的量化流程，不依赖原始训练设置。",
+          "location": "abstract",
+          "quote": "Our approach combines a quantization pipeline that uses the model itself to generate training data and does not require access to the training setup, with a novel 2.7-bit-per-parameter format supporting efficient execution on Arm CPUs."
+        },
+        {
+          "claim": "论文将 Llama 3.2 11B Vision Instruct 压缩到 3.7 GB 并保持视觉问答性能。",
+          "location": "abstract",
+          "quote": "We validate our approach by compressing the Llama 3.2 11B Vision Instruct model to 3.7 GB with 8-bit activations, preserving strong performance on a set of standard visual question answering tasks."
+        }
+      ],
+      "experiments": [
+        "所有实验使用 Llama 3.2 11B Vision Instruct 模型，原始参数为 bfloat16。",
+        "评估三种量化流程：直接转换、GPTQ 和 QAT；对除偏置等一维参数外的语言和视觉权重进行量化。",
+        "直接转换和 QAT 变体使用逐通道缩放的 INT8 激活，GPTQ 仅量化权重并保留 bfloat16 激活。",
+        "将 S3D8 与三种标量量化基线在相近模型大小下比较：INT 使用均匀有符号整数级，lloyd-max 使用非均匀标量级，student-t 使用为学生 t 先验优化的标量量化级。",
+        "在四个视觉问答任务的固定 1024 例子上评测：VQAv2、ChartQA、DocVQA 和 AI2D，报告各自指标和总体平均。",
+        "在 Graviton4 上，S3D8 获得 36.8 tokens/s（120 GB/s），而 INT8 为 26.4 tokens/s（258 GB/s），显示单用户文本生成的实用加速。",
+        "量化后模型压缩到 3.7 GB，激活为 8 比特，在标准视觉问答任务上表现出有限退化。"
+      ],
+      "first_affiliation": "Graphcore Research",
+      "insight": "该工作有效的核心在于两个层面的协同：一方面利用模型自身生成多模态合成训练数据，使 QAT 能在没有原始训练集的情况下仍然获得贴近模型输出分布的蒸馏信号，从而缓解极低比特量化带来的性能退化；另一方面将权重的数值格式与 Arm CPU 的 SIMD 解码路径协同设计，使每个字节通过共享质心索引打包三个带符号权重并解码到 INT8，从而在压缩率、模型质量和执行速度之间取得比通用标量或分块格式更优的折中。",
+      "limitations": [
+        "实验仅关注单一模型 Llama 3.2 11B Vision Instruct 和 CPU 执行。",
+        "S3D8 使用 Arm 优化的 64 项查表解码器，其他架构可能需要专用内核。",
+        "评估仅使用一小组 VQA 风格基准，且这些基准是原始 Llama 评估套件的一部分。",
+        "所有模型权重使用固定量化格式；尝试保留部分层为高精度的初步实验未改善精度-压缩权衡。",
+        "对比使用作者自己实现的量化方法和格式；相对于 llama.cpp 的 Q2_K 和 IQ2 等已部署格式的精度和运行时间尚未评估。",
+        "提示和图像选择可能进一步优化以改善下游任务泛化。"
+      ],
+      "method": [
+        "合成数据生成：使用模型自身生成训练样本，用于量化感知训练，避免依赖原始训练数据或训练配方。",
+        "量化感知训练：以原始全精度模型为教师，使用知识蒸馏让量化模型匹配教师输出，训练数据来自模型自身生成的合成多模态数据。",
+        "S3D8 数值格式：每个字节通过共享质心索引打包三个带符号权重，权重被解码到 INT8 用于推理，激活量化为 8 比特。",
+        "移动端部署：针对 Arm CPU 的 SIMD 解码路径设计格式，并在 Arm CPU 上执行量化后的模型。",
+        "对比实验设计：使用一致的 QAT 流程对比不同数值格式，以隔离数值格式本身的影响。"
+      ],
+      "motivation": "视觉语言模型在移动端部署时面临显著的内存和计算需求，而现有低比特量化方法在 VLM 上仍难以在保持下游问答性能的同时实现低于 3 比特的压缩；此外，量化感知训练通常依赖原始训练数据，但实际部署中往往无法获得原始训练配方，因此需要一种不依赖原始训练数据、并能与 Arm CPU 高效执行格式协同设计的量化框架。",
+      "primary_topic": "视觉语言模型的低比特量化与移动端高效推理",
+      "relation_to_research": "该论文与智能优化、生产调度和 AI4OR 的研究方向关联较弱。它研究的是视觉语言模型的低比特量化与移动端推理加速，属于模型压缩和高效深度学习系统范畴，不涉及生产调度、柔性作业车间、流水车间、分布式制造、生产运输协同或动态扰动等优化问题。其量化感知训练和数值格式设计或许在概念上可被推测为对需要轻量部署的优化求解器神经网络代理模型有参考价值，例如将大规模神经网络预测模型压缩后部署到边缘设备以辅助调度决策，但该迁移需要重新验证量化后代理模型在约束可行性和解质量上的保持程度，且论文本身并未涉及组合优化或约束决策。",
+      "relevance_score": 2,
+      "setting": "该研究面向视觉语言模型在资源受限移动设备上的部署问题，决策对象是模型权重的数值表示形式以及量化训练流程；目标是在不访问原始训练数据与训练配方的前提下，将预训练 VLM 压缩到 3 比特每参数以下，同时尽量保持其视觉问答能力；关键约束包括极低比特宽度、Arm CPU 上的高效执行以及有限的内存与计算资源；信息假设是只能使用预训练模型本身、无法获得原始训练数据；环境为静态推理部署场景，论文未涉及动态扰动或在线决策。",
+      "tags": [
+        "视觉语言模型",
+        "量化感知训练",
+        "模型压缩",
+        "数值格式",
+        "移动推理"
+      ],
+      "title_zh": "Llama-Mobile：面向视觉语言模型的高效 2.7 比特量化",
+      "uncertainty": "本次判断的不确定性主要来自证据范围仅为摘要和全文节选，未能获取完整的实验细节、数值表格和消融结果；此外，论文分类为 cs.CV 和 cs.LG，与生产调度和 AI4OR 无直接交集，因此相关性评分较低。若研究者的工作恰好涉及边缘设备上的模型轻量化部署，则相关性可能略有提升，但仍需自行验证迁移可行性。",
+      "why_recommended": "对于当前聚焦智能优化与生产调度方向的研究者，该论文的推荐价值有限。若研究工作中涉及将深度神经网络模型部署到资源受限设备（如车间边缘控制器、移动终端）以支持实时预测或决策，则该论文提出的无原始数据 QAT 流程和软硬件协同的 2.7 比特格式可能提供工程上的迁移思路；但总体而言，它不直接解决调度优化问题，也不提供学习辅助搜索或强化学习求解机制，因此不构成核心参考文献。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-05T02:51:42.309788Z",
+      "input_hash": "004349086edb6753c648f37485fd5f488f8bf2061b4b33cc244f51d8c988ec32",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "8d71d2adaafd0faaf7477c259afa22c95bf31efb67c7f466884ddf3b4a56a36b": {
     "analysis": {
       "analysis": "作者将变量定值视为约简混合整数搜索空间的手段，利用机器学习分类器输出各二进制变量的概率分数，并比较常数阈值、最坏情况错误定值和子优化约束三种阈值设定策略；对子优化约束策略，作者通过考虑错误定值对下游机组组合目标的影响，设计分解式阈值调优算法，为每台发电机产生特定置信度阈值，从而在搜索空间缩减与解质量之间进行量化权衡。",
@@ -29314,6 +29842,105 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
+    }
+  },
+  "a0e875ed5c0483c99ca640839f653be9258550de7bab7ee7fa026ff2cd911053": {
+    "analysis": {
+      "analysis": "作者通过定义任务（为某一优化问题设计启发式）、区分任务特定 AHD 与跨任务 AHD 来分析问题，并引入基于跨任务种群性能的迁移差距来量化任务间可迁移性，从而指导任务种群的交互；再以互补覆盖准则分析启发式集合的构建。材料未说明更具体的问题结构分解或下界分析。",
+      "challenges": [
+        "启发式搜索通常依赖被优化问题本身的评估反馈，难以在无目标反馈下泛化",
+        "如何在多个任务间决定哪些任务应交互并有效迁移启发式",
+        "如何在保持集合紧凑的同时覆盖多样化的源任务组合",
+        "在同一设计预算下同时提升 ID 与 OOD 性能"
+      ],
+      "corresponding_authors": [
+        "Zhenkun Wang"
+      ],
+      "evidence": [
+        {
+          "claim": "论文提出 MECo，一个由大语言模型驱动的多任务进化框架，用于零样本跨问题泛化",
+          "location": "abstract",
+          "quote": "We introduce MECo, an LLM-driven multi-task evolutionary framework for zero-shot cross-problem generalization."
+        },
+        {
+          "claim": "MECo 维护任务条件下的启发式种群，并使用基于跨任务种群性能的迁移差距指导交互",
+          "location": "abstract",
+          "quote": "MECo maintains task-conditioned heuristic populations and uses a transfer gap based on cross-task population performance to guide their interactions."
+        },
+        {
+          "claim": "互补选择准则通过奖励每个成员对源任务组合的额外覆盖来构造紧凑启发式集合",
+          "location": "abstract",
+          "quote": "A complementary selection criterion then constructs a compact heuristic set by rewarding each member’s additional coverage of source combinations."
+        },
+        {
+          "claim": "选出的集合直接应用于目标问题而不进行进一步搜索或适配",
+          "location": "abstract",
+          "quote": "The selected set is applied to target problems without further search or adaptation."
+        },
+        {
+          "claim": "在 VRP 与 FJSP 的 32 个问题变体上，MECo 在相同预算下平均代价低于八种 AHD 基线",
+          "location": "abstract",
+          "quote": "Experiments on 32 problem variants across vehicle routing (VRP) and flexible job-shop scheduling (FJSP) show that MECo achieves the lowest mean costs compared with eight automated heuristic design (AHD) baselines under the same budgets."
+        },
+        {
+          "claim": "在异域问题上 MECo 优于各家族中最强基线",
+          "location": "abstract",
+          "quote": "On out-of-domain problems, it outperforms the strongest baseline in each family."
+        },
+        {
+          "claim": "将 MECo 框架与不同 AHD 方法结合可提升其 ID 与 OOD 性能",
+          "location": "abstract",
+          "quote": "Moreover, integrating the framework of MECo with different AHD methods improves their ID and OOD performance in both families, supporting its effectiveness across different methods."
+        },
+        {
+          "claim": "仅有源任务反馈、不使用目标评估，是跨问题泛化的核心挑战",
+          "location": "abstract",
+          "quote": "Generalizing to new problem definitions using only source-task feedback therefore remains a central challenge."
+        }
+      ],
+      "experiments": [
+        "在 VRP 与 FJSP 两个族共 32 个问题变体上比较 MECo 与八种自动化启发式设计（AHD）基线，相同预算下 MECo 平均代价最低",
+        "在异域（OOD）问题上，MECo 在两个族中均优于各自最强的基线",
+        "将 MECo 框架与 EoH、ReEvo、HSEvo 结合后，其 ID 与 OOD 性能在两个族中均有提升（见表 3 报告的平均值与标准差）",
+        "报告中提到平均排名 1.12、平均相对差距 0.02%（在 16 个变体上接近最佳观测方法），并给出图 4 中相对 MECo 的 OOD 平均代价",
+        "训练开销、公平计算预算的具体描述、消融实验细节与泛化到未测试问题的证据在提供材料中未完整说明"
+      ],
+      "first_affiliation": "南方科技大学自动化与智能制造学院",
+      "insight": "让多个任务条件下的启发式种群在搜索过程中交互、迁移和重组，并利用基于跨任务种群性能的“迁移差距”来决定交互方向，可以使启发式在源任务之间共享可迁移的结构；同时再以“对源任务组合的额外覆盖”为选择准则构造紧凑启发式集合，从而在目标问题上无需任何额外搜索或适配即可零样本应用。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "MECo 维护任务条件下的启发式种群（task-conditioned heuristic populations）",
+        "利用基于跨任务种群性能的 transfer gap 指导种群间交互",
+        "交互实现启发式的迁移与重组（transfer and recombination）",
+        "互补选择准则通过奖励每个成员对源任务组合的额外覆盖来构造紧凑启发式集合",
+        "选出的启发式集合直接应用到目标问题，不进行进一步搜索或适配",
+        "可将 EoH、ReEvo、HSEvo 等 AHD 的启发式生成与种群更新规则嵌入 MECo 的任务种群，MECo 决定哪些任务交互并传递父代启发式初始化组合任务种群"
+      ],
+      "motivation": "为多样化的组合优化问题设计有效启发式需要大量领域专业知识与反复搜索。大语言模型虽然可以自动化启发式生成与改进，但启发式搜索通常依赖被优化问题本身的评估反馈，因此仅使用源任务反馈泛化到新问题定义仍是核心挑战。作者希望缓解新问题变体出现时启发式需要重新适配或重新设计的反复成本。",
+      "primary_topic": "基于大语言模型的自动化启发式设计中的跨问题零样本泛化",
+      "relation_to_research": "该论文直接面向组合优化（含柔性作业车间调度 FJSP 与车辆路径 VRP）的启发式自动设计，并关注零样本跨问题泛化，与智能优化、生产调度和 AI4OR 高度相关。其多任务进化、任务间启发式迁移重组与紧凑集合选择机制，推测可迁移到柔性作业车间、流水车间、分布式制造与生产运输协同等调度问题，实现新问题变体出现时无需目标评估即可复用启发式；迁移条件包括：需要构造可执行启发式表示、定义源任务族与目标变体、并具备源任务上的评估反馈。此类迁移属于推测，非作者结论。",
+      "relevance_score": 8,
+      "setting": "研究问题是在仅有源任务评估反馈、目标问题定义不可见且无法在目标上评估的条件下，为多个组合优化问题变体设计可零样本迁移的启发式集合；决策对象是启发式程序（启发式集合）本身；目标是最小化目标问题上的平均求解代价（VRP 距离、FJSP makespan），在相同设计预算下进行；关键约束是设计阶段不使用目标评估反馈、需要对源任务组合进行覆盖、最终集合紧凑；信息假设是仅有多任务源问题的评估反馈；环境包含 VRP 与 FJSP 两类共 32 个问题变体，并区分同域（ID）与异域（OOD）。",
+      "tags": [
+        "大语言模型",
+        "自动化启发式设计",
+        "多任务进化",
+        "零样本泛化",
+        "柔性作业车间调度",
+        "车辆路径问题"
+      ],
+      "title_zh": "基于大语言模型的多任务进化用于零样本跨问题泛化",
+      "uncertainty": "提供材料为论文节选，缺少方法细节、完整实验设置、预算定义、消融与局限性讨论；因此对方法内部机制、训练开销、统计显著性和泛化边界的判断存在不确定性，部分实验结果数字来自节选片段而非完整表格，可能不完整。",
+      "why_recommended": "论文提出仅依赖源任务反馈即可零样本泛化到新问题定义的启发式设计框架，并在 FJSP 与 VRP 上验证；其多任务进化、迁移差距驱动的种群交互与覆盖导向的集合选择机制，对研究学习辅助搜索、自动化启发式设计及生产调度中快速适配新变体具有直接参考价值，且强调相同预算下的比较与 OOD 评测，契合对公平计算预算与泛化的关注。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-05T02:51:02.800561Z",
+      "input_hash": "3de61af843500af585e4b27a4755c83875b0334abdb0f284e661236b8ee785aa",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
     }
   },
   "a0f2e9ba2ec04e7fb631f20bfe681802645a65b8255db4af4f1e22f213c6a914": {
@@ -33353,6 +33980,89 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
+    }
+  },
+  "b3b9946abbf431793bf630e73809d510903215945e3bdc5d714cbf6ab60d9d22": {
+    "analysis": {
+      "analysis": "作者将 MIO 原始启发式建模为在受限子空间（节点）上的局部搜索与线性松弛求解，并借鉴 restrict-and-relax search 与 Local-MIP 的固定/轻固定策略。通过分析节点间无包含关系导致界传播低效的缺点，提出深度下潜与界传播的节点生成策略加以缓解；同时利用解池信息设计共识重启和精英策略来指导变量固定/释放。在 GPU 侧，将线性松弛和局部搜索的代数操作批处理化，实现多节点并行探索；在 CPU 侧维护解池并做节点保留/剪枝决策。作者还讨论了与分支定界并行运行的集成可能。",
+      "challenges": [
+        "GPU 并行化 MIO 原始启发式仍处于早期，缺乏通用框架",
+        "节点生成策略的结构化与非结构化权衡：非结构化快速生成深节点但使界传播等预处理效率降低",
+        "在受限子问题（部分变量固定）上实现高效局部搜索",
+        "GPU 与 CPU 之间的数据通信与解池同步开销",
+        "公平计算预算下节点并行带来的额外开销是否可接受"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文提出 PaNGEA，一种 GPU 友好的 MIO 原始启发式，结合线性松弛求解与 GPU 局部搜索。",
+          "location": "abstract",
+          "quote": "we introduce the Parallel Node Generation and Exploration Algorithm (PaNGEA), a GPU-friendly MIO primal heuristic. PaNGEA explores restricted subproblems by combining linear-relaxation solves with a local-search procedure designed for efficient batched execution on GPUs."
+        },
+        {
+          "claim": "在 283 个 MIPcc26 和 MIPLIB 实例上，单节点 GPU 实现相比 CPU 降低平均 gap integral 8–18%。",
+          "location": "abstract",
+          "quote": "on 283 MIPcc26 and MIPLIB instances, implementing a single-node primal heuristic on the GPU reduces the average gap integral by 8-18% relative to its CPU counterpart."
+        },
+        {
+          "claim": "并行生成和探索多个节点进一步降低平均 gap integral 12–19%。",
+          "location": "abstract",
+          "quote": "generating and exploring multiple nodes in parallel further reduces the average gap integral by 12-19%."
+        },
+        {
+          "claim": "第一单位为 London Business School。",
+          "location": "supplied_full_text",
+          "quote": "London Business School, jpauphilet@london.edu London Business School, yupengw@london.edu"
+        }
+      ],
+      "experiments": [
+        "在 283 个 MIPcc26 和 MIPLIB 实例上测试。",
+        "单一节点的原始启发式在 GPU 上实现相比 CPU 对应实现，平均 gap integral 降低 8–18%。",
+        "并行生成和探索多个节点进一步降低平均 gap integral 12–19%。",
+        "在 MIPcc26 和 MIPLIB 基准上，该设计在非商业方法中取得最强性能。",
+        "报告了线性松弛和分支定界相关指标，包括节点迭代次数、非超时率等，并比较了批处理与顺序执行的差异。",
+        "与分支定界并行运行的集成实验见附录 D，但摘要和节选中未给出具体数值。",
+        "未提供训练开销、公平计算预算的详细对比、泛化到其他问题类的实验以及消融研究的完整数据。"
+      ],
+      "first_affiliation": "London Business School",
+      "insight": "核心洞察是将启发式选择问题转化为批量的启发式探索：与其依赖单一节点生成规则，不如利用 GPU 批次能力同时生成并评估多个候选节点，从最有潜力的节点继续搜索。这一设计之所以有效，是因为 GPU 擅长并行求解大量小型线性松弛和局部搜索操作，而多节点并行分散了对单一下降路径的依赖，增加了找到高质量可行解的概率。同时，对 Local-MIP 的两阶段实现使受限子问题上的局部搜索更高效。",
+      "limitations": [
+        "未使用结构化节点生成策略，导致界传播等预处理技术效率降低，因为节点与其子节点间无明确包含关系。",
+        "实现与分支定界结合时可更好利用界传播等技术，但当前实现中仍有改进空间。"
+      ],
+      "method": [
+        "算法为独立原始启发式，不依赖 MIO 求解器，结合线性松弛求解与 GPU 友好的局部搜索过程。",
+        "在受限子问题（节点）上实现两阶段 Local-MIP：第一阶段在 GPU 上高效执行大量简单代数操作进行局部搜索，第二阶段处理固定坐标以提升解质量。",
+        "节点生成策略包括：局部搜索后按坐标变化成本 s_j = r_j (x_j^LS - x_j^LP) 选择最低成本坐标进行固定/轻固定（典型固定比例 4%）；下潜策略随机选择分数变量并求解两个线性松弛后固定到更紧的一侧；共识重启策略利用 CPU 解池，若 80% 解中某二元变量取同一值则固定；精英策略对已固定二元坐标做释放/再固定。",
+        "并行节点生成与探索：利用 GPU 批处理能力同时生成和评估多个候选节点，从最有希望的节点继续迭代。",
+        "节点保留决策：比较节点下界与当前最优解以剪枝次优节点，类似分支定界的界限剪枝但节点间无结构化包含关系。",
+        "与分支定界并行集成的设想：在每轮迭代中同时批量探索分支定界节点与 PaNGEA 节点，以提高线性松弛求解的批处理效率和计算效率（实现见附录 D）。"
+      ],
+      "motivation": "MIO 求解中原始启发式能尽早找到高质量可行解以剪枝；现有 GPU 加速优化工作主要集中在连续优化，将 GPU 并行化用于 MIO 原始启发式仍是开放挑战。作者希望利用 GPU 的批处理能力不仅加速单节点计算，更并行生成和探索多个子问题以提升解质量。",
+      "primary_topic": "混合整数优化的 GPU 加速原始启发式算法",
+      "relation_to_research": "论文直接研究 MIO 原始启发式的 GPU 加速，属于数学规划与硬件加速交叉方向。对于智能优化与生产调度研究，其并行节点生成与批处理局部搜索的思想可迁移至需要大量局部搜索或子问题求解的调度问题（如柔性作业车间中邻域搜索的并行化），但生产调度通常涉及更复杂的约束结构与多目标，需适配约束可行性检查与多目标评价机制；GPU 批处理对图结构或序列决策的调度问题迁移需要重新设计状态表示（此为推测）。论文未涉及神经网络、强化学习或大模型智能体，但 GPU 并行多节点探索的架构与多智能体并行搜索有概念上的相似性，可作为学习辅助搜索中并行采样与评估的硬件加速基础（此为推测）。",
+      "relevance_score": 6,
+      "setting": "研究问题为一般混合整数线性优化问题 min c^T x s.t. Ax ≤ b, ℓ^0 ≤ x ≤ u^0, x_j ∈ Z (∀j∈I)，目标是利用 GPU 并行能力设计原始启发式以快速找到高质量可行解，从而加速分支定界求解。决策对象为整数变量取值及节点（子问题）的变量界。关键约束为线性约束、变量界和整数性。信息假设方面，算法为独立启发式，不依赖 MIO 求解器，但利用 CPU 上的解池与 GPU 上的线性松弛求解。环境为静态单次求解场景，未讨论动态扰动或在线调整。",
+      "tags": [
+        "混合整数优化",
+        "原始启发式",
+        "GPU加速",
+        "局部搜索",
+        "并行节点生成",
+        "分支定界"
+      ],
+      "title_zh": "PaNGEA：GPU 上的并行节点生成与探索算法",
+      "uncertainty": "仅依据摘要和有限全文节选，未获取完整的方法细节、实验配置、公平计算预算比较和消融数据；对应作者信息在节选中未明确标注；与分支定界集成的具体性能增益缺少数值；迁移到生产调度问题的可行性属于推测，未经验证。",
+      "why_recommended": "该工作展示了如何利用 GPU 批处理能力并行生成和探索多个 MIO 子问题，并给出了在标准基准上 gap integral 的量化改进，其“以批量探索替代单一路径”的思想对学习辅助搜索、进化算法与数学规划结合中的并行子问题求解具有参考价值。此外，对节点生成策略的分析（结构化与非结构化的权衡）有助于思考约束可行性、下界剪枝与搜索效率之间的平衡，尽管论文本身不涉及神经网络或强化学习，其并行求解架构可为智能优化中的并行搜索设计提供硬件层面的启示。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-05T02:50:52.201696Z",
+      "input_hash": "aebea03702a0fbe11208c9320e3ff44b01cc9e723f5ecb4b1585a5dc89ff9ce2",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
     }
   },
   "b3cbf83d44be85b0bfbe622c7e687938d655b7186339c988ce7fea85f1cda5c3": {
@@ -38399,6 +39109,91 @@
       "reading_scope": "abstract"
     }
   },
+  "cda8a10b0e18b39658ca907fdfcd3f4de79acf5cb5c3ff34d60158676892c6e8": {
+    "analysis": {
+      "analysis": "作者首先把逐层重构写成包含尺度、整数码与零点的双线性箱约束混合整数最小二乘形式，并指出目标可按输出列分解；随后利用量化表示的结构，将问题分解为两个交替子问题：固定码时对所有组的尺度做联合最小二乘拟合，固定尺度时在当前网格上做受约束的整数码更新；论文还通过对矩阵做QR分解与缓存因子来降低计算量，并给出命题说明先重拟合网格再移动多个码可以严格降低误差。",
+      "challenges": [
+        "量化尺度与整数码的乘积结构使问题成为双线性箱约束混合整数最小二乘，非凸且离散",
+        "不同组之间通过输入相关性耦合，尺度不能独立求解",
+        "有效改进常常需要组内多个码同时移动，单码局部搜索无法到达",
+        "需要在保持宿主位宽、分组、零点和推理成本不变的前提下做插件式精化"
+      ],
+      "corresponding_authors": [
+        "Xiao-Wen Chang"
+      ],
+      "evidence": [
+        {
+          "claim": "论文把逐组量化的网格与整数码未相互重新拟合视为精度损失来源，并据此提出联合交替精化方法。",
+          "location": "abstract",
+          "quote": "Group-wise post-training quantizers for large language models round weights onto a grid that is not refit to the resulting integer codes."
+        },
+        {
+          "claim": "方法在任意逐组量化器上交替执行所有组尺度的联合最小二乘拟合与可同时移动多个码的有界Babai提议。",
+          "location": "abstract",
+          "quote": "we propose JARQ , a plug-in refinement that starts from any group-wise quantizer and alternates a joint least-squares fit of all group scales with bounded Babai proposals that move many codes of a group together on the current grid."
+        },
+        {
+          "claim": "该问题被形式化为双线性箱约束混合整数最小二乘问题，求解器不依赖反向传播且不增加宿主推理成本。",
+          "location": "abstract",
+          "quote": "The problem is a bilinear box-constrained mixed-integer least-squares problem; the solver is backpropagation-free, does not increase the layer-wise objective under exact scale solves, and keeps the host’s bit width, groups, zero points, and inference cost."
+        },
+        {
+          "claim": "在Llama-2、Llama-3与Qwen模型和多种宿主量化器上，方法在大多数比较中降低困惑度并提升选择题准确率。",
+          "location": "abstract",
+          "quote": "Across Llama-2, Llama-3, and Qwen models with RTN, GPTQ, OmniQuant, and AWQ hosts, JARQ lowers perplexity in 90 of 96 comparisons, cuts three-bit RTN perplexity by up to 36%, raises mean multiple-choice accuracy in 23 of 24 configurations, and improves QEP, QuaRot, and OJBKQ outputs, at under a minute per 7B block."
+        },
+        {
+          "claim": "作者用命题说明在宿主网格上单码移动均更差时，重拟合尺度后批量Babai提议仍可移动两个码并严格降低误差。",
+          "location": "supplied_full_text",
+          "quote": "Proposition 3.1 (Refitting the grid unlocks descent) . There exist a group problem of the form ( 8 ) and a host state ( s 0 , 𝐪 0 ) (s_{0},\\mathbf{q}_{0}) such that 𝐪 0 \\mathbf{q}_{0} minimizes the error over 𝔹 d i \\mathbb{B}^{d_{i}} at scale s 0 s_{0} , yet after a least-squares scale refit, the bounded Babai proposal changes two codes and strictly lowers the error."
+        }
+      ],
+      "experiments": [
+        "在Llama-2、Llama-3与Qwen模型上，以RTN、GPTQ、OmniQuant、AWQ为宿主进行对比，96次比较中90次困惑度下降",
+        "三比特RTN困惑度最多下降36%",
+        "24种配置中23种选择题平均准确率提升",
+        "还能改善QEP、QuaRot与OJBKQ的输出",
+        "7B模型每个块的精化时间少于一分钟",
+        "材料未给出具体基线数值、实例规模细节、消融实验、训练开销的完整公平计算预算对比以及泛化到其他模型族的系统评估"
+      ],
+      "first_affiliation": "McGill University",
+      "insight": "核心洞察在于把量化尺度与整数码视为一对相互依赖的变量：网格固定会过时，一旦部分码改变，应重新用最小二乘拟合所有组的尺度，而在新网格上又可以由批量码移动继续下降；因此交替地做联合尺度拟合与受约束的多码Babai式提议，能在不增加逐层目标的前提下反复解锁下降方向，且不引入反向传播或额外推理开销。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "把逐层重构建模为双线性箱约束混合整数最小二乘问题，目标按输出列独立分解",
+        "交替执行两步：固定整数码时对所有组的尺度做联合最小二乘拟合，固定尺度时在当前网格上更新整数码",
+        "整数码更新采用有界Babai式提议，允许一次移动组内多个码，并限制每列的迭代预算K（主实验K=3）",
+        "通过QR分解与缓存因子（A=UR，Ybar=U^T Y）加速计算，保留常数项用于停止判断",
+        "以任意逐组量化器作为宿主，只要求其初始尺度、码与零点，不改变位宽、分组、零点与推理成本",
+        "使用逐层校准输入，终端尺度与码确定安装权重后，其输出作为下一层的校准输入；当连续尺度更新后目标下降不超过阈值tau=1e-5时停止",
+        "支持换用QEP的传播校正目标，并声称所有结论在该目标下不变"
+      ],
+      "motivation": "现有逐组训练后量化方法（如RTN、GPTQ、AWQ、OmniQuant）先固定量化网格再对权重取整，得到的整数码不会反过来重新拟合网格；作者认为这种“网格固定、码不复访”的做法留下了精度空间，因为最优网格依赖于码、不同组的误差通过输入相关性耦合、且有效的码改动往往是多个码同时变化。",
+      "primary_topic": "大语言模型训练后量化的混合整数最小二乘精化",
+      "relation_to_research": "该论文研究的是大语言模型训练后量化中的离散优化问题，属于AI4OR中混合整数最小二乘与交替优化的范畴，与智能优化和学习辅助搜索有方法论上的交集，但并不直接研究生产调度、柔性作业车间、流水车间、分布式制造或生产运输协同等问题。若将交替尺度拟合与批量整数码提议的机制迁移到生产调度，推测需要先把调度问题表述成具有可分解结构的箱约束混合整数最小二乘或近邻格点问题，并定义可批量移动的离散决策变量与可联合重拟合的连续参数，同时重新处理约束可行性、动态扰动与多目标权衡；这类迁移只是推测，并非作者结论。",
+      "relevance_score": 3,
+      "setting": "研究设定为大型语言模型训练后量化中的逐层权重重构问题：给定固定的校准输入矩阵与全精度权重，决策对象是每组的量化尺度、整数码以及零点，目标是最小化层输出的最小二乘重构误差，关键约束是组内均匀量化表示、整数码的箱约束与组规模不变，信息假设是只能使用小规模校准集且不改变宿主量化器的位宽、分组、零点与推理成本，环境为静态的逐层离线优化，材料未说明存在动态扰动或在线更新。",
+      "tags": [
+        "训练后量化",
+        "混合整数最小二乘",
+        "交替优化",
+        "无反向传播求解",
+        "大语言模型压缩"
+      ],
+      "title_zh": "JARQ：面向量化的联合交替精化",
+      "uncertainty": "本文判断的主要不确定性在于：该论文属于大语言模型量化领域，与生产调度和AI4OR的直接关联较弱，相关性分数较低；同时材料仅提供摘要与部分全文，实验数字的完整细节、消融和公平计算预算比较未完全给出，因此对其迁移价值只能做谨慎推测。",
+      "why_recommended": "论文展示了一种无反向传播、可插件式嵌入现有量化器的交替离散-连续优化机制，通过联合尺度拟合与批量整数码提议在不增加推理成本的前提下改进解质量；对关注混合整数优化、约束可行性、计算预算与学习辅助搜索的研究者而言，其问题分解、下降性命题与逐层停止准则有方法论借鉴价值，但对生产调度方向的研究者而言属于相邻领域而非直接主题。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-05T02:51:27.668483Z",
+      "input_hash": "d723df4e3dd2988a75b5419c36dd19a9bfa52181f9876210371aca9299b5d0fc",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "ce189206d5d13043488a9908f6de341df8bfa0b62cae1f89afacf232e4be6e0a": {
     "analysis": {
       "analysis": "作者将临床试验匹配视为形式约束满足问题，利用既有医学本体和 LLM 把非形式化推理（关于歧义、隐含临床假设和不完整患者记录）转成显式、精确、可控、可解释的 SMT 约束；为可扩展和高效，进一步把 SMT 匹配问题投影到关系代数，以便用数据库实现。",
@@ -40450,6 +41245,108 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
+    }
+  },
+  "d9efb47c0489c2640e20f321d285f97bc1b51e78feb8ce26a6bede8679172742": {
+    "analysis": {
+      "analysis": "作者基于 Activation Beacon 式渐进 token 压缩管线进行分析：输入按固定间隔插入 beacon token 并分块，每块关注先前 beacon 记忆使 beacon 状态吸收上下文信息，块级 prefill 后丢弃原始 token KV，只缓存压缩后的 beacon 记忆。在此基础上，作者进一步分析低秩 KV 的问题结构，发现 K-RoPE 迫使重建，而移除 K-RoPE 虽可启用潜在空间注意力却会丢失顺序信息；通过区分 beacon 与原始 token 对 Key 侧 RoPE 移除的敏感度差异，将低秩参数化与位置处理解耦。此外，作者通过比较不同 feature 压缩倍率（2x、4x、8x）在同一总压缩比下的 trade-off，分析 token 压缩与特征压缩之间的平衡。",
+      "challenges": [
+        "token-wise 压缩在激进压缩下信息损失大，且淘汰类方法需先构建完整 KV，难以节省 prefill 计算",
+        "feature-wise 压缩中低秩 Key 在应用 RoPE 前需要全维重建，造成解码延迟瓶颈",
+        "如何在 beacon 状态中进一步消除冗余，并联合优化 token 压缩与特征压缩",
+        "如何在不同层之间分配有限的压缩预算以适应层间异质性",
+        "去除 Key 侧 RoPE 后如何保持位置信息与语义信息不丢失"
+      ],
+      "corresponding_authors": [
+        "Song Chen",
+        "Weichen Liu"
+      ],
+      "evidence": [
+        {
+          "claim": "论文提出一种联合 token-特征 KV 缓存压缩方法，用于缓解长上下文 LLM 服务中的 KV 缓存显存瓶颈",
+          "location": "abstract",
+          "quote": "Long-context LLM serving is increasingly bottlenecked by KV-cache memory, especially in resource-constrained scenarios."
+        },
+        {
+          "claim": "作者发现位置不对称性：移除 Key 侧 RoPE 对 beacon token 的退化远小于对原始 token 的退化",
+          "location": "abstract",
+          "quote": "We further uncover a positional asymmetry: removing key-side RoPE affects beacon and raw tokens differently, with much smaller degradation for beacon tokens."
+        },
+        {
+          "claim": "基于该不对称性训练 K-RoPE-free beacon KV 投影并启用潜在空间注意力以规避重建延迟",
+          "location": "abstract",
+          "quote": "Exploiting this asymmetry, SlimKV trains beacon KV projections under a K-RoPE-free constraint and enables latent-space attention during decoding, mitigating reconstruction latency."
+        },
+        {
+          "claim": "在 4x/8x 压缩比下保留超过 96% 未压缩模型的分数",
+          "location": "abstract",
+          "quote": "On LongBench, SlimKV outperforms baselines at 16x/32x compression and remains leading at 4x/8x, where it retains over 96% of the uncompressed model's score."
+        },
+        {
+          "claim": "效率评估显示在 128K 长度下最高 7.34x 注意力加速与 3.38x 端到端解码加速",
+          "location": "abstract",
+          "quote": "efficiency evaluation shows up to 7.34x attention speedup and 3.38x end-to-end decoding speedup over the uncompressed model at 128K length."
+        },
+        {
+          "claim": "作者明确局限：主要在基于 RoPE 的语言模型上评估，其他位置编码方案下的行为有待进一步检验",
+          "location": "supplied_full_text",
+          "quote": "First, SlimKV is mainly evaluated on RoPE-based language models, which represent a widely used family of current LLM backbones."
+        },
+        {
+          "claim": "作者明确局限：实验聚焦纯文本长上下文语言模型，扩展到多模态等更广泛架构需要额外验证",
+          "location": "supplied_full_text",
+          "quote": "Second, our experiments focus on text-only long-context language models."
+        },
+        {
+          "claim": "方法是在冻结主干的情况下只训练 beacon 投影参数，并以目标低秩形式训练而非事后分解",
+          "location": "supplied_full_text",
+          "quote": "SlimKV applies low-rank parameterization only to the beacon branch, with the backbone frozen and only beacon projection parameters updated during training."
+        }
+      ],
+      "experiments": [
+        "在 LongBench 上评估：在 16x/32x 压缩比下 SlimKV 优于基线；在 4x/8x 下保持领先，保留超过 96% 的未压缩模型平均分",
+        "在 Needle-in-a-Haystack (NIAH) 上验证：确认在不同证据位置上的鲁棒性",
+        "效率评估：在 128K 长度下相对未压缩模型实现最高 7.34x 注意力加速和 3.38x 端到端解码加速",
+        "与 Activation Beacon 的对比：SlimKV-f4 将相对未压缩模型的差距缩小 18.5%–28.2%",
+        "在相同总压缩比下比较 2x、4x、8x 特征压缩，发现 4x 设置取得最佳平衡，在多数高压缩设置中平均分最高",
+        "低压缩比 4x/8x 下采用 2x 特征压缩，SlimKV 保留超过 96% 未压缩平均分，持续优于 KVZip 和 PALU，与 Activation Beacon 有竞争力",
+        "包含 question-aware 基线 SnapKV 作为对比，SlimKV 为 question-agnostic，更适用于多轮和多请求场景"
+      ],
+      "first_affiliation": "中国科学技术大学（University of Science and Technology of China）",
+      "insight": "作者的关键洞察是发现了一种位置不对称性：在 Key 侧移除 RoPE 时，beacon token 与原始 token 的退化程度不同，beacon token 的退化明显更小。因此可以只对 beacon Key 施加 K-RoPE-free 约束并训练其低秩投影，从而在潜在空间直接完成注意力计算，避免全维重建，同时把语义与位置线索保留在潜在 KV 空间。这一有效性的来源是：beacon 状态作为软压缩的历史上下文表示，其信息承载方式对去掉 Key 侧 RoPE 的敏感度较低，因而可以在不重建的情况下保持可用性。",
+      "limitations": [
+        "主要在基于 RoPE 的语言模型上评估；由于免重建设计针对低秩注意力中的 Key 侧 RoPE 重建瓶颈，其在其他位置编码方案下的行为仍有待进一步检验",
+        "实验聚焦纯文本长上下文语言模型；扩展到更广泛架构（如带视觉或跨模态 KV 缓存的多模态 LLM）是有趣方向但需要额外验证"
+      ],
+      "method": [
+        "在 Activation Beacon 式渐进 token 压缩管线基础上，按固定间隔插入 beacon token 并分块，每块关注先前 beacon 记忆，块 prefill 后丢弃原始 token KV，仅缓存压缩的 beacon 记忆",
+        "以低秩感知的方式训练 beacon KV 投影，直接在其目标低秩形式下训练，而不是事后做 SVD 式分解",
+        "仅对 beacon 分支应用低秩参数化，冻结主干网络，训练时只更新 beacon 投影参数",
+        "在全局压缩预算下进行层自适应 rank 分配，以匹配层间异质性",
+        "发现位置不对称性后，对 beacon KV 投影施加 K-RoPE-free 约束，使 beacon Key 不依赖 Key 侧 RoPE，从而在解码时使用潜在空间注意力，避免全维重建延迟"
+      ],
+      "motivation": "长上下文推理时 KV 缓存随上下文长度快速增长，造成显存压力和访存延迟。已有的 token-wise 压缩通过淘汰或凝聚减少缓存状态数量，但在激进压缩下信息损失严重，且基于淘汰的方法需先构造完整 KV 再删除，限制了 prefill 计算节省；feature-wise 压缩降低每 token 维度，但低秩 Key 在应用 RoPE 前常需重建到全维度，成为解码延迟瓶颈。作者由此提出核心问题：能否用联合 token-特征压缩同时缓解信息损失与重建延迟。",
+      "primary_topic": "长上下文大语言模型推理中的 KV 缓存压缩",
+      "relation_to_research": "该论文核心是大语言模型长上下文推理的 KV 缓存压缩与注意力加速，属于系统与模型效率方向，而非智能优化、生产调度或人工智能驱动运筹优化。它没有涉及生产调度、组合优化、约束可行性求解或决策优化。推测而言，其中低秩表示、层自适应预算分配以及消除重建瓶颈的思路，或可迁移到需要压缩状态表示的学习辅助搜索或大规模邻域求解器中（例如用低秩状态压缩替代全维状态记忆），但需满足以下条件：问题状态需具有可低秩近似结构、压缩后仍能直接支持价值/打分计算、且不依赖需全维重建的位置或次序编码；这些迁移均为推测，并非作者结论。",
+      "relevance_score": 2,
+      "setting": "研究问题是大语言模型长上下文推理（serving）中 KV 缓存的显存与访存瓶颈；决策对象是如何在缓存中压缩历史 token 的 KV 状态以降低显存与解码延迟；目标是压缩后仍保持长上下文任务精度并提升解码速度；关键约束是压缩后仍需位置编码（RoPE）与注意力打分、且需在资源受限场景下工作；信息假设是压缩为 question-agnostic（不依赖具体问题）；环境为静态的长上下文推理解码过程；材料未说明是否在线动态变化的推理环境。",
+      "tags": [
+        "KV 缓存压缩",
+        "低秩表示",
+        "长上下文推理",
+        "注意力加速",
+        "RoPE"
+      ],
+      "title_zh": "SlimKV：联合 token-特征 KV 缓存压缩与免重建 Beacon 注意力",
+      "uncertainty": "本文证据仅来自摘要和全文节选，缺少完整的方法公式、消融细节、基线列表和全部实验表格；层自适应 rank 分配的具体机制、低秩训练的目标函数、训练开销与公平计算预算的对比细节均未在材料中完整给出。此外，该论文与智能优化和生产调度的关联判断基于标题与摘要所述主题，未发现任何调度或组合优化内容，相关分数较低具有较高确定性。",
+      "why_recommended": "对当前研究者而言，本文与生产调度/智能优化主题关联很弱，不建议作为核心文献精读。可能的间接价值在于：其层自适应 rank 分配是在全局预算下分配异构压缩资源的机制，与在优化求解中分配有限计算预算有形式上的相似性；其 K-RoPE-free 免重建潜在空间注意力也提示在低秩压缩表示上直接计算而非重建的思路。但这些相似性属于形式类比，若要迁移到生产调度或组合优化，需要重新定义状态表示、打分机制与约束可行性保证，读者应仅将其作为压缩表示与预算分配的技术参考，而非领域内工作。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-05T02:51:05.396796Z",
+      "input_hash": "b7f5489a2f47075b477ad5b21b42ecd6fd746a46539114b4f7ce1f772da109d5",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
     }
   },
   "da144a8e9a594c6ac92cf732b9b951e7bc0539390380efb0131a1c8fe91d3431": {
