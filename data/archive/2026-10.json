@@ -650,6 +650,131 @@
       },
       "tier": "browse"
     },
+    "arxiv:2511.08275:v2": {
+      "analysis": {
+        "analysis": "作者将地质品位不确定性下的 OPMSP 建模为双目标机会约束优化问题，利用机会约束框架处理概率约束，并通过双目标形式将置信水平的选择从优化前转移到优化后。求解上采用多目标进化算法处理大规模随机优化问题，并设置单目标机会约束进化方法与确定性 MILP 基准作为对比，同时通过消融实验分析问题特定初始化与变异组件的贡献。材料未说明更具体的分解、下界或图表示等分析手段。",
+        "challenges": [
+          "露天矿调度问题规模大且包含大量运营与地质约束",
+          "地质品位不确定性使问题成为大规模随机优化问题",
+          "传统机会约束方法需要预设置信水平，限制解集灵活性",
+          "在双目标框架下同时处理盈利性与风险权衡并保持约束可行性"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文研究地质不确定性下的露天矿调度问题，并提出双目标机会约束形式化",
+            "location": "abstract",
+            "quote": "In this paper, we consider the OPMSP under geological grade uncertainty and propose a bi-objective chance-constrained formulation that simultaneously maximizes the expected discounted net present value and minimizes scheduling risk."
+          },
+          {
+            "claim": "所提形式化不需要预设置信水平，而是在单次优化运行中生成一组 Pareto 最优解",
+            "location": "abstract",
+            "quote": "Unlike traditional chance-constrained approaches, the proposed formulation does not require a predefined confidence level during optimization. Instead, it generates a set of Pareto-optimal solutions representing different trade-offs between profitability and risk within a single optimization run."
+          },
+          {
+            "claim": "采用多目标进化算法求解，并与单目标机会约束进化方法和确定性 MILP 基准对比",
+            "location": "abstract",
+            "quote": "To solve the resulting large-scale stochastic optimization problem, we employ multi-objective evolutionary algorithms and compare their performance against a single-objective chance-constrained evolutionary approach and a deterministic MILP benchmark."
+          },
+          {
+            "claim": "通过消融实验评估问题特定初始化与变异组件的贡献",
+            "location": "abstract",
+            "quote": "We further evaluate the contribution of the problem-specific initialization and mutation components through an ablation study."
+          },
+          {
+            "claim": "实验使用 MineLib 基准实例，规模多达 112687 个区块",
+            "location": "abstract",
+            "quote": "Experimental results on MineLib benchmark instances containing up to 112 687 blocks demonstrate that the proposed formulation effectively captures the trade-off between profitability and risk under geological uncertainty while providing greater flexibility than confidence-level-dependent approaches."
+          }
+        ],
+        "experiments": [
+          "使用 MineLib 基准实例，包含多达 112687 个区块",
+          "结果表明所提形式化能有效捕捉地质不确定性下的盈利性与风险权衡",
+          "相比依赖置信水平的方法具有更大灵活性",
+          "对比基线包括单目标机会约束进化方法与确定性 MILP 基准",
+          "通过消融研究评估问题特定初始化与变异组件的贡献；具体数值结果、运行时间和训练开销材料未说明"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "论文的核心洞察在于：不在优化过程中预先指定置信水平，而是将机会约束问题转化为双目标形式，同时优化期望折现净现值与调度风险，从而在一次优化运行中生成一组代表盈利性与风险不同权衡的 Pareto 最优解。这样，决策者可在优化后根据偏好选择解，避免反复以不同置信水平重新求解，使风险与收益的权衡显式化并更具灵活性。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "提出地质品位不确定性下 OPMSP 的双目标机会约束形式化，同时最大化期望折现净现值并最小化调度风险",
+          "不要求在优化过程中预先定义置信水平，而是在单次优化运行中生成一组 Pareto 最优解以呈现盈利性与风险之间的权衡",
+          "采用多目标进化算法求解所得的大规模随机优化问题",
+          "引入问题特定的初始化与变异组件，并通过消融实验评估其贡献",
+          "与单目标机会约束进化方法及确定性 MILP 基准进行比较"
+        ],
+        "motivation": "传统确定性方法往往忽略地质不确定性，导致次优或不可靠的生产调度。机会约束可处理不确定性，通过确保概率约束以预设置信水平满足来提供框架，但传统机会约束方法需要预先指定置信水平，限制了灵活性。",
+        "primary_topic": "地质不确定性下露天矿调度的双目标机会约束进化优化",
+        "relation_to_research": "该论文直接研究不确定性下的调度优化问题，采用进化算法与机会约束建模，与智能优化和生产调度研究高度相关。其双目标机会约束建模范式可迁移到柔性作业车间、流水车间、分布式制造等场景中处理加工时间、需求或能耗不确定性，但需要将机会约束具体化为相应约束并验证大规模实例下的求解效率。多目标进化算法与问题特定初始化、变异组件的结合方式，可为学习辅助搜索或进化算法与数学规划结合的研究提供参考；这些迁移属于推测，需要针对具体调度问题重新设计与验证。",
+        "relevance_score": 7,
+        "setting": "研究露 open-pit 矿调度问题（OPMSP），属于长期矿山规划中的复杂优化问题，包含大量运营与地质约束。决策对象为露天矿的生产调度方案，目标是在地质品位不确定性下同时最大化期望折现净现值并最小化调度风险。关键约束涉及运营约束、地质约束以及以预设置信水平满足的概率约束。信息假设为矿体品位存在地质不确定性，环境为静态规划场景（长期矿山规划），动态扰动未说明。",
+        "tags": [
+          "机会约束优化",
+          "双目标优化",
+          "进化算法",
+          "大规模随机优化",
+          "露天矿调度"
+        ],
+        "title_zh": "地质不确定性下大规模露天矿调度的双目标机会约束进化优化",
+        "uncertainty": "仅依据标题与摘要进行分析，未提供全文，因此对算法具体机制、约束处理方式、实验数值、计算预算和消融细节的了解有限；相关性评分基于方法建模范式与调度优化的关联，实际迁移价值需结合全文验证。",
+        "why_recommended": "该论文展示了如何在不预设置信水平的情况下，通过双目标机会约束进化优化显式呈现风险与收益的权衡，并处理多达 112687 个区块的大规模实例。对于关注生产调度中不确定性建模、机会约束、多目标进化算法以及约束可行性验证的研究者，该建模范式和求解策略具有直接参考价值，尤其是将置信水平选择后置为 Pareto 权衡的设计思路，可启发动态扰动和多目标约束优化场景下的求解框架设计。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-06T11:40:26.431866+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2511.08275v2",
+        "status": "not_found"
+      },
+      "final_score": 0.646283832625465,
+      "provenance": {
+        "analyzed_at": "2026-10-06T03:42:40.287415Z",
+        "input_hash": "11eaa49ffe67a4d55f351f022de6ecfb47fb0ee29dba55eac0e527cf7276af10",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "The open-pit mine scheduling problem (OPMSP) is a complex optimization problem in long-term mine planning that involves numerous operational and geological constraints. Traditional deterministic approaches often ignore geological uncertainty, leading to suboptimal or unreliable production schedules. Chance constraints provide a framework for handling uncertainty by ensuring that probabilistic constraints are satisfied with a predefined confidence level. In this paper, we consider the OPMSP under geological grade uncertainty and propose a bi-objective chance-constrained formulation that simultaneously maximizes the expected discounted net present value and minimizes scheduling risk. Unlike traditional chance-constrained approaches, the proposed formulation does not require a predefined confidence level during optimization. Instead, it generates a set of Pareto-optimal solutions representing different trade-offs between profitability and risk within a single optimization run. To solve the resulting large-scale stochastic optimization problem, we employ multi-objective evolutionary algorithms and compare their performance against a single-objective chance-constrained evolutionary approach and a deterministic MILP benchmark. We further evaluate the contribution of the problem-specific initialization and mutation components through an ablation study. Experimental results on MineLib benchmark instances containing up to 112 687 blocks demonstrate that the proposed formulation effectively captures the trade-off between profitability and risk under geological uncertainty while providing greater flexibility than confidence-level-dependent approaches.",
+          "authors": [
+            "Ishara Hewa Pathiranage",
+            "Aneta Neumann"
+          ],
+          "canonical_id": "2511.08275",
+          "categories": [
+            "cs.NE",
+            "cs.AI"
+          ],
+          "comment": "This version is accepted in Swarm and Evolutionary Computation, Elsevier",
+          "pdf_url": "https://arxiv.org/pdf/2511.08275",
+          "published_at": "2025-11-11T14:05:29Z",
+          "source": "arxiv",
+          "title": "Bi-objective chance-constrained evolutionary optimization for large-scale open-pit mine scheduling under geological uncertainty",
+          "updated_at": "2026-10-04T02:54:41Z",
+          "url": "https://arxiv.org/abs/2511.08275",
+          "version": 2
+        },
+        "rank": 11,
+        "score": {
+          "base_score": 0.602334241137209,
+          "exploration": 0.8153329879140621,
+          "matched_terms": [
+            "evolutionary optimization",
+            "stochastic optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.601731493086263,
+          "topic": 0.5416496700726641
+        }
+      },
+      "tier": "browse"
+    },
     "arxiv:2601.22497:v2": {
       "analysis": {
         "analysis": "作者从合作博弈论视角分析问题，先形式化公平感知评估函数应满足的四条公理，再引入让步率向量刻画各DM可接受的妥协，据此推广经典MPMOP最优解定义，并将经典性能指标嵌入基于纳什乘积的评估框架，理论上证明该框架满足全部公理。为进行实证验证，作者在已有MPMOP基准套件基础上构造包含共识缺失协商结构的基准问题。具体如何利用问题结构或分解进行求解，材料未说明。",
@@ -1321,6 +1446,305 @@
         }
       },
       "tier": "explore"
+    },
+    "arxiv:2605.31050:v2": {
+      "analysis": {
+        "analysis": "作者将多局部搜索过程的选择建模为最佳臂识别问题，利用各过程的优化历史轨迹作为观测信号，通过外推改进轨迹来估计每个过程的最终性能，并据此逐步消除低潜力候选；在信任域贝叶斯优化设定下，作者从理论上分析了所提出的BAI引导分配在温和假设下能加速收敛到全局最优，并给出了简单遗憾上界的形式化表述。",
+        "challenges": [
+          "当前最优值无法可靠反映各局部搜索过程的最终性能",
+          "在有限评估预算下平衡探索多个局部过程与集中评估高潜力过程",
+          "轨迹外推与最终性能估计的准确性和鲁棒性",
+          "将最佳臂识别机制推广到超越信任域贝叶斯优化的其他局部或种群优化器时保持有效性"
+        ],
+        "corresponding_authors": [
+          "Nobuo Namura",
+          "Sho Takemori"
+        ],
+        "evidence": [
+          {
+            "claim": "论文提出轨迹感知的最佳臂识别框架，使用优化历史指导局部搜索过程间的评估分配",
+            "location": "abstract",
+            "quote": "We propose a trajectory-aware best-arm identification (BAI) framework that uses optimization history to guide this allocation."
+          },
+          {
+            "claim": "论文指出当前最优值不总能反映各局部搜索过程的最终性能",
+            "location": "abstract",
+            "quote": "However, current best values do not always reflect the final performance of each process."
+          },
+          {
+            "claim": "论文理论上表明BAI引导的分配在温和假设下加速收敛到全局最优",
+            "location": "abstract",
+            "quote": "For trust region--based BO, we theoretically show that the proposed BAI-guided allocation accelerates convergence to the global optimum under mild assumptions."
+          },
+          {
+            "claim": "论文实验表明方法在多模态问题上改进贝叶斯优化",
+            "location": "abstract",
+            "quote": "Experiments on synthetic and real-world benchmarks demonstrate that our method improves BO on multimodal problems."
+          },
+          {
+            "claim": "论文表明同一机制可增强其他局部或基于种群的优化器",
+            "location": "abstract",
+            "quote": "We also show that the same mechanism can enhance other local or population-based optimizers, suggesting its potential as a general extension strategy for multimodal black-box optimization."
+          },
+          {
+            "claim": "论文提出通过外推改进轨迹来估计最终性能并逐步消除低潜力候选",
+            "location": "abstract",
+            "quote": "The proposed method extrapolates improvement trajectories, estimates final performance, and progressively eliminates low-potential candidates."
+          }
+        ],
+        "experiments": [
+          "在合成基准和真实世界基准上评估方法，表明方法在多模态问题上改进了贝叶斯优化",
+          "BAI变体在对应基础优化器上均有提升",
+          "CMAES-10-BAI优于BIPOP-CMAES",
+          "结果表明轨迹感知BAI的收益不限于TuRBO，同一基于优化历史的机制也能改进其他优化器",
+          "材料未提供具体的实例规模、运行时间、训练开销、消融实验细节或公平计算预算的具体数字"
+        ],
+        "first_affiliation": "Fujitsu Limited, Kawasaki, Japan",
+        "insight": "单个局部搜索过程的当前最优值具有误导性，因为其收敛轨迹的形态（如改进速度与趋势）比瞬时最优值更能预测最终可达性能；通过外推改进轨迹并逐步剔除低潜力候选，可以在评估预算有限时把更多评估集中到真正有潜力的过程上，从而在保持局部搜索优势的同时提升全局收敛效率。",
+        "limitations": [
+          "理论分析聚焦于具有多个信任域的贝叶斯优化设定，材料未说明该理论是否覆盖其他优化器或其他分配机制",
+          "材料未说明方法在高维问题上是否仍然有效或存在其他未讨论的局限"
+        ],
+        "method": [
+          "提出轨迹感知的最佳臂识别（BAI）框架，使用优化历史指导局部搜索过程间的评估分配",
+          "外推各过程的改进轨迹以估计其最终性能",
+          "根据估计的最终性能逐步消除低潜力候选过程",
+          "将BAI机制与TuRBO等信任域贝叶斯优化集成，形成BAI引导的分配策略",
+          "在同一机制下展示其可增强其他局部或种群优化器（如CMA-ES变体）",
+          "理论分析针对多个信任域覆盖决策空间的情形，给出BAI引导分配的收敛加速结论"
+        ],
+        "motivation": "标准贝叶斯优化在多模态或高维问题上性能下降，因为高斯过程核长度尺度易被局部变化主导而难以捕捉全局结构；并行运行多个局部搜索过程（如多个信任域）并将评估分配给高潜力过程是有效补救，但仅依赖当前最优值进行分配并不总能反映各过程的最终性能，因此需要利用优化历史轨迹来更准确地估计最终性能。",
+        "primary_topic": "贝叶斯优化中的多局部搜索过程评估分配，基于优化历史轨迹的最佳臂识别",
+        "relation_to_research": "本文属于黑箱优化中的评估分配与搜索过程选择问题，与智能优化和生产调度中的算法机制设计有间接关联。其核心机制——利用历史轨迹估计候选搜索过程的最终潜力并动态分配计算预算——在概念上可迁移到生产调度中多种启发式或元启发式求解器的在线选择与计算预算分配，但需要针对调度问题的离散决策变量、约束可行性处理和动态扰动等条件进行适配，这些迁移属于推测而非作者结论。论文未直接涉及柔性作业车间、流水车间、分布式制造、生产运输协同、能效或多目标约束调度。",
+        "relevance_score": 6,
+        "setting": "研究问题为昂贵黑箱多模态优化，决策对象是多个并行局部搜索过程（如多个信任域贝叶斯优化过程）之间的评估预算分配；目标是在给定总评估次数下找到全局最优解；关键约束是每次函数评估代价高昂、评估次数有限，且各局部搜索过程的当前最优值不一定反映其最终性能；信息假设为可观测各过程的优化历史（评估点与目标值轨迹），环境为静态黑箱优化场景，未涉及动态扰动或多目标约束。",
+        "tags": [
+          "贝叶斯优化",
+          "最佳臂识别",
+          "信任域贝叶斯优化",
+          "多模态黑箱优化",
+          "局部搜索分配",
+          "进化算法"
+        ],
+        "title_zh": "面向贝叶斯优化中局部搜索分配的轨迹感知最佳臂识别及其扩展",
+        "uncertainty": "本次判断基于摘要和部分全文节选，全文节选的完整性有限，缺少实验部分的具体设置、基线细节、消融结果和理论假设的完整陈述，因此对方法实际效果、局限性和可迁移性的评估存在不确定性。",
+        "why_recommended": "对于关注学习辅助搜索、计算预算分配和算法机制设计的研究者，该论文提供了一种将优化历史轨迹用于候选过程评估与淘汰的通用框架，其思想可能启发生产调度中多求解器协同或多种群进化算法的评估资源分配策略；同时其理论分析与跨优化器实验设计对理解分配机制的有效性和泛化边界有参考价值，但需注意其与生产调度具体问题的距离。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-06T11:40:26.431866+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2605.31050v2",
+        "status": "not_found"
+      },
+      "final_score": 0.6134241307477889,
+      "provenance": {
+        "analyzed_at": "2026-10-06T03:42:07.275772Z",
+        "input_hash": "69b6f399f05d7e052a30a43f3e8b585f2b090c45422e36688a72a6253e719ebd",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Bayesian optimization (BO) is effective for expensive black-box optimization, but its performance often degrades on multimodal or high-dimensional problems. A promising remedy is to run multiple local search processes, such as trust region--based BO, and allocate evaluations to those with high potential. However, current best values do not always reflect the final performance of each process. We propose a trajectory-aware best-arm identification (BAI) framework that uses optimization history to guide this allocation. The proposed method extrapolates improvement trajectories, estimates final performance, and progressively eliminates low-potential candidates. For trust region--based BO, we theoretically show that the proposed BAI-guided allocation accelerates convergence to the global optimum under mild assumptions. Experiments on synthetic and real-world benchmarks demonstrate that our method improves BO on multimodal problems. We also show that the same mechanism can enhance other local or population-based optimizers, suggesting its potential as a general extension strategy for multimodal black-box optimization.",
+          "authors": [
+            "Nobuo Namura",
+            "Sho Takemori"
+          ],
+          "canonical_id": "2605.31050",
+          "categories": [
+            "cs.LG"
+          ],
+          "comment": "24 pages, 20 figures",
+          "pdf_url": "https://arxiv.org/pdf/2605.31050",
+          "published_at": "2026-05-29T09:25:16Z",
+          "source": "arxiv",
+          "title": "Trajectory-Aware Best-Arm Identification for Local Search Allocation in Bayesian Optimization and Beyond",
+          "updated_at": "2026-10-05T05:50:47Z",
+          "url": "https://arxiv.org/abs/2605.31050",
+          "version": 2
+        },
+        "rank": 6,
+        "score": {
+          "base_score": 0.6244075104505252,
+          "exploration": 0.881478918844678,
+          "matched_terms": [
+            "black-box optimization",
+            "local search"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.7966251466337765,
+          "topic": 0.5017534977141239
+        }
+      },
+      "tier": "deep_read"
+    },
+    "arxiv:2606.04816:v2": {
+      "analysis": {
+        "analysis": "作者将验证问题拆分为两类错误检测：用可行解检测被错误添加的约束，用单约束违反解检测被遗漏的约束，再结合最优值检查，从而同时验证目标与约束集合。摘要未说明是否利用问题结构、分解、下界或图表示来设计验证器。",
+        "challenges": [
+          "目标值正确但约束集合错误的生成代码难以被现有验证发现",
+          "VRP 变体多样且约束耦合，需要覆盖多种约束类型的验证基准",
+          "构造能检测多余约束与遗漏约束的测试解",
+          "将约束级验证信号有效接入合成数据构造与强化学习训练流程"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "现有验证信号关注目标值，可能忽略约束级错误",
+            "location": "abstract",
+            "quote": "existing verification signals focus on whether the generated formulation produces the correct objective value. Such signals can overlook constraint-level errors"
+          },
+          {
+            "claim": "作者提出 constraint injection 直接测试生成代码是否实现意图约束",
+            "location": "abstract",
+            "quote": "We propose constraint injection, a verification method that directly tests whether the generated code implements the intended constraints."
+          },
+          {
+            "claim": "用可行解检测错误添加的约束，用单约束违反解检测遗漏的约束",
+            "location": "abstract",
+            "quote": "We use feasible solutions to detect incorrectly added constraints and one-constraint-violating solutions to detect omissions."
+          },
+          {
+            "claim": "验证器同时作为合成数据拒绝采样准则和强化学习 rollout 级奖励",
+            "location": "abstract",
+            "quote": "The verifier serves as a rejection-sampling criterion for synthetic data construction and as a rollout-level reward for reinforcement learning (RL)."
+          },
+          {
+            "claim": "VRPCoder-RL 在 VRPBench 上总体 Pass@1 为 93%",
+            "location": "abstract",
+            "quote": "On VRPBench, VRPCoder-RL reaches 93% overall Pass@1"
+          },
+          {
+            "claim": "VRPBench 覆盖 21 个 VRP 变体、四个子集，且经专家验证",
+            "location": "abstract",
+            "quote": "VRPBench, an expert-verified benchmark spanning 21 VRP variants across four subsets"
+          }
+        ],
+        "experiments": [
+          "在 VRPBench 上评估，VRPCoder-RL 总体 Pass@1 达到 93%",
+          "在三个子集上超过 Gemini-3.1-Pro Preview",
+          "超过 Claude-Sonnet-4.5 28 个百分点",
+          "超过最强先前 OR-LLM 78 个百分点",
+          "摘要未提供实例规模、运行时间、训练开销、公平计算预算、消融实验和泛化实验的具体数字"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "目标值等价并不等于约束集合等价；通过构造能区分约束是否被正确加入的测试解，可以在目标值之外获得约束级监督信号。该信号既可用于数据构造时的拒绝采样，也可作为强化学习的 rollout 级奖励，从而把验证从单纯的目标值检查推进到约束集合检查。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "提出 constraint injection 验证方法，直接测试生成代码是否实现意图约束",
+          "使用可行解检测错误添加的约束，使用单约束违反解检测遗漏的约束",
+          "结合最优值检查，共同验证目标函数与约束集合",
+          "构建 VRPCoder：一个 8B 模型，从自然语言 VRP 描述生成 Gurobi 代码",
+          "构建 VRPBench：覆盖 21 个 VRP 变体、四个子集的专家验证基准",
+          "将该验证器作为合成数据构造中的拒绝采样准则",
+          "将该验证器作为强化学习的 rollout 级奖励",
+          "训练得到 VRPCoder-RL"
+        ],
+        "motivation": "现有验证信号主要检查生成模型是否给出正确目标值，但额外或遗漏的约束在特定测试实例上可能不改变最优值，从而掩盖约束级错误。作者希望直接检验生成代码是否实现了意图中的约束集合，而不仅仅是对齐目标值。",
+        "primary_topic": "大语言模型生成优化模型代码的约束级验证与强化学习微调",
+        "relation_to_research": "该工作直接涉及大语言模型驱动的优化建模与求解器代码生成，属于 AI4OR 中自动建模与学习辅助求解方向。其约束级验证信号可作为生产调度、柔性作业车间、分布式制造等问题的建模质量保障机制：推测可迁移到调度问题，但需要构造相应的可行解和单约束违反解，并针对调度约束（如工序先后、机器容量、运输协同、能耗上限）设计注入方式；这一迁移属于推测，不是作者已证明的结论。作为强化学习奖励的用法也与学习辅助搜索、智能体优化相关，但摘要未说明与经典进化算法或数学规划求解器的更深层结合。",
+        "relevance_score": 8,
+        "setting": "研究问题是由大语言模型根据自然语言描述的车辆路径问题（VRP）自动生成可执行的 Gurobi 求解器代码，目标是保证生成代码不仅目标值正确、而且约束集合与用户意图一致。决策对象是 LLM 生成的求解器代码及其中的约束建模。关键约束是 VRP 具有多样且紧密耦合的业务约束，目标值等价信号无法暴露约束级错误。信息假设为可访问自然语言问题描述、生成的求解器代码，以及可用于验证的可行解和单约束违反解。环境为静态的离线建模与训练评估，不涉及在线动态扰动。",
+        "tags": [
+          "LLM优化建模",
+          "约束注入",
+          "车辆路径问题",
+          "强化学习",
+          "拒绝采样",
+          "Gurobi代码生成",
+          "可执行求解器代码"
+        ],
+        "title_zh": "超越目标值等价：面向车辆路径问题的LLM优化建模约束注入验证",
+        "uncertainty": "仅依据标题与摘要，无法确认第一单位、通讯作者、完整方法细节、实验计算预算、基线配置、消融结果、代码与数据可复现性，以及约束注入在非 VRP 问题上的有效性。",
+        "why_recommended": "对关注 AI4OR、自动建模和 LLM 生成求解器代码的研究者，该论文提供了不依赖目标值等价的约束级验证思路，并展示了验证信号同时用于拒绝采样和强化学习奖励的闭环。其 VRPBench 与约束注入设计对生产调度等约束复杂问题的自动建模评测与训练信号设计具有直接借鉴价值。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-06T11:40:26.431866+08:00",
+        "figures": [
+          {
+            "caption": "A candidate missing the subtour-elimination constraint still matches the reference optimal value, so the optimal value check accepts it. Constraint injection injects a disconnected-subtour solution: correct code rejects it as infeasible, while the buggy candidate accepts it, exposing the missing constraint.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2606.04816/v2/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2606.04816v2/introduction.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2606.04816v2#S1.F1"
+          },
+          {
+            "caption": "Overview of the three-stage data synthesis pipeline.",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2606.04816/v2/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2606.04816v2/data.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2606.04816v2#S4.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2606.04816v2",
+        "status": "available"
+      },
+      "final_score": 0.6806670507256665,
+      "provenance": {
+        "analyzed_at": "2026-10-06T03:42:47.173602Z",
+        "input_hash": "a7a937e70dc20464f67ee2154f15e848c86dc1f6218e7e630415c6c984e9cf62",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Large language models (LLMs) can generate executable solver code from natural-language descriptions of optimization problems. However, existing verification signals focus on whether the generated formulation produces the correct objective value. Such signals can overlook constraint-level errors: incorrect formulations may still produce the same optimum when extra or missing constraints do not affect the tested instance. We propose constraint injection, a verification method that directly tests whether the generated code implements the intended constraints. We use feasible solutions to detect incorrectly added constraints and one-constraint-violating solutions to detect omissions. Together with the optimal value check, these tests verify both the objective and the constraint set. We evaluate this approach on vehicle routing problems (VRPs), which provide a challenging testbed with diverse, tightly coupled operational constraints. We develop VRPCoder, an 8B model for generating Gurobi code from natural-language VRP descriptions, and VRPBench, an expert-verified benchmark spanning 21 VRP variants across four subsets. The verifier serves as a rejection-sampling criterion for synthetic data construction and as a rollout-level reward for reinforcement learning (RL). On VRPBench, VRPCoder-RL reaches 93% overall Pass@1, outperforms Gemini-3.1-Pro Preview on three subsets, exceeds Claude-Sonnet-4.5 by 28 percentage points, and exceeds the strongest prior OR-LLM by 78 percentage points.",
+          "authors": [
+            "Xizi Luo",
+            "Changhong He",
+            "Dongdong Geng",
+            "Chenggong Shi",
+            "Yu Mei"
+          ],
+          "canonical_id": "2606.04816",
+          "categories": [
+            "cs.AI",
+            "cs.LG"
+          ],
+          "comment": "30 pages, 11 figures, Accepted to Findings of EMNLP 2026",
+          "pdf_url": "https://arxiv.org/pdf/2606.04816",
+          "published_at": "2026-06-03T12:39:04Z",
+          "source": "arxiv",
+          "title": "Beyond Objective Equivalence: Constraint Injection for LLM-Based Optimization Modeling on Vehicle Routing Problems",
+          "updated_at": "2026-10-05T10:00:36Z",
+          "url": "https://arxiv.org/abs/2606.04816",
+          "version": 2
+        },
+        "rank": 16,
+        "score": {
+          "base_score": 0.5830310013193934,
+          "exploration": 0.256072197828687,
+          "matched_terms": [
+            "vehicle routing",
+            "optimization modeling",
+            "reinforcement learning"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.83193572711815,
+          "topic": 0.6053321663742364
+        }
+      },
+      "tier": "browse"
     },
     "arxiv:2607.00691:v2": {
       "analysis": {
@@ -6116,8 +6540,967 @@
         }
       },
       "tier": "deep_read"
+    },
+    "arxiv:2610.04279:v1": {
+      "analysis": {
+        "analysis": "作者利用条件均衡不等式显式建模偏离可行性的依赖关系，通过仿射编码将成本和激活条件表示为线性形式，证明所得不等式精确刻画均衡集合。进一步利用条件多面体的整数顶点性质分析凹成本在均衡策略所在最小面上的行为，并针对均匀整数可分装箱问题给出保持成本不变的变换以得到顶点均衡。材料未说明更详细的问题结构分析步骤。",
+        "challenges": [
+          "偏离策略的可行性随对手策略组合变化，导致均衡条件非凸且依赖对手",
+          "精确均衡可能不存在，需要认证不存在或给出近似因子",
+          "共享约束下均衡集合的精确刻画与算法嵌入"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文研究带共享约束的有限整数博弈中纯纳什均衡的计算。",
+            "location": "abstract",
+            "quote": "We develop a cutting-plane algorithm for computing pure Nash equilibria in finite integer games with shared constraints"
+          },
+          {
+            "claim": "条件均衡不等式通过显式激活项捕捉偏离可行性的依赖。",
+            "location": "abstract",
+            "quote": "Conditional equilibrium inequalities capture this dependence through an explicit activation term."
+          },
+          {
+            "claim": "作者证明所得不等式精确刻画均衡集合，并将其作为惰性约束嵌入分支切割。",
+            "location": "abstract",
+            "quote": "We give affine encodings of costs and activation conditions and prove that the resulting inequalities characterize the equilibrium set exactly. Embedded as lazy constraints in branch-and-cut, they yield the Generalized Zero-Regret algorithm"
+          },
+          {
+            "claim": "实验在3,300个实例上评估，计算社会最优均衡，认证不存在和近似因子。",
+            "location": "abstract",
+            "quote": "evaluate the algorithm on 3,300 instances, computing a socially optimal equilibrium on all but 43, certifying nonexistence on 16, and certifying approximation factors within a few percent where no exact equilibrium exists."
+          }
+        ],
+        "experiments": [
+          "在3,300个实例上评估算法",
+          "在除43个以外的所有实例上计算出社会最优均衡",
+          "在16个实例上认证均衡不存在",
+          "对不存在精确均衡的实例，认证近似因子在几个百分点以内"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "作者通过显式激活项将均衡条件与对手策略组合关联，把“对某个对手组合可行、对另一个不可行”的均衡依赖编码为条件均衡不等式；该不等式经仿射编码后能精确刻画均衡集合，从而可将均衡计算嵌入分支切割框架中求解。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "提出条件均衡不等式，通过显式激活项捕捉偏离可行性对对手策略组合的依赖",
+          "给出成本和激活条件的仿射编码，证明所得不等式精确刻画均衡集合",
+          "将条件均衡不等式作为惰性约束嵌入分支切割，得到广义零遗憾算法（Generalized Zero-Regret algorithm）",
+          "使用二分过程维护最小可达近似因子的认证界",
+          "证明当条件多面体具有整数顶点时，凹成本在包含均衡策略的最小面上为常数，严格凹性迫使顶点策略",
+          "对均匀整数可分装箱问题，通过保成本变换在无严格凹性时也获得顶点均衡",
+          "给出装箱、网络形成和带共享容量的背包博弈的公式化表示"
+        ],
+        "motivation": "带共享约束的整数博弈中，策略的可行性依赖于对手策略组合，传统均衡不等式无法直接刻画这种依赖性，因此需要新的均衡刻画与计算方法。",
+        "primary_topic": "带共享约束的整数规划博弈的纯纳什均衡计算",
+        "relation_to_research": "该论文研究整数规划博弈中带共享约束的均衡计算，核心是多参与者整数决策与共享资源约束下的优化求解，与智能优化和生产调度中的分布式决策、资源分配问题有概念联系。其割平面与分支切割结合的方法可能可迁移到多智能体或分布式调度中的均衡与协商问题，但需要将调度问题建模为带共享约束的整数博弈，并处理动态扰动、机器容量等约束；这种迁移属于推测，尚未被作者验证。",
+        "relevance_score": 6,
+        "setting": "研究有限整数博弈中纯纳什均衡的计算问题，博弈包含共享约束，使得一个偏离策略对某个对手策略组合可行、对另一个对手策略组合不可行。决策对象是各参与者的整数策略；目标是在精确或近似均衡集合上优化一个线性目标（如社会福利）。关键约束包括共享资源容量以及整数可行性。信息假设为完全信息博弈，材料未说明是否为动态环境。",
+        "tags": [
+          "整数规划博弈",
+          "纳什均衡",
+          "割平面",
+          "分支切割",
+          "零遗憾算法",
+          "共享约束",
+          "博弈论优化"
+        ],
+        "title_zh": "带共享约束的整数规划博弈中均衡的计算",
+        "uncertainty": "仅基于标题与摘要，未提供全文，因此实验细节、算法实现、基线对比、计算预算和可复现性信息不足；第一单位和通讯作者信息未提供；与生产调度的迁移路径属于推测。",
+        "why_recommended": "对关注分布式制造、生产运输协同和多智能体决策的研究者，该论文提供了带共享约束的整数博弈均衡精确刻画与分支切割求解机制，其条件均衡不等式和近似因子认证思路可能为处理多主体资源竞争与约束可行性问题提供新视角。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-06T11:40:26.431866+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2610.04279v1",
+        "status": "not_found"
+      },
+      "final_score": 0.456858068798864,
+      "provenance": {
+        "analyzed_at": "2026-10-06T03:44:04.778223Z",
+        "input_hash": "95064dbe9b5aa46b54082f913aa81c41c86d8971cfc1321d222f6ac2e6227528",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "We develop a cutting-plane algorithm for computing pure Nash equilibria in finite integer games with shared constraints, where a deviation may be feasible against one opponent profile and infeasible against another. Conditional equilibrium inequalities capture this dependence through an explicit activation term. We give affine encodings of costs and activation conditions and prove that the resulting inequalities characterize the equilibrium set exactly. Embedded as lazy constraints in branch-and-cut, they yield the Generalized Zero-Regret algorithm for optimizing a linear objective over exact or approximate equilibria; a bisection procedure maintains certified bounds on the smallest achievable approximation factor. We also prove that, when the conditional polytopes have integral vertices, a concave cost is constant on the minimal face containing an equilibrium strategy, so strict concavity forces vertex strategies; for uniform integer-splittable bin packing, a cost-preserving transformation yields vertex equilibria even without strict concavity. We give formulations for bin packing, network formation, and knapsack games with shared capacities and evaluate the algorithm on 3,300 instances, computing a socially optimal equilibrium on all but 43, certifying nonexistence on 16, and certifying approximation factors within a few percent where no exact equilibrium exists.",
+          "authors": [
+            "Bainian Hao",
+            "Hyunwoo Lee",
+            "Robert Hildebrand",
+            "Carla Michini"
+          ],
+          "canonical_id": "2610.04279",
+          "categories": [
+            "math.OC",
+            "cs.GT"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2610.04279",
+          "published_at": "2026-10-03T04:18:37Z",
+          "source": "arxiv",
+          "title": "Computing Equilibria in Integer Programming Games with Shared Constraints",
+          "updated_at": "2026-10-03T04:18:37Z",
+          "url": "https://arxiv.org/abs/2610.04279",
+          "version": 1
+        },
+        "rank": 50,
+        "score": {
+          "base_score": 0.3397419432706617,
+          "exploration": 0.0890252054827895,
+          "matched_terms": [
+            "integer programming",
+            "branch and cut"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.4755077023589536,
+          "topic": 0.3725850800419702
+        }
+      },
+      "tier": "browse"
+    },
+    "arxiv:2610.04473:v1": {
+      "analysis": {
+        "analysis": "作者将LLM推理配置形式化为约束多目标黑盒优化，并利用确定性资源成本作为可提前计算的约束，从而在搜索阶段拒绝超预算候选。搜索在冻结的采样代理集上进行，并通过自适应收紧预算来控制搜索范围；找到的Pareto代表点再回到全规模数据集上重新验证。材料未说明更具体的分解、下界或图表示手段。",
+        "challenges": [
+          "逐层搜索空间维度高，且连续与离散空间混合，传统机制特定启发式无法扩展",
+          "真实LLM评估代价高昂，不能对每个候选都做全量模型调用",
+          "资源预算约束需要在搜索过程中被显式满足，而不是仅在最后检查",
+          "多目标之间存在冲突，需要获得并验证Pareto代表点而不仅是单个折中点",
+          "不同推理机制（KV缓存与MoE路由）的配置空间结构不同，需要统一可复用框架"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文把LLM推理配置形式化为约束多目标黑盒优化，并构建可复用搜索框架InferOpt。",
+            "location": "abstract",
+            "quote": "We recast inference configuration as constrained multi-objective black-box optimization and build InferOpt, a reusable search framework that requires only variable bounds, a deterministic resource cost, and an evaluation hook."
+          },
+          {
+            "claim": "InferOpt在模型调用前拒绝超预算候选，并自适应收紧预算。",
+            "location": "abstract",
+            "quote": "InferOpt searches on a frozen sampled proxy set, rejects over-budget candidates before any model call, tightens the budget adaptively, and re-validates Pareto representatives on full-scale dataset."
+          },
+          {
+            "claim": "同一流程覆盖28维连续KV空间和26维离散MoE空间。",
+            "location": "abstract",
+            "quote": "One pipeline covers a 28-dimensional continuous KV space (Qwen2.5-7B) and a 26-dimensional discrete MoE space (DeepSeek-V2-Lite)."
+          },
+          {
+            "claim": "在KV空间上，InferOpt搜索的逐层预算相比匹配均匀预算在Full KV参考点上分别改进7.3%和14.0%。",
+            "location": "abstract",
+            "quote": "On KV, post-prefill pruning cuts the 16K cache by 64.4% and TPOT by 22.9--48.5%, and the searched layer-wise budget by InferOpt beats a matched uniform budget by 7.3% and 14.0% of the Full KV reference points."
+          },
+          {
+            "claim": "在MoE空间上，InferOpt去掉43.0%的routed token–expert pairs，同时与默认配置相差不超过0.59个点。",
+            "location": "abstract",
+            "quote": "On MoE, a searched top-k schedule by InferOpt removes 43.0% of routed token--expert pairs while staying within 0.59 points of the default, closer than the matched-budget baselines."
+          },
+          {
+            "claim": "与Random Search、NSGA-II和MOTPE相比，InferOpt在两个空间上均领先。",
+            "location": "abstract",
+            "quote": "Against Random Search, NSGA-II, and MOTPE, InferOpt leads on both spaces, taking the best proxy hypervolume and the lowest retention on KV and staying closest to the uncompressed reference at the lowest experts on MoE."
+          }
+        ],
+        "experiments": [
+          "在KV空间（Qwen2.5-7B，28维连续）上，post-prefill剪枝将16K缓存减少64.4%，TPOT降低22.9–48.5%；InferOpt搜索得到的逐层预算相比匹配的均匀预算，在Full KV参考点上分别改进7.3%和14.0%",
+          "在MoE空间（DeepSeek-V2-Lite，26维离散）上，搜索得到的top-k调度去掉43.0%的routed token–expert pairs，同时与默认配置相差不超过0.59个点，比匹配预算基线更接近默认",
+          "与Random Search、NSGA-II和MOTPE相比，InferOpt在两个空间上均领先：在KV上取得最佳代理hypervolume和最低retention，在MoE上以最低专家数最接近未压缩参考",
+          "训练开销、运行时间绝对值、公平计算预算的统一口径、泛化到其他模型以及消融实验在摘要中未提供"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "其核心洞察在于把资源成本从模型中解耦为确定性的可计算约束，并在任何昂贵的模型调用之前用该约束过滤候选，从而把搜索集中在可行且可能处于Pareto前沿的配置上；同时只在冻结的采样代理集上搜索、再对Pareto代表做全量验证，使跨机制、跨连续与离散空间的搜索成为可能。这一点比简单堆叠启发式或单点调参更有效，因为它把预算不可行性变成搜索的前置剪枝条件，而非事后惩罚。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "把LLM推理配置定义为约束多目标黑盒优化问题，只需变量上下界、确定性的资源成本和评估钩子",
+          "在冻结的采样代理集上执行搜索，以降低真实模型调用开销",
+          "对候选先根据确定性资源成本做预算检查，超预算者在任何模型调用前被拒绝",
+          "在搜索过程中自适应收紧预算",
+          "对搜索得到的Pareto代表点在全规模数据集上重新验证",
+          "同一搜索流程覆盖28维连续KV空间和26维离散MoE空间"
+        ],
+        "motivation": "实际部署LLM时需要设置大量推理期旋钮，从逐层KV保留到逐层专家数量；现有做法依赖针对特定机制的启发式，只能给出单个工作点，无法扩展到逐层搜索空间，也无法在多个冲突目标和预算约束下系统探索。因此作者希望把推理配置问题转化为可复用的约束多目标黑盒优化框架，适配连续与离散两类空间。",
+        "primary_topic": "面向大语言模型推理配置的约束多目标黑盒搜索",
+        "relation_to_research": "该论文属于AI驱动运筹优化中的约束多目标黑盒搜索方向，和智能优化、学习辅助搜索有直接方法关联：它使用代理集搜索、预算过滤和多目标Pareto验证，这些机制可迁移到生产调度中的资源受限多目标问题，例如柔性作业车间或分布式制造中的能效—完工时间权衡。但这种迁移是推测，需要把调度问题编码为有界变量、给出确定性资源成本函数和评估钩子，并验证代理集能否保持调度约束可行性；论文本身并未涉及生产调度、动态扰动或多智能体强化学习。",
+        "relevance_score": 6,
+        "setting": "论文将LLM推理时的配置问题建模为带预算约束的多目标黑盒优化问题：决策对象是推理期旋钮，包括逐层KV保留量与逐层专家数量；目标是在满足资源成本预算的前提下，权衡缓存压缩、生成效率与模型质量等冲突指标，并返回Pareto代表点。文中使用冻结的采样代理集进行搜索、在真实模型调用前拒绝超预算候选、自适应收紧预算，并在全规模数据集上重新验证Pareto代表点。变量维度分别是一个28维连续KV空间和一个26维离散MoE空间。信息假设上，框架只要求变量上下界、确定性的资源成本和评估钩子；静态或动态环境未说明。",
+        "tags": [
+          "约束多目标优化",
+          "黑盒优化",
+          "代理模型",
+          "LLM推理配置",
+          "资源预算约束",
+          "Pareto前沿"
+        ],
+        "title_zh": "InferOpt：面向LLM推理配置的约束多目标搜索",
+        "uncertainty": "本次仅基于标题和摘要判断，未获得全文，因此无法确认具体的搜索算子、代理模型类型、预算收紧策略、交叉验证方式、统计显著性、运行时间与计算预算细节，也无法排除作者在正文中讨论了其他局限或生产调度相关应用。相关性给6分，是因为其约束多目标黑盒搜索机制有明确迁移路径，但论文本身并非直接研究生产调度或作业车间问题。",
+        "why_recommended": "对研究智能优化与AI4OR的博士生而言，这篇论文提供了一个约束多目标黑盒搜索的清晰框架：它把预算约束前置为候选拒绝条件、用冻结代理集降低昂贵评估、再对Pareto代表做全量验证。这种“代理搜索—预算过滤—全量验证”结构对生产调度中评估代价高、约束严格、需要多目标折中的问题具有方法借鉴价值。同时，它在连续KV空间和离散MoE空间上的对比实验，可作为跨连续—离散约束优化的参考案例。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-06T11:40:26.431866+08:00",
+        "figures": [
+          {
+            "caption": "InferOpt in three stages. Proxy sampling constructs a frozen stratified subset; budget-aware multi-objective search rejects over-budget candidates before evaluation; Pareto-optimal representatives are selected and re-validated on disjoint held-out examples.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2610.04473/v1/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2610.04473v1/InferOpt_framework.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2610.04473v1#S2.F1"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2610.04473v1",
+        "status": "available"
+      },
+      "final_score": 0.4716040205286802,
+      "provenance": {
+        "analyzed_at": "2026-10-06T03:44:01.116029Z",
+        "input_hash": "3e0f2ea07a989f03dfe667a2c12498fb13087e7fedc5d8c60b874854c806b27a",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Serving an LLM means setting dozens of inference-time knobs, from per-layer KV retention to per-layer expert counts. Practice sets them with mechanism-specific heuristics that return a single operating point and do not scale to layer-wise search spaces. We recast inference configuration as constrained multi-objective black-box optimization and build InferOpt, a reusable search framework that requires only variable bounds, a deterministic resource cost, and an evaluation hook. InferOpt searches on a frozen sampled proxy set, rejects over-budget candidates before any model call, tightens the budget adaptively, and re-validates Pareto representatives on full-scale dataset. One pipeline covers a 28-dimensional continuous KV space (Qwen2.5-7B) and a 26-dimensional discrete MoE space (DeepSeek-V2-Lite). On KV, post-prefill pruning cuts the 16K cache by 64.4% and TPOT by 22.9--48.5%, and the searched layer-wise budget by InferOpt beats a matched uniform budget by 7.3% and 14.0% of the Full KV reference points. On MoE, a searched top-k schedule by InferOpt removes 43.0% of routed token--expert pairs while staying within 0.59 points of the default, closer than the matched-budget baselines. Against Random Search, NSGA-II, and MOTPE, InferOpt leads on both spaces, taking the best proxy hypervolume and the lowest retention on KV and staying closest to the uncompressed reference at the lowest experts on MoE.",
+          "authors": [
+            "Qi Chen",
+            "Yingying Cheng",
+            "Zhaoyi Sun",
+            "Li Zhou",
+            "Fan Zhang",
+            "Jie Sun"
+          ],
+          "canonical_id": "2610.04473",
+          "categories": [
+            "cs.AI"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2610.04473",
+          "published_at": "2026-10-03T12:19:09Z",
+          "source": "arxiv",
+          "title": "InferOpt: Constrained Multi-Objective Search for LLM Inference Configurations",
+          "updated_at": "2026-10-03T12:19:09Z",
+          "url": "https://arxiv.org/abs/2610.04473",
+          "version": 1
+        },
+        "rank": 49,
+        "score": {
+          "base_score": 0.3665527645976003,
+          "exploration": 0.15119572912998736,
+          "matched_terms": [
+            "black-box optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.5168791042331655,
+          "topic": 0.38513296340675673
+        }
+      },
+      "tier": "browse"
+    },
+    "arxiv:2610.04572:v1": {
+      "analysis": {
+        "analysis": "摘要未说明作者如何具体分析问题结构、分解或下界。从摘要可推断，作者通过实验对比发现单次分离投影步骤足以提供有效的约束信号，并据此设计自适应损失权重来利用投影后的约束残差。但摘要未提供对问题结构、图表示或理论分析的详细说明。",
+        "challenges": [
+          "现有方法需要展开多个修复步骤，计算和内存密集。",
+          "当修复过程不收敛时，展开方法鲁棒性不足。",
+          "多数约束满足工作被让渡给修复步骤，学习模型本身对约束的感知不足。",
+          "在约束评估昂贵、仅能通过神经代理评估时，展开方法内存不可行。"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "作者的核心发现是训练中单次分离投影步骤足够。",
+            "location": "abstract",
+            "quote": "Our central finding is that, contrary to common practice, a single detached projection step suffices in training."
+          },
+          {
+            "claim": "PAL 利用单次投影后的约束残差自适应加权原始预测上的约束惩罚。",
+            "location": "abstract",
+            "quote": "We accomplish this with a Projection-Adaptive Loss (PAL), which uses the constraint residual after this single step to adaptively weigh constraint penalties on the raw prediction."
+          },
+          {
+            "claim": "PAL 在极端非线性约束下是唯一保持近乎完美可行性的方法。",
+            "location": "abstract",
+            "quote": "In experiments, PAL is the only method that retains virtually perfect feasibility on extremely nonlinear constraints, and matches or outperforms current methods on synthetic and engineering benchmarks."
+          },
+          {
+            "claim": "PAL 在 ACOPF 基准上训练速度比 DC3 快 2.5 倍。",
+            "location": "abstract",
+            "quote": "Because it only requires a single detached projection step, PAL trains 2.5x faster than the canonical repair-based method (DC3) on its own ACOPF benchmark."
+          },
+          {
+            "claim": "PAL 可在约束评估昂贵时通过神经代理训练，而展开方法内存不可行。",
+            "location": "abstract",
+            "quote": "PAL can also be trained when constraints are expensive to evaluate (e.g., via neural surrogates), a setting where current unrolled methods are memory-intractable."
+          }
+        ],
+        "experiments": [
+          "在合成基准和工程基准上，PAL 在极端非线性约束下是唯一保持近乎完美可行性的方法。",
+          "PAL 在合成和工程基准上匹配或优于当前方法。",
+          "在作者自己的 ACOPF 基准上，PAL 的训练速度比典型基于修复的方法 DC3 快 2.5 倍，因为只需要单次分离投影步骤。",
+          "当约束评估昂贵（例如通过神经代理）时，PAL 仍可训练，而当前展开方法在该设置下内存不可行。"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "作者的核心发现是：与常见做法相反，训练中只做一次分离的投影步骤就足够。其有效性在于，利用单次投影后的约束残差来自适应地加权原始预测上的约束惩罚，使模型在训练时就能感知约束满足程度，而无需展开多步修复。这样既保留了修复步骤提供的约束信号，又避免了展开带来的计算与内存负担。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "使用单次分离的投影步骤对原始神经网络预测进行修复，得到投影后的输出。",
+          "计算该单次投影后的约束残差。",
+          "利用该残差自适应地加权原始预测上的约束惩罚，形成 Projection-Adaptive Loss (PAL)。",
+          "训练时仅依赖这一次分离投影，不展开多步修复过程。",
+          "PAL 可与约束评估昂贵的场景结合，例如使用神经代理来评估约束。"
+        ],
+        "motivation": "作者指出，目前主流方法在训练中展开多个修复步骤，并对展开后仍存在的约束违反进行软惩罚。这种做法计算和内存开销大，当修复过程不收敛时缺乏鲁棒性，并且将大部分约束满足工作让渡给修复步骤，限制了学习模型自身对约束的感知。因此需要一种更高效且仍能保持精确可行性的训练机制。",
+        "primary_topic": "学习模型输出后的约束修复与精确约束满足",
+        "relation_to_research": "该论文与智能优化、生产调度和 AI4OR 的关联主要体现在学习方法与约束满足的结合。论文提出的 PAL 通过单次投影和自适应损失来保证约束可行性，这一机制原则上可迁移到生产调度中需要满足机器容量、工序先后、时间窗等硬约束的学习型求解器。但论文本身并未涉及生产调度、柔性作业车间或分布式制造，因此迁移到调度问题属于推测，需要验证约束残差能否有效定义、投影操作是否兼容调度约束的离散组合结构，以及单次投影是否在调度问题中仍能保持可行性。",
+        "relevance_score": 6,
+        "setting": "论文研究学习模型在存在硬约束时如何保证输出满足约束的问题。决策对象是神经网络对原始预测的修复过程，目标是在训练中实现近乎完美的约束可行性，同时降低计算与内存开销。关键约束为非线性等式或不等式约束，信息假设是训练时可对原始预测执行投影或修复步骤，环境为静态的监督学习或工程优化基准任务。摘要未说明是否涉及动态扰动或多阶段决策。",
+        "tags": [
+          "约束满足",
+          "投影修复",
+          "损失函数设计",
+          "学习辅助优化",
+          "DC3",
+          "ACOPF"
+        ],
+        "title_zh": "只需投影一次：用于精确约束满足的投影自适应损失",
+        "uncertainty": "本次分析仅基于标题和摘要，未提供全文，因此方法细节、实验规模、基线设置、消融研究、具体数值和理论保证均无法核实。相关性评分基于方法可迁移性而非论文直接研究生产调度，迁移到调度问题需要额外验证，故不确定性较高。",
+        "why_recommended": "对关注学习辅助优化和约束可行性保障的研究者，该论文提供了关于修复步骤在训练中作用的反直觉发现，并给出了一种计算高效、内存友好的约束惩罚设计。其单次投影加自适应权重的思路可能为生产调度中学习模型与约束修复的结合提供新视角，尤其是在约束评估昂贵或需要端到端训练的场合。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-06T11:40:26.431866+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2610.04572v1",
+        "status": "not_found"
+      },
+      "final_score": 0.5299204528467691,
+      "provenance": {
+        "analyzed_at": "2026-10-06T03:43:16.626104Z",
+        "input_hash": "8b9b03e3935bf3961b726a868a3096c6a97e49c02786a792386a0ea16698a29d",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Precise constraint satisfaction is a prerequisite to deploying learned models in many areas, motivating methods that repair raw neural predictions with a repair procedure. Current methods unroll multiple repair steps in training and softly penalize constraint violations that remain after the unroll. This is compute- and memory-intensive, lacks robustness when the repair fails to converge, and surrenders most of the constraint satisfaction work to the repair. Our central finding is that, contrary to common practice, a single detached projection step suffices in training. We accomplish this with a Projection-Adaptive Loss (PAL), which uses the constraint residual after this single step to adaptively weigh constraint penalties on the raw prediction. In experiments, PAL is the only method that retains virtually perfect feasibility on extremely nonlinear constraints, and matches or outperforms current methods on synthetic and engineering benchmarks. Because it only requires a single detached projection step, PAL trains 2.5x faster than the canonical repair-based method (DC3) on its own ACOPF benchmark. PAL can also be trained when constraints are expensive to evaluate (e.g., via neural surrogates), a setting where current unrolled methods are memory-intractable.",
+          "authors": [
+            "Tim Aebersold",
+            "Soheyl Massoudi",
+            "Mark Fuge"
+          ],
+          "canonical_id": "2610.04572",
+          "categories": [
+            "cs.LG",
+            "cs.AI",
+            "cs.CE"
+          ],
+          "comment": "36 pages, 11 figures, 12 tables. Code: https://github.com/IDEALLab/projection-adaptive-loss",
+          "pdf_url": "https://arxiv.org/pdf/2610.04572",
+          "published_at": "2026-10-03T15:08:15Z",
+          "source": "arxiv",
+          "title": "Only Project Once: Projection-Adaptive Loss for Exact Constraint Satisfaction",
+          "updated_at": "2026-10-03T15:08:15Z",
+          "url": "https://arxiv.org/abs/2610.04572",
+          "version": 1
+        },
+        "rank": 25,
+        "score": {
+          "base_score": 0.4725826415395803,
+          "exploration": 0.9489855434888684,
+          "matched_terms": [
+            "constraint satisfaction"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.5322783916838476,
+          "topic": 0.31941159808427866
+        }
+      },
+      "tier": "explore"
+    },
+    "arxiv:2610.05169:v1": {
+      "analysis": {
+        "analysis": "作者将问题分解为两个阶段：先做逻辑对齐，再做源充分性验证与按需交互修复，之后才进入形式化和编码。对齐阶段借助 OR 引导的专家结构，用监督式路由在变量、参数、目标和约束上生成对齐候选项；验证阶段由源充分性验证器判定原始描述是否支持所需修复；若证据不足，则由交互修复智能体请求额外信息并修订描述。材料未说明是否使用下界、图表示或问题分解等更具体的分析工具。",
+        "challenges": [
+          "自然语言描述中的模糊表达与逻辑不一致难以直接形式化",
+          "修复可能缺乏原文证据，需要判断源描述是否充分",
+          "证据不足时需要向用户发起有针对性的澄清而非凭空补全",
+          "需要同时评估对齐阶段与交互修复阶段的效果",
+          "在自动化流程中保持修复后的描述与原始意图一致"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文关注真实运筹问题描述中的不完整知识、模糊表达与逻辑不一致，且这类描述无法直接用于形式化",
+            "location": "abstract",
+            "quote": "Operations research (OR) problems are often described by stakeholders with incomplete knowledge and vague expressions in real-world settings. Such ambiguous descriptions can not be used to formulation directly."
+          },
+          {
+            "claim": "框架在形式化和编码前通过两阶段对齐处理逻辑不一致",
+            "location": "abstract",
+            "quote": "which first addresses logical inconsistency through two-stage alignment before downstream formulation and coding"
+          },
+          {
+            "claim": "逻辑对齐智能体采用 OR 引导的专家结构，并通过监督式路由在变量、参数、目标和约束上生成对齐候选",
+            "location": "abstract",
+            "quote": "a logical alignment agent with OR-guided experts structure first produces an aligned candidate using supervised routing over variables, parameters, objectives, and constraints"
+          },
+          {
+            "claim": "源充分性验证器判断原始描述是否支持所需修复，证据不足时由交互修复智能体请求信息并修订描述",
+            "location": "abstract",
+            "quote": "a source-sufficiency verifier determines whether the original description supports the required repairs. When evidence is insufficient, an interactive repair agent requests additional information and revises the description before modeling and coding"
+          },
+          {
+            "claim": "论文提出歧义感知基准及其匹配的对话扩展以评估两个阶段",
+            "location": "abstract",
+            "quote": "an ambiguity-aware benchmark and its matched dialogue extension are proposed to support evaluation of both stages"
+          },
+          {
+            "claim": "32B 模型在错误恢复和求解准确率上相对基座模型有倍数提升",
+            "location": "abstract",
+            "quote": "The 32B model achieved 86.8\\% error-recovery success and 60.4\\% solution accuracy, reaching 1.98 and 1.86 times the respective base-model scores."
+          },
+          {
+            "claim": "交互修复在需要澄清的案例上取得完整描述准确率",
+            "location": "abstract",
+            "quote": "Interactive repair further achieved 90.71\\% complete-description accuracy when cases requiring clarification."
+          }
+        ],
+        "experiments": [
+          "32B 模型达到 86.8% 的错误恢复成功率与 60.4% 的求解准确率，分别约为基座模型得分的 1.98 倍和 1.86 倍",
+          "8B 模型达到 47.9% 的求解准确率，超过所评估的最佳变体，如 DeepSeek-V4-Flash 与 Claude-sonnet-4.5",
+          "交互修复在需要澄清的案例上达到 90.71% 的完整描述准确率",
+          "摘要提到提出了歧义感知基准及其匹配的对话扩展以支持两阶段评估，但未给出实例规模、计算预算、训练开销、消融设置或泛化测试细节"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "把逻辑不一致从下游建模错误中前置分离出来，并区分“可依据原文证据修复”和“原文证据不足、必须向用户澄清”两类情形，才能避免模型以幻觉方式补全信息。其有效性来自先用监督式路由确定要对齐的变量、参数、目标和约束，再用源充分性验证器判断修复是否有证据支撑，仅在证据不足时触发交互修复，从而在自动化与忠实性之间取得可控平衡。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "提出 AMAO，即歧义感知多智能体自动运筹问题求解框架，先在形式化和编码前做两阶段对齐以处理逻辑不一致",
+          "逻辑对齐智能体采用 OR 引导的专家结构，通过监督式路由在变量、参数、目标和约束上生成对齐候选项",
+          "源充分性验证器判断原始描述是否支持所需修复",
+          "当证据不足时，交互修复智能体请求额外信息并修订描述，然后再进行建模和编码",
+          "提出歧义感知基准及其匹配的对话扩展，用于评估对齐与交互修复两个阶段"
+        ],
+        "motivation": "现实中的运筹问题描述往往带有不完整知识、模糊表达和逻辑不一致，不能直接用于形式化。因此自动运筹求解的前置瓶颈不是建模或编码本身，而是如何在不牺牲忠实性的前提下先行对齐并修复描述中的逻辑不一致。",
+        "primary_topic": "大模型/多智能体驱动的自动运筹建模，面向描述歧义与逻辑不一致的修复",
+        "relation_to_research": "论文事实：AMAO 直接面向自动运筹问题求解，核心是多智能体与大模型协作处理自然语言描述中的歧义与逻辑不一致，再衔接形式化与编码。推测：这与智能优化和生产调度存在明确迁移路径，例如在柔性作业车间、流水车间或分布式制造中，把用户或现场给出的工序约束、设备能力、运输时间和扰动信息视为可能不一致的输入描述，用逻辑对齐与源充分性验证先修复模型输入，再交由调度求解器或学习辅助搜索求解；迁移条件是能够为调度领域定义变量、参数、目标、约束层面的对齐规则，并建立可验证的证据源，否则无法保证修复的忠实性。该论文未涉及强化学习策略、进化算法或数学规划求解器内部机制。",
+        "relevance_score": 8,
+        "setting": "论文研究真实场景中由利益相关者用不完整知识和模糊表达描述的运筹优化问题：这类描述因存在逻辑不一致而无法直接形式化建模，因此自动求解需要在形式化和编码之前先行处理歧义与不一致。决策对象是给定的自然语言问题描述及其含混之处，目标是产出一致、可支撑建模的描述并进一步完成形式化与编码；关键约束是修复必须以原始描述中的证据为依据，证据不足时不得凭空补全，而应通过交互向用户索取信息；信息假设是描述可能不完整、含歧义且逻辑不一致；静态或动态环境材料未说明。",
+        "tags": [
+          "自动建模",
+          "多智能体",
+          "逻辑一致性",
+          "歧义修复",
+          "大模型智能体",
+          "运筹优化"
+        ],
+        "title_zh": "面向逻辑不一致的歧义感知多智能体自动运筹优化框架",
+        "uncertainty": "仅能依据标题与摘要判断，未提供全文，因此无法核实基准规模、基线设置、计算预算、训练开销、消融实验、统计显著性和可复现性细节；第一单位与通讯作者在材料中未出现；迁移到生产调度等具体优化问题的可行性属于推测，未获作者结论支持。",
+        "why_recommended": "对研究 AI4OR 和自动建模的博士生而言，该工作把自动运筹的瓶颈定位在描述层的逻辑不一致与证据充分性，而非仅提升建模准确率，这对生产调度中常见的模糊需求、动态扰动描述和不完整约束信息具有直接启发。其两阶段对齐、源充分性验证与按需交互修复的机制，可作为学习辅助搜索或大模型智能体进入调度求解流水线之前的前处理模块加以借鉴，且摘要给出了错误恢复与求解准确率指标，便于评估迁移价值与可复现性需求。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-06T11:40:26.431866+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2610.05169v1",
+        "status": "not_found"
+      },
+      "final_score": 0.5666368034019087,
+      "provenance": {
+        "analyzed_at": "2026-10-06T03:43:50.493656Z",
+        "input_hash": "c83f458e1916f6f57056576fc68078d947aa683daf9994c0b5c083370599b4e0",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Operations research (OR) problems are often described by stakeholders with incomplete knowledge and vague expressions in real-world settings. Such ambiguous descriptions can not be used to formulation directly. Thus, automating OR problems solving requires processing this logical inconsistency in advance. To address this challenge, we propose an \\textbf{A}mbiguity-Aware \\textbf{M}ulti-Agent Framework for \\textbf{A}utomated \\textbf{O}R Problem Solving, \\textbf{AMAO}, which first addresses logical inconsistency through two-stage alignment before downstream formulation and coding. Specifically, a logical alignment agent with OR-guided experts structure first produces an aligned candidate using supervised routing over variables, parameters, objectives, and constraints. Then, a source-sufficiency verifier determines whether the original description supports the required repairs. When evidence is insufficient, an interactive repair agent requests additional information and revises the description before modeling and coding. In addition, an ambiguity-aware benchmark and its matched dialogue extension are proposed to support evaluation of both stages. The 32B model achieved 86.8\\% error-recovery success and 60.4\\% solution accuracy, reaching 1.98 and 1.86 times the respective base-model scores. The 8B model achieved 47.9\\% solution accuracy, exceeding the best evaluated variant such as DeepSeek-V4-Flash and Claude-sonnet-4.5. Interactive repair further achieved 90.71\\% complete-description accuracy when cases requiring clarification. These results support combining context-based repair with evidence assessment and targeted user clarification for automated OR modeling.",
+          "authors": [
+            "Chengxi She",
+            "Xingyu Lu",
+            "Yue Zhao",
+            "Qitao Shi",
+            "Caihua Chen"
+          ],
+          "canonical_id": "2610.05169",
+          "categories": [
+            "math.OC"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2610.05169",
+          "published_at": "2026-10-04T12:28:06Z",
+          "source": "arxiv",
+          "title": "Ambiguity-Aware Multi-Agent Framework for Automated Operations Research under Logical Inconsistency",
+          "updated_at": "2026-10-04T12:28:06Z",
+          "url": "https://arxiv.org/abs/2610.05169",
+          "version": 1
+        },
+        "rank": 44,
+        "score": {
+          "base_score": 0.3757032789125612,
+          "exploration": 0.03336455151728251,
+          "matched_terms": [
+            "operations research",
+            "multi-agent"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.6647179568595503,
+          "topic": 0.39093872161207255
+        }
+      },
+      "tier": "browse"
+    },
+    "arxiv:2610.05221:v1": {
+      "analysis": {
+        "analysis": "作者通过跨CO基准、AHD方法和主干LLM的系统性实证来刻画可行性振荡模式，并追踪其来源：分析显示可行性退化常发生在大型求解器修订之后，同时反馈冗余使得失败归因困难。基于这一结构性观察，作者将精化过程重新表述为对修订方向与修订范围的双重控制问题，用代表性失败证据选择引导更新方向，并用可行行为的累积程度驱动修订范围的渐进收窄。",
+        "challenges": [
+          "LLM迭代修订求解器时容易破坏已验证的可行行为，造成可行性振荡",
+          "全量反馈中存在大量冗余，难以定位真正值得关注的失败案例",
+          "需要在不放弃求解质量改进的前提下控制修订幅度",
+          "需要平衡反馈信息量与每次修订范围以降低token消耗"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文刻画了LLM在自动启发式设计中迭代修订求解器时出现的可行性振荡现象",
+            "location": "abstract",
+            "quote": "We characterize this pattern as feasibility oscillation and document it across CO benchmarks, AHD methods, and backbone LLMs."
+          },
+          {
+            "claim": "可行性退化常伴随大幅求解器修订，而反馈冗余使得难以定位关键失败",
+            "location": "abstract",
+            "quote": "Tracing this oscillation, our analysis reveals that feasibility degradation often follows large solver revisions, while substantial feedback redundancy makes it harder to identify which failures deserve attention."
+          },
+          {
+            "claim": "论文提出DiSH，对修订方向与范围进行联合控制",
+            "location": "abstract",
+            "quote": "we introduce DiSH, a harness that jointly controls revision direction and scope."
+          },
+          {
+            "claim": "DiSH选取代表性失败证据引导更新，并随可行行为累积逐步收窄修订范围",
+            "location": "abstract",
+            "quote": "It selects representative failure evidence to guide each update and progressively narrows the revision scope as feasible behavior accumulates."
+          },
+          {
+            "claim": "在九个CO基准上DiSH提升QYI并减少可行性振荡，同时将反馈token消耗减半",
+            "location": "abstract",
+            "quote": "Across nine CO benchmarks, DiSH consistently improves QYI scores and reduces feasibility oscillation, while roughly halving feedback token consumption relative to prior methods that use full feedback."
+          }
+        ],
+        "experiments": [
+          "在九个组合优化基准上进行评估",
+          "相比使用全量反馈的先前方法，DiSH持续提升QYI分数并减少可行性振荡",
+          "相对先前方法大约将反馈token消耗减半"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "可行性振荡的根源不在于LLM本身缺乏能力，而在于修订的幅度与反馈信息的利用方式：大幅修订容易推翻已验证的可行行为，而全量反馈淹没了真正重要的失败信号。因此，通过选取有代表性的失败证据来引导每次更新、并随着可行行为累积逐步收窄修订范围，可以在不牺牲改进能力的前提下稳定精化轨迹并降低反馈开销，这解释为何方向与范围的联合控制比单纯增加反馈或增大模型更有效。",
+        "limitations": [
+          "摘要未报告具体CO基准名称、实例规模、基线方法细节与统计显著性",
+          "摘要未说明QYI分数的具体定义与计算方式",
+          "摘要未提供训练或推理时间开销、超参数敏感性以及消融实验的详细结果",
+          "摘要未讨论该控制框架对动态扰动、多目标场景或分布式制造的适用性"
+        ],
+        "method": [
+          "提出DiSH控制框架，对LLM求解器精化过程同时施加修订方向控制和修订范围控制",
+          "从执行与验证反馈中选取具有代表性的失败证据来引导每一次更新",
+          "随着可行行为逐步累积，渐进收窄修订范围以保护已验证的求解器行为",
+          "在每次修订中利用执行与验证反馈进行迭代，但以受控方向和范围替代全量反馈驱动的修改"
+        ],
+        "motivation": "LLM智能体在AHD中迭代修订求解器时，常常破坏此前已验证的求解器行为，导致精化过程不稳定且代价高昂；作者将这一现象刻画为可行性振荡，并观察到可行性退化往往伴随大幅求解器修订，同时大量反馈冗余使得难以识别哪些失败应优先关注，因此需要一种能够同时控制修订方向与范围的控制机制。",
+        "primary_topic": "大语言模型驱动的自动启发式设计中的可行性振荡抑制",
+        "relation_to_research": "论文直接研究LLM智能体在组合优化自动启发式设计中的求解器精化，属于AI4OR与学习辅助搜索的交叉方向。其方向-范围控制机制与可行性振荡的刻画，与生产调度中学习辅助搜索的约束可行性维护、公平计算预算以及精化稳定性问题存在明确的方法迁移路径：若将该控制机制用于柔性作业车间或分布式调度，需要把可行性判据替换为调度约束满足性，把失败证据定义为不可行或劣质调度方案，并验证在动态扰动下代表性失败选择与范围收窄策略是否仍然有效；这些迁移属于推测，尚未被作者验证。",
+        "relevance_score": 8,
+        "setting": "研究问题是在组合优化（CO）的自动启发式设计（AHD）中，让LLM智能体通过执行与验证反馈迭代修订求解器；决策对象是每次修订的方向与范围，目标是在提升求解质量（QYI分数）的同时抑制可行性退化并降低反馈成本；关键约束是必须保持已验证的可行求解器行为、避免修订破坏既有可行性，信息假设是智能体只能获得执行与验证反馈而无法直接获知哪些失败最值得关注，环境为静态的九个CO基准上的迭代式离线精化过程，但摘要未明确说明是否涉及动态实例或在线扰动。",
+        "tags": [
+          "大语言模型智能体",
+          "自动启发式设计",
+          "组合优化",
+          "可行性振荡",
+          "求解器精化",
+          "反馈控制"
+        ],
+        "title_zh": "利用具有方向-范围控制的大语言模型进行组合求解器精化",
+        "uncertainty": "证据仅来自标题与摘要，未提供全文，因此方法细节、实验设置、基线公平性、QYI定义和统计结果无法核实；对生产调度场景的迁移判断属于推测，无法确认作者是否讨论过动态扰动或多目标约束。",
+        "why_recommended": "对研究智能优化与AI4OR的博士生而言，该论文把LLM智能体迭代精化求解器时的不稳定性上升为可度量的可行性振荡问题，并给出可迁移的控制思路：用代表性失败证据引导修订方向、用可行行为累积控制修订范围。这一机制与学习辅助搜索中的约束维护、计算预算分配和搜索稳定性直接相关，其跨九个基准、跨多种AHD方法与主干LLM的实证设计也提供了评估泛化性与反馈效率的参考范式。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-06T11:40:26.431866+08:00",
+        "figures": [
+          {
+            "caption": "Overview of the DiSH framework. DiSH converts evaluation feedback into two complementary controls over what to revise and how extensively to revise it. Scope control adjusts the permitted revision magnitude, while direction control selects representative failures and successful instances to focus the revision. Together, they form the revision prompt that guides the LLM to repair remaining failures while preserving previously feasible behavior across iterations.",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2610.05221/v1/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2610.05221v1/fig2.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2610.05221v1#S1.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2610.05221v1",
+        "status": "available"
+      },
+      "final_score": 0.6550988745130881,
+      "provenance": {
+        "analyzed_at": "2026-10-06T03:42:56.907333Z",
+        "input_hash": "e4b80c9d14c15428a2d9af8c298e20f551801a29941af1a27bd11d4422ebacb6",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Harnesses are increasingly unlocking the potential of large language model (LLM) agents by making their actions more controllable. In automatic heuristic design (AHD) for combinatorial optimization (CO), LLMs iteratively revise solvers using execution and verification feedback. However, these revisions often break previously validated solver behavior, making refinement unstable and costly. We characterize this pattern as feasibility oscillation and document it across CO benchmarks, AHD methods, and backbone LLMs. Tracing this oscillation, our analysis reveals that feasibility degradation often follows large solver revisions, while substantial feedback redundancy makes it harder to identify which failures deserve attention. Motivated by these findings, we introduce DiSH, a harness that jointly controls revision direction and scope. It selects representative failure evidence to guide each update and progressively narrows the revision scope as feasible behavior accumulates. Across nine CO benchmarks, DiSH consistently improves QYI scores and reduces feasibility oscillation, while roughly halving feedback token consumption relative to prior methods that use full feedback. These results establish DiSH as a strong baseline for solver refinement under harness control.",
+          "authors": [
+            "Yili Cao",
+            "Anqi Li",
+            "Haoran Li",
+            "Yongtang Shi",
+            "Zicheng Zhang"
+          ],
+          "canonical_id": "2610.05221",
+          "categories": [
+            "math.OC"
+          ],
+          "comment": "The authors are listed in alphabetical order",
+          "pdf_url": "https://arxiv.org/pdf/2610.05221",
+          "published_at": "2026-10-04T13:41:58Z",
+          "source": "arxiv",
+          "title": "Harnessing LLMs with Direction-Scope Control for Combinatorial Solver Refinement",
+          "updated_at": "2026-10-04T13:41:58Z",
+          "url": "https://arxiv.org/abs/2610.05221",
+          "version": 1
+        },
+        "rank": 15,
+        "score": {
+          "base_score": 0.5365434082056145,
+          "exploration": 0.8610789766988791,
+          "matched_terms": [
+            "combinatorial optimization",
+            "large language model"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.6732972422961037,
+          "topic": 0.40474643603882776
+        }
+      },
+      "tier": "explore"
+    },
+    "arxiv:2610.05746:v1": {
+      "analysis": {
+        "analysis": "作者将参数化 MINLP 的求解分解为整数预测与连续精炼两个阶段：先让神经网络输出整数解的分布与对应连续热启动，再固定整数变量，用可微的弹性信赖域 SQP 层在固定迭代次数内精炼连续变量。作者同时指出，预测模型可生成多个候选整数解，每个候选配对连续初始化，以缓解单一预测不准确带来的风险。关于如何利用问题结构设计下界、图表示或分解策略，材料未说明。",
+        "challenges": [
+          "离散决策与连续变量的耦合使问题同时具有组合复杂性和非线性非凸性，松弛较弱、分支定界搜索困难",
+          "神经网络直接预测解容易产生不可行或高度次优的结果",
+          "传统混合整数 SQP 难以在固定迭代次数内有效执行，且需要大量问题特定调参",
+          "训练 SQP 层需要可微的优化过程，涉及曲率正则化与步长等参数的学习",
+          "随 SQP 层数增加，训练与推理开销上升，且高维问题的训练数据生成与前向/反向传播都可能变得昂贵"
+        ],
+        "corresponding_authors": [
+          "Viet-Anh Le",
+          "Rahul Mangharam"
+        ],
+        "evidence": [
+          {
+            "claim": "论文提出一种学习型优化框架，用于求解模型预测控制与轨迹优化中出现的参数化混合整数非线性规划",
+            "location": "abstract",
+            "quote": "We propose a learning-to-optimize framework for solving parametric mixed-integer nonlinear programs arising in model predictive control and trajectory optimization."
+          },
+          {
+            "claim": "方法将神经网络预测与序列二次规划精炼层结合",
+            "location": "abstract",
+            "quote": "The proposed method combines neural network prediction with a sequential quadratic programming (SQP) refinement layer."
+          },
+          {
+            "claim": "神经网络预测整数解与相容的连续热启动，并通过多个候选应对预测不准确",
+            "location": "abstract",
+            "quote": "To account for prediction inaccuracies, the trained predictor generates multiple candidate integer solutions, each paired with a continuous initialization."
+          },
+          {
+            "claim": "固定整数解后，可微 SQP 层在固定迭代次数内精炼连续变量，SQP 层参数被训练以改善每次迭代后的可行性与目标值",
+            "location": "abstract",
+            "quote": "The integer solutions are then fixed, and a differentiable SQP layer refines the associated continuous variables over a prescribed number of iterations. The SQP-layer parameters, including the curvature regularization and step size, are trained to improve both feasibility and objective value after every iteration."
+          },
+          {
+            "claim": "分离整数预测与连续精炼提升了鲁棒性并维持可预测的计算预算",
+            "location": "abstract",
+            "quote": "By separating integer prediction from continuous optimization-based refinement, the proposed framework improves robustness to imperfect neural predictions while maintaining a predictable computational budget."
+          },
+          {
+            "claim": "方法在平面推箱的接触与轨迹优化示例上得到演示",
+            "location": "abstract",
+            "quote": "We demonstrate the proposed framework on contact and trajectory optimization for a planar box-pushing example."
+          }
+        ],
+        "experiments": [
+          "在平面推箱（planar box-pushing）的接触调度与轨迹优化问题上验证所提框架",
+          "与 GUROBI 进行运行时间对比：GUROBI 平均约 395.29 秒；所提 L2O 方法在候选数 B 与 SQP 层数 K 不同组合下平均时间从约 0.07 秒到 0.92 秒不等",
+          "候选数与 SQP 层数增加时运行时间上升，体现计算成本与解质量之间的权衡",
+          "作者报告所提框架相对仅使用神经网络预测器在解质量上有改善，并降低了求解 MINLP 所需的计算量",
+          "材料未提供目标值具体数值、约束可行性比例、训练开销、消融实验或泛化实验的详细数据"
+        ],
+        "first_affiliation": "宾夕法尼亚大学电气与系统工程系",
+        "insight": "核心洞察在于将整数预测与连续优化精炼解耦：神经网络只负责给出多个候选整数解及其对应的连续热启动，整数变量固定后，可微 SQP 层以可控的固定迭代次数精炼连续变量，并通过训练 SQP 层的曲率正则化与步长参数，使每次迭代后的可行性和目标值都得到改善。这种分工让不完美的整数预测仍有机会通过多候选与优化层修正，同时避免了直接端到端预测解时容易出现的不可行或次优问题。",
+        "limitations": [
+          "随着 SQP 层数增加，训练和推理成本上升",
+          "扩展到高维问题仍然困难，生成足够高质量的训练数据可能不易，且通过 QP 层的前向与反向传播可能变得计算昂贵"
+        ],
+        "method": [
+          "神经网络整数预测器 NN^z_φ(θ) 以问题参数 θ 为输入，输出关于可行整数解分布的 logits ℓ(θ)",
+          "由整数分布采样或选择多个候选整数解 ẑ(θ)，每个候选配对一个连续变量热启动",
+          "固定整数解后，使用固定数量的可微弹性信赖域 SQP 层对连续变量进行精炼",
+          "SQP 层中可训练参数包括曲率正则化和步长，训练目标为改善每次迭代后的可行性与目标值",
+          "训练采用监督与自监督损失相结合的方式，整体为两阶段训练框架",
+          "最终在多个候选精炼结果中进行候选选择"
+        ],
+        "motivation": "混合整数优化在自动驾驶、机器人、混合系统的控制应用中自然出现，但实时求解混合整数程序需要同时应对离散优化的组合复杂性和连续优化的计算负担，传统混合整数 SQP 等算法难以在固定迭代次数内稳定执行且需要大量问题特定调参。已有监督学习方法主要面向混合整数凸规划，泛化与可行性难以保证；自监督学习虽能通过惩罚约束违反提高可行性，却可能因梯度训练陷入较差局部最优而得到高度次优解。为此，作者希望构建一种对神经网络预测误差更鲁棒、且计算预算可预测的学习型优化框架。",
+        "primary_topic": "学习型优化求解参数化混合整数非线性规划",
+        "relation_to_research": "本文属于学习辅助优化与求解器结合的方向，与智能优化、生产调度和 AI4OR 中的学习辅助搜索、神经网络与数学规划结合的研究主题相邻。其核心机制——神经网络预测离散决策、多候选生成、可微连续优化层精炼、固定计算预算——在方法层面具有可迁移性。推测可将类似框架迁移到柔性作业车间或分布式生产调度中，将机器选择、工序排序等离散决策交给神经网络预测，再用连续优化或调度规则精炼，但迁移需要满足以下条件：调度问题的离散决策维度可能远高于本文示例，训练数据生成难度更大，且需要设计适合调度约束的连续精炼层与可行性保证机制。本文并未研究生产调度问题，上述关联属于迁移设想。",
+        "relevance_score": 6,
+        "setting": "研究问题为求解一类参数化混合整数最优控制问题（MIOCP），问题出现在模型预测控制与轨迹优化场景中，决策对象包括系统状态 x_t、连续控制输入 u_t 和整数决策变量 z_t，目标是在控制时域 H 上使终端与阶段代价之和最小，约束包括等式动力学约束 h(x,z;θ)=0、不等式约束 g(x,z;θ)≤0 和整数约束 z∈Z，问题参数 θ 可包括初始状态、目标状态以及其他任务或环境相关量。信息假设为参数已知，环境性质（静态或动态）材料未说明。",
+        "tags": [
+          "学习型优化",
+          "混合整数非线性规划",
+          "序列二次规划",
+          "神经网络预测",
+          "模型预测控制",
+          "轨迹优化",
+          "微分优化层"
+        ],
+        "title_zh": "学习求解混合整数非线性规划：神经网络预测与序列二次规划精炼相结合",
+        "uncertainty": "本文主要面向控制与轨迹优化中的参数化 MINLP，示例仅为平面推箱，未验证生产调度场景；全文节选中未提供目标值、可行性比例、训练开销、消融和泛化实验的完整数据，部分结论依赖摘要与节选片段，对其在更广泛调度问题上的迁移效果无法从材料中确认。",
+        "why_recommended": "该文展示了将神经网络预测与可微 SQP 精炼层耦合的学习型优化架构，明确区分整数预测与连续精炼，并通过多候选与可训练优化层参数提升对预测误差的鲁棒性，同时保持可预测的计算预算。这些机制对研究学习辅助搜索、神经网络与数学规划结合、以及面向混合离散连续决策的生产调度问题具有方法借鉴价值，尤其是其处理不可行预测、固定迭代预算和优化层可微训练的思路，可启发调度问题中离散决策与连续优化的协同求解设计。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-06T11:40:26.431866+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2610.05746v1",
+        "status": "not_found"
+      },
+      "final_score": 0.7479400499790276,
+      "provenance": {
+        "analyzed_at": "2026-10-06T03:41:46.707073Z",
+        "input_hash": "7079f99d3a77e50954c32dc7bdb94d1428f10f315cd0e0399ead041dcd2062dc",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "We propose a learning-to-optimize framework for solving parametric mixed-integer nonlinear programs arising in model predictive control and trajectory optimization. The proposed method combines neural network prediction with a sequential quadratic programming (SQP) refinement layer. First, neural networks are trained using a combination of supervised and self-supervised losses to predict integer solutions together with compatible continuous warm starts. To account for prediction inaccuracies, the trained predictor generates multiple candidate integer solutions, each paired with a continuous initialization. The integer solutions are then fixed, and a differentiable SQP layer refines the associated continuous variables over a prescribed number of iterations. The SQP-layer parameters, including the curvature regularization and step size, are trained to improve both feasibility and objective value after every iteration. By separating integer prediction from continuous optimization-based refinement, the proposed framework improves robustness to imperfect neural predictions while maintaining a predictable computational budget. We demonstrate the proposed framework on contact and trajectory optimization for a planar box-pushing example.",
+          "authors": [
+            "Viet-Anh Le",
+            "Rahul Mangharam"
+          ],
+          "canonical_id": "2610.05746",
+          "categories": [
+            "math.OC",
+            "cs.SY",
+            "eess.SY"
+          ],
+          "comment": "8 pages, submitted to ACC 2027",
+          "pdf_url": "https://arxiv.org/pdf/2610.05746",
+          "published_at": "2026-10-05T03:52:24Z",
+          "source": "arxiv",
+          "title": "Learning to Solve Mixed-Integer Nonlinear Programming with Neural Networks and Sequential Quadratic Programming Refinement",
+          "updated_at": "2026-10-05T03:52:24Z",
+          "url": "https://arxiv.org/abs/2610.05746",
+          "version": 1
+        },
+        "rank": 1,
+        "score": {
+          "base_score": 0.8689819090527773,
+          "exploration": 0.9108283751979754,
+          "matched_terms": [
+            "mixed integer",
+            "mixed-integer",
+            "learning to optimize",
+            "neural network"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.7804194844254216,
+          "topic": 0.8823293257619649
+        }
+      },
+      "tier": "deep_read"
+    },
+    "arxiv:2610.06111:v1": {
+      "analysis": {
+        "analysis": "作者从参数化复杂度视角分析问题：首先将决策版本 SBMP 形式化，将匹配代价定义在各分量瓶颈之和上；随后通过给出 O((Z+1)^k n^{2.5}) 时间的算法证明以 k 和 Z 联合为参数时属于 FPT，并利用非确定性猜测量 O(g(Z)log n) 或 O(g(k)log n) 分别证明以 Z 或 k 单独为参数时属于 W[P]；再通过归约证明以 Z 或 k 单独为参数时的 W[SAT]-hardness，该归约同时蕴含以最大度或树宽为参数的 para-NP-hardness；在近似方面，通过从 q-Dominating Set 的归约证明超对数因子不可近似，并给出 k/d-近似算法与以 k 为参数的 EPAS，同时证明以 Z 为参数时不存在 FPT 时间 F(Z)-近似算法。",
+        "challenges": [
+          "多分量瓶颈代价使匹配评价产生跨分量耦合，经典单瓶颈匹配技术难以直接迁移",
+          "单独以 k 或 Z 为参数时问题分别只有 W[P] 成员性并具 W[SAT]-hardness，难以获得 FPT 精确算法",
+          "优化版本在超对数因子内不可近似",
+          "以 Z 为参数时不存在任何 FPT 时间 F(Z)-近似算法（除非 W[1]=FPT）",
+          "即使限制在平面图、最大度为三仍保持困难性",
+          "并列/同步调度与单向移动重配置等应用需要多方向代价建模，但该模型的计算复杂性极高"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文研究多分量瓶颈匹配问题，代价为各分量瓶颈之和",
+            "location": "abstract",
+            "quote": "We consider a matching problem in which the cost of each edge is a vector with $k$ components. The cost of a matching is the sum of the bottlenecks over all components"
+          },
+          {
+            "claim": "该问题应用于强同步作业车间调度与单向移动的重配置问题",
+            "location": "abstract",
+            "quote": "This type of matching has applications in heavily synchronized job-shop scheduling problems and in reconfiguration problems, where movement is restricted to a single direction per step."
+          },
+          {
+            "claim": "以 k 与 Z 联合为参数时属于 FPT，运行时间为 O((Z+1)^k n^{2.5})",
+            "location": "supplied_full_text",
+            "quote": "SBMP\ncan be decided in time\nO\n⁡\n(\n(\nZ\n+\n1\n)\nk\n​\nn\n2.5\n)\nO((Z+1)^{k}n^{2.5})\n, i.e., it is in\n𝖥𝖯𝖳\n{\\mathsf{FPT}}\nwhen parameterized by\nk\nk\nand\nZ\nZ\nsimultaneously"
+          },
+          {
+            "claim": "以 Z 或 k 单独为参数时问题属于 W[P] 且具 W[SAT]-hardness",
+            "location": "supplied_full_text",
+            "quote": "SBMP\nis in\n𝖶\n⁡\n[\n𝖯\n]\n{\\mathsf{W}}[{\\mathsf{P}}]\nwhen parameterized by either\nZ\nZ\nor\nk\nk"
+          },
+          {
+            "claim": "困难性在平面图且最大度为三时仍成立",
+            "location": "supplied_full_text",
+            "quote": "Notably, the hardness results also hold for planar graphs with maximum degree three, demonstrating that the hardness does not arise from arbitrary edge crossings or highly connected nodes."
+          },
+          {
+            "claim": "给出 k/d-近似算法与以 k 为参数的 EPAS，并排除以 Z 为参数的类似近似方案",
+            "location": "supplied_full_text",
+            "quote": "On the approximation side, we showed super-logarithmic approximation hardness and provided a\nk\n/\nd\n\\nicefrac{{k}}{{d}}\n-approximation, as well as an EPAS with parameter\nk\nk\n. Furthermore, we ruled out similar approximation schemes for\nZ\nZ\n."
+          },
+          {
+            "claim": "非二部图复杂度是未来工作",
+            "location": "supplied_full_text",
+            "quote": "Future work includes investigating the complexity of the problem for non-bipartite graphs in greater detail."
+          }
+        ],
+        "experiments": [
+          "本文为理论复杂度与近似算法研究，实验部分材料未说明；结论均为渐近复杂度、归约与近似比等理论结果，包括 O((Z+1)^k n^{2.5}) 的 FPT 算法、W[P] 成员性、W[SAT]-hardness、para-NP-hardness、超对数因子近似困难性、k/d-近似与以 k 为参数的 EPAS，以及以 Z 为参数时不存在 FPT 时间 F(Z)-近似算法。未提供基准实例、运行时间实测、训练开销、消融或泛化实验。"
+        ],
+        "first_affiliation": "Bochum University of Applied Sciences, Germany",
+        "insight": "核心洞察在于：该问题的困难性并非源于图的复杂结构（如大量交叉边或高度数节点），因为即使限制在平面图且最大度为三时 W[SAT]-hardness 仍然成立；真正的困难性来自多分量瓶颈目标本身带来的组合结构。将匹配代价定义为各分量瓶颈之和，为评价一个匹配引入了跨分量的耦合，使得单一瓶颈匹配的经典算法与近似技术难以直接推广。另一方面，当把分量数 k 与代价上界 Z 联合作为参数时，问题落入 FPT，因为可以枚举各分量的瓶颈取值组合并在受限结构上求解匹配，这揭示了参数联合约束对问题可解性的决定性作用。",
+        "limitations": [
+          "作者在结论中指出，非二部图情形的复杂度仍待更详细研究；由于定理 1 和 2 未使用二部性，问题在一般图上仍属 W[P]，若其为 W[P]-完全，在一般图上可能比在二部图上更易证明",
+          "作者指出未来可考虑目标函数或代价函数的变体，例如要求各分量代价由节点集上的度量诱导，或改为最大化匹配代价",
+          "近似方面作者指出，虽给出了超对数近似困难性、k/d-近似与以 k 为参数的 EPAS，并排除了以 Z 为参数的类似近似方案，但仍有进一步研究空间",
+          "作者未在结论中给出实验验证或实际调度场景的计算评估"
+        ],
+        "method": [
+          "将多瓶颈匹配形式化为决策问题 SBMP 与优化问题 min-SBMP，明确代价为各分量瓶颈之和",
+          "证明以 k 与 Z 联合为参数时问题属于 FPT，算法运行时间为 O((Z+1)^k n^{2.5})",
+          "分别证明以 Z 或 k 单独为参数时 SBMP 属于 W[P]，即存在 O(g(Z)log n) 或 O(g(k)log n) 次非确定性猜测的 FPT 判定",
+          "通过归约证明以 Z 或 k 单独为参数时 SBMP 的 W[SAT]-hardness，且该归约在平面图、最大度为三时依然成立，并蕴含以最大度或树宽为参数的 para-NP-hardness",
+          "证明优化版本的超对数因子近似困难性",
+          "给出任意常数 d≤k 的 k/d-近似算法以及以 k 为参数的 EPAS（高效近似方案）",
+          "证明以 Z 为参数时不存在 FPT 时间 F(Z)-近似算法，除非 W[1]=FPT"
+        ],
+        "motivation": "该多瓶颈匹配问题在实际中来源于强同步作业车间调度与受限方向的重配置问题：在需避免碰撞的机器人/滑块重配置中，常用起止位置间的瓶颈匹配给出并行控制数的下界，但当不同智能体不能同时向不同方向移动时，单一代价值不足，需要为每条边赋予上、下、左、右四个方向的分量，从而自然得到多瓶颈匹配模型。作者因此希望从参数化复杂度与近似算法的角度刻画该问题的可解性与不可近似性边界。",
+        "primary_topic": "多瓶颈匹配问题的参数化复杂度与近似算法",
+        "relation_to_research": "该论文直接研究多瓶颈匹配这一组合优化问题的参数化复杂度与近似性，其应用动机之一即为强同步作业车间调度，因此与生产调度方向存在明确的模型联系：论文所形式化的同步作业车间可视为各工位/工位组之间因同步约束产生的分配问题，其多方向代价向量对应重配置中同步移动方向受限的建模。迁移设想（推测）：若将生产调度中的工位分配或运输协同决策建模为带多分量瓶颈代价的匹配子问题，则本文的 FPT 联合参数算法、k/d-近似与 EPAS 可能在特定参数范围内提供理论保证；但该迁移需要满足代价向量各分量独立可估、约束可归约为完美匹配、且实例的 k 或 Z 较小等条件，论文本身并未给出面向实际调度实例的实验验证。该工作属于 AI4OR 的理论侧邻接方向，与神经网络辅助求解、强化学习或多智能体学习无直接关系。",
+        "relevance_score": 6,
+        "setting": "研究问题是一个二部图上的完美匹配问题：给定二部图 G=(S∪T,E) 与向量值代价函数 c:E→N_0^k，每条边 e 的代价为 k 维向量 (c_1(e),…,c_k(e))，匹配 M 的代价定义为各分量上瓶颈值之和 ∑_{i=1}^k max_{e∈M} c_i(e)；决策版本询问是否存在代价不超过给定值 Z 的完美匹配，优化版本 min-SBMP 要求最小化该代价。决策对象是边的完美匹配选择，目标是最小化各分量最大代价之和，关键约束是匹配必须完美且二部图结构给定，信息假设为代价向量完全已知的静态离线环境；动态性、在线信息与随机性材料未说明。论文动机来源于强同步作业车间调度（每条生产线各工序须等所有工位完成上一工序才能开始）以及每步只允许单一方向移动的重配置问题中，用多方向移动需求向量构建下界。",
+        "tags": [
+          "参数化复杂度",
+          "近似算法",
+          "瓶颈匹配",
+          "作业车间调度",
+          "重配置问题",
+          "W层级"
+        ],
+        "title_zh": "多瓶颈匹配：参数化复杂度与近似算法",
+        "uncertainty": "输入材料为摘要与全文节选，节选内容包含引言、问题定义、结论和部分参考文献，未给出完整的定理证明与全部归约细节，因此对方法要点的描述依据摘要与节选中明确陈述的结果。证据未提供通讯作者信息、具体实验数据与代码地址，相关字段按规则填写。迁移到生产调度的讨论属于推测，论文本身未给出调度实例计算评估。",
+        "why_recommended": "推荐给研究生产调度与 AI4OR 的读者，因为该文为强同步作业车间与单向移动重配置中的匹配型下界问题提供了严格的参数化复杂度与近似性边界，有助于理解此类多瓶颈耦合目标问题的固有困难性，从而在算法设计时判断何时可期望 FPT 或近似保证、何时应转向启发式或学习辅助搜索。其 W[SAT]-hardness 与近似困难性结论也可用于说明为何某些调度子问题不宜追求精确多项式算法，而需要参数化或近似机制。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-06T11:40:26.431866+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2610.06111v1",
+        "status": "not_found"
+      },
+      "final_score": 0.6092145034670361,
+      "provenance": {
+        "analyzed_at": "2026-10-06T03:42:32.562900Z",
+        "input_hash": "112656b3eda6ad257c3597d2b387478d5d56bb22f494e036ec9976a369cb286b",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "We consider a matching problem in which the cost of each edge is a vector with $k$ components. The cost of a matching is the sum of the bottlenecks over all components, and we ask whether there is a perfect matching of cost at most some value $Z$. This type of matching has applications in heavily synchronized job-shop scheduling problems and in reconfiguration problems, where movement is restricted to a single direction per step. In this paper, we analyze the problem from a parameterized complexity perspective and provide various results including FPT-membership for parameters $k$ and $Z$ combined, as well as W[P]-membership and W[SAT]-hardness for each of the two parameters individually. The reduction also implies para-NP-hardness parameterized by either maximum degree or treewidth. We further show hardness of approximation within a super-logarithmic factor for the optimization variant and provide a $k/d$-approximation algorithm for any constant $d \\leq k$ as well as an efficient approximation scheme parameterized by $k$. With parameter $Z$, we show that no FPT-time $F(Z)$-approximation algorithm is possible for any computable function $F$, unless W[1] = FPT.",
+          "authors": [
+            "Jonas Friemel",
+            "Tilo Hoitz",
+            "Phillip Keldenich",
+            "Arne Schmidt"
+          ],
+          "canonical_id": "2610.06111",
+          "categories": [
+            "cs.DS",
+            "cs.CC",
+            "cs.DM"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2610.06111",
+          "published_at": "2026-10-05T10:45:13Z",
+          "source": "arxiv",
+          "title": "Matching with Multiple Bottlenecks: Parameterized Complexity and Approximation",
+          "updated_at": "2026-10-05T10:45:13Z",
+          "url": "https://arxiv.org/abs/2610.06111",
+          "version": 1
+        },
+        "rank": 9,
+        "score": {
+          "base_score": 0.6167536426673382,
+          "exploration": 0.8931807499123544,
+          "matched_terms": [
+            "job shop",
+            "job-shop"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.838404881417596,
+          "topic": 0.4744455438115456
+        }
+      },
+      "tier": "deep_read"
     }
   },
   "schema_version": 1,
-  "updated_at": "2026-10-05T10:50:03.735823+08:00"
+  "updated_at": "2026-10-06T11:40:26.431866+08:00"
 }
