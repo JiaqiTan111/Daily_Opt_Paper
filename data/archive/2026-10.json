@@ -532,6 +532,140 @@
       },
       "tier": "browse"
     },
+    "arxiv:2510.04455:v3": {
+      "analysis": {
+        "analysis": "作者利用问题的二阶段可分解结构：先求解约束参数，再在固定约束下估计目标权重。理论上，在次高斯假设下为伪度量空间发展统计学习工具，建立同时含未知目标与约束的逆向优化学习理论框架。通过Proposition 5.1证明用φ^sup替代真实约束后观测解仍属于最优面（FOP），再结合Propositions F.4与5.1说明可分两阶段求解；Theorem 5.2给出算法输出满足x^*(s)∈FOP(θ^sup,φ^sup,s)的结论。泛化分析中把误差分解为约束恢复概率与给定恢复后的目标泛化误差两部分，并指出约束学习的保守性代价表现为随样本数N指数衰减的概率项。",
+        "challenges": [
+          "同时从数据中学习MILP的目标函数与约束参数的问题结构复杂，既有方法多局限于目标函数学习。",
+          "需要给出有限样本保证，包括约束恢复与目标函数泛化的联合分析。",
+          "约束学习必须保持观测解的最优性，同时兼顾对未见状态的泛化能力。"
+        ],
+        "corresponding_authors": [
+          "Akira Kitaoka"
+        ],
+        "evidence": [
+          {
+            "claim": "既有数据驱动逆向优化主要关注约束已知时学习目标函数，同时学习目标与约束的MILP逆向优化尚待探索。",
+            "location": "abstract",
+            "quote": "existing data-driven inverse optimization methods primarily focus on learning objective functions under known constraints, and learning both objective functions and constraints from data for MILPs remains largely unexplored"
+          },
+          {
+            "claim": "作者提出二阶段方法：先学习约束，再在学到的约束条件下估计目标函数权重。",
+            "location": "abstract",
+            "quote": "Our method first learns the constraints and then, conditioned on the learned constraints, estimates the objective-function weights."
+          },
+          {
+            "claim": "理论部分在次高斯假设下为伪度量空间发展统计学习工具，并给出有限样本保证。",
+            "location": "abstract",
+            "quote": "we develop statistical learning tools for pseudo-metric spaces under sub-Gaussian assumptions"
+          },
+          {
+            "claim": "实验在最多100个决策变量的ILP调度实例上验证方法。",
+            "location": "abstract",
+            "quote": "our method successfully solves inverse optimization problems on scheduling instances formulated as ILPs with up to 100 decision variables"
+          },
+          {
+            "claim": "约束学习采用与观测一致的最紧参数，保证观测解最优性。",
+            "location": "supplied_full_text",
+            "quote": "Constraint learning is deliberately conservative:  ϕ\nsup\n\\phi^{\\sup}\n is the tightest parameter consistent with the observed solutions, so it admits no decision beyond the data, and this tightening preserves the optimality of the observed solutions (\nProposition\n5.1\n)."
+          },
+          {
+            "claim": "实验中D=10即100个决策变量、280个约束时，求解式(3.5)的墙钟时间均值为325.19秒、中位数为99.00秒。",
+            "location": "supplied_full_text",
+            "quote": "10        100        280        325.19        99.00"
+          }
+        ],
+        "experiments": [
+          "实验对象为以ILP表述的单机调度问题，包括带释放时间且最小化完成时间加权和的问题，以及带释放时间且最小化拖期加权和的问题。",
+          "在单机调度实例中，决策变量数量D从3到10，对应问题规模从16个变量、40个约束到100个变量、280个约束。",
+          "报告了求解式(3.5)的墙钟时间：D=4时均值为0.13秒、中位数为0.09秒；D=6时均值为2.24秒、中位数为1.63秒；D=8时均值为62.76秒、中位数为51.45秒；D=10时均值为325.19秒、中位数为99.00秒。",
+          "对于带释放时间的单机调度问题，N=5、10个episode、SRSL设置下，报告了算法1每次迭代的最坏情况MSEF，曲线到达0的迭代次数即最坏情况所需迭代数；对于D为3到10、N=1的设定，每个D进行25个episode，报告了SRSS与SRSL两种学习率下所需迭代次数，并确认在所有考虑的D下式(3.5)均可被求解。",
+          "另进行了验证泛化误差的实验（Section 7.3）。缺失的基线对比、在线/动态场景验证与消融细节材料未说明。"
+        ],
+        "first_affiliation": "NEC Corporation, 1753 Shimonumabe, Nakahara-ku, Kawasaki, Kanagawa, Japan",
+        "insight": "作者提出先学约束再学目标的二阶段方法之所以可行，关键在于约束学习采用保守策略：所得参数φ^sup是与观测解一致的最紧参数，不会允许超出数据的决策，从而保持观测解的最优性（Proposition 5.1）。在此基础上，目标函数学习只需在已恢复的可行域上进行，且约束恢复误差可通过有限样本保证分解为约束恢复概率项与给定恢复后的目标泛化误差项。",
+        "limitations": [
+          "材料未说明作者明确陈述的局限性。"
+        ],
+        "method": [
+          "第一阶段：学习约束参数。约束由未知函数与阈值参数化，以与观测解一致的最紧参数φ^sup为目标，通过算法1迭代优化，损失中λ=0时惩罚项在样本上消失，λ>0时度量未见状态上的约束违反。",
+          "第二阶段：在学习到的约束φ^sup条件下估计目标函数权重θ^sup，求解式(3.5)。",
+          "算法2整体以均匀分布下采样得到的N个状态运行，先约束后目标，并给出有限样本保证。",
+          "学习率提供SRSS与SRSL两种调度选择。",
+          "理论方面在次高斯假设下为伪度量空间发展统计学习工具，并在状态集合有限、均匀分布等条件下建立Theorem 5.2等结论。",
+          "阶段一采用保守的、与观测一致的最紧参数，以保持观测解最优性并控制对未见状态的泛化。"
+        ],
+        "motivation": "MILP广泛用于调度、电力系统与运输规划，但建模所需的客观权重与约束阈值（如加工时间、截止日期、资源上限）在现实中往往未知。既有数据驱动逆向优化方法主要关注在约束已知时学习目标函数，而对MILP同时学习目标函数与约束仍有很大空白。",
+        "primary_topic": "混合整数线性规划的逆向优化：从观测解中同时学习约束与目标函数",
+        "relation_to_research": "论文直接涉及生产调度场景中的逆向建模：其单机调度ILP实验说明该方法可用来从观测调度反推加工时间、截止日期等约束参数与目标权重，对生产调度中的模型校准与知识发现具有参考价值。其二阶段“先约束后目标”的学习结构可能对学习辅助搜索与自动建模有启发，例如在柔性作业车间、流水车间或分布式制造中，将结构约束的恢复与目标权重学习解耦。但本工作属于逆向优化与统计学习理论，不涉及强化学习、多智能体、图神经网络或大模型智能体机制；若要迁移到更复杂的调度问题，需要处理状态空间组合爆炸、动态扰动与更大规模实例，这些均为推测，尚需验证。",
+        "relevance_score": 6,
+        "setting": "研究一类数据驱动逆向优化问题：给定状态s（环境/输入）与专家在该状态下的最优解x^*(s)，目标是学习解释这些观测的目标函数与约束参数。目标函数设为给定特征函数的线性组合，约束由未知函数与阈值参数化；约束参数中释放时间r_j已知，加工时间p_j、截止日期d_j等未知。文中考虑静态的、状态集合有限且状态从均匀分布采样的环境（材料未说明动态扰动或在线变化）。若观测解仅近似最优，则允许ε>0的近似解。",
+        "tags": [
+          "逆向优化",
+          "混合整数线性规划",
+          "数学规划",
+          "统计学习理论",
+          "调度"
+        ],
+        "title_zh": "逆向混合整数规划：先学习约束，再学习目标函数",
+        "uncertainty": "只提供了摘要与部分全文节选，缺少算法1和算法2的完整步骤、假设3.2-3.4的细节、理论与实验的完整设置，因而方法细节与实验可比性（如基线、约束可行性验证、公平计算预算）判断存在不确定性。标题、单位与通信作者来自节选中的明确署名信息。",
+        "why_recommended": "该文为MILP逆向优化中同时学习目标与约束提供了理论保证与调度ILP实验，对研究自动建模、生产调度参数估计以及学习与数学规划结合的研究者有直接参考价值：其保守约束学习维持观测最优性的思路，以及误差分解为约束恢复与目标泛化的分析框架，可用于设计更可靠的数据驱动调度模型校准方法。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-07T11:07:34.397493+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2510.04455v3",
+        "status": "not_found"
+      },
+      "final_score": 0.7209307622819464,
+      "provenance": {
+        "analyzed_at": "2026-10-07T03:09:26.737282Z",
+        "input_hash": "15eadb7b336fda8d53f9a2c0d4663a77b5e55c7622419456c54e39687d4bd2dd",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Data-driven inverse optimization for mixed-integer linear programs (MILPs), which seeks to learn an objective function and constraints consistent with observed decisions, is important for building accurate mathematical models in a variety of domains, including power systems and scheduling. However, to the best of our knowledge, existing data-driven inverse optimization methods primarily focus on learning objective functions under known constraints, and learning both objective functions and constraints from data for MILPs remains largely unexplored. In this paper, we propose a two-stage approach for a class of inverse optimization problems in which the objective is a linear combination of given feature functions and the constraints are parameterized by unknown functions and thresholds. Our method first learns the constraints and then, conditioned on the learned constraints, estimates the objective-function weights. On the theoretical side, we provide finite-sample guarantees for solving the proposed inverse optimization problem. To this end, we develop statistical learning tools for pseudo-metric spaces under sub-Gaussian assumptions and use them to derive a learning-theoretic framework for inverse optimization with both unknown objectives and constraints. On the experimental side, we demonstrate that our method successfully solves inverse optimization problems on scheduling instances formulated as ILPs with up to 100 decision variables.",
+          "authors": [
+            "Akira Kitaoka"
+          ],
+          "canonical_id": "2510.04455",
+          "categories": [
+            "math.OC",
+            "cs.AI",
+            "cs.LG",
+            "math.ST",
+            "stat.ML",
+            "stat.TH"
+          ],
+          "comment": "63 pages",
+          "pdf_url": "https://arxiv.org/pdf/2510.04455",
+          "published_at": "2025-10-06T03:02:43Z",
+          "source": "arxiv",
+          "title": "Inverse Mixed-Integer Programming: Learning Constraints then Objective Functions",
+          "updated_at": "2026-10-05T09:10:16Z",
+          "url": "https://arxiv.org/abs/2510.04455",
+          "version": 3
+        },
+        "rank": 1,
+        "score": {
+          "base_score": 0.8198741132399024,
+          "exploration": 0.9321071206432228,
+          "matched_terms": [
+            "mixed integer",
+            "mixed-integer",
+            "integer programming"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.64595050217624,
+          "topic": 0.8375
+        }
+      },
+      "tier": "deep_read"
+    },
     "arxiv:2510.09373:v2": {
       "analysis": {
         "analysis": "作者通过形式化方法定义序列域及其更新操作，分析将其集成到trail-based CP求解器所需的数据结构，并针对路径问题结构引入一致性水平与专用全局约束，最后在多个路径与排序问题上检验建模简化与计算性能，但摘要未给出具体的理论分析细节或复杂度结果。",
@@ -1203,6 +1337,139 @@
       },
       "tier": "browse"
     },
+    "arxiv:2604.19753:v3": {
+      "analysis": {
+        "analysis": "作者通过观察预训练嵌入能够区分问题实例这一现象，提出直接使用嵌入空间中的近邻关系进行算法选择，并通过消融实验分析反距离加权和行混洗对性能的影响，以及序列化种子敏感性。",
+        "challenges": [
+          "如何将原始实例文件转化为适合嵌入的文本序列",
+          "序列化方式（如行顺序）对嵌入稳定性的影响",
+          "在无任务特定训练下如何选择近邻并加权",
+          "嵌入模型对不同问题域实例的泛化能力",
+          "与基于手工特征的方法在计算预算上的公平比较"
+        ],
+        "corresponding_authors": [
+          "Stefan Szeider"
+        ],
+        "evidence": [
+          {
+            "claim": "论文提出一种无需手工特征、使用预训练文本嵌入的算法选择方法 ZeroFolio。",
+            "location": "abstract",
+            "quote": "We propose ZeroFolio, a feature-free approach to algorithm selection that uses pretrained text embeddings instead of hand-crafted instance features."
+          },
+          {
+            "claim": "方法将原始实例文件作为纯文本嵌入，并通过加权 k 近邻选择算法。",
+            "location": "abstract",
+            "quote": "It reads the raw instance file as plain text, embeds it with a pretrained embedding model, and selects an algorithm via weighted k-nearest neighbors."
+          },
+          {
+            "claim": "方法基于预训练嵌入无需领域知识即可区分实例的观察。",
+            "location": "abstract",
+            "quote": "Our approach is based on the observation that pretrained embeddings can distinguish problem instances without any domain knowledge or task-specific training."
+          },
+          {
+            "claim": "在 11 个 ASlib 场景、7 个域上评估，并在多数场景中优于随机森林。",
+            "location": "abstract",
+            "quote": "We evaluate our approach on 11 ASlib scenarios spanning 7 domains (SAT, MaxSAT, QBF, ASP, CSP, MIP, and graph problems). ZeroFolio outperforms a random forest trained on hand-crafted features in 9 of 11 scenarios, often substantially, and in 8 of them with every serialization seed."
+          },
+          {
+            "claim": "在 3 个 ICON Challenge 场景上接近 AutoFolio。",
+            "location": "abstract",
+            "quote": "On the three scenarios with published AutoFolio results from the 2015 ICON Challenge, ZeroFolio comes within a small margin of AutoFolio without any per-scenario tuning."
+          },
+          {
+            "claim": "消融研究表明反距离加权和行混洗能提升性能。",
+            "location": "abstract",
+            "quote": "Our ablation study on SAT12-ALL shows that inverse-distance weighting and line shuffling improve performance."
+          }
+        ],
+        "experiments": [
+          "在 11 个 ASlib 场景、覆盖 SAT、MaxSAT、QBF、ASP、CSP、MIP 和图问题共 7 个域上评估",
+          "ZeroFolio 在 11 个场景中的 9 个上优于基于手工特征训练的随机森林，且其中 8 个在每个序列化种子下均胜出",
+          "在 11 个场景中的 8 个上优于按场景调参的随机森林",
+          "在 3 个有已发表 AutoFolio 结果的 2015 ICON Challenge 场景上，ZeroFolio 在无按场景调参的情况下接近 AutoFolio",
+          "在 SAT12-ALL 上的消融研究表明反距离加权和行混洗能提升性能",
+          "分析了方法对序列化种子的敏感性",
+          "在随机森林更强的 SAT12-ALL 场景上，两者可通过软投票结合取得进一步提升"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "预训练文本嵌入在没有任何领域知识或任务特定训练的情况下，仍能捕捉实例之间的可区分性，这种区分性足以支持基于近邻的算法选择；其有效性来源于嵌入模型在大规模文本上习得的通用结构表征，而非针对特定问题域的特征工程。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "将原始实例文件作为纯文本读取",
+          "使用预训练嵌入模型对文本进行嵌入",
+          "在嵌入空间中通过加权 k 近邻选择算法",
+          "采用反距离加权提升近邻投票效果",
+          "使用行混洗作为序列化处理以改善性能",
+          "在部分场景下与随机森林通过软投票结合"
+        ],
+        "motivation": "传统算法选择方法依赖手工设计的实例特征，这些特征需要领域知识且难以跨问题域迁移；作者希望验证预训练文本嵌入本身是否已包含足以区分实例并支持算法选择的信息，从而实现无需领域知识、无需任务特定训练的通用算法选择。",
+        "primary_topic": "基于预训练文本嵌入的算法选择",
+        "relation_to_research": "该论文研究的是算法选择（algorithm selection），即根据问题实例特征从候选求解器中挑选合适算法，这与智能优化中的学习辅助搜索、求解器选择与调度有直接关联。其核心思想——用预训练文本嵌入替代手工特征——可推测迁移到生产调度领域：若将调度实例（如柔性作业车间、流水车间的实例文件）序列化为文本，使用嵌入和近邻选择求解器或启发式算法，可能减少特征工程负担；但迁移需要满足实例可文本化、候选算法性能可度量、训练集与测试集分布相近等条件，且论文本身未在调度问题上验证，属于推测。",
+        "relevance_score": 6,
+        "setting": "研究问题为给定一个实例（以文本文件形式表示）时，从一组候选算法中挑选一个预期性能最好的算法；决策对象为算法选择策略本身，目标是最小化所选算法的运行时间或最大化性能指标；关键约束包括不使用手工设计的实例特征、不进行任务特定的模型训练、仅依赖预训练文本嵌入；信息假设是实例的原始文本表示足以区分不同的问题实例；环境为离线静态场景，在 11 个 ASlib 场景、覆盖 7 个问题域上评估。",
+        "tags": [
+          "算法选择",
+          "文本嵌入",
+          "k近邻",
+          "元学习",
+          "跨域迁移"
+        ],
+        "title_zh": "无需领域知识的文本嵌入算法选择",
+        "uncertainty": "证据仅来自标题与摘要，未提供全文；无法确认嵌入模型的具体类型、k 近邻的细节、计算开销、与 AutoFolio 的具体差距数值以及序列化种子的具体影响，因此对方法细节和实验公平性的判断存在不确定性。",
+        "why_recommended": "对于研究智能优化和生产调度的读者，该论文提供了一种轻量级的算法选择范式：无需领域知识即可利用预训练嵌入进行求解器推荐，这与生产调度中为不同实例动态选择求解器或启发式策略的需求高度契合；其方法简单、可复现，且涉及跨域泛化和计算预算公平性，值得作为元学习和学习辅助搜索的参考。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-07T11:07:34.397493+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2604.19753v3",
+        "status": "not_found"
+      },
+      "final_score": 0.5048131404671494,
+      "provenance": {
+        "analyzed_at": "2026-10-07T03:10:27.821856Z",
+        "input_hash": "89ed9308de162770f3d499f2f804e618ebd6a47db2aa425a96b48dfe716f820c",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "We propose ZeroFolio, a feature-free approach to algorithm selection that uses pretrained text embeddings instead of hand-crafted instance features. It reads the raw instance file as plain text, embeds it with a pretrained embedding model, and selects an algorithm via weighted k-nearest neighbors. Our approach is based on the observation that pretrained embeddings can distinguish problem instances without any domain knowledge or task-specific training. ZeroFolio applies to any problem domain with text-based instance formats. We evaluate our approach on 11 ASlib scenarios spanning 7 domains (SAT, MaxSAT, QBF, ASP, CSP, MIP, and graph problems). ZeroFolio outperforms a random forest trained on hand-crafted features in 9 of 11 scenarios, often substantially, and in 8 of them with every serialization seed. It wins 8 of 11 scenarios against a per-scenario-tuned random forest. On the three scenarios with published AutoFolio results from the 2015 ICON Challenge, ZeroFolio comes within a small margin of AutoFolio without any per-scenario tuning. Our ablation study on SAT12-ALL shows that inverse-distance weighting and line shuffling improve performance. We further analyze the sensitivity of our approach to the serialization seed. On the SAT12-ALL scenario, where the random forest is stronger, both methods can be combined via soft voting to achieve further improvements.",
+          "authors": [
+            "Stefan Szeider"
+          ],
+          "canonical_id": "2604.19753",
+          "categories": [
+            "cs.AI",
+            "cs.CL",
+            "cs.LG"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2604.19753",
+          "published_at": "2026-03-20T13:07:59Z",
+          "source": "arxiv",
+          "title": "Algorithm Selection with Zero Domain Knowledge via Text Embeddings",
+          "updated_at": "2026-10-05T19:26:23Z",
+          "url": "https://arxiv.org/abs/2604.19753",
+          "version": 3
+        },
+        "rank": 41,
+        "score": {
+          "base_score": 0.4269329826675443,
+          "exploration": 0.6287390397783852,
+          "matched_terms": [
+            "algorithm selection"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.7188750631667844,
+          "topic": 0.28586208620752107
+        }
+      },
+      "tier": "browse"
+    },
     "arxiv:2605.05389:v2": {
       "analysis": {
         "analysis": "作者从多图路由的策略结构出发，将路由策略分解为节点置换阶段与边选择阶段，以降低联合决策的复杂度；通过预编码边聚合减少边层输入冗余，并采用非自回归架构使边选择可并行计算，再利用分层强化学习联合训练两个阶段。材料未说明是否使用下界、分解界或其他问题结构分析。",
@@ -1320,6 +1587,138 @@
         }
       },
       "tier": "browse"
+    },
+    "arxiv:2605.05660:v3": {
+      "analysis": {
+        "analysis": "作者通过对 DR-MOO 做拉格朗日对偶重构来分析问题，将原问题转化为对偶变量估计与多梯度下降交替进行的形式。基于该结构，作者首先设计双环 MGDA：内层循环估计对偶变量，外层执行多梯度更新，并据此分析达到 ε-Pareto 平稳点的总样本复杂度。为消除双采样需求，作者进一步引入大批量采样与梯度裁剪，以适应广义光滑性并控制随机偏好更新中的偏差，从而得到单环 double-clip MGDA 并重新分析其样本复杂度。摘要未提供更细的分析步骤（如具体下界构造或证明技术）。",
+        "challenges": [
+          "现有 MOO 形式未显式建模数据分布偏移，缺乏鲁棒性保证",
+          "DR-MOO 的拉格朗日对偶重构引入对偶变量，直接求解需要双层循环与双采样",
+          "非凸设定下、且不要求对偶目标梯度一致有界时，收敛性分析困难",
+          "随机偏好更新的偏差与广义光滑性导致的偏差需同时控制",
+          "需要设计 Pareto 型解概念并给出相应的平稳性保证"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文引入分布鲁棒多目标优化（DR-MOO），在各自最坏情况分布下最小化多个目标",
+            "location": "abstract",
+            "quote": "We introduce distributionally robust multi-objective optimization (DR-MOO), which minimizes multiple objectives under their respective worst-case distributions."
+          },
+          {
+            "claim": "作者提出 DR-MOO 的 Pareto 型解概念并给出可证明保证的 MGDA 算法",
+            "location": "abstract",
+            "quote": "We propose Pareto-type solution concepts for DR-MOO and develop multi-gradient descent algorithms (MGDA) with provable guarantees."
+          },
+          {
+            "claim": "双环 MGDA 通过内层循环估计对偶变量，样本复杂度为 O(ε^{-8})",
+            "location": "abstract",
+            "quote": "we first design a double-loop MGDA that uses an inner loop to estimate dual variables and achieves a total sample complexity $\\mathcal{O}(\\epsilon^{-8})$ for reaching an $\\epsilon$-Pareto-stationary point."
+          },
+          {
+            "claim": "结合大批量采样与梯度裁剪得到单环 double-clip MGDA，样本复杂度改善为 O(ε^{-4})",
+            "location": "abstract",
+            "quote": "This yields a single-loop double-clip MGDA with substantially improved sample complexity $\\mathcal{O}(\\epsilon^{-4})$."
+          },
+          {
+            "claim": "理论适用于非凸问题且不要求对偶目标梯度一致有界",
+            "location": "abstract",
+            "quote": "Our theory applies to nonconvex problems without requiring uniformly bounded gradients of the dual objectives."
+          },
+          {
+            "claim": "实验显示所提方法与最先进 MGDA 基线相比具有竞争力，但未给出具体数字",
+            "location": "abstract",
+            "quote": "Experiments demonstrate that our methods are competitive with state-of-the-art MGDA baselines."
+          }
+        ],
+        "experiments": [
+          "摘要称实验表明所提方法与当前最先进的 MGDA 基线相比具有竞争力，但未提供具体基线名称、实例规模、评价指标数值、运行时间或训练开销等细节。"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "核心洞察在于问题结构与算法机制的匹配：对 DR-MOO 做拉格朗日对偶重构后，原本耦合的最坏情况分布与多目标权衡被拆解为“对偶变量的估计”与“偏好/多梯度的更新”两部分。双环 MGDA 通过内层循环估计对偶变量，因而需要双采样；而作者发现若能同时处理广义光滑性带来的偏差和随机偏好更新的偏差，就可以摆脱双层采样结构。将大批量采样与梯度裁剪结合，正是为了在广义光滑条件下控制这两类偏差，从而把单环算法的样本复杂度从 O(ε^{-8}) 改善到 O(ε^{-4})，且理论不再要求对偶目标梯度一致有界。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "引入分布鲁棒多目标优化（DR-MOO）形式：在各自最坏情况分布下最小化多个目标",
+          "提出 DR-MOO 的 Pareto 型解概念，用于刻画解的最优性/平稳性",
+          "基于拉格朗日对偶重构设计双环 MGDA：内层循环估计对偶变量，外层执行多梯度下降",
+          "对双环 MGDA 给出达到 ε-Pareto 平稳点的总样本复杂度 O(ε^{-8})",
+          "为消除双采样，结合大批量采样与梯度裁剪以适配广义光滑性并控制随机偏好更新的偏差",
+          "由此得到单环 double-clip MGDA，样本复杂度为 O(ε^{-4})",
+          "理论适用于非凸问题，且不要求对偶目标的梯度一致有界"
+        ],
+        "motivation": "作者指出，多目标优化在需要多准则学习的应用中受到越来越多的关注，但现有大多数多目标优化建模并未显式考虑数据中的分布偏移，因此这些方法在分布发生偏移时缺乏鲁棒性保证。为此作者引入分布鲁棒多目标优化（DR-MOO），希望在各自最坏情况分布下同时最小化多个目标，并给出具有可证明收敛保证的算法。",
+        "primary_topic": "分布鲁棒多目标优化的多梯度下降算法与收敛性理论",
+        "relation_to_research": "该论文属于多目标优化与鲁棒优化的算法理论工作，与智能优化和 AI4OR 中的多目标约束优化、学习辅助搜索有方法论上的相邻关系：其拉格朗日对偶重构、双层到单层的采样结构简化、梯度裁剪控制偏差的思路，可能为带分布不确定性或多目标权衡的生产调度问题提供分析工具。但摘要未涉及离散决策、调度约束、图神经网络或强化学习，因此与柔性作业车间、流水车间、分布式制造、生产运输协同等具体调度场景没有直接联系。若要迁移到生产调度，推测需要把调度问题的约束与组合结构嵌入其目标/分布建模，并重新处理不可微或离散决策带来的困难。",
+        "relevance_score": 6,
+        "setting": "研究设定为在数据存在分布偏移时求解多目标优化问题：决策对象是同时最小化多个目标的学习模型参数，每个目标在其各自的最坏情况分布下被评估，目标之间通过 Pareto 型解概念进行权衡。关键约束与信息假设包括：问题为非凸，且不要求对偶目标的梯度一致有界；数据分布的最坏情况形式由作者引入的 DR-MOO 框架刻画。环境为静态的离线随机优化设定，摘要未说明是否涉及在线或动态扰动。",
+        "tags": [
+          "多目标优化",
+          "分布鲁棒优化",
+          "多梯度下降MGDA",
+          "非凸优化",
+          "样本复杂度",
+          "梯度裁剪"
+        ],
+        "title_zh": "从对偶追踪到梯度裁剪：可证明更快的分布鲁棒多目标优化",
+        "uncertainty": "仅有标题与摘要，缺少全文，因此方法的具体实现细节、实验设置、基线对比、消融研究、代码与复现信息均无法核实；作者单位与通讯作者信息未提供；相关性分数基于摘要判断，若全文包含调度或组合优化应用，相关性可能被低估。",
+        "why_recommended": "对关注多目标优化、非凸收敛保证和样本复杂度的研究者，该论文提供了一个从双环到单环、从 O(ε^{-8}) 到 O(ε^{-4}) 的清晰算法设计范式，其“对偶重构 + 大批量采样 + 梯度裁剪”的组合机制在方法论上具有迁移价值。同时它也提醒研究者：涉及分布鲁棒与多目标权衡时，样本复杂度和偏差控制是核心难点。虽然与生产调度不直接相关，但可作为 AI4OR 中学习辅助优化理论分析的参考。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-07T11:07:34.397493+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2605.05660v3",
+        "status": "not_found"
+      },
+      "final_score": 0.5770036772291007,
+      "provenance": {
+        "analyzed_at": "2026-10-07T03:09:48.902076Z",
+        "input_hash": "80e06631a143c1c8a154f476aacd15d2d11b18b13508e57f78721cf6e2783d24",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Multi-objective optimization (MOO) has received growing attention in applications that require learning under multiple criteria. However, most existing MOO formulations do not explicitly account for distributional shifts in the data. We introduce distributionally robust multi-objective optimization (DR-MOO), which minimizes multiple objectives under their respective worst-case distributions. We propose Pareto-type solution concepts for DR-MOO and develop multi-gradient descent algorithms (MGDA) with provable guarantees. Leveraging a Lagrangian dual reformulation, we first design a double-loop MGDA that uses an inner loop to estimate dual variables and achieves a total sample complexity $\\mathcal{O}(\\epsilon^{-8})$ for reaching an $\\epsilon$-Pareto-stationary point. To further improve convergence, we combine large-batch sampling with gradient clipping to accommodate generalized smoothness and control bias in stochastic preference updates, eliminating the need for double sampling. This yields a single-loop double-clip MGDA with substantially improved sample complexity $\\mathcal{O}(\\epsilon^{-4})$. Our theory applies to nonconvex problems without requiring uniformly bounded gradients of the dual objectives. Experiments demonstrate that our methods are competitive with state-of-the-art MGDA baselines.",
+          "authors": [
+            "Yufeng Yang",
+            "Fangning Zhuo",
+            "Ziyi Chen",
+            "Heng Huang",
+            "Yi Zhou"
+          ],
+          "canonical_id": "2605.05660",
+          "categories": [
+            "cs.LG",
+            "math.OC"
+          ],
+          "comment": "47 pages",
+          "pdf_url": "https://arxiv.org/pdf/2605.05660",
+          "published_at": "2026-05-07T04:24:17Z",
+          "source": "arxiv",
+          "title": "From Dual Tracking to Clipping: Provably Faster Distributionally Robust Multi-Objective Optimization",
+          "updated_at": "2026-10-05T22:53:27Z",
+          "url": "https://arxiv.org/abs/2605.05660",
+          "version": 3
+        },
+        "rank": 13,
+        "score": {
+          "base_score": 0.5581885040529102,
+          "exploration": 0.7714911638676203,
+          "matched_terms": [
+            "multi-objective optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.745188086768751,
+          "topic": 0.4438164347584671
+        }
+      },
+      "tier": "explore"
     },
     "arxiv:2605.06585:v2": {
       "analysis": {
@@ -1536,7 +1935,7 @@
         "html_url": "https://arxiv.org/html/2605.31050v2",
         "status": "not_found"
       },
-      "final_score": 0.6134241307477889,
+      "final_score": 0.5972702168976194,
       "provenance": {
         "analyzed_at": "2026-10-06T03:42:07.275772Z",
         "input_hash": "69b6f399f05d7e052a30a43f3e8b585f2b090c45422e36688a72a6253e719ebd",
@@ -1564,17 +1963,17 @@
           "url": "https://arxiv.org/abs/2605.31050",
           "version": 2
         },
-        "rank": 6,
+        "rank": 8,
         "score": {
-          "base_score": 0.6244075104505252,
-          "exploration": 0.881478918844678,
+          "base_score": 0.5950367579956715,
+          "exploration": 0.8926023737709146,
           "matched_terms": [
             "black-box optimization",
             "local search"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.7966251466337765,
+          "recency": 0.6239625532058444,
           "topic": 0.5017534977141239
         }
       },
@@ -1665,7 +2064,7 @@
         "why_recommended": "对关注 AI4OR、自动建模和 LLM 生成求解器代码的研究者，该论文提供了不依赖目标值等价的约束级验证思路，并展示了验证信号同时用于拒绝采样和强化学习奖励的闭环。其 VRPBench 与约束注入设计对生产调度等约束复杂问题的自动建模评测与训练信号设计具有直接借鉴价值。"
       },
       "figure_gallery": {
-        "checked_at": "2026-10-06T11:40:26.431866+08:00",
+        "checked_at": "2026-10-07T11:07:34.397493+08:00",
         "figures": [
           {
             "caption": "A candidate missing the subtour-elimination constraint still matches the reference optimal value, so the optimal value check accepts it. Constraint injection injects a disconnected-subtour solution: correct code rejects it as infeasible, while the buggy candidate accepts it, exposing the missing constraint.",
@@ -1697,7 +2096,7 @@
         "html_url": "https://arxiv.org/html/2606.04816v2",
         "status": "available"
       },
-      "final_score": 0.6806670507256665,
+      "final_score": 0.672652421541849,
       "provenance": {
         "analyzed_at": "2026-10-06T03:42:47.173602Z",
         "input_hash": "a7a937e70dc20464f67ee2154f15e848c86dc1f6218e7e630415c6c984e9cf62",
@@ -1729,10 +2128,10 @@
           "url": "https://arxiv.org/abs/2606.04816",
           "version": 2
         },
-        "rank": 16,
+        "rank": 17,
         "score": {
-          "base_score": 0.5830310013193934,
-          "exploration": 0.256072197828687,
+          "base_score": 0.5684589482579072,
+          "exploration": 0.35624180590473814,
           "matched_terms": [
             "vehicle routing",
             "optimization modeling",
@@ -1740,7 +2139,7 @@
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.83193572711815,
+          "recency": 0.6516198272039234,
           "topic": 0.6053321663742364
         }
       },
@@ -2033,6 +2432,147 @@
         }
       },
       "tier": "browse"
+    },
+    "arxiv:2608.13079:v3": {
+      "analysis": {
+        "analysis": "作者将问题分解为离散决策生成与连续完成两阶段。分析核心围绕：用连续松弛 z^t∈[0,1]^m 作为扩散模型与可行性修正算子之间的接口；通过投影算子将中间松弛预测拉向可行集，并给出阈值恢复误差上界，把投影几何与汉明距离、精确重构指标联系起来；当离散决策恢复并固定后，定义连续完成集 X_ξ(z)，再调用数值优化器求连续变量。该分析说明为何在反向扩散全程注入约束信息比只在末端修复更有优势。",
+        "challenges": [
+          "离散决策空间大小为2^m，在线组合搜索代价高",
+          "目标函数与约束可能非凸，固定松弛后仍无全局最优保证",
+          "扩散模型原生不强制应用相关约束，小的离散错误可能导致下游连续问题不可行",
+          "松弛变量阈值恢复并不自动保证离散可行性，需要分析投影经由阈值后的误差保持",
+          "需要在学习基线、修复消融与商业MIP求解器之间公平比较可行性与求解时间"
+        ],
+        "corresponding_authors": [
+          "Ferdinando Fioretto"
+        ],
+        "evidence": [
+          {
+            "claim": "论文提出约束图扩散CGD，在反向扩散过程中直接融入约束信息以引导生成可行解。",
+            "location": "abstract",
+            "quote": "We introduce Constrained Graph Diffusion (CGD), a learning-based framework that approximately solves recurring instances of such problems by learning a conditional distribution over their discrete decisions. CGD uses a graph-based diffusion model and incorporates constraint information directly into the reverse diffusion process, steering intermediate predictions toward the feasible region throughout generation."
+          },
+          {
+            "claim": "在固定恢复的离散决策后，由数值优化器求解剩余连续问题，从而避免在线组合搜索。",
+            "location": "abstract",
+            "quote": "Once the discrete decision is recovered and fixed, a numerical optimizer solves the remaining continuous problem, avoiding online combinatorial search over the binary variables while retaining numerical optimization for continuous completion."
+          },
+          {
+            "claim": "实验显示CGD在可行性与解质量上优于学习基线，并在大规模实例上相对最先进MIP求解器达到最高543倍加速。",
+            "location": "abstract",
+            "quote": "We evaluate CGD on AC-OPF with branch switching and discrete portfolio optimization, demonstrating substantial improvements in feasibility and solution quality over learning-based baselines while achieving speedups of up to $543\\times$ over state-of-the-art MIP solvers on large instances."
+          },
+          {
+            "claim": "作者认为CGD可应用于调度、路径规划与资源分配等更广泛组合优化问题。",
+            "location": "supplied_full_text",
+            "quote": "We believe that CGD can be applied to a wide range of combinatorial optimization problems beyond those studied in this paper, including scheduling, routing, and resource allocation problems."
+          }
+        ],
+        "experiments": [
+          "在AC-OPF with branch switching与离散投资组合优化两类问题上评估。AC-OPF使用9、197、500节点系统，分别含12、286、597个二值变量与172、3916、8651个连续变量。",
+          "学习型基线包括MLP、GNN、DIFUSCO与LTO for MIP；消融包括CGD without projection和CGD + final-step projection。",
+          "指标包括汉明距离、精确重构、约束违反、下游不可行性与目标间隙。AC-OPF参考解为求解器返回的最佳可行解，投资组合MIQP使用最优解。",
+          "AC-OPF三个系统上CGD实现零观测下游不可行，目标间隙分别为0.01%、1.76%、0.20%；消融显示移除修正机制会增加预测误差与下游不可行，仅在最后一步投影虽恢复可行性但无法恢复CGD的解质量。",
+          "运行时间：CGD求解9、197、500节点实例分别约0.53、1.80、1.26秒，相对Gurobi达到相同目标间隙的加速分别为9.4×、234.7×、543.8×；DC-OPF对应加速为0.25×、1.11×、16.71×。"
+        ],
+        "first_affiliation": "University of Virginia",
+        "insight": "贡献有效性来自将约束可行性作为扩散反向过程的一部分，而不是仅在末端做修复。通过在连续松弛空间上反复执行可微投影，反向扩散轨迹被持续拉向可行域，使得末端阈值恢复或问题相关修复更容易得到可行且高质量的离散决策；随后固定离散变量、把剩余连续问题交给数值优化器，从而把组合搜索负担从在线求解转移到离线学习与约束投影中。",
+        "limitations": [
+          "材料未说明作者明确陈述的局限；论文结论提出未来工作包括开发基础扩散模型以解决不同族混合整数问题及多阶段问题，可视为对当前单阶段、单问题族设定局限的暗示，但摘要与节选中没有显式局限段落。"
+        ],
+        "method": [
+          "使用基于图的扩散模型学习给定实例 ξ 下离散决策 z 的条件分布，并在连续松弛 z^t∈[0,1]^m 上操作。",
+          "在反向扩散过程的每个步骤中，用可微优化层实现投影算子，将松弛估计投影到约束可行集 C_ξ。",
+          "训练时投影作为可行性正则项，约束去噪器对期望松弛预测；生成时投影作为即插即用机制，在扩散轨迹中持续修正松弛决策。",
+          "末端采用恢复映射 R_ξ 将 u_0 转为二值决策 z^，默认 R_ξ 为逐分量阈值 T(u)_i=1{u_i≥1/2}，实验中可使用问题相关修复增强。",
+          "恢复 z^ 后固定离散决策，由数值优化器求解连续子问题，避免对二值变量进行在线组合搜索，同时保留连续问题的数值优化完成。",
+          "框架被描述为问题无关，可通过合适的投影算子适配广泛混合整数优化问题。"
+        ],
+        "motivation": "混合整数优化同时面临组合爆炸与连续子问题非凸两重困难。已有学习型方法要么在传统求解器内部改进决策但仍需在线组合搜索，要么直接预测解但可能产生分数或不可行决策。作者希望避开对二值变量的在线组合搜索，同时借助扩散模型表达离散决策的多模态条件分布，并在生成过程中直接处理约束。",
+        "primary_topic": "基于图扩散模型的混合整数优化近似求解",
+        "relation_to_research": "论文事实：CGD直接研究混合整数优化中离散决策的图扩散生成与约束投影修正，并在连续完成后调用数值优化器，属于AI4OR与学习辅助优化范畴。迁移设想（推测）：其将离散决策生成与连续完成分离、在生成轨迹中持续注入约束的机制，有潜力迁移到柔性作业车间、分布式制造或生产运输协同中的机器分配、工序选择、路径开关等离散决策；迁移需要构造对应问题的可行域投影算子或问题相关修复，并处理调度中时序耦合、动态扰动与多目标约束，论文未验证这些场景。",
+        "relevance_score": 8,
+        "setting": "论文研究形式为 min f(x,z) s.t. g(x,z)≤0, x∈X⊆R^n, z∈{0,1}^m 的混合整数优化问题，目标是在满足组合约束的前提下联合确定离散变量 z 与连续变量 x。作者假设同类问题实例反复出现且共享结构，希望学习离散决策的条件分布；离散变量通过连续松弛进行操作，固定恢复的离散决策后由数值优化器求解剩余连续子问题。问题可能非凸且非线性，静态环境，未说明在线动态扰动或时序耦合。",
+        "tags": [
+          "混合整数优化",
+          "图扩散模型",
+          "约束投影",
+          "学习辅助优化",
+          "组合决策生成",
+          "可行性修正"
+        ],
+        "title_zh": "面向混合整数优化的约束图扩散方法",
+        "uncertainty": "全文节选覆盖摘要、引言、方法片段、实验设定与部分结果，但缺少投影算子具体形式、训练细节、附录完整结果与投资组合问题的详细数值；未提供作者明确局限；第一单位由作者列表页首单位判断，通讯作者由邮箱对应关系判断，存在一定不确定性。",
+        "why_recommended": "对关注学习辅助搜索、约束可行性与求解质量公平比较的研究者，CGD提供了一种可迁移的框架：学习离散条件分布、在扩散反向过程中通过投影保持可行性、再把连续子问题交给数值优化器。其消融明确说明仅在末端修复不足，运行时间与MIP求解器在匹配间隙下比较，对生产调度中“学习离散决策+数值完成”的分解思路具有参考价值。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-07T11:07:34.397493+08:00",
+        "figures": [
+          {
+            "caption": "Overview of the generation phase of CGD. At each reverse step t t , the denoiser produces a relaxed binary decision, whose Monte Carlo estimate z ¯ t \\bar{z}_{t} is corrected with respect to the relaxed feasible set 𝒞 ξ \\mathcal{C}_{\\xi} . The resulting correction is incorporated into the reverse update. Terminal recovery produces the binary decision z ^ \\hat{z} , while a numerical solver recovers the continuous variables x ^ \\hat{x} .",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2608.13079/v3/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2608.13079v3/fig1_updated.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2608.13079v3#S1.F1"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2608.13079v3",
+        "status": "available"
+      },
+      "final_score": 0.7078816665177268,
+      "provenance": {
+        "analyzed_at": "2026-10-07T03:10:05.847738Z",
+        "input_hash": "cd22304cf487072f7f43eb6667e0d20ff61819e68191e83757114e88695e9f00",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "This paper proposes a novel learning-based approach to approximately solve instances of mixed-integer optimization problems. These problems are computationally challenging, as they require jointly determining discrete and continuous decisions while satisfying complex combinatorial constraints. problem-agnostic and can accommodate a broad class of mixed-integer optimization problems through suitable projection operators. We introduce Constrained Graph Diffusion (CGD), a learning-based framework that approximately solves recurring instances of such problems by learning a conditional distribution over their discrete decisions. CGD uses a graph-based diffusion model and incorporates constraint information directly into the reverse diffusion process, steering intermediate predictions toward the feasible region throughout generation. By operating on continuous relaxations of the discrete variables, CGD defines a differentiable constrained generation pathway up to terminal discrete recovery. Once the discrete decision is recovered and fixed, a numerical optimizer solves the remaining continuous problem, avoiding online combinatorial search over the binary variables while retaining numerical optimization for continuous completion. We evaluate CGD on AC-OPF with branch switching and discrete portfolio optimization, demonstrating substantial improvements in feasibility and solution quality over learning-based baselines while achieving speedups of up to $543\\times$ over state-of-the-art MIP solvers on large instances.",
+          "authors": [
+            "Vincenzo Di Vito",
+            "Yusuf Guven",
+            "Babak Badnava",
+            "Deepjyoti Deka",
+            "Kaarthik Sundar",
+            "Ferdinando Fioretto"
+          ],
+          "canonical_id": "2608.13079",
+          "categories": [
+            "cs.LG"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2608.13079",
+          "published_at": "2026-08-13T10:46:18Z",
+          "source": "arxiv",
+          "title": "Constrained Graph Diffusion for Mixed Integer Optimization",
+          "updated_at": "2026-10-05T14:43:58Z",
+          "url": "https://arxiv.org/abs/2608.13079",
+          "version": 3
+        },
+        "rank": 7,
+        "score": {
+          "base_score": 0.6325121209413214,
+          "exploration": 0.24983838957699106,
+          "matched_terms": [
+            "mixed integer",
+            "mixed-integer",
+            "diffusion model"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.6844782756002762,
+          "topic": 0.727
+        }
+      },
+      "tier": "deep_read"
     },
     "arxiv:2608.24471:v2": {
       "analysis": {
@@ -7030,7 +7570,7 @@
         "html_url": "https://arxiv.org/html/2610.05169v1",
         "status": "not_found"
       },
-      "final_score": 0.5666368034019087,
+      "final_score": 0.5718893199640188,
       "provenance": {
         "analyzed_at": "2026-10-06T03:43:50.493656Z",
         "input_hash": "c83f458e1916f6f57056576fc68078d947aa683daf9994c0b5c083370599b4e0",
@@ -7063,15 +7603,15 @@
         },
         "rank": 44,
         "score": {
-          "base_score": 0.3757032789125612,
-          "exploration": 0.03336455151728251,
+          "base_score": 0.3852533090254887,
+          "exploration": 0.22996240529600334,
           "matched_terms": [
             "operations research",
             "multi-agent"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.6647179568595503,
+          "recency": 0.5206452687019305,
           "topic": 0.39093872161207255
         }
       },
@@ -7153,7 +7693,7 @@
         "why_recommended": "对研究智能优化与AI4OR的博士生而言，该论文把LLM智能体迭代精化求解器时的不稳定性上升为可度量的可行性振荡问题，并给出可迁移的控制思路：用代表性失败证据引导修订方向、用可行行为累积控制修订范围。这一机制与学习辅助搜索中的约束维护、计算预算分配和搜索稳定性直接相关，其跨九个基准、跨多种AHD方法与主干LLM的实证设计也提供了评估泛化性与反馈效率的参考范式。"
       },
       "figure_gallery": {
-        "checked_at": "2026-10-06T11:40:26.431866+08:00",
+        "checked_at": "2026-10-07T11:07:34.397493+08:00",
         "figures": [
           {
             "caption": "Overview of the DiSH framework. DiSH converts evaluation feedback into two complementary controls over what to revise and how extensively to revise it. Scope control adjusts the permitted revision magnitude, while direction control selects representative failures and successful instances to focus the revision. Together, they form the revision prompt that guides the LLM to repair remaining failures while preserving previously feasible behavior across iterations.",
@@ -7172,7 +7712,7 @@
         "html_url": "https://arxiv.org/html/2610.05221v1",
         "status": "available"
       },
-      "final_score": 0.6550988745130881,
+      "final_score": 0.6523552613343373,
       "provenance": {
         "analyzed_at": "2026-10-06T03:42:56.907333Z",
         "input_hash": "e4b80c9d14c15428a2d9af8c298e20f551801a29941af1a27bd11d4422ebacb6",
@@ -7203,17 +7743,17 @@
           "url": "https://arxiv.org/abs/2610.05221",
           "version": 1
         },
-        "rank": 15,
+        "rank": 14,
         "score": {
-          "base_score": 0.5365434082056145,
-          "exploration": 0.8610789766988791,
+          "base_score": 0.5315550206078858,
+          "exploration": 0.9795750295705682,
           "matched_terms": [
             "combinatorial optimization",
             "large language model"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.6732972422961037,
+          "recency": 0.527365057636907,
           "topic": 0.40474643603882776
         }
       },
@@ -7310,7 +7850,7 @@
         "html_url": "https://arxiv.org/html/2610.05746v1",
         "status": "not_found"
       },
-      "final_score": 0.7479400499790276,
+      "final_score": 0.6932914843335997,
       "provenance": {
         "analyzed_at": "2026-10-06T03:41:46.707073Z",
         "input_hash": "7079f99d3a77e50954c32dc7bdb94d1428f10f315cd0e0399ead041dcd2062dc",
@@ -7340,10 +7880,10 @@
           "url": "https://arxiv.org/abs/2610.05746",
           "version": 1
         },
-        "rank": 1,
+        "rank": 2,
         "score": {
-          "base_score": 0.8689819090527773,
-          "exploration": 0.9108283751979754,
+          "base_score": 0.7696208806065448,
+          "exploration": 0.533492855055588,
           "matched_terms": [
             "mixed integer",
             "mixed-integer",
@@ -7352,7 +7892,7 @@
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.7804194844254216,
+          "recency": 0.6112693481135313,
           "topic": 0.8823293257619649
         }
       },
@@ -7499,8 +8039,175 @@
         }
       },
       "tier": "deep_read"
+    },
+    "arxiv:2610.06400:v1": {
+      "analysis": {
+        "analysis": "作者将集体视觉导航问题形式化为一个深度强化学习问题并给出其形式化规格，把全局奖励按个体动作拆分为个体奖励以直接缓解空间信用分配难题。方法上不追求集中式大模型，而是从问题结构出发，将控制器的自动设计分解为两个阶段：先通过多智能体强化学习获得预训练的个体导航策略，再用神经进化策略对该策略参数进行优化，从而把学习信号与进化搜索结合。奖励函数通过人工信用分配设计，按前进、左转/右转、停止与碰撞分别给予不同数值，以塑造反应式避障与无地图探索行为。材料未说明作者是否使用下界、图表示或其他结构分解手段。",
+        "challenges": [
+          "集群机器人去中心化控制器的数据驱动自动设计及涌现集体行为的生成",
+          "多智能体学习中的空间信用分配问题，即难以确定哪个智能体的动作促成了特定结果",
+          "在仅使用单目相机、无地图、无距离传感器的低成本资源受限平台上实现无碰撞探索",
+          "在计算与能量预算严格受限时，避免依赖大规模、高能耗的深度模型",
+          "使视觉策略在不确定与动态环境中保持鲁棒性、灵活性与可扩展性"
+        ],
+        "corresponding_authors": [
+          "Álvaro Díez"
+        ],
+        "evidence": [
+          {
+            "claim": "论文将多智能体强化学习与神经进化策略结合，用交叉熵方法与协方差矩阵自适应进化策略优化预训练的个体导航策略。",
+            "location": "abstract",
+            "quote": "This approach synergistically combines multi-agent reinforcement learning with neuro-evolutionary strategies, specifically leveraging implementations of the cross-entropy method and the covariance matrix adaptation evolution strategy to optimize a pre-trained individual navigation policy."
+          },
+          {
+            "claim": "深度架构面向低成本资源受限平台，仅依赖单目相机图像，强调计算与能量效率。",
+            "location": "abstract",
+            "quote": "The underlying deep architecture is engineered for low-cost, resource-constrained platforms, utilizing a compact neural network that relies exclusively on monocular camera imagery."
+          },
+          {
+            "claim": "交叉熵方法训练的控制器探索覆盖比CMA-ES多36.20%。",
+            "location": "abstract",
+            "quote": "The controller trained using our cross-entropy method achieves superior exploration coverage, visiting 36.20% more regions compared to the covariance matrix adaptation evolution strategy."
+          },
+          {
+            "claim": "最佳视觉策略探索性能与依赖更昂贵距离传感器的传统方法统计相当，同时平均能耗降低31.40%。",
+            "location": "abstract",
+            "quote": "our best vision-based policy achieves exploration performance statistically comparable to traditional methods relying on more expensive distance sensors, while delivering a significant 31.40% average reduction in energy consumption."
+          },
+          {
+            "claim": "奖励函数按动作拆分个体奖励，前进为5、左转或右转为0.5、停止为-1、碰撞为-10，以处理空间信用分配。",
+            "location": "supplied_full_text",
+            "quote": "\\mathcal{R}=\\begin{cases}5,&\\text{if }a_{t}^{j}=a_{forward},\\\\ 0.5,&\\text{if }a_{t}^{j}=a_{right}\\text{ or }a_{t}^{j}=a_{left},\\\\ -1,&\\text{if }a_{t}^{j}=a_{stop},\\\\ -10,&\\text{if }collision.\\end{case"
+          },
+          {
+            "claim": "论文将全局奖励分解为个体奖励以直接处理空间信用分配问题。",
+            "location": "supplied_full_text",
+            "quote": "This approach directly addresses the spatial credit assignment problem, a common challenge in multi-agent learning and swarm robotics where it can be difficult to determine which agent’s action contributed to a particular outcome"
+          }
+        ],
+        "experiments": [
+          "实验在高保真物理模拟器中执行，结果表明所得控制器能够对多样室内环境进行鲁棒且可扩展的集体探索。",
+          "使用交叉熵方法训练的控制器在探索覆盖上优于协方差矩阵自适应进化策略，访问区域多出36.20%。",
+          "最佳视觉策略的探索性能在统计上与依赖更昂贵距离传感器的传统方法相当，同时平均能耗降低31.40%。",
+          "全文节选提及第6节评估并分析控制器的鲁棒性、灵活性与可扩展性，但未给出具体数值。",
+          "训练开销、公平计算预算、消融实验、基线方法的具体配置与实例规模等细节在所提供的材料中未说明。"
+        ],
+        "first_affiliation": "Department of Computer Science and Artificial Intelligence, University of Alicante, Carretera San Vicente del Raspeig, San Vicente del Raspeig, 03690, Alicante, Spain",
+        "insight": "论文的核心洞察在于：对于集群这类需要在局部感知下涌现集体行为的场景，与其用大规模集中式模型换取表达能力，不如先用多智能体强化学习预训练一个紧凑的个体导航策略，再用进化策略在参数空间中优化该策略以适配集体目标。这样既能借助强化学习获得有效的单体验视觉导航行为，又能利用进化策略高度可并行、可扩展且对时序信用分配与解空间探索更鲁棒的特性，在极低计算与能量开销下实现鲁棒、灵活、可扩展的集体视觉导航。",
+        "limitations": [
+          "材料提到结论部分会讨论本工作的局限并展望未来方向，但所提供的全文节选未包含结论部分的具体局限陈述，因此具体局限内容材料未说明。"
+        ],
+        "method": [
+          "提出一种AI驱动的混合方法，协同结合多智能体强化学习与神经进化策略，用于自动合成集群机器人控制器。",
+          "以多智能体强化学习预训练一个个体导航策略，其参数在智能体依据局部观测执行动作后根据个体奖励更新。",
+          "使用进化策略实现——具体为交叉熵方法与协方差矩阵自适应进化策略——对预训练好的个体导航策略进行优化，以获得集体视觉导航策略。",
+          "深度架构面向低成本资源受限平台设计，采用仅依赖单目相机图像的紧凑神经网络。",
+          "奖励函数将全局奖励分解为每个智能体的个体奖励，按动作赋值：前进为5、左转或右转为0.5、停止为-1、碰撞为-10，以直接处理空间信用分配。",
+          "控制器为去中心化、无地图、反应式避障设计，同构集群智能体仅使用局部感知与通信。",
+          "奖励函数可灵活替换以诱导不同集体行为，例如聚集用于目标跟踪、分散用于集体探索。"
+        ],
+        "motivation": "集群机器人在搜索救援与环境监测等复杂动态场景中具有鲁棒、低成本的优势，但其核心难题在于如何以数据驱动方式自动设计能够产生涌现集体行为的去中心化控制器。现有依赖大型注意力模型或集中式视觉惯性SLAM的方法在内存、计算和能量上开销过高，不适合低成本资源受限的集群平台，因此作者转而探索一种高效、可扩展的混合自动设计路径。",
+        "primary_topic": "集群机器人视觉导航控制器的深度强化学习与神经进化混合自动设计",
+        "relation_to_research": "论文事实层面，该工作研究的是集群机器人视觉导航控制器的自动设计，核心机制是多智能体强化学习与进化策略（交叉熵方法、CMA-ES）的混合，强调去中心化、低成本、能量效率与可扩展性，属于机器人学习与神经进化交叉领域，与生产调度或AI4OR并不直接对应。迁移设想（推测）：其“先预训练个体策略、再用进化策略在参数空间优化以适配集体目标”的两阶段混合范式，以及将全局目标拆解为个体奖励以缓解信用分配的思路，在条件满足时可能迁移到分布式生产调度或多智能体协同调度中，例如把单机或单元级调度策略预训练后，用进化策略优化多智能体协同的全局目标；但需要将连续视觉观测替换为调度状态表示，将动作空间由导航动作替换为调度决策，并重新设计满足约束可行性的奖励或适应度函数，这些迁移均属推测，并非作者结论。",
+        "relevance_score": 6,
+        "setting": "研究问题是为资源受限的集群机器人自动合成去中心化的视觉导航控制器，使其仅依靠单目相机图像进行无地图、无碰撞的集体探索。决策对象是同构集群中的每个智能体在每一时间步的前进、左转、右转或停止动作；目标是在不确定与动态的室内环境中最大化集体探索覆盖范围，同时保持碰撞避免与能效。关键约束包括仅使用单目相机（不使用距离传感器）、去中心化且无地图的局部感知与局部通信、面向低成本资源受限平台的计算与能量预算。信息假设为每个智能体只能获得自身对环境的局部观测，并通过个体奖励聚合为全局奖励；环境被描述为不确定且动态，属于动态环境设定。",
+        "tags": [
+          "集群机器人",
+          "多智能体强化学习",
+          "神经进化",
+          "交叉熵方法",
+          "协方差矩阵自适应进化策略",
+          "视觉导航",
+          "低成本平台"
+        ],
+        "title_zh": "基于深度强化学习与进化混合设计的视觉集群导航",
+        "uncertainty": "本次分析仅基于标题、摘要与部分全文节选，缺少方法细节、实验设置、基线配置与结论中的局限陈述，因此对方法的具体网络结构、状态与动作形式化、训练预算、统计检验方式以及作者明确声明的局限均存在不确定性；提供的全文节选中部分段落存在截断，可能遗漏与迁移价值相关的关键描述。",
+        "why_recommended": "虽然该论文的直接应用场景是集群机器人视觉导航而非生产调度，但其研究路径对本方向博士生具有可借鉴的方法论价值：一是展示了如何用进化策略对已训练的策略网络进行参数级混合优化，这与学习辅助搜索、进化算法与深度模型结合的思路相通；二是其个体奖励分解以处理空间信用分配的做法，对多智能体协同调度中的全局-局部目标分解有参考意义；三是其对低成本、能量效率、可扩展性与鲁棒性的显式关注，与智能优化中强调约束可行性、公平计算预算和泛化的研究价值取向一致。建议以方法论迁移的视角阅读，而非直接套用其集群导航结论。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-07T11:07:34.397493+08:00",
+        "figures": [
+          {
+            "caption": "Microscopic model architecture. This figure details the layer structure of the convolutional variational autoencoder (bottom), which handles perception by compressing high-dimensional images, and the lightweight classification neural network (top), which serves as the controller for action selection.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2610.06400/v1/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2610.06400v1/Figure_1.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2610.06400v1#S3.F1"
+          },
+          {
+            "caption": "Relationship between the microscopic and macroscopic models of the proposed swarm robotic system. The parameters of the collective navigation policy are updated based on the individual rewards assigned to agents for actions they execute in response to their partial observations of the environment.",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2610.06400/v1/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2610.06400v1/Figure_2.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2610.06400v1#S3.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2610.06400v1",
+        "status": "available"
+      },
+      "final_score": 0.6230581582910132,
+      "provenance": {
+        "analyzed_at": "2026-10-07T03:09:21.619702Z",
+        "input_hash": "a86bee590dc2907b248bbcb1824b9b76f5b8f72401ae6778635ede83b5487bb5",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Swarm robotics presents a robust and cost-effective paradigm for advanced automation in complex, dynamic environments, such as those encountered in search and rescue or environmental monitoring. A fundamental challenge for this field is the data-driven design of decentralized controllers capable of generating emergent collective behaviors. This paper proposes a novel, AI-driven hybrid methodology for the automatic synthesis of swarm robotic controllers for autonomous visual navigation. This approach synergistically combines multi-agent reinforcement learning with neuro-evolutionary strategies, specifically leveraging implementations of the cross-entropy method and the covariance matrix adaptation evolution strategy to optimize a pre-trained individual navigation policy. The underlying deep architecture is engineered for low-cost, resource-constrained platforms, utilizing a compact neural network that relies exclusively on monocular camera imagery. This vision-based design emphasizes computational and energy efficiency, a critical requirement for practical swarm deployments. Experiments, performed in a high-fidelity physics simulator, demonstrate that the resulting controllers enable robust and scalable collective exploration of diverse indoor environments. The controller trained using our cross-entropy method achieves superior exploration coverage, visiting 36.20% more regions compared to the covariance matrix adaptation evolution strategy. Critically, our best vision-based policy achieves exploration performance statistically comparable to traditional methods relying on more expensive distance sensors, while delivering a significant 31.40% average reduction in energy consumption. These findings validate an effective and economically viable autonomous control system, establishing a path for deploying highly efficient collective intelligence in real-world engineering applications.",
+          "authors": [
+            "\\'{A}lvaro D\\'{i}ez (Department of Computer Science",
+            "Artificial Intelligence",
+            "University of Alicante)",
+            "Fidel Aznar (Department of Computer Science"
+          ],
+          "canonical_id": "2610.06400",
+          "categories": [
+            "cs.RO",
+            "cs.MA",
+            "cs.NE"
+          ],
+          "comment": "46 pages, 21 figures. Published in Engineering Applications of Artificial Intelligence under a CC BY 4.0 license",
+          "pdf_url": "https://arxiv.org/pdf/2610.06400",
+          "published_at": "2026-10-05T14:21:11Z",
+          "source": "arxiv",
+          "title": "Visual Swarm Navigation via Deep Reinforcement Learning and Evolutionary Hybrid Design",
+          "updated_at": "2026-10-05T14:21:11Z",
+          "url": "https://arxiv.org/abs/2610.06400",
+          "version": 1
+        },
+        "rank": 6,
+        "score": {
+          "base_score": 0.6419239241654784,
+          "exploration": 0.9609095772384287,
+          "matched_terms": [
+            "resource-constrained",
+            "neural network",
+            "reinforcement learning",
+            "multi-agent"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.6817762104276042,
+          "topic": 0.5393987986411708
+        }
+      },
+      "tier": "deep_read"
     }
   },
   "schema_version": 1,
-  "updated_at": "2026-10-06T11:40:26.431866+08:00"
+  "updated_at": "2026-10-07T11:07:34.397493+08:00"
 }
