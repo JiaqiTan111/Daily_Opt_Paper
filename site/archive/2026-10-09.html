@@ -1,0 +1,1228 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2026-10-09 科研日报</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root {
+      --ink:#16211b; --muted:#5d6a62; --paper:#f3efe6; --card:#fffdfa;
+      --green:#1f5c42; --green-soft:#e8f0e9; --line:#d8d2c5; --accent:#b44d2f;
+      --shadow:0 16px 42px rgba(34,42,36,.07);
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; color:var(--ink); background:var(--paper); font:16px/1.7 system-ui,-apple-system,"Noto Sans SC",sans-serif; }
+    button,input,select { font:inherit; }
+    button { color:inherit; }
+    a { color:var(--green); }
+    [hidden] { display:none !important; }
+    main { width:min(1440px,94vw); margin:0 auto; padding:34px 0 96px; }
+
+    .page-header { border-bottom:1px solid var(--line); padding-bottom:30px; }
+    .masthead { display:flex; justify-content:space-between; gap:20px; align-items:center; color:var(--muted); font-size:.83rem; letter-spacing:.03em; }
+    .masthead nav { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px 16px; }
+    .masthead nav a { color:var(--muted); text-decoration:none; }
+    .masthead nav a:hover { color:var(--green); text-decoration:underline; }
+    h1 { max-width:1100px; margin:42px 0 20px; font:700 clamp(2.35rem,6vw,5.3rem)/1.04 Georgia,"Noto Serif SC",serif; overflow-wrap:anywhere; }
+    .lede { max-width:920px; color:var(--muted); font-size:1.08rem; }
+    .stats { display:grid; grid-template-columns:repeat(5,minmax(120px,1fr)); gap:12px; margin-top:30px; }
+    .stat { padding:14px 16px; border:1px solid var(--line); background:rgba(255,255,255,.45); }
+    .stat strong { display:block; color:var(--green); font-size:1.6rem; line-height:1.2; }
+
+    .gallery-intro { display:flex; justify-content:space-between; gap:30px; align-items:end; margin:50px 0 20px; }
+    .eyebrow { margin:0 0 5px; color:var(--accent); font-size:.78rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    .gallery-intro h2 { margin:0; font:700 clamp(1.8rem,3vw,2.8rem)/1.15 Georgia,"Noto Serif SC",serif; }
+    .gallery-intro > p { max-width:620px; margin:0; color:var(--muted); }
+
+    .portal-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,245px),1fr)); gap:14px; }
+    .portal-card { min-height:178px; display:flex; flex-direction:column; padding:20px; color:var(--ink); border:1px solid var(--line); background:var(--card); text-decoration:none; box-shadow:var(--shadow); transition:.18s ease; }
+    .portal-card:hover { transform:translateY(-3px); border-color:var(--green); }
+    .portal-card strong { font:700 1.28rem/1.35 Georgia,"Noto Serif SC",serif; }
+    .portal-card p { margin:10px 0 18px; color:var(--muted); font-size:.9rem; }
+    .portal-card span { margin-top:auto; color:var(--green); font-weight:800; font-size:.84rem; }
+    .portal-section { margin-top:58px; padding-top:34px; border-top:1px solid var(--line); }
+    .portal-section h2 { margin:0 0 8px; font:700 2rem/1.2 Georgia,"Noto Serif SC",serif; }
+    .portal-section > p { margin:0 0 20px; color:var(--muted); }
+    .portal-subtitle { margin:28px 0 12px; font-size:1rem; }
+
+    .topic-shelves { display:grid; grid-template-columns:repeat(auto-fit,minmax(185px,1fr)); gap:10px; margin-bottom:18px; }
+    .topic-filter { min-height:96px; padding:14px 16px; text-align:left; border:1px solid var(--line); background:rgba(255,253,250,.7); cursor:pointer; transition:.18s ease; }
+    .topic-filter:hover { transform:translateY(-2px); border-color:var(--green); }
+    .topic-filter[aria-pressed="true"] { color:#fff; border-color:var(--green); background:var(--green); box-shadow:0 8px 18px rgba(31,92,66,.18); }
+    .topic-filter strong { display:block; line-height:1.35; }
+    .topic-filter span { display:block; margin-top:6px; color:var(--muted); font-size:.82rem; }
+    .topic-filter[aria-pressed="true"] span { color:rgba(255,255,255,.78); }
+
+    .explorer-controls { position:sticky; top:0; z-index:20; display:grid; grid-template-columns:minmax(220px,2fr) repeat(4,minmax(125px,1fr)) auto; gap:10px; padding:14px; border:1px solid var(--line); background:rgba(243,239,230,.95); box-shadow:0 10px 25px rgba(34,42,36,.06); backdrop-filter:blur(12px); }
+    .control { display:grid; gap:4px; color:var(--muted); font-size:.76rem; font-weight:700; }
+    .control input,.control select { width:100%; min-height:42px; padding:8px 10px; color:var(--ink); border:1px solid var(--line); border-radius:0; background:var(--card); }
+    .explorer-actions { display:flex; gap:6px; align-items:end; }
+    .explorer-actions button { min-height:42px; padding:8px 12px; border:1px solid var(--line); background:var(--card); cursor:pointer; white-space:nowrap; }
+    .explorer-actions button:hover { border-color:var(--green); color:var(--green); }
+    .explorer-status { display:flex; justify-content:space-between; gap:20px; align-items:center; margin:18px 0 10px; color:var(--muted); }
+    .explorer-status strong { color:var(--green); font-size:1.2rem; }
+    .active-tag { color:var(--green); font-weight:800; }
+    .noscript-notice,.empty-state { padding:20px; border:1px solid var(--line); background:var(--card); }
+
+    .tier-section { margin-top:36px; }
+    .tier-heading { display:flex; justify-content:space-between; align-items:end; gap:20px; margin-bottom:14px; border-bottom:1px solid var(--line); }
+    .tier-heading h2 { margin:0 0 8px; font-size:1.45rem; }
+    .tier-heading p { margin:0 0 8px; color:var(--muted); }
+    .paper-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr)); gap:18px; align-items:start; }
+
+    .paper-card { min-width:0; overflow:hidden; border:1px solid var(--line); background:var(--card); box-shadow:var(--shadow); }
+    .paper-card__cover { position:relative; height:230px; display:grid; place-items:center; overflow:hidden; border-bottom:1px solid var(--line); background:#f7f7f2; }
+    .paper-card__cover > img { width:100%; height:100%; display:block; object-fit:contain; background:#fff; }
+    .paper-card__cover-caption { position:absolute; left:0; right:0; bottom:0; max-height:58px; overflow:hidden; margin:0; padding:9px 12px; color:#fff; background:linear-gradient(transparent,rgba(12,20,16,.88)); font-size:.76rem; line-height:1.35; }
+    .paper-card__placeholder { width:100%; height:100%; display:flex; flex-direction:column; justify-content:space-between; padding:22px; color:var(--green); background:linear-gradient(145deg,#edf3ed,#faf7ef 62%,#e8eee8); }
+    .paper-card__placeholder span { font-weight:800; }
+    .paper-card__placeholder strong { font:700 1.45rem/1.2 Georgia,serif; overflow-wrap:anywhere; }
+    .paper-card__placeholder small { color:var(--muted); }
+    .paper-card__body { display:flex; flex-direction:column; min-height:520px; padding:22px; }
+    .paper-card--compact .paper-card__body { min-height:285px; }
+    .paper-card__rubric { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:12px; color:var(--muted); font-size:.74rem; }
+    .paper-card__rubric span { padding:2px 7px; border:1px solid var(--line); }
+    .paper-card__rubric .topic-badge { color:var(--green); border-color:var(--green); font-weight:800; }
+    .paper-card h3 { margin:0 0 8px; font-size:1.3rem; line-height:1.38; }
+    .paper-card h3 a { color:var(--ink); text-decoration:none; }
+    .paper-card h3 a:hover { color:var(--green); text-decoration:underline; }
+    .original-title { display:-webkit-box; overflow:hidden; margin:0 0 8px; color:var(--muted); font:italic .88rem/1.45 Georgia,serif; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
+    .authors { overflow:hidden; margin:0 0 18px; color:var(--muted); font-size:.82rem; text-overflow:ellipsis; white-space:nowrap; }
+    .paper-card__takeaway { padding:14px; border-left:3px solid var(--green); background:var(--green-soft); }
+    .paper-card__takeaway p { margin:0; }
+    .paper-card__takeaway p:last-child { display:-webkit-box; overflow:hidden; -webkit-box-orient:vertical; -webkit-line-clamp:4; }
+    .field-label { margin-bottom:4px !important; color:var(--green); font-size:.75rem; font-weight:800; letter-spacing:.08em; }
+    .paper-card__recommendation { display:-webkit-box; overflow:hidden; margin:14px 0; color:var(--muted); font-size:.9rem; -webkit-box-orient:vertical; -webkit-line-clamp:3; }
+    .paper-card__recommendation strong { color:var(--ink); }
+    .paper-tags { display:flex; flex-wrap:wrap; gap:6px; margin:0 0 16px; padding:0; list-style:none; }
+    .paper-tags a { display:block; padding:3px 8px; color:var(--green); background:#edf3ed; font-size:.75rem; text-decoration:none; }
+    .paper-tags a:hover { text-decoration:underline; }
+
+    .paper-details { margin-top:auto; border-top:1px solid var(--line); }
+    .paper-details summary { display:flex; justify-content:space-between; gap:12px; align-items:center; padding:14px 0 0; color:var(--green); font-weight:800; cursor:pointer; list-style:none; }
+    .paper-details summary::-webkit-details-marker { display:none; }
+    .summary-close { display:none; }
+    .paper-details[open] .summary-open { display:none; }
+    .paper-details[open] .summary-close { display:inline; }
+    .paper-details[open] .summary-arrow { transform:rotate(180deg); }
+    .summary-arrow { transition:transform .2s ease; }
+    .paper-details__meta { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 18px; margin:22px 0; padding:16px; background:#f6f3ec; font-size:.9rem; }
+    .paper-details__meta p { margin:0; }
+    .paper-links { display:flex; flex-wrap:wrap; gap:14px; }
+    .research-note { display:grid; grid-template-columns:minmax(150px,210px) minmax(0,1fr); gap:10px 20px; margin:22px 0 0; }
+    .research-note dt { color:var(--muted); font-weight:800; }
+    .research-note dd { min-width:0; margin:0; }
+    .research-note ul { margin:0; padding-left:1.25rem; }
+    blockquote { margin:10px 0; padding:10px 14px; border-left:3px solid var(--green); background:#f2f5ef; }
+    .paper-figures { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr)); gap:14px; margin:22px 0 8px; }
+    .paper-figure { margin:0; border:1px solid var(--line); background:#f7f7f2; }
+    .paper-figure__media { min-height:180px; display:grid; place-items:center; background:#fff; overflow:hidden; }
+    .paper-figure img { display:block; width:100%; max-height:480px; object-fit:contain; }
+    .paper-figure figcaption { padding:11px 13px; color:var(--muted); font-size:.84rem; line-height:1.5; }
+    .figure-source { display:block; margin-top:5px; font-size:.8rem; }
+    .figure-error { padding:26px; color:var(--muted); text-align:center; }
+    .copyright,.analysis-scope { color:var(--muted); font-size:.78rem; }
+    .analysis-scope { margin-top:22px; padding-top:12px; border-top:1px solid var(--line); }
+    .detail-layout { margin-top:42px; }
+    .detail-layout .paper-card { width:min(1120px,100%); margin:0 auto; }
+    .detail-layout .paper-card__cover { height:min(520px,55vw); }
+    .detail-layout .paper-card__body { min-height:0; padding:clamp(24px,4vw,44px); }
+
+    .paper-card:has(.paper-details[open]) { grid-column:1/-1; }
+    .paper-card:has(.paper-details[open]) .paper-card__cover { display:none; }
+    .paper-card:has(.paper-details[open]) .paper-card__body { width:min(1120px,100%); min-height:0; margin:0 auto; padding:clamp(24px,4vw,44px); }
+    .paper-card:has(.paper-details[open]) .paper-card__takeaway p:last-child,
+    .paper-card:has(.paper-details[open]) .paper-card__recommendation { display:block; overflow:visible; }
+
+    @media (max-width:1100px) {
+      .stats { grid-template-columns:repeat(3,1fr); }
+      .explorer-controls { grid-template-columns:repeat(3,1fr); }
+      .control--query { grid-column:span 2; }
+    }
+    @media (max-width:760px) {
+      main { width:min(94vw,680px); padding-top:24px; }
+      .masthead,.gallery-intro,.explorer-status { align-items:flex-start; flex-direction:column; }
+      .masthead nav { justify-content:flex-start; }
+      h1 { margin-top:28px; font-size:clamp(1.85rem,9vw,2.5rem); }
+      .stats { grid-template-columns:repeat(2,1fr); }
+      .topic-shelves { display:flex; overflow-x:auto; padding-bottom:6px; scroll-snap-type:x proximity; }
+      .topic-filter { min-width:190px; scroll-snap-align:start; }
+      .explorer-controls { position:static; grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .control--query,.explorer-actions { grid-column:1/-1; }
+      .explorer-actions { flex-wrap:wrap; }
+      .paper-details__meta,.research-note { grid-template-columns:1fr; }
+      .research-note dt { margin-top:10px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header class="page-header">
+    <div class="masthead">
+      <span>PAPERDAILY · 智能优化与生产调度 · 2026-10-09 11:29</span>
+      <nav aria-label="站点导航">
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/">今日</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/daily/">每日日报</a>
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/library/">长期论文库</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/topics/">主题</a>
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/">标签</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/archive/">发表归档</a>
+        <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/search/">搜索</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/feed.xml">订阅</a>
+      </nav>
+    </div>
+    <h1>2026-10-09 科研日报</h1>
+<p class="lede">本次检索最近 3 天的论文版本，首次发表日期见各篇详情。</p><p class="lede">保留该次运行的论文顺序、编辑层级、分析范围与结构化解读。</p>    <div class="stats" aria-label="长期档案统计">
+      <div class="stat"><strong>9</strong>当前页面论文</div>
+      <div class="stat"><strong>205</strong>长期论文</div>
+      <div class="stat"><strong>8</strong>稳定主题</div>
+      <div class="stat"><strong>14</strong>固定标签</div>
+      <div class="stat"><strong>103</strong>已有配图</div>
+    </div>
+  </header>
+
+  <section class="gallery-intro" aria-labelledby="gallery-title">
+    <div><p class="eyebrow">论文画廊</p><h2 id="gallery-title">本期全部论文</h2></div>
+    <p>这是按日期保存的每日日报快照，不混入长期论文库。</p>
+  </section>
+
+  <section data-explorer>
+    <div class="topic-shelves" role="group" aria-label="按研究主题筛选">
+      <button class="topic-filter" type="button" data-topic-choice="" aria-pressed="true"><strong>全部研究</strong><span>9 篇</span></button>
+      <button class="topic-filter" type="button" data-topic-choice="scheduling" aria-pressed="false" title="车间、流水线、装配与生产运输协同的调度建模和求解。"><strong>生产调度</strong><span>2 篇 · 车间、流水线、装配与生产运输协同的调度建模和求解。</span></button>
+      <button class="topic-filter" type="button" data-topic-choice="evolutionary-optimization" aria-pressed="false" title="进化计算、群智能、约束多目标、多任务与昂贵优化。"><strong>进化与智能优化</strong><span>1 篇 · 进化计算、群智能、约束多目标、多任务与昂贵优化。</span></button>
+      <button class="topic-filter" type="button" data-topic-choice="agents-ai4or" aria-pressed="false" title="多智能体协同、大模型启发式生成、运筹建模与工具调用。"><strong>智能体与自动建模</strong><span>2 篇 · 多智能体协同、大模型启发式生成、运筹建模与工具调用。</span></button>
+      <button class="topic-filter" type="button" data-topic-choice="mathematical-programming" aria-pressed="false" title="整数规划、约束规划、分解、界与学习辅助精确求解。"><strong>数学规划与混合求解</strong><span>3 篇 · 整数规划、约束规划、分解、界与学习辅助精确求解。</span></button>
+      <button class="topic-filter" type="button" data-topic-choice="routing-resources" aria-pressed="false" title="路径规划、车辆路径、项目调度与资源配置。"><strong>路径与资源优化</strong><span>1 篇 · 路径规划、车辆路径、项目调度与资源配置。</span></button>
+    </div>
+
+    <form class="explorer-controls" data-filter-form aria-label="筛选论文">
+      <label class="control control--query"><span>关键词</span><input type="search" name="q" maxlength="200" autocomplete="off" placeholder="标题、作者、方法、标签……" data-filter-query></label>
+      <label class="control"><span>编辑层级</span><select name="tier" data-filter-tier><option value="">全部层级</option><option value="deep_read">今日必读</option><option value="browse">值得浏览</option><option value="explore">探索发现</option></select></label>
+      <label class="control"><span>证据范围</span><select name="scope" data-filter-scope><option value="">全部范围</option><option value="full_text">正文节选</option><option value="abstract">摘要级</option></select></label>
+      <label class="control"><span>最低相关性</span><select name="score" data-filter-score><option value="0">全部</option><option value="8">8 分以上</option><option value="9">9 分以上</option></select></label>
+      <label class="control"><span>论文配图</span><select name="figure" data-filter-figure><option value="">全部</option><option value="yes">已有原图</option><option value="no">暂无原图</option></select></label>
+      <div class="explorer-actions"><button type="button" data-expand-visible>展开结果</button><button type="button" data-collapse-visible>全部收起</button><button type="reset">重置</button></div>
+    </form>
+    <noscript><p class="noscript-notice">筛选功能需要启用 JavaScript；未启用时仍会显示全部论文。</p></noscript>
+    <div class="explorer-status"><p>当前显示 <strong data-result-count aria-live="polite">9</strong> 篇论文 <span class="active-tag" data-active-tag></span></p><p>标签有稳定永久网址，也可在当前画廊内继续筛选。</p></div>
+
+      <section class="tier-section" data-tier-section="deep_read">
+        <header class="tier-heading"><h2>今日必读</h2><p><span data-tier-count>6</span> 篇</p></header>
+        <div class="paper-grid"><article
+  class="paper-card"
+  data-paper-card
+  data-paper-id="arxiv:2610.03316:v2"
+  data-topic="scheduling"
+>
+<div class="paper-card__cover">
+      <div class="paper-card__placeholder" aria-label="该论文暂未提取到可用原图">
+        <span>生产调度</span>
+        <strong>arXiv:2610.03316</strong>
+        <small>本期暂无可用论文原图</small>
+      </div>
+  </div>
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">生产调度</span>
+      <span>正文节选</span>
+      <span>相关性 9/10</span>
+      <span>v2</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2610.03316/">基于大语言模型的多任务进化实现零样本跨问题泛化</a></h3>
+    <p class="original-title" lang="en">Multi-Task Evolution for Zero-Shot Cross-Problem Generalization using LLMs</p>
+    <p class="authors">Zhuoliang Xie · Changliang Zhou · Genghui Li · Zhenkun Wang</p>
+
+<div class="paper-card__takeaway">
+      <p class="field-label">核心洞察</p>
+      <p>跨问题泛化的关键在于把多个源任务上的备选启发式组织为任务条件化种群，并让种群之间的交互由一种基于跨任务种群性能的迁移间隙来驱动，从而促进启发式的迁移与重组；同时以互补性选择准则奖励每个成员对源任务组合的额外覆盖，从而得到一个紧凑但覆盖面广的启发式集合，使其在无目标反馈时仍能在目标问题上表现良好。</p>
+    </div>
+    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>对研究智能优化与生产调度的读者而言，该工作提供了在无目标评估反馈下通过大语言模型多任务进化获得可零样本迁移启发式集合的机制，且实验覆盖柔性作业车间调度问题与车辆路径问题的多种变体，报告了域内与域外性能及跨方法集成效果，有助于理解自动化启发式设计的泛化边界与多任务搜索的公平比较方式。</p>
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/job-shop/" data-tag-filter="job-shop">作业车间</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/llm/" data-tag-filter="llm">大模型辅助优化</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/evolutionary/" data-tag-filter="evolutionary">进化与群智能</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/transfer-surrogate/" data-tag-filter="transfer-surrogate">迁移与代理模型</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/benchmark/" data-tag-filter="benchmark">基准与泛化</a></li>
+    </ul>
+
+<details class="paper-details">
+      <summary>
+        <span class="summary-open">展开完整解读</span>
+        <span class="summary-close">收起完整解读</span>
+        <span aria-hidden="true" class="summary-arrow">↓</span>
+      </summary>
+
+      <div class="paper-details__meta">
+        <p><strong>模型细分主题：</strong>大语言模型驱动的自动化启发式设计在多问题间的零样本跨问题泛化</p>
+        <p><strong>模型原始标签：</strong>大语言模型、自动化启发式设计、多任务进化、零样本跨问题泛化、组合优化、柔性作业车间调度、车辆路径问题</p>
+        <p><strong>第一单位：</strong>南方科技大学自动化与智能制造学院</p>
+        <p><strong>通讯作者：</strong>Zhenkun Wang</p>
+        <p><strong>首次上传：</strong>2026-10</p>
+        <p class="paper-links">
+          <a href="https://arxiv.org/abs/2610.03316">arXiv 摘要 ↗</a>
+<a href="https://arxiv.org/pdf/2610.03316">PDF ↗</a><a href="https://arxiv.org/html/2610.03316v2">官方 HTML ↗</a>        </p>
+      </div>
+
+
+      <dl class="research-note">
+        <dt>研究设定</dt><dd>研究问题是如何在仅使用源任务评估反馈、不接触目标任务评估的条件下，为多个组合优化问题设计可零样本迁移的启发式集合。决策对象是任务条件化的启发式程序种群及其交互与选择策略；目标是在给定源任务组合上构造一个紧凑的启发式集合，使其在未见的目标问题变体上直接应用而不进行额外搜索或适配；关键约束是设计阶段不允许使用目标问题的评估反馈，且需在同一预算下与自动化启发式设计基线公平比较；信息假设为设计阶段仅可获取源任务的评估反馈；环境为静态问题定义集合，但覆盖域内与域外问题变体。</dd>
+        <dt>研究动机</dt><dd>为多样化的组合优化问题设计有效启发式需要大量领域专家知识和反复的搜索迭代。大语言模型虽能自动生成与改进启发式，但启发式搜索通常依赖被优化问题本身的评估反馈，从而难以在只有源任务反馈时泛化到新的问题定义。因此，如何在无目标反馈条件下实现跨问题的零样本泛化成为核心挑战。</dd>
+        <dt>核心洞察</dt><dd>跨问题泛化的关键在于把多个源任务上的备选启发式组织为任务条件化种群，并让种群之间的交互由一种基于跨任务种群性能的迁移间隙来驱动，从而促进启发式的迁移与重组；同时以互补性选择准则奖励每个成员对源任务组合的额外覆盖，从而得到一个紧凑但覆盖面广的启发式集合，使其在无目标反馈时仍能在目标问题上表现良好。</dd>
+        <dt>技术挑战</dt><dd><ul><li>启发式搜索通常依赖目标问题的评估反馈，而零样本跨问题泛化要求在无目标反馈下设计启发式</li><li>不同源任务之间的启发式如何有效迁移与重组，以及如何度量任务之间的迁移间隙</li><li>在源任务组合上构造紧凑且覆盖充分的启发式集合，避免冗余并保持泛化能力</li><li>在同一预算下与多种自动化启发式设计基线公平比较并验证跨方法有效性</li></ul></dd>
+        <dt>问题分析</dt><dd>作者将组合优化启发式设计形式化为跨多个任务的多任务进化搜索问题，维护任务条件化的启发式种群。通过定义基于跨任务种群性能的迁移间隙来度量任务之间的差异并指导种群间交互，进而实现启发式的迁移与重组。设计阶段仅使用源反馈进行进化与互补集合选择，目标问题不参与评估。最终以互补覆盖准则筛选出紧凑启发式集合。材料未说明是否使用具体的图表示或数学下界分析。</dd>
+        <dt>方法</dt><dd><ul><li>MECo 维护任务条件化的启发式种群，每个任务对应某个优化问题的启发式设计</li><li>使用基于跨任务种群性能的迁移间隙指导不同任务种群之间的交互</li><li>通过交互实现启发式之间的迁移与重组</li><li>引入互补选择准则，奖励每个成员对源任务组合的额外覆盖，从而构造紧凑的启发式集合</li><li>选出的集合直接应用于目标问题，不进行进一步搜索或适配</li><li>设计阶段仅使用源任务反馈，不进行目标评估</li><li>框架可与不同自动化启发式设计方法结合：将基线方法自身的启发式生成与种群更新规则嵌入 MECo 的任务种群中，由 MECo 决定交互任务并传递父代启发式以初始化组合任务种群，搜索后由 MECo 从任务种群中选出最终四个启发式</li></ul></dd>
+        <dt>实验</dt><dd><ul><li>在车辆路径问题（VRP）和柔性作业车间调度问题（FJSP）的32个问题变体上，与八种自动化启发式设计基线在相同预算下比较，MECo 取得最低平均代价</li><li>在域外问题上，MECo 在每个问题族中均优于最强基线</li><li>将 MECo 框架与不同自动化启发式设计方法结合后，在 VRP 和 FJSP 两个族上的域内与域外性能均得到改善</li><li>实验报告了 VRP 的 distance 和 FJSP 的 makespan 指标，包含 All、ID、OOD 分组结果</li><li>在重复搜索中平均排名为1.12，平均相对间隙为0.02%，在16个变体上接近最佳观测方法</li></ul></dd>
+        <dt>局限</dt><dd><ul><li>材料未明确陈述作者给出的局限性</li></ul></dd>
+        <dt>与你的研究关系</dt><dd>该论文直接研究大语言模型驱动的自动化启发式设计及其跨问题零样本泛化，覆盖车辆路径问题与柔性作业车间调度问题，与智能优化、生产调度及人工智能驱动运筹优化高度相关。其任务条件化种群、迁移间隙、启发式迁移与重组、互补集合选择等机制可迁移到柔性作业车间、流水车间、分布式制造、生产运输协同等调度问题中；迁移设想属于推测，需要条件包括将不同调度问题定义为源任务、构造可执行启发式程序表示、设计跨任务性能度量以及验证无目标反馈下的泛化能力。该工作未涉及强化学习或神经网络求解器训练，但与学习辅助搜索、进化算法与大语言模型智能体结合的方向直接相关。</dd>
+        <dt>证据与不确定性</dt>
+        <dd>
+          <p>论文标识为 arxiv:2610.03316:v2，但全文节选内容不完整，部分方法细节、实验设置、基线配置与消融信息缺失；摘要提及32个问题变体与八种基线，但正文仅展示部分表格数据，因此对方法完整流程与实验充分性的判断存在不确定性。</p>
+          <blockquote><strong>论文提出 MECo，一个由大语言模型驱动的多任务进化框架，用于零样本跨问题泛化：</strong>We introduce MECo, an LLM-driven multi-task evolutionary framework for zero-shot cross-problem generalization.</blockquote>
+          <blockquote><strong>MECo 维护任务条件化启发式种群，并使用基于跨任务种群性能的迁移间隙指导交互：</strong>MECo maintains task-conditioned heuristic populations and uses a transfer gap based on cross-task population performance to guide their interactions.</blockquote>
+          <blockquote><strong>设计阶段仅使用源任务反馈，目标问题不进行评估：</strong>Generalizing to new problem definitions using only source-task feedback therefore remains a central challenge.</blockquote>
+          <blockquote><strong>互补选择准则通过奖励每个成员对源任务组合的额外覆盖来构造紧凑启发式集合：</strong>A complementary selection criterion then constructs a compact heuristic set by rewarding each member&#39;s additional coverage of source combinations.</blockquote>
+          <blockquote><strong>选出的集合直接应用于目标问题，不进行进一步搜索或适配：</strong>The selected set is applied to target problems without further search or adaptation.</blockquote>
+          <blockquote><strong>在 VRP 和 FJSP 的32个问题变体上，MECo 在相同预算下取得最低平均代价，优于八种自动化启发式设计基线：</strong>Experiments on 32 problem variants across vehicle routing (VRP) and flexible job-shop scheduling (FJSP) show that MECo achieves the lowest mean costs compared with eight automated heuristic design (AHD) baselines under the same budgets.</blockquote>
+          <blockquote><strong>MECo 框架与不同自动化启发式设计方法结合后，在域内和域外性能上均有提升：</strong>Moreover, integrating the framework of MECo with different AHD methods improves their ID and OOD performance in both families, supporting its effectiveness across different methods.</blockquote>
+          <blockquote><strong>第一作者单位为南方科技大学自动化与智能制造学院：</strong>School of Automation and Intelligent Manufacturing Southern University of Science and Technology, Shenzhen, China</blockquote>
+        </dd>
+      </dl>
+      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；读取了全文节选。证据范围不足的内容不应视为全文结论。</p>
+    </details>  </div>
+</article><article
+  class="paper-card"
+  data-paper-card
+  data-paper-id="arxiv:2610.10184:v1"
+  data-topic="scheduling"
+>
+<div class="paper-card__cover">
+      <img
+        src="https://JiaqiTan111.github.io/Daily_Opt_Paper/figures/arxiv/2610.10184/v1/fig1-panel1.jpg"
+        alt="Figure 1：Three workflows compared in this study. (a) Two-stage multi-agent pipeline: a tool-free Formulator Agent hands a formulation to an Executor Agent connected to the MCP documentation server. (b) Single Executor Agent connected to the same MCP server. (c) Direct LLM baseline without tool access."
+        loading="lazy"
+        decoding="async"
+        referrerpolicy="no-referrer"
+        data-paper-figure
+        data-original-url="https://arxiv.org/html/2610.10184v1/figures/fig_workflows.jpg"
+      >
+      <div class="figure-error" hidden data-figure-error>论文图暂时无法加载，可从原文查看。</div>
+      <p class="paper-card__cover-caption"><strong>Figure 1</strong> Three workflows compared in this study. (a) Two-stage multi-agent pipeline: a tool-free Formulator Agent hands a formulation to an Executor Agent connected to the MCP documentation server. (b) Single Executor Agent connected to the same MCP server. (c) Direct LLM baseline without tool access.</p>
+  </div>
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">生产调度</span>
+      <span>正文节选</span>
+      <span>相关性 8/10</span>
+      <span>v1</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2610.10184/">智能体AI辅助的约束编程生产调度建模评估</a></h3>
+    <p class="original-title" lang="en">Agentic AI-Assisted Modeling for Production Scheduling: Assessment in Constraint Programming</p>
+    <p class="authors">\&#39;Angel S\&#39;anchez-Fern\&#39;andez · Javier Pernas-\&#39;Alvarez · Diego Crespo-Pereira</p>
+
+<div class="paper-card__takeaway">
+      <p class="field-label">核心洞察</p>
+      <p>建模任务的瓶颈并不在数学形式化本身，而在于将形式化模型正确映射为求解器API代码；通用LLM的推理能力已足以完成问题到决策变量、约束和目标的抽象，但幻觉和API误用集中出现在实现阶段。因此，将形式化与编码分离为独立阶段，并仅在实现阶段通过按需检索求解器文档来约束生成，能有效降低错误率，而不需要微调或问题特定架构。</p>
+    </div>
+    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>推荐阅读因为该论文提供了在生产调度领域使用通用LLM智能体自动生成约束编程模型的系统性评估，揭示了形式化可行但实现困难的瓶颈，并给出了多智能体分工结合文档检索的具体机制。其实验设计覆盖多种经典调度问题，报告了成功率、延迟和token消耗，对关注学习辅助建模、智能体优化和约束编程的研究者具有直接参考价值，尤其是在公平计算预算和可复现性意识下评估LLM辅助建模效果方面。</p>
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/job-shop/" data-tag-filter="job-shop">作业车间</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/flow-shop/" data-tag-filter="flow-shop">流水车间</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/agents/" data-tag-filter="agents">多智能体</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/llm/" data-tag-filter="llm">大模型辅助优化</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/mathematical-programming/" data-tag-filter="mathematical-programming">数学规划</a></li>
+    </ul>
+
+<details class="paper-details">
+      <summary>
+        <span class="summary-open">展开完整解读</span>
+        <span class="summary-close">收起完整解读</span>
+        <span aria-hidden="true" class="summary-arrow">↓</span>
+      </summary>
+
+      <div class="paper-details__meta">
+        <p><strong>模型细分主题：</strong>大语言模型智能体驱动的约束编程生产调度自动建模</p>
+        <p><strong>模型原始标签：</strong>大语言模型智能体、约束编程、自动建模、生产调度、多智能体系统、模型上下文协议、AI4OR</p>
+        <p><strong>第一单位：</strong>Universidade da Coruña, Campus Industrial de Ferrol, CITENI, Grupo Integrado de Ingeniería, Esteiro s/n, Ferrol, 15403</p>
+        <p><strong>通讯作者：</strong>Ángel Sánchez-Fernández</p>
+        <p><strong>首次上传：</strong>2026-10</p>
+        <p class="paper-links">
+          <a href="https://arxiv.org/abs/2610.10184">arXiv 摘要 ↗</a>
+<a href="https://arxiv.org/pdf/2610.10184">PDF ↗</a><a href="https://arxiv.org/html/2610.10184v1">官方 HTML ↗</a>        </p>
+      </div>
+
+      <div class="paper-figures">
+        <figure class="paper-figure">
+          <div class="paper-figure__media">
+            <img
+              src="https://JiaqiTan111.github.io/Daily_Opt_Paper/figures/arxiv/2610.10184/v1/fig1-panel1.jpg"
+              alt="Figure 1：Three workflows compared in this study. (a) Two-stage multi-agent pipeline: a tool-free Formulator Agent hands a formulation to an Executor Agent connected to the MCP documentation server. (b) Single Executor Agent connected to the same MCP server. (c) Direct LLM baseline without tool access."
+              loading="lazy"
+              decoding="async"
+              referrerpolicy="no-referrer"
+              data-paper-figure
+              data-original-url="https://arxiv.org/html/2610.10184v1/figures/fig_workflows.jpg"
+            >
+            <div class="figure-error" hidden data-figure-error>该论文图暂时无法加载，可从原文查看。</div>
+          </div>
+          <figcaption>
+            <strong>Figure 1.</strong> Three workflows compared in this study. (a) Two-stage multi-agent pipeline: a tool-free Formulator Agent hands a formulation to an Executor Agent connected to the MCP documentation server. (b) Single Executor Agent connected to the same MCP server. (c) Direct LLM baseline without tool access.
+            <a class="figure-source" href="https://arxiv.org/html/2610.10184v1#S3.F1">来源：论文官方 arXiv HTML ↗</a>
+          </figcaption>
+        </figure>
+        <figure class="paper-figure">
+          <div class="paper-figure__media">
+            <img
+              src="https://JiaqiTan111.github.io/Daily_Opt_Paper/figures/arxiv/2610.10184/v1/fig2-panel1.jpg"
+              alt="Figure 2：Structure of the prompts. The task message that enters every workflow, shown for problem PC1: four sections in a fixed order, with the process described in natural language only, the identity of the SQLite instance, the schema of every table generated from the database file, and the conventions left open by the description. The complete prompts and the task messages of PC1–PC6 are provided as supplementary material and in the project repository ( Sánchez-Fernández et al., 2026 ) ."
+              loading="lazy"
+              decoding="async"
+              referrerpolicy="no-referrer"
+              data-paper-figure
+              data-original-url="https://arxiv.org/html/2610.10184v1/figures/fig_prompt_structure.jpg"
+            >
+            <div class="figure-error" hidden data-figure-error>该论文图暂时无法加载，可从原文查看。</div>
+          </div>
+          <figcaption>
+            <strong>Figure 2.</strong> Structure of the prompts. The task message that enters every workflow, shown for problem PC1: four sections in a fixed order, with the process described in natural language only, the identity of the SQLite instance, the schema of every table generated from the database file, and the conventions left open by the description. The complete prompts and the task messages of PC1–PC6 are provided as supplementary material and in the project repository ( Sánchez-Fernández et al., 2026 ) .
+            <a class="figure-source" href="https://arxiv.org/html/2610.10184v1#S3.F2">来源：论文官方 arXiv HTML ↗</a>
+          </figcaption>
+        </figure>
+      </div>
+      <p class="copyright">图片来自论文官方 arXiv 页面，仅用于论文导航与学术阅读；版权归论文作者或相关权利人所有。</p>
+
+      <dl class="research-note">
+        <dt>研究设定</dt><dd>研究从自然语言问题描述自动生成约束编程模型的问题，决策对象为调度模型的决策变量、约束与目标函数的形式化表达及可执行代码，目标是在无任务特定训练的条件下让通用LLM智能体完成建模与实现，关键约束包括无需微调、需避免幻觉与API误用、需覆盖流水车间、作业车间、柔性作业车间和资源约束仓库调度等多类问题，信息假设为智能体仅能访问自然语言描述、实例数据库模式以及通过模型上下文协议服务器动态检索的求解器文档，环境为静态的单轮生成场景，材料未说明是否涉及动态扰动或人机交互循环。</dd>
+        <dt>研究动机</dt><dd>工业实践中优化建模需要专家大量投入，形成实践者与运筹学专家之间的鸿沟；现有LLM自动建模研究多面向混合整数线性规划且依赖专用训练或问题特定架构，限制工业部署；而制造业智能体AI研究通常假定优化模型已存在，仅用于运营决策支持。因此需要评估通用LLM智能体能否在无任务特定训练下，直接从自然语言描述构建约束编程模型，以弥合自动建模与智能体决策支持两条研究路线之间的空白。</dd>
+        <dt>核心洞察</dt><dd>建模任务的瓶颈并不在数学形式化本身，而在于将形式化模型正确映射为求解器API代码；通用LLM的推理能力已足以完成问题到决策变量、约束和目标的抽象，但幻觉和API误用集中出现在实现阶段。因此，将形式化与编码分离为独立阶段，并仅在实现阶段通过按需检索求解器文档来约束生成，能有效降低错误率，而不需要微调或问题特定架构。</dd>
+        <dt>技术挑战</dt><dd><ul><li>通用LLM在调用特定求解器API时产生幻觉，导致语法错误、物理不可行模型或数学上不可行的形式化</li><li>紧耦合的厂内物流模型实现仍然困难，多智能体工作流在复杂问题上成功率显著下降</li><li>在无专用训练和问题特定架构条件下保持建模的通用性与准确性之间的平衡</li><li>约束编程模型的LLM辅助生成相对MILP研究明显不足，缺乏可参考的自动化框架</li></ul></dd>
+        <dt>问题分析</dt><dd>作者通过对比直接LLM调用、单智能体架构和多智能体架构在六个工业导向调度问题上的表现，分析建模成功与失败的模式。采用模型上下文协议服务器提供求解器文档的上下文感知检索，以缓解实现阶段的幻觉。通过统计各类实现错误的频率，发现错误高度集中，少数反复出现的错误解释了超过一半的失败，从而论证文档检索服务器在实现阶段的有效性。材料未说明作者是否使用形式化下界或问题分解等数学分析手段。</dd>
+        <dt>方法</dt><dd><ul><li>直接LLM基线：将自然语言问题描述直接输入LLM，一次性生成约束编程模型代码</li><li>单智能体架构：由单个LLM智能体同时完成自然语言信息处理和模型编码两个阶段</li><li>多智能体架构：将建模过程分解为两个阶段，一个智能体负责自然语言信息处理与模型形式化，生成决策变量、约束和目标函数；另一个智能体负责根据求解器规范进行模型编码，包括检索和验证所需函数、处理参数格式并组装最终模型</li><li>模型上下文协议服务器：托管求解器API文档，通过发现工具和精确检索工具，使智能体能够按需检索相关函数和规格，检索协议在服务器内部强制执行，文档语料、分块和检索自动构建，不使用嵌入或专家人工分类</li><li>评估指标：建模准确性、执行成功率、延迟和token消耗量</li></ul></dd>
+        <dt>实验</dt><dd><ul><li>在六个工业导向问题上进行对比，涵盖流水车间、作业车间、柔性作业车间和资源约束仓库调度；使用三种LLM；评估建模准确性、执行成功、延迟和token消耗；多智能体工作流将生成脚本正确运行的比例从直接LLM调用的14.8%提升至59.3%，在四个较简单问题上达到80.6%；紧耦合的厂内物流模型仍是开放挑战；实现错误高度集中，五种反复出现的错误解释了超过一半的错误语料。材料未说明具体基线方法名称、实例规模、训练开销明细和消融实验的完整设置。</li></ul></dd>
+        <dt>局限</dt><dd><ul><li>紧耦合的厂内物流模型仍是开放挑战；所提方法在复杂问题上成功率明显下降；材料未明确陈述其他局限，如是否依赖特定求解器版本或是否测试于更广泛的调度问题。</li></ul></dd>
+        <dt>与你的研究关系</dt><dd>该论文直接研究生产调度模型的自动生成，涉及流水车间、作业车间、柔性作业车间等本领域核心问题，并使用大语言模型智能体和约束编程求解器，与AI4OR和学习辅助搜索方向高度相关。其多智能体分工与文档检索机制可迁移到其他优化求解器的建模辅助中。迁移到生产调度中的动态扰动或分布式制造场景需要额外条件：智能体需能处理时变问题和多工厂协调约束，且检索服务器需覆盖相应求解器的动态建模API，这些属于推测，尚未被作者验证。</dd>
+        <dt>证据与不确定性</dt>
+        <dd>
+          <p>本次判断基于摘要和部分全文节选，未提供完整的实验数据表、三种LLM的具体名称、实例规模和详细统计结果，也未说明训练开销和消融实验的全貌，因此对方法泛化性和实际工业部署可行性的评估存在不确定性。</p>
+          <blockquote><strong>研究评估通用LLM智能体在无任务特定训练下从自然语言描述生成约束编程模型的能力：</strong>This study bridges both directions by assessing whether general-purpose LLMs, orchestrated as agents without task-specific training, can formulate and implement constraint programming models from natural-language problem descriptions.</blockquote>
+          <blockquote><strong>多智能体工作流将生成脚本正确运行的比例从直接LLM调用的14.8%提升至59.3%，在四个较简单问题上达到80.6%：</strong>The multi-agent workflow raises the share of scripts that run correctly as generated from 14.8% with a direct LLM call to 59.3%, reaching 80.6% on the four less complex problems</blockquote>
+          <blockquote><strong>紧耦合的厂内物流模型仍是开放挑战：</strong>while tightly coupled intralogistics models remain an open challenge</blockquote>
+          <blockquote><strong>模型上下文协议服务器提供求解器文档的上下文感知检索以缓解实现阶段的幻觉：</strong>integrated with a Model Context Protocol server that provides context-aware retrieval of solver documentation to mitigate hallucinations during implementation</blockquote>
+          <blockquote><strong>实验覆盖流水车间、作业车间、柔性作业车间和资源约束仓库调度六类工业导向问题，使用三种LLM评估建模准确性、执行成功率、延迟和token消耗：</strong>on six industry-oriented problems covering flow-shop, job-shop, flexible job-shop and resource-constrained warehouse scheduling, using three LLMs and assessing modeling accuracy, execution success, latency and token consumption</blockquote>
+          <blockquote><strong>实现错误高度集中，五种反复出现的错误解释了超过一半的错误语料：</strong>the corpus of implementation errors is highly concentrated: five recurrent mistakes explain more than half of it</blockquote>
+        </dd>
+      </dl>
+      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；读取了全文节选。证据范围不足的内容不应视为全文结论。</p>
+    </details>  </div>
+</article><article
+  class="paper-card"
+  data-paper-card
+  data-paper-id="arxiv:2610.11294:v1"
+  data-topic="mathematical-programming"
+>
+<div class="paper-card__cover">
+      <div class="paper-card__placeholder" aria-label="该论文暂未提取到可用原图">
+        <span>数学规划与混合求解</span>
+        <strong>arXiv:2610.11294</strong>
+        <small>本期暂无可用论文原图</small>
+      </div>
+  </div>
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">数学规划与混合求解</span>
+      <span>正文节选</span>
+      <span>相关性 8/10</span>
+      <span>v1</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2610.11294/">ORDO：面向混合整数规划预求解的操作级轮次感知动态排序</a></h3>
+    <p class="original-title" lang="en">ORDO: Operation-level Round-aware Dynamic Ordering for MIP Presolve</p>
+    <p class="authors">Zehuan Chen · Chunhe Song</p>
+
+<div class="paper-card__takeaway">
+      <p class="field-label">核心洞察</p>
+      <p>贡献有效的关键在于改变了决策对象：一旦从配置向量变为统一的原子动作序列，动作语义在不同域之间天然共享，迁移时无需重新定义动作空间，模型只需以实例特征为条件生成序列，因而跨域零样本加速成为建模范式的自然红利，而非额外施加的域适应模块。顺序携带的时序依赖本身是不可交换求解结果变化的主要来源，把它作为可学习的独立变量，使模型能够捕捉配置向量与参与子集所丢失的跨问题类共性；而序列竞赛进一步针对单条路径预测的重尾风险，用并发候选截断尾部，使内容单路径失效的实例仍能被覆盖，从而在不牺牲正确性的前提下同时获得内容质量增益与竞争放大增益。</p>
+    </div>
+    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>该论文把预求解规划从参数配置搜索重铸为统一原子动作空间上的自回归序列生成，并配套改造 SCIP 源码实现序列注入与执行观测，再以序列竞赛截断单路径重尾风险，这套“改变决策对象 + 学习生成 + 执行设施 + 竞赛部署”的组合对智能优化与 AI4OR 研究者具有方法论价值。其对不可交换性、时序依赖、跨域零样本边界、语料丰富度不能预测增益、以及匹配算力下 3.9–5.0 倍核心时间开销的诚实报告，为评估学习辅助搜索的约束可行性、解质量、公平算力预算与泛化提供了可借鉴的实验协议和边界意识。序列竞赛把组合与竞赛方法下沉到动作序列层级、并把增益分解为候选质量与竞争放大的分析思路，也可迁移到生产调度中多候选调度方案的并发求解与评估。</p>
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/mathematical-programming/" data-tag-filter="mathematical-programming">数学规划</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/benchmark/" data-tag-filter="benchmark">基准与泛化</a></li>
+    </ul>
+
+<details class="paper-details">
+      <summary>
+        <span class="summary-open">展开完整解读</span>
+        <span class="summary-close">收起完整解读</span>
+        <span aria-hidden="true" class="summary-arrow">↓</span>
+      </summary>
+
+      <div class="paper-details__meta">
+        <p><strong>模型细分主题：</strong>MIP 预求解阶段的操作级动作序列生成与序列竞赛</p>
+        <p><strong>模型原始标签：</strong>混合整数规划预求解、动作序列生成、自回归序列建模、序列竞赛、零样本跨域泛化、SCIP 源码改造</p>
+        <p><strong>第一单位：</strong>中国科学院工业人工智能研究院（Institute of Industrial Artificial Intelligence, CAS）</p>
+        <p><strong>通讯作者：</strong>Zehuan Chen, Chunhe Song</p>
+        <p><strong>首次上传：</strong>2026-10</p>
+        <p class="paper-links">
+          <a href="https://arxiv.org/abs/2610.11294">arXiv 摘要 ↗</a>
+<a href="https://arxiv.org/pdf/2610.11294">PDF ↗</a><a href="https://arxiv.org/html/2610.11294v1">官方 HTML ↗</a>        </p>
+      </div>
+
+
+      <dl class="research-note">
+        <dt>研究设定</dt><dd>论文研究混合整数规划（MIP）分支定界前的预求解（presolve）规划问题，决策对象是覆盖多类求解器组件的统一原子动作空间上的完整动作序列，目标是最小化该实例端到端的总求解时间（含后续分支定界）。关键约束在于：MIP 离散非凸导致预求解动作不可交换，一个动作的结果会改变其他动作的适用条件与强度，因此动作时序拓扑必须作为独立变量保留；求解器黑盒不提供注入动作序列的接口。信息假设为给定实例描述即可条件生成序列，环境处理为“自回归决策序列 + 在线每实例解码 + 序列竞赛”的半在线部署模式，训练语料离线构建，在线仅做逐实例解码与并发竞赛。其余要素如是否显式建模动态扰动，材料未说明。</dd>
+        <dt>研究动机</dt><dd>预求解对 MIP 整体性能影响仅次于割平面，且效果随实例族（域）变化，实测在某些域上比默认慢达 2.4 倍、在其他域上更快。作者指出既有学习型预求解方法存在共同局限：手工预设复用同一专家调度、自适应差；配置调优类方法只搜索固定维配置空间（如 L2P-MIP 把 14 个例程的优先级、时机与轮次形式化为 42 维向量），其输出不携带动作调用顺序，也无法干预约束处理回调的调用顺序；规则与子集选择只决定哪些例程参与，不决定顺序；组合与竞赛方法只在配置或完整求解策略层面构造候选。四类方法都停留在配置向量或参与子集层面，无法表达动作之间的时序依赖，因而难以跨问题类泛化。作者通过人为打乱同一序列顺序会令求解时间分布尾部膨胀数倍这一现象，论证顺序在功能上是必要的，从而把预求解规划重铸为动作序列上的自回归生成问题。</dd>
+        <dt>核心洞察</dt><dd>贡献有效的关键在于改变了决策对象：一旦从配置向量变为统一的原子动作序列，动作语义在不同域之间天然共享，迁移时无需重新定义动作空间，模型只需以实例特征为条件生成序列，因而跨域零样本加速成为建模范式的自然红利，而非额外施加的域适应模块。顺序携带的时序依赖本身是不可交换求解结果变化的主要来源，把它作为可学习的独立变量，使模型能够捕捉配置向量与参与子集所丢失的跨问题类共性；而序列竞赛进一步针对单条路径预测的重尾风险，用并发候选截断尾部，使内容单路径失效的实例仍能被覆盖，从而在不牺牲正确性的前提下同时获得内容质量增益与竞争放大增益。</dd>
+        <dt>技术挑战</dt><dd><ul><li>MIP 离散非凸导致预求解动作不可交换，顺序变化会改变约简结果与后续分支定界成本</li><li>现有学习型方法只能优化参数配置，无法表达动作间非交换的时序依赖，输出不含动作调用顺序</li><li>黑盒求解器不暴露注入动作序列的接口，需要在求解器源码层面改造以支持序列注入与执行观测</li><li>跨域零样本泛化困难，增益随域变化且不能被语料丰富度解释</li><li>单路径生成存在重尾失败风险，需要以并发生成截断尾部分布</li><li>序列搜索比内容单路径消耗更多核心时间（每核核心时间比为 3.9–5.0 倍），需在匹配算力下评估收益</li></ul></dd>
+        <dt>问题分析</dt><dd>作者从 MIP 预求解动作不可交换这一结构性质出发，通过人为打乱同一动作序列中元素的顺序，观测到求解时间分布尾部膨胀数倍，从而验证顺序在功能上必要，并据此把决策对象从配置向量提升为完整动作序列。作者以四类既有方法的决策对象为维度进行对照分析（手工启发式与参数调优、实例配置调优、规则与子集选择、组合与竞赛求解），逐项指出它们都止步于配置向量或参与子集，无法表达时序依赖；并明确承认顺序敏感性在 LP 侧与求解阶段已有先例，因此把“首次”限定在 MIP 侧的原子动作层级。在求解侧，作者将预求解规划形式化为给定实例描述 x 求生成分布 π(·|x)，并把生成过程重铸为自回归条件生成 p_θ(a_t | a_{0,…,t-1}, x)，同时强调该形式带来表征能力解耦与空间扩展两个结构差异。部署层面，作者分析单路径预测的重尾风险，引入序列竞赛并将收益分解为候选质量与竞争放大两部分，同时给出可吸收性论证：既有学习型预求解方案的输出都可回放为动作序列，因而原则上可被本框架吸收，反之不成立，但可吸收不等于可获利，作者未作收益声明。</dd>
+        <dt>方法</dt><dd><ul><li>统一原子动作空间：覆盖多类求解器组件，将动作顺序、轮次边界与执行契约全部纳入序列生成的输出空间</li><li>序列生成模型架构：以实例特征作为初始状态，与历史动作 token 拼接作为输入，采用 N×Blocks 的 Transformer 结构，含 LayerNorm、带因果掩码的多头自注意力（Q/K 施加旋转位置编码 RoPE）、残差连接、前馈网络与最终 LayerNorm，输出头经线性层自回归预测下一项</li><li>轮次与终止符共享输出空间：轮次边界与终止符与动作共享同一输出空间，使“以何顺序、在第几轮执行”由同一分布给出</li><li>学习目标：以完整动作序列为决策对象，按 p_θ(a_t | a_{0,…,t-1}, x) 进行自回归条件生成</li><li>执行与观测设施：修改 SCIP 10.0.1 源码，在原生路径上注入给定序列，并记录哪些动作实际执行以及在哪个轮次执行，以支持自定义动作序列的可控执行并保证解的正确性</li><li>序列竞赛部署：候选序列并发运行，池大小为 np + content×K + fallback×K = 2K+1 条路径同时启动，最先完成者胜出，其余以 SIGKILL 撤回；分子取胜出者的求解器内部时间</li><li>测量协议：分母为同批次 5 个默认策略同构副本中最先完成者的求解器内部时钟；对比时双方均使用 5 个在线核心与相同时间限制，且对手臂将同一配置复制 5 次取最快完成者，该不对称性被作者指出会压低自身读数</li><li>四阶段流水线：语料构建与序列建模各离线执行一次，在线部分仅执行逐实例解码与序列竞赛，测量层报告 SGM 比值与逐实例胜率</li></ul></dd>
+        <dt>实验</dt><dd><ul><li>运行环境为 SCIP 10.0.1，实例来自 Distributional MIPLIB（D-MIPLIB）的按域实例族基准，使用 easy val 划分的七个 MIP 域：CA、GISP、CFLP、MIS、MVC、SC（各 100 个实例）与 NNV（550 个）</li><li>主指标为相对默认策略的移位几何平均（SGM）比值，SGM(t) = (∏_i (t_i+1))^{1/n} − 1，移位为 1 秒，逐实例计算，超时按该实例时间限制计，比值小于 1 表示加速；同时报告逐实例胜率（快于默认的实例比例）</li><li>在线对比遵循统一协议：双方均使用 5 个在线核心与相同时间限制，全程使用求解器内部时钟；分母始终取同实例同设置下同批次 5 个默认策略同构副本中最先完成者的时钟，独立重复</li><li>零样本评估覆盖 6 个留一域与 1 个自然未见域，结果为 4 个加速、2 个持平、1 个失败；NNV 单路径为 0.8377，加竞赛后为 0.7181（对齐时间限制），增益主要来自分支搜索</li><li>内容质量必要性验证：随机内容（负对照）给出 1.1700/1.1954（&gt;1），说明内容质量是增益的必要条件</li><li>域内无系统差异：目标域在训练集中时与默认策略无系统差异（域内 CA 0.9804、GISP 1.0050），价值集中在跨域零样本与无先验执行</li><li>反直觉现象：在语料退化的域上，不把该域收集的序列训练进模型反而使零样本迁移更好；对语料丰富域（CA）则相反，该域语料是必要锚点，效应双向且依赖域，候选机制为序列空间退化</li><li>预算边界：需要插件级源码访问，每实例运行 2K+1 次，其每核核心时间与内容单路径之比为 3.9–5.0 倍，因此增益是在匹配算力下读取的</li></ul></dd>
+        <dt>局限</dt><dd><ul><li>作者明确把“首次”限定在 MIP 侧与原子动作层级，不作出“首次把预求解变为排序问题”的全局声明，因为顺序敏感性在 LP 侧与求解阶段已有先例</li><li>目标域在训练集中时与默认策略无系统差异，价值仅限于跨域零样本与无先验执行</li><li>增益随域变化且不能被语料丰富度预测，SC 与 NNV 成功而 CA 失败标出了该边界</li><li>可吸收性不等于可获利，论文不作收益声明</li><li>预算边界包括需要插件级源码访问，以及每实例 2K+1 次运行带来的 3.9–5.0 倍每核核心时间比</li></ul></dd>
+        <dt>与你的研究关系</dt><dd>论文事实层面：该工作直接研究 MIP 预求解阶段的操作级动作序列生成与部署，属于 AI4OR 中“学习辅助搜索/求解器组件决策”的方向；其决策对象、自回归条件生成、执行观测设施与序列竞赛机制，与神经网络辅助求解、学习辅助搜索的研究兴趣高度一致。迁移设想（推测）：把“决策对象从配置向量提升为可执行动作序列并保留时序拓扑”这一思路迁移到生产调度，尤其是柔性作业车间、流水车间与生产运输协同中工序序列或调度规则序列的生成，需要满足若干条件——存在一个可枚举、语义跨实例族共享的原子动作（或工序—资源分配操作）空间；动作之间不可交换且顺序影响目标（如 makespan、能耗或拖期）；能够以实例特征为条件进行自回归生成；并具备将候选序列注入仿真或求解器原生执行路径、记录实际执行与轮次的执行—观测设施。而序列竞赛迁移到调度时，需要在匹配算力预算下评估多个候选调度方案的并发求解收益，并注意论文本身提示的每核核心时间比放大问题。以上迁移为本文作者未涉及的推测，不能计作其结论。</dd>
+        <dt>证据与不确定性</dt>
+        <dd>
+          <p>输入材料为摘要加全文节选，节选中部分句子被截断（如“This paper theref”“the decision object is the orde”“ol of concurrent racing”“deploymen”“designing and pro”等），因此方法细节（如动作空间具体覆盖的求解器组件类别定义、候选 K 的取值、训练语料规模与训练开销、网络层数与隐藏维度、消融实验的完整设置）以及部分实验数值的上下文无法完整确认。作者身份与单位依据节选中作者标注与致谢脚注判断为中国科学院工业人工智能研究院，但节选未提供完整机构章节。关系与迁移部分已明确区分论文事实与推测。</p>
+          <blockquote><strong>论文把预求解规划重铸为统一原子动作空间上的自回归序列生成，决策对象是动作序列：</strong>We recast presolve planning as autoregressive sequence generation over a unified atomic action space, moving the decision object to action sequences; we call this framework ORDO---Operation-level Round-aware Dynamic Ordering for MIP Presolve.</blockquote>
+          <blockquote><strong>MIP 离散非凸导致预求解动作不可交换，执行顺序改变约简结果与后续分支定界成本：</strong>Because MIP is discrete and non-convex, presolve actions do not commute and the execution order changes the reduction outcome and the solving cost of the subsequent branch and bound.</blockquote>
+          <blockquote><strong>既有四类学习型预求解方法都止步于配置向量或参与子集层面，无法表达动作间时序依赖：</strong>The common limitation of the four classes is that none can express the temporal dependencies among actions: all of them stop at the configuration-vector or participation-subset level, so they capture no commonality across problem classes and cannot generalize</blockquote>
+          <blockquote><strong>作者通过修改 SCIP 源码实现序列注入与执行观测设施：</strong>Black-box solvers expose no interface for injecting an action sequence, so we modify the SCIP 10.0.1 source to inject a given sequence along the native path and to record which actions actually execute and in which round.</blockquote>
+          <blockquote><strong>序列竞赛的并发路径数为 2K+1，最先完成者胜出，其余被撤回：</strong>Pool = np + content×
+K
+K
++ fallback×
+K
+K
+=
+2
+​
+K
++
+1
+2K+1
+paths launched together; the first to finish wins and the others are withdrawn (SIGKILL)</blockquote>
+          <blockquote><strong>实验使用 D-MIPLIB 的七个 MIP 域，主指标为移位几何平均比值与逐实例胜率：</strong>Seven MIP domains are used: CA, GISP, CFLP, MIS, MVC, SC (100 instances each) and NNV (550), all from the easy val split.</blockquote>
+          <blockquote><strong>零样本跨域结果为 4 个加速、2 个持平、1 个失败，NNV 单路径 0.8377、加竞赛后 0.7181：</strong>The dividend of that reformulation on unseen domains is 4 accelerated, 2 tied and 1 failed, with NNV at 0.8377 single-path and 0.7181 after racing with aligned limits—and the gain comes mainly from branch search.</blockquote>
+          <blockquote><strong>序列竞赛每实例运行 2K+1 次，其每核核心时间与内容单路径之比为 3.9–5.0 倍：</strong>the
+2
+​
+K
++
+1
+2K+1
+runs per instance, whose core-time ratio per core against content single-path is 3.9–5.0
+×
+\times
+—gains are therefore read under matched compute.</blockquote>
+        </dd>
+      </dl>
+      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；读取了全文节选。证据范围不足的内容不应视为全文结论。</p>
+    </details>  </div>
+</article><article
+  class="paper-card"
+  data-paper-card
+  data-paper-id="arxiv:2610.11546:v1"
+  data-topic="evolutionary-optimization"
+>
+<div class="paper-card__cover">
+      <img
+        src="https://JiaqiTan111.github.io/Daily_Opt_Paper/figures/arxiv/2610.11546/v1/fig1-panel1.png"
+        alt="Figure 1：The flowchart of the proposed DRL-DCO algorithm."
+        loading="lazy"
+        decoding="async"
+        referrerpolicy="no-referrer"
+        data-paper-figure
+        data-original-url="https://arxiv.org/html/2610.11546v1/images/media/image1.png"
+      >
+      <div class="figure-error" hidden data-figure-error>论文图暂时无法加载，可从原文查看。</div>
+      <p class="paper-card__cover-caption"><strong>Figure 1</strong> The flowchart of the proposed DRL-DCO algorithm.</p>
+  </div>
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">进化与智能优化</span>
+      <span>正文节选</span>
+      <span>相关性 8/10</span>
+      <span>v1</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2610.11546/">学习编排进化搜索：用于优化与结构模型修正中动态DE-CMA-ES协调的进程感知深度强化学习</a></h3>
+    <p class="original-title" lang="en">Learning to Orchestrate Evolutionary Search: Progression-Aware Deep Reinforcement Learning for Dynamic DE-CMA-ES Coordination in Optimization and Structural Model Updating</p>
+    <p class="authors">Lechen Li (1 · 2) · Rongye Shi (3) · Wanhuan Zhou (1) ((1) State Key Laboratory of Internet of Things for Smart City · University of Macau · Macau 519000 · China · (2) College of Water Conservancy · Hydropower Engineering · Hohai University · Nanjing 210098 · (3) School of Artificial Intelligence · Beihang University · Beijing 100191 · China)</p>
+
+<div class="paper-card__takeaway">
+      <p class="field-label">核心洞察</p>
+      <p>该研究的核心洞察在于：将DE和CMA-ES的协同视为一个由深度强化学习智能体连续控制的统一决策过程，而非算法的机械拼接。通过设计进程感知的状态表示和多样性驱动的奖励函数，智能体能够根据搜索进程的当前状态动态分配探索和开发资源，从而在保持CMA-ES全局分布结构的同时保留DE的多样性恢复能力，实现探索主导、开发主导和混合策略模式的自发切换。这种协同方式的有效性来源于对搜索进程的持续感知和资源动态重分配，而非简单的模块叠加。</p>
+    </div>
+    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>该论文对研究智能优化和生产调度的读者具有较高参考价值。首先，它提出了一种将深度强化学习与多种进化策略动态协同的统一框架，可启发生产调度中多算子或多元启发式协同的研究。其次，其进程感知状态表示和多样性驱动奖励设计为学习辅助搜索中的状态和奖励设计提供了具体思路。第三，无监督推理模式为训练后策略的快速部署提供了工程可行性。第四，论文在高维基准函数和实际工程问题上进行了验证，展示了方法的泛化能力，对关注算法机制、约束可行性和求解质量的研究者有借鉴意义。</p>
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/dynamic-robust/" data-tag-filter="dynamic-robust">动态与鲁棒</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/reinforcement-learning/" data-tag-filter="reinforcement-learning">强化学习</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/evolutionary/" data-tag-filter="evolutionary">进化与群智能</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/benchmark/" data-tag-filter="benchmark">基准与泛化</a></li>
+    </ul>
+
+<details class="paper-details">
+      <summary>
+        <span class="summary-open">展开完整解读</span>
+        <span class="summary-close">收起完整解读</span>
+        <span aria-hidden="true" class="summary-arrow">↓</span>
+      </summary>
+
+      <div class="paper-details__meta">
+        <p><strong>模型细分主题：</strong>深度强化学习驱动的进化算法动态编排与混合DE-CMA-ES协同</p>
+        <p><strong>模型原始标签：</strong>深度强化学习、进化算法、DDPG、DE-CMA-ES混合、学习辅助搜索、结构模型修正、高维优化</p>
+        <p><strong>第一单位：</strong>澳门大学智慧城市物联网国家重点实验室</p>
+        <p><strong>通讯作者：</strong>Lechen Li</p>
+        <p><strong>首次上传：</strong>2026-10</p>
+        <p class="paper-links">
+          <a href="https://arxiv.org/abs/2610.11546">arXiv 摘要 ↗</a>
+<a href="https://arxiv.org/pdf/2610.11546">PDF ↗</a><a href="https://arxiv.org/html/2610.11546v1">官方 HTML ↗</a>        </p>
+      </div>
+
+      <div class="paper-figures">
+        <figure class="paper-figure">
+          <div class="paper-figure__media">
+            <img
+              src="https://JiaqiTan111.github.io/Daily_Opt_Paper/figures/arxiv/2610.11546/v1/fig1-panel1.png"
+              alt="Figure 1：The flowchart of the proposed DRL-DCO algorithm."
+              loading="lazy"
+              decoding="async"
+              referrerpolicy="no-referrer"
+              data-paper-figure
+              data-original-url="https://arxiv.org/html/2610.11546v1/images/media/image1.png"
+            >
+            <div class="figure-error" hidden data-figure-error>该论文图暂时无法加载，可从原文查看。</div>
+          </div>
+          <figcaption>
+            <strong>Figure 1.</strong> The flowchart of the proposed DRL-DCO algorithm.
+            <a class="figure-source" href="https://arxiv.org/html/2610.11546v1#Sx2.F1">来源：论文官方 arXiv HTML ↗</a>
+          </figcaption>
+        </figure>
+        <figure class="paper-figure">
+          <div class="paper-figure__media">
+            <img
+              src="https://JiaqiTan111.github.io/Daily_Opt_Paper/figures/arxiv/2610.11546/v1/fig2-panel1.png"
+              alt="Figure 2：Convergence histories of best fitness and effective population distribution of the five baseline algorithms and the DRL-DCO algorithm (agent-training phase) on the Rastrigin and Rosenbrock functions at dimensionality N d = 50 N_{\text{d}}=50 . (a) Convergence history on Rastrigin; (b) effective population size distribution on Rastrigin; (c) convergence history on Rosenbrock; (d) effective population size distribution on Rosenbrock."
+              loading="lazy"
+              decoding="async"
+              referrerpolicy="no-referrer"
+              data-paper-figure
+              data-original-url="https://arxiv.org/html/2610.11546v1/images/media/image4.png"
+            >
+            <div class="figure-error" hidden data-figure-error>该论文图暂时无法加载，可从原文查看。</div>
+          </div>
+          <figcaption>
+            <strong>Figure 2.</strong> Convergence histories of best fitness and effective population distribution of the five baseline algorithms and the DRL-DCO algorithm (agent-training phase) on the Rastrigin and Rosenbrock functions at dimensionality N d = 50 N_{\text{d}}=50 . (a) Convergence history on Rastrigin; (b) effective population size distribution on Rastrigin; (c) convergence history on Rosenbrock; (d) effective population size distribution on Rosenbrock.
+            <a class="figure-source" href="https://arxiv.org/html/2610.11546v1#Sx3.F2">来源：论文官方 arXiv HTML ↗</a>
+          </figcaption>
+        </figure>
+      </div>
+      <p class="copyright">图片来自论文官方 arXiv 页面，仅用于论文导航与学术阅读；版权归论文作者或相关权利人所有。</p>
+
+      <dl class="research-note">
+        <dt>研究设定</dt><dd>论文研究高维单目标优化问题，特别是结构模型修正（FEMU）中需要在复杂非凸、参数相关的适应度景观上最小化模型预测响应与观测响应之间差异的优化问题。决策对象是每代中DE与CMA-ES之间的计算资源分配比例、种群规模、精英保留策略和重启机制。目标是在有限计算预算下同时保证收敛精度和鲁棒性，避免过早收敛到局部最优。关键约束包括高维参数空间中的非凸性和变量耦合。信息假设为搜索过程中可观测种群统计信息和进程状态，但未明确说明是否获得梯度或真实函数结构信息。环境为静态优化问题，但搜索过程被视为顺序决策过程，由智能体在代际间连续控制。</dd>
+        <dt>研究动机</dt><dd>现有混合进化算法通常依赖静态架构或固定切换规则，导致搜索阶段割裂，无法根据搜索进程动态调整探索与开发之间的平衡。同时，现有RL辅助EA方法多数将RL组件限制为对单一进化策略的间歇性干预，且缺乏对适应度景观或搜索进程的充分感知。因此，需要一种能够连续、进程感知地协调多种进化搜索策略的统一框架。</dd>
+        <dt>核心洞察</dt><dd>该研究的核心洞察在于：将DE和CMA-ES的协同视为一个由深度强化学习智能体连续控制的统一决策过程，而非算法的机械拼接。通过设计进程感知的状态表示和多样性驱动的奖励函数，智能体能够根据搜索进程的当前状态动态分配探索和开发资源，从而在保持CMA-ES全局分布结构的同时保留DE的多样性恢复能力，实现探索主导、开发主导和混合策略模式的自发切换。这种协同方式的有效性来源于对搜索进程的持续感知和资源动态重分配，而非简单的模块叠加。</dd>
+        <dt>技术挑战</dt><dd><ul><li>高维非凸优化问题中变量耦合和欺骗性最优导致的搜索困难</li><li>现有混合进化算法中固定切换规则导致搜索阶段割裂</li><li>RL辅助进化算法中状态表示缺乏进程感知和景观感知</li><li>训练后的策略需要在无监督推理模式下保持有效性</li><li>连续多维动作空间的设计与控制</li></ul></dd>
+        <dt>问题分析</dt><dd>作者将DE-CMA-ES的混合搜索过程建模为马尔可夫决策过程，利用DDPG的actor-critic架构对进化过程进行连续控制。通过进程感知的状态表示捕捉搜索进程信息，通过多样性驱动的奖励函数引导智能体学习资源分配策略。作者分析了现有RL辅助EA方法将RL限制为间歇性干预单一步骤的局限，并据此设计了对两个并行进化过程进行连续控制的机制。材料未说明作者是否利用了适应度景观的图表示、分解或下界等结构信息。</dd>
+        <dt>方法</dt><dd><ul><li>采用DDPG的actor-critic架构，actor网络根据当前搜索状态输出连续动作，critic网络评估动作价值</li><li>状态表示为进程感知的搜索状态，包含种群统计信息和进程指标</li><li>动作空间为连续多维，控制DE与CMA-ES之间的资源分配比例、种群规模、精英保留和重启机制</li><li>奖励函数为多样性驱动的奖励，引导智能体平衡探索与开发</li><li>智能体在每代对非精英子集进行DE和CMA-ES的连续编排，而非对每代整个种群硬切换</li><li>训练阶段使用critic监督，通过确定性策略梯度更新actor和critic网络参数</li><li>推理阶段仅使用actor进行前向推断，无需critic评估和网络更新，实现无监督部署</li><li>支持探索主导、开发主导和混合策略三种模式的自主切换</li><li>包含重启机制以逃离局部最优，并支持在达到阈值时提前终止回合</li></ul></dd>
+        <dt>实验</dt><dd><ul><li>在五个高维单目标基准函数上验证：Ackley、Griewank、Rastrigin、Rosenbrock和Schwefel函数</li><li>在IASC-ASCE结构健康监测基准上进行FEMU任务验证</li><li>基线包括最先进的自适应和混合进化算法，以及单算子DRL治理的基线</li><li>DRL-DCO在收敛精度和鲁棒性上优于对比方法</li><li>在IASC-ASCE基准上，智能体推理阶段在五种损伤工况下识别刚度值，10次独立运行取平均</li><li>材料未说明具体的计算预算、种群规模、迭代次数、运行时间或训练开销</li></ul></dd>
+        <dt>局限</dt><dd><ul><li>材料未说明</li></ul></dd>
+        <dt>与你的研究关系</dt><dd>该论文与智能优化和生产调度中的学习辅助搜索方向有明确的迁移路径。论文研究的核心问题是利用深度强化学习动态编排多种进化搜索策略，这一思路可直接迁移到柔性作业车间调度、流水车间调度等组合优化问题中，其中不同邻域结构或不同元启发式策略的协同可通过类似框架进行动态协调。迁移设想（推测）：将DE-CMA-ES的连续编排机制迁移到生产调度问题时，需要将状态表示从连续优化问题中的种群统计和进程指标扩展为包含调度解特征、机器负载、工序约束满足度等信息的表示；动作空间需要从连续资源分配比例调整为适用于调度问题中的算子选择或参数调节；奖励函数需要融入完工时间、约束违反惩罚等调度目标；同时需要验证在离散解空间和动态扰动下的泛化能力。此外，无监督推理模式对生产调度中的在线决策具有潜在价值，但需要验证在动态环境中的适应性。</dd>
+        <dt>证据与不确定性</dt>
+        <dd>
+          <p>由于仅提供了摘要和部分全文节选，缺少方法部分的具体网络结构、训练细节、完整的实验设置和结果数据，对方法细节和实验结论的理解存在不确定性。特别是关于计算预算、种群规模、迭代次数等关键实验参数未在节选中明确给出，无法评估方法的实际计算效率和公平计算预算。此外，对于状态表示的具体构成、奖励函数的具体形式以及动作空间的具体维度，节选材料中未提供完整描述。</p>
+          <blockquote><strong>论文提出了一种由深度强化学习治理的动态DE-CMA-ES编排算法，使用DDPG的actor-critic智能体连续控制进化过程：</strong>this study proposes a Deep Reinforcement Learning-governed dynamic DE-CMAES Orchestration (DRL-DCO) algorithm, in which a Deep Deterministic Policy Gradient (DDPG)-based actor-critic agent continuously governs the evolutionary process as a single, unified system rather than a mechanical concatenation of algorithms.</blockquote>
+          <blockquote><strong>智能体通过进程感知状态表示和多样性驱动奖励，在DE和CMA-ES之间动态分配计算资源，并同时调控种群规模、精英保留和重启机制：</strong>Guided by a progression-aware state representation and a diversity-informed reward, the agent fluidly reallocates computational resources between the differencevector-based exploration of Differential Evolution (DE) and the covariance-guided exploitation of CMA-ES, while jointly regulating population size, elite preservation, and a restart mechanism to escape local optima.</blockquote>
+          <blockquote><strong>训练后的actor可以在无监督推理模式下仅通过前向推断自主编排DE和CMA-ES控制，无需critic评估或权重更新：</strong>the trained actor can operate in a supervision-free inference mode, where the internalized policy autonomously orchestrates DE and CMA-ES control from observed search states through forward inference alone, without critic evaluation or weight updates, enabling faster deployment while retaining full effectiveness.</blockquote>
+          <blockquote><strong>论文在高维单目标优化基准和IASC-ASCE结构健康监测基准上验证，在收敛精度和鲁棒性上优于最先进的自适应和混合进化算法以及单算子DRL治理基线：</strong>Validated on high-dimensional single-objective optimization benchmarks and the IASC-ASCE structural health monitoring benchmark, DRL-DCO achieves superior convergence accuracy and robustness compared to state-of-the-art adaptive and hybrid evolutionary algorithms, as well as single-operator DRL-governed baselines.</blockquote>
+          <blockquote><strong>现有混合进化算法依赖静态架构或固定切换规则，导致搜索阶段割裂：</strong>Existing hybrid evolutionary algorithms typically rely on static architectures or fixed switching rules, resulting in disjointed search phases.</blockquote>
+          <blockquote><strong>实验采用五个代表性单目标基准函数：Ackley、Griewank、Rastrigin、Rosenbrock和Schwefel函数：</strong>Five representative single-objective benchmark functions were adopted: the Ackley, Griewank, Rastrigin, Rosenbrock, and Schwefel functions</blockquote>
+        </dd>
+      </dl>
+      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；读取了全文节选。证据范围不足的内容不应视为全文结论。</p>
+    </details>  </div>
+</article><article
+  class="paper-card"
+  data-paper-card
+  data-paper-id="arxiv:2610.12183:v1"
+  data-topic="agents-ai4or"
+>
+<div class="paper-card__cover">
+      <img
+        src="https://JiaqiTan111.github.io/Daily_Opt_Paper/figures/arxiv/2610.12183/v1/fig1-panel1.png"
+        alt="Figure 1：Frontier-model comparison on AgenticBBO-Bench. Left: overall benchmark scores. Right: score versus official list-price token cost per task (log scale). Models with similar optimization performance can incur substantially different inference costs."
+        loading="lazy"
+        decoding="async"
+        referrerpolicy="no-referrer"
+        data-paper-figure
+        data-original-url="https://arxiv.org/html/2610.12183v1/frontier_model_scores_final_colors_mixed_markers.png"
+      >
+      <div class="figure-error" hidden data-figure-error>论文图暂时无法加载，可从原文查看。</div>
+      <p class="paper-card__cover-caption"><strong>Figure 1</strong> Frontier-model comparison on AgenticBBO-Bench. Left: overall benchmark scores. Right: score versus official list-price token cost per task (log scale). Models with similar optimization performance can incur substantially different inference costs.</p>
+  </div>
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">智能体与自动建模</span>
+      <span>正文节选</span>
+      <span>相关性 7/10</span>
+      <span>v1</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2610.12183/">深入审视智能体式黑箱优化：面向黑箱优化的LLM智能体基准测试</a></h3>
+    <p class="original-title" lang="en">A Closer Look at Agentic BBO: Benchmarking LLM Agents for Black-Box Optimization</p>
+    <p class="authors">Ming Chen · Rong-Xi Tan · Ke Xue · Yu-Jie Zhou · Taiye Lu · Zhi-Xuan Gao · Peng Xie · Zijun Shen · Chen Lu · Haopu Shang · Chao Qian</p>
+
+<div class="paper-card__takeaway">
+      <p class="field-label">核心洞察</p>
+      <p>LLM智能体在BBO中的价值不在于简单替换数值优化器，而在于结合任务语义、计算、优化工具与反馈驱动决策；但额外数值工具并不总是带来提升，任务语义普遍有用而更具体的先验知识可靠性较低，且数值优化器可以有效吸收智能体建立的搜索轨迹收益。因此，性能提升依赖智能体设计、任务适配和搜索策略，而非单纯使用更昂贵的前沿模型。</p>
+    </div>
+    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>当前研究者关注神经网络、强化学习、多智能体和学习辅助搜索与优化求解器的结合。该论文提供了跨域智能体式BBO的统一基准、有限预算评估协议以及对优化工具、任务知识和LLM角色的大规模控制实验，有助于理解LLM智能体在优化中的真实增益与设计取舍，对设计生产调度中的智能体优化系统、评估公平计算预算和泛化性具有直接参考价值。</p>
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/agents/" data-tag-filter="agents">多智能体</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/llm/" data-tag-filter="llm">大模型辅助优化</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/benchmark/" data-tag-filter="benchmark">基准与泛化</a></li>
+    </ul>
+
+<details class="paper-details">
+      <summary>
+        <span class="summary-open">展开完整解读</span>
+        <span class="summary-close">收起完整解读</span>
+        <span aria-hidden="true" class="summary-arrow">↓</span>
+      </summary>
+
+      <div class="paper-details__meta">
+        <p><strong>模型细分主题：</strong>大模型智能体用于黑箱优化的跨域基准测试与设计因素分析</p>
+        <p><strong>模型原始标签：</strong>黑箱优化、LLM智能体、基准测试、有限预算评估、优化工具集成、超参数优化、数据库调优、芯片设计、分子设计</p>
+        <p><strong>第一单位：</strong>南京大学新型软件技术国家重点实验室；南京大学人工智能学院</p>
+        <p><strong>通讯作者：</strong>Ke Xue, Chao Qian</p>
+        <p><strong>首次上传：</strong>2026-10</p>
+        <p class="paper-links">
+          <a href="https://arxiv.org/abs/2610.12183">arXiv 摘要 ↗</a>
+<a href="https://arxiv.org/pdf/2610.12183">PDF ↗</a><a href="https://arxiv.org/html/2610.12183v1">官方 HTML ↗</a>        </p>
+      </div>
+
+      <div class="paper-figures">
+        <figure class="paper-figure">
+          <div class="paper-figure__media">
+            <img
+              src="https://JiaqiTan111.github.io/Daily_Opt_Paper/figures/arxiv/2610.12183/v1/fig1-panel1.png"
+              alt="Figure 1：Frontier-model comparison on AgenticBBO-Bench. Left: overall benchmark scores. Right: score versus official list-price token cost per task (log scale). Models with similar optimization performance can incur substantially different inference costs."
+              loading="lazy"
+              decoding="async"
+              referrerpolicy="no-referrer"
+              data-paper-figure
+              data-original-url="https://arxiv.org/html/2610.12183v1/frontier_model_scores_final_colors_mixed_markers.png"
+            >
+            <div class="figure-error" hidden data-figure-error>该论文图暂时无法加载，可从原文查看。</div>
+          </div>
+          <figcaption>
+            <strong>Figure 1.</strong> Frontier-model comparison on AgenticBBO-Bench. Left: overall benchmark scores. Right: score versus official list-price token cost per task (log scale). Models with similar optimization performance can incur substantially different inference costs.
+            <a class="figure-source" href="https://arxiv.org/html/2610.12183v1#S1.F1">来源：论文官方 arXiv HTML ↗</a>
+          </figcaption>
+        </figure>
+        <figure class="paper-figure">
+          <div class="paper-figure__media">
+            <img
+              src="https://JiaqiTan111.github.io/Daily_Opt_Paper/figures/arxiv/2610.12183/v1/fig2-panel1.png"
+              alt="Figure 2：Comparison between traditional Bayesian optimization and Agentic BBO. Traditional BO follows a fixed optimizer-driven procedure, whereas Agentic BBO lets an LLM agent organize the intermediate decision process before each expensive evaluation. The actions shown in the agent loop are representative examples rather than a fixed or exhaustive workflow: the agent may dynamically choose, skip, repeat, combine, or introduce other actions before proposing a candidate."
+              loading="lazy"
+              decoding="async"
+              referrerpolicy="no-referrer"
+              data-paper-figure
+              data-original-url="https://arxiv.org/html/2610.12183v1/Traditional_BO_vs_Agentic_BBO_v4.png"
+            >
+            <div class="figure-error" hidden data-figure-error>该论文图暂时无法加载，可从原文查看。</div>
+          </div>
+          <figcaption>
+            <strong>Figure 2.</strong> Comparison between traditional Bayesian optimization and Agentic BBO. Traditional BO follows a fixed optimizer-driven procedure, whereas Agentic BBO lets an LLM agent organize the intermediate decision process before each expensive evaluation. The actions shown in the agent loop are representative examples rather than a fixed or exhaustive workflow: the agent may dynamically choose, skip, repeat, combine, or introduce other actions before proposing a candidate.
+            <a class="figure-source" href="https://arxiv.org/html/2610.12183v1#S3.F2">来源：论文官方 arXiv HTML ↗</a>
+          </figcaption>
+        </figure>
+      </div>
+      <p class="copyright">图片来自论文官方 arXiv 页面，仅用于论文导航与学术阅读；版权归论文作者或相关权利人所有。</p>
+
+      <dl class="research-note">
+        <dt>研究设定</dt><dd>研究问题为在目标函数解析形式和梯度不可得、且每次评估代价高昂的黑箱优化（BBO）中，如何使用大语言模型（LLM）智能体进行有限预算下的优化。决策对象是智能体在搜索过程中如何调用计算资源、优化工具和反馈驱动决策；目标是在统一有限预算协议下最大化优化得分。关键约束包括统一的有限评估预算、目标函数为黑箱且评估昂贵。信息假设为智能体可获取任务语义、先验知识以及数值优化工具的输出。环境为静态黑箱优化任务，涵盖合成函数、超参数优化、数据库调优、芯片设计和分子设计五个领域；动态扰动未说明。</dd>
+        <dt>研究动机</dt><dd>现有智能体式BBO研究使用不同任务领域和系统配置，导致结果难以比较、单个设计选择的效果难以隔离。作者因此构建统一协议下的跨域基准，以系统比较LLM智能体在BBO中的表现并分析影响性能的设计因素。</dd>
+        <dt>核心洞察</dt><dd>LLM智能体在BBO中的价值不在于简单替换数值优化器，而在于结合任务语义、计算、优化工具与反馈驱动决策；但额外数值工具并不总是带来提升，任务语义普遍有用而更具体的先验知识可靠性较低，且数值优化器可以有效吸收智能体建立的搜索轨迹收益。因此，性能提升依赖智能体设计、任务适配和搜索策略，而非单纯使用更昂贵的前沿模型。</dd>
+        <dt>技术挑战</dt><dd><ul><li>现有智能体式BBO研究任务领域和系统配置不统一，结果难以比较，设计选择效果难以隔离</li><li>额外数值优化工具并不一致地提升性能</li><li>更具体的先验知识可靠性较低</li><li>前沿模型成本高，但单纯使用更贵模型并不能替代更好的智能体设计与搜索策略</li><li>离线优化器开发在不相交任务上的迁移不可靠</li></ul></dd>
+        <dt>问题分析</dt><dd>作者通过构建统一有限预算评估协议下的跨域基准 AgenticBBO-Bench，在五个领域上比较智能体式BBO、直接LLM方法和最佳数值优化器，并控制三个因素（优化工具、任务信息与先验知识、LLM在搜索中的角色）进行消融分析。此外，作者设计五任务前沿挑战并在Codex智能体框架下评估七种LLM，分析性能与成本权衡。</dd>
+        <dt>方法</dt><dd><ul><li>构建 AgenticBBO-Bench 跨域基准，覆盖合成函数、超参数优化、数据库调优、芯片设计和分子设计五个领域</li><li>采用统一的有限预算评估协议，使不同任务和系统配置可比较</li><li>定义智能体式BBO配置：结合任务语义、计算、优化工具和反馈驱动决策</li><li>设计受控实验分析三个因素：优化工具、任务信息与先验知识、LLM在搜索中的角色</li><li>提出五任务前沿挑战，并在Codex智能体框架下评估七种LLM，比较性能与成本</li></ul></dd>
+        <dt>实验</dt><dd><ul><li>在五个领域上，智能体式BBO的家族平均得分高于直接LLM方法；在四个领域中优于最佳数值优化器</li><li>额外数值工具并不一致地提升性能</li><li>任务语义普遍有用，而更具体的先验知识可靠性较低</li><li>数值优化器可以有效吸收智能体建立的搜索轨迹收益</li><li>在五任务前沿挑战中，使用Codex智能体框架评估七种LLM，GPT-6 Astra 与 DeepSeek-V4.1-Flash 在所评估模型中位于性能与成本的帕累托前沿</li><li>离线优化器开发报告了开发集与留出任务得分的差异（开发S=0.607，留出0.279），但作者声明仅三个会话，应视为描述性证据而非因果结论</li></ul></dd>
+        <dt>局限</dt><dd><ul><li>作者明确指出离线优化器开发在不相交任务上的迁移不可靠，且由于每个家族仅三个会话，该结果应视为描述性证据而非因果结论</li><li>前沿挑战规模紧凑，可能限制泛化评估</li><li>更具体的先验知识可靠性较低</li></ul></dd>
+        <dt>与你的研究关系</dt><dd>该论文直接研究智能体式黑箱优化，与AI4OR中学习辅助搜索、大模型智能体、自动建模和优化求解器结合密切相关。其统一有限预算评估协议、工具集成分析和性能-成本帕累托前沿分析，可直接迁移到生产调度、柔性作业车间等带约束优化问题的智能体设计评估中。推测：若要将该方法迁移到生产调度，需将调度问题形式化为黑箱优化任务，定义可评估的调度目标与约束可行性检查，并适配调度领域的任务语义与先验知识；还需验证在离散决策、多约束和动态扰动场景下智能体工具调用的有效性。</dd>
+        <dt>证据与不确定性</dt>
+        <dd>
+          <p>全文节选仅包含摘要、引言、结论、实验片段和参考文献，缺少方法细节、完整实验表格、基线设置和附录内容。因此对智能体内部架构、状态动作定义、训练开销、消融实验的具体数字和统计显著性无法完全确认。部分结论依赖作者陈述，证据强度有限。</p>
+          <blockquote><strong>论文构建了跨域智能体式BBO基准，覆盖五个领域，并采用统一有限预算评估协议：</strong>We therefore introduce AgenticBBO-Bench, a cross-domain benchmark for agentic BBO spanning synthetic functions, hyperparameter optimization, database tuning, chip design, and molecular design under a unified finite-budget evaluation protocol.</blockquote>
+          <blockquote><strong>智能体式BBO在五个领域中家族平均得分高于直接LLM方法，并在四个领域中优于最佳数值优化器：</strong>In our experiments, agentic BBO achieves higher family-averaged scores than direct LLM-based methods in all five domains and outperforms the best numerical optimizers in four.</blockquote>
+          <blockquote><strong>额外数值工具并不一致地提升性能，任务语义普遍有用而更具体先验知识可靠性较低，数值优化器可有效吸收智能体建立的搜索轨迹收益：</strong>Our results show that additional numerical tools do not consistently improve performance, task semantics are broadly useful while more specific priors are less reliable, and numerical optimizers can effectively absorb gains from search trajectories established by the agent.</blockquote>
+          <blockquote><strong>在五任务前沿挑战中，GPT-6 Astra 与 DeepSeek-V4.1-Flash 位于所评估模型的性能与成本帕累托前沿：</strong>Finally, we introduce a five-task frontier challenge within AgenticBBO-Bench and evaluate seven LLMs under the Codex agent harness, where GPT-6 Astra and DeepSeek-V4.1-Flash lie on the Pareto frontier of performance and cost among the evaluated models.</blockquote>
+          <blockquote><strong>离线优化器开发在不相交任务上的迁移不可靠，且因会话数少应视为描述性证据：</strong>These results show that optimizer development can improve over the fixed GP baseline, but transfer to disjoint tasks is not uniformly reliable in this setting. The variation may reflect sensitivity to the particular development tasks rather than a general limitation of offline optimizer development. With only three sessions per family, the result should therefore be viewed as descriptive evidence rather than a causal claim about overfitting or any individual design choice.</blockquote>
+        </dd>
+      </dl>
+      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；读取了全文节选。证据范围不足的内容不应视为全文结论。</p>
+    </details>  </div>
+</article><article
+  class="paper-card"
+  data-paper-card
+  data-paper-id="arxiv:2610.11759:v1"
+  data-topic="routing-resources"
+>
+<div class="paper-card__cover">
+      <div class="paper-card__placeholder" aria-label="该论文暂未提取到可用原图">
+        <span>路径与资源优化</span>
+        <strong>arXiv:2610.11759</strong>
+        <small>本期暂无可用论文原图</small>
+      </div>
+  </div>
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">路径与资源优化</span>
+      <span>正文节选</span>
+      <span>相关性 6/10</span>
+      <span>v1</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2610.11759/">超越 QAOA：面向自适应组合优化的 AI 与量子计算综述</a></h3>
+    <p class="original-title" lang="en">Beyond QAOA: A Review of AI and Quantum Computing for Adaptive Combinatorial Optimization</p>
+    <p class="authors">Hoong Chuin LAU</p>
+
+<div class="paper-card__takeaway">
+      <p class="field-label">核心洞察</p>
+      <p>作者的核心洞察是：量子组合优化的瓶颈正在从“问题能否放到量子处理器上”转向“经典与量子资源应在整个优化过程中如何分配”，因此许多围绕 QPU 的决策可以被显式地建模为学习或序贯决策问题；这一视角之所以有效，是因为即使尚未建立量子优势，减少 QPU 调用、改善可行性和选择更好后端本身也具有实用价值，从而为 AI 辅助量子优化提供了独立于量子优势的评估标准。</p>
+    </div>
+    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>推荐阅读的原因在于：该综述虽以量子组合优化为主，但其核心框架是把优化流水线中的关键决策显式建模为学习或序贯决策问题，并强调公平计算预算、经典基线、消融与资源匹配的证据分级；这些原则与生产调度和 AI4OR 研究中关注的约束可行性、求解质量、公平预算和可复现性高度一致，可为学习辅助搜索与求解器选择研究提供方法论参照。</p>
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/benchmark/" data-tag-filter="benchmark">基准与泛化</a></li>
+    </ul>
+
+<details class="paper-details">
+      <summary>
+        <span class="summary-open">展开完整解读</span>
+        <span class="summary-close">收起完整解读</span>
+        <span aria-hidden="true" class="summary-arrow">↓</span>
+      </summary>
+
+      <div class="paper-details__meta">
+        <p><strong>模型细分主题：</strong>AI 与量子计算交叉的自适应组合优化综述</p>
+        <p><strong>模型原始标签：</strong>组合优化、量子优化、QAOA、自适应求解流程、学习型策略、资源分配、基准评测</p>
+        <p><strong>第一单位：</strong>School of Computing and Information Systems, Singapore Management University, Singapore</p>
+        <p><strong>通讯作者：</strong>Hoong Chuin Lau</p>
+        <p><strong>首次上传：</strong>2026-10</p>
+        <p class="paper-links">
+          <a href="https://arxiv.org/abs/2610.11759">arXiv 摘要 ↗</a>
+<a href="https://arxiv.org/pdf/2610.11759">PDF ↗</a><a href="https://arxiv.org/html/2610.11759v1">官方 HTML ↗</a>        </p>
+      </div>
+
+
+      <dl class="research-note">
+        <dt>研究设定</dt><dd>论文是一篇综述，研究对象是近中期量子组合优化工作流中的自适应决策问题：传统上预先固定的形式化、惩罚项、分解、线路结构、测量预算、后端选择以及是否调用 QPU 等决策，改由学习型策略依据问题实例、求解进度或硬件状态来做出；目标是在量子硬件受 qubit 数量、线路保真度、采样成本、校准漂移和约束编码困难限制的条件下，提升量子或混合量子优化流水线的效率与可行性；关键约束包括量子资源稀缺、约束编码困难以及缺乏公平的经典基线对比；信息假设方面，学习型策略可以观察实例、求解进度和硬件状态；环境是含噪声近中期量子硬件与经典计算资源并存的静态或动态混合环境，材料未给出更细的动态扰动设定。</dd>
+        <dt>研究动机</dt><dd>近中期量子方法在 qubit 数量、线路保真度、采样成本、校准漂移和约束编码方面受限，而机器学习正越来越多地用于配置和控制量子优化工作流；作者希望回答 AI 如何改变量子组合优化的设计与运行，以及量子计算在何处改变基于 AI 的优化器，并通过证据分级揭示该交叉领域的真实进展与实验控制薄弱问题。</dd>
+        <dt>核心洞察</dt><dd>作者的核心洞察是：量子组合优化的瓶颈正在从“问题能否放到量子处理器上”转向“经典与量子资源应在整个优化过程中如何分配”，因此许多围绕 QPU 的决策可以被显式地建模为学习或序贯决策问题；这一视角之所以有效，是因为即使尚未建立量子优势，减少 QPU 调用、改善可行性和选择更好后端本身也具有实用价值，从而为 AI 辅助量子优化提供了独立于量子优势的评估标准。</dd>
+        <dt>技术挑战</dt><dd><ul><li>量子硬件受 qubit 数量、线路保真度、采样成本、校准漂移限制</li><li>约束编码到 QUBO/Ising 形式困难，惩罚项、松弛变量和稀疏可行子空间常主导性能</li><li>实验控制薄弱：57 项研究中有 25 项没有经典基线</li><li>仅 24 项涉及消融的研究中有 10 项完全隔离了量子贡献</li><li>中位实验仅使用 17 个 qubit</li><li>2025—2026 年文献多为预印本且指标异质性过强，难以做定量元分析</li><li>量子计算改进学习型优化器的证据大多局限于小规模模拟</li><li>尚无最高证据等级上广泛令人信服的结果</li></ul></dd>
+        <dt>问题分析</dt><dd>作者按所做决策而非应用领域组织文献，将其归入 AI for quantum optimization、quantum for AI-driven optimization 和 AI–quantum co-optimization 三类范式，并按流水线阶段编码决策对象，包括参数初始化、查询选择、线路设计、形式化、约束处理、分解、采样、硬件执行、求解器选择与求解器策略控制；同时提出 M0–M5 证据等级，从模拟、泛化、硬件验证、端到端执行到匹配资源的实际优势，用于评估已有证据。</dd>
+        <dt>方法</dt><dd><ul><li>提出自适应工作流概念：将形式化、惩罚项、分解、线路结构、测量预算、后端选择以及是否调用 QPU 等传统上预先固定的决策交由学习型策略，依据实例、求解进度或硬件状态做出</li><li>按被学习的决策而非应用领域组织文献，覆盖参数初始化、查询选择、线路设计、形式化、约束处理、分解、采样、硬件执行、求解器选择与求解器策略控制</li><li>划分三类范式：AI for Quantum Optimization、Quantum for AI-Driven Optimization 与 AI–Quantum Co-Optimization</li><li>对 119 篇论文进行结构化综述，其中 67 篇详细编码，并按固定类别对证据核心进行编码</li><li>提出 M0–M5 证据等级，区分模拟、泛化、硬件验证、端到端执行与匹配资源下的实际优势</li><li>在综述中总结选择性量子使用原则：学习型控制器可在量子执行的预期边际价值不足以抵消其成本时拒绝量子执行</li></ul></dd>
+        <dt>实验</dt><dd><ul><li>结构化综述 119 篇论文，其中 67 篇详细编码</li><li>57 项研究中 25 项没有经典基线</li><li>24 项涉及消融的研究中仅 10 项完全隔离量子贡献</li><li>中位实验使用 17 个 qubit</li><li>证据显示 AI 辅助量子优化的证据明显强于反方向；量子计算改进学习型优化器的证据大多局限于小规模模拟</li><li>在筛选语料中，最高证据等级未发现广泛令人信服的结果</li></ul></dd>
+        <dt>局限</dt><dd><ul><li>领域发展迅速，2025—2026 年文献多为预印本</li><li>报告指标异质性过强，无法进行定量元分析</li><li>成熟度等级记录的是已展示内容，而非单项研究的科学质量</li></ul></dd>
+        <dt>与你的研究关系</dt><dd>该综述与智能优化和 AI4OR 的关系体现在“学习辅助搜索”与“求解器策略控制”层面：其按决策编码的视角可直接迁移到生产调度中学习何时启用精确求解器、如何分配计算预算、如何选择分解与约束处理方式；量子部分对当前经典生产调度研究属于相邻方向而非直接方法。若将选择性量子使用、学习型控制器和匹配资源评测原则迁移到柔性作业车间、流水车间或分布式制造，需要条件：具备可调用的量子或专用硬件后端、可定义清晰的成本收益信号、以及可与经典基线在同等资源预算下比较的评测协议；这些迁移属于推测，并非作者结论。</dd>
+        <dt>证据与不确定性</dt>
+        <dd>
+          <p>本文是综述而非提出新算法，且证据范围仅为标题、摘要与有限全文节选，无法核实各被引研究的细节与具体实验数字；相关性评分 6 反映其与 AI4OR 的迁移路径明确但非直接研究生产调度问题，且量子硬件部分对当前经典调度研究属于相邻方向。</p>
+          <blockquote><strong>该综述按被学习的决策而非应用领域组织文献，并划分三类范式。：</strong>This review examines three paradigms, AI for quantum optimization, quantum for AI-driven optimization, and AI-quantum co-optimization, and organizes the literature by the decision being learned rather than by application.</blockquote>
+          <blockquote><strong>综述的结构化编码显示实验控制薄弱，且中位实验使用 17 个 qubit。：</strong>Experimental controls are thin: 25 of 57 studies include no classical baseline, the quantum contribution is fully isolated in 10 of 24 studies where an ablation applies, and the median experiment uses 17 qubits.</blockquote>
+          <blockquote><strong>作者提出 M0–M5 证据等级，并指出最高等级没有广泛令人信服的结果。：</strong>We introduce an M0-M5 evidence hierarchy, from simulation to matched-resource practical advantage, and find no broadly convincing result at the highest level.</blockquote>
+          <blockquote><strong>作者认为扩展越来越是系统问题，核心是经典与量子资源如何在整个优化过程中分配。：</strong>We argue that scaling is increasingly a systems problem: the question is not only whether a problem fits on a quantum processor, but how classical and quantum resources should be allocated across the optimization process.</blockquote>
+          <blockquote><strong>AI 辅助量子优化的证据明显强于反方向，量子改进学习型优化器的证据大多局限于小规模模拟。：</strong>shows that the evidence is considerably stronger for AI-assisted quantum optimization than for the reverse direction: learning already reduces quantum evaluations, improves initialization, supports decomposition and penalty control, and mitigates noise, whereas evidence that quantum computation improves learned optimizers remains largely confined to small-scale simulation.</blockquote>
+        </dd>
+      </dl>
+      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；读取了全文节选。证据范围不足的内容不应视为全文结论。</p>
+    </details>  </div>
+</article></div>
+      </section>
+      <section class="tier-section" data-tier-section="browse">
+        <header class="tier-heading"><h2>值得浏览</h2><p><span data-tier-count>3</span> 篇</p></header>
+        <div class="paper-grid"><article
+  class="paper-card"
+  data-paper-card
+  data-paper-id="arxiv:2610.09890:v1"
+  data-topic="mathematical-programming"
+>
+<div class="paper-card__cover">
+      <div class="paper-card__placeholder" aria-label="该论文暂未提取到可用原图">
+        <span>数学规划与混合求解</span>
+        <strong>arXiv:2610.09890</strong>
+        <small>本期暂无可用论文原图</small>
+      </div>
+  </div>
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">数学规划与混合求解</span>
+      <span>摘要级</span>
+      <span>相关性 7/10</span>
+      <span>v1</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2610.09890/">超越性逆优化：学习优于智能体决策的目标函数</a></h3>
+    <p class="original-title" lang="en">Outperformance Inverse Optimization: Learning Objective Functions that Outperform Agent Decisions</p>
+    <p class="authors">Akira Kitaoka</p>
+
+<div class="paper-card__takeaway">
+      <p class="field-label">核心洞察</p>
+      <p>贡献的有效性来自将逆优化目标从‘解释观测为最优’重新定义为‘在每个状态诱导出分量意义上更优的最优解’，这一重新定义使得损失函数可以仅依赖前向问题预言机评估，从而适配MILP；同时，作者证明了在权重诱导唯一超越最优解的条件下，泛化误差随观测数增加而下降，且该界在观测数上紧至对数因子，为方法的统计可靠性提供了理论支撑。</p>
+    </div>
+    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>对于关注学习辅助优化、逆优化和目标函数学习的研究者，本文提供了将逆优化从模仿提升为改进的理论框架，并给出了仅依赖前向预言机的损失函数和泛化误差界，这些机制可能启发生产调度中目标权重学习、多目标权衡以及学习与数学规划结合的研究。尽管实验细节有限，其理论视角和方法设计具有迁移潜力。</p>
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/mathematical-programming/" data-tag-filter="mathematical-programming">数学规划</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/benchmark/" data-tag-filter="benchmark">基准与泛化</a></li>
+    </ul>
+
+<details class="paper-details">
+      <summary>
+        <span class="summary-open">展开完整解读</span>
+        <span class="summary-close">收起完整解读</span>
+        <span aria-hidden="true" class="summary-arrow">↓</span>
+      </summary>
+
+      <div class="paper-details__meta">
+        <p><strong>模型细分主题：</strong>逆优化与目标函数学习</p>
+        <p><strong>模型原始标签：</strong>逆优化、混合整数线性规划、目标函数学习、DC优化、泛化误差界、决策预测</p>
+        <p><strong>第一单位：</strong>证据未提供</p>
+        <p><strong>通讯作者：</strong>证据未提供</p>
+        <p><strong>首次上传：</strong>2026-10</p>
+        <p class="paper-links">
+          <a href="https://arxiv.org/abs/2610.09890">arXiv 摘要 ↗</a>
+<a href="https://arxiv.org/pdf/2610.09890">PDF ↗</a><a href="https://arxiv.org/html/2610.09890v1">官方 HTML ↗</a>        </p>
+      </div>
+
+
+      <dl class="research-note">
+        <dt>研究设定</dt><dd>研究问题是从观测到的决策中估计目标函数的权重，观测对象为混合整数线性规划（MILP）中的状态-动作对；目标不是复现观测动作，而是寻求在每个状态下诱导出一个在所有分量上都严格优于观测动作的最优解；关键约束是只能通过前向问题预言机（forward-problem oracle）评估损失，无法直接获取最优解集结构；信息假设是给定一组观测到的状态与相应动作，环境为静态设定，动态性材料未说明。</dd>
+        <dt>研究动机</dt><dd>现有逆优化方法在MILP中试图将观测动作复现为最优解，当观测动作是次优时，学到的权重只是折中权重，无法刻画更优决策。作者希望学习能诱导出超越观测动作的目标函数权重，从而支持决策改进而非仅仅模仿。</dd>
+        <dt>核心洞察</dt><dd>贡献的有效性来自将逆优化目标从‘解释观测为最优’重新定义为‘在每个状态诱导出分量意义上更优的最优解’，这一重新定义使得损失函数可以仅依赖前向问题预言机评估，从而适配MILP；同时，作者证明了在权重诱导唯一超越最优解的条件下，泛化误差随观测数增加而下降，且该界在观测数上紧至对数因子，为方法的统计可靠性提供了理论支撑。</dd>
+        <dt>技术挑战</dt><dd><ul><li>观测动作次优时，传统逆优化只能学到折中权重，无法保证改进</li><li>MILP中直接评估候选权重需要大量前向求解，计算昂贵</li><li>损失函数非凸且可能不可微，需要设计梯度类或DC优化算法进行最小化</li><li>需要理论保证在新状态上诱导出超越最优解的概率</li><li>仅能通过前向问题预言机访问问题结构，无法直接使用最优解集或对偶信息</li></ul></dd>
+        <dt>问题分析</dt><dd>作者利用逆优化的反事实性质，将学习目标从拟合观测最优性条件转变为在每个观测状态上要求存在一个最优解在所有分量上优于观测动作。这一条件可以仅通过前向问题预言机检验，因此适合MILP。作者进一步构造可评估的损失函数，并针对其非凸性引入基于梯度和DC优化的最小化算法。在理论方面，作者通过分析权重诱导唯一超越最优解的概率，推导出泛化误差上界并证明其紧性。</dd>
+        <dt>方法</dt><dd><ul><li>提出超越性逆优化框架：寻找权重，使得在每个观测状态处，由该权重定义的前向问题存在一个最优解在所有分量上优于观测动作。</li><li>设计损失函数：该损失函数仅依赖前向问题预言机即可评估，因此适用于混合整数线性规划（MILP）。</li><li>给出最小化算法：包括基于梯度的方法和DC优化算法，用于最小化上述损失函数。</li><li>理论分析：对于在所有观测处诱导唯一超越最优解的权重，证明在新状态上失败诱导此类解的概率（泛化误差）被一个与观测数成反比的量所界定，且该界在观测数上紧至对数因子。</li><li>实验验证：在合成数据和真实数据上，与现有方法比较，评估预测超越动作的解的能力。</li></ul></dd>
+        <dt>实验</dt><dd><ul><li>在合成数据和真实数据上进行实验；摘要仅陈述所提方法在预测超越动作的解方面优于现有方法，未提供具体基线名称、实例规模、约束可行性、解质量指标、运行时间、训练开销或消融结果等数字。</li></ul></dd>
+        <dt>局限</dt><dd><ul><li>材料未说明</li></ul></dd>
+        <dt>与你的研究关系</dt><dd>本文属于AI4OR中学习优化目标函数的方向，与智能优化和生产调度的关系主要体现在：逆优化可用于从调度决策中学习目标权重，而超越性逆优化试图学习能改进决策的权重，而非仅模仿。若迁移到生产调度，需要将调度问题建模为MILP并定义状态-动作对，且需要前向求解器作为预言机；该迁移为推测，需验证超越性条件在调度多目标权衡下的实际可解性与计算开销。与强化学习的关系是，本文不直接使用强化学习，但学习目标函数以诱导更优决策的思想可与学习辅助搜索或智能体优化结合。</dd>
+        <dt>证据与不确定性</dt>
+        <dd>
+          <p>仅基于标题与摘要，未提供全文，因此对方法的具体实现、实验规模、基线对比、计算预算和局限性了解有限；相关性评分基于逆优化与AI4OR的潜在联系，而非论文直接研究生产调度或智能优化算法。</p>
+          <blockquote><strong>论文提出超越性逆优化，寻找在每个状态下诱导出在所有分量上优于观测动作的最优解的权重。：</strong>We propose outperformance inverse optimization, which instead seeks weights that induce, at each state, an optimal solution outperforming the observed action in every component.</blockquote>
+          <blockquote><strong>损失函数仅依赖前向问题预言机，因此适用于MILP。：</strong>We give a loss function that can be evaluated with forward-problem oracles alone and is thus applicable to MILPs, together with gradient-based and DC optimization algorithms for minimizing it.</blockquote>
+          <blockquote><strong>作者证明了在权重诱导唯一超越最优解时，泛化误差上界与观测数成反比，且紧至对数因子。：</strong>For weights inducing a unique outperforming optimal solution at all observations, we prove that the probability of failing to induce such a solution at a new state (the generalization error) is bounded by a quantity inversely proportional to the number of observations, and that this bound is tight in the number of observations up to logarithmic factors.</blockquote>
+          <blockquote><strong>在合成和真实数据上，所提方法在预测超越动作的解方面优于现有方法。：</strong>In experiments on synthetic and real data, the proposed methods improve the prediction of solutions outperforming the actions over existing methods.</blockquote>
+        </dd>
+      </dl>
+      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；仅依据标题与摘要。证据范围不足的内容不应视为全文结论。</p>
+    </details>  </div>
+</article><article
+  class="paper-card"
+  data-paper-card
+  data-paper-id="arxiv:2610.12119:v1"
+  data-topic="mathematical-programming"
+>
+<div class="paper-card__cover">
+      <div class="paper-card__placeholder" aria-label="该论文暂未提取到可用原图">
+        <span>数学规划与混合求解</span>
+        <strong>arXiv:2610.12119</strong>
+        <small>本期暂无可用论文原图</small>
+      </div>
+  </div>
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">数学规划与混合求解</span>
+      <span>摘要级</span>
+      <span>相关性 6/10</span>
+      <span>v1</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2610.12119/">使用Weisfeiler-Leman特征进行约束优化中的算法选择</a></h3>
+    <p class="original-title" lang="en">Using Weisfeiler-Leman Features for Algorithm Selection in Constraint Optimisation</p>
+    <p class="authors">Alessio Pellegrino · Jacopo Mauro</p>
+
+<div class="paper-card__takeaway">
+      <p class="field-label">核心洞察</p>
+      <p>核心洞察在于：既然1-WL测试界定了标准消息传递GNN的图区分能力上限，且适当GNN可达到该上限，那么直接用基于WL核衍生的结构特征作为算法选择器的输入，可以在不训练GNN的情况下获得对问题实例结构的稳健表示；进一步地，基于割的表示WLc通过建模结构划分提供了更细致的预测信号。</p>
+    </div>
+    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>对关注学习辅助求解与算法选择的研究者而言，该文提供了一条不依赖GNN训练、以WL图核和割结构表示刻画实例结构的特征提取路线，并给出在真实MiniZinc Challenge实例上的分类器对比，可作为在调度问题中设计实例-算法匹配特征的参考。</p>
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/multi-objective/" data-tag-filter="multi-objective">约束多目标</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/graph-neural/" data-tag-filter="graph-neural">图神经网络</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/mathematical-programming/" data-tag-filter="mathematical-programming">数学规划</a></li>
+    </ul>
+
+<details class="paper-details">
+      <summary>
+        <span class="summary-open">展开完整解读</span>
+        <span class="summary-close">收起完整解读</span>
+        <span aria-hidden="true" class="summary-arrow">↓</span>
+      </summary>
+
+      <div class="paper-details__meta">
+        <p><strong>模型细分主题：</strong>约束优化中的算法选择与实例结构特征自动提取</p>
+        <p><strong>模型原始标签：</strong>算法选择、约束规划、Weisfeiler-Leman图核、图表示学习、自动特征提取、MiniZinc</p>
+        <p><strong>第一单位：</strong>证据未提供</p>
+        <p><strong>通讯作者：</strong>证据未提供</p>
+        <p><strong>首次上传：</strong>2026-10</p>
+        <p class="paper-links">
+          <a href="https://arxiv.org/abs/2610.12119">arXiv 摘要 ↗</a>
+<a href="https://arxiv.org/pdf/2610.12119">PDF ↗</a><a href="https://arxiv.org/html/2610.12119v1">官方 HTML ↗</a>        </p>
+      </div>
+
+
+      <dl class="research-note">
+        <dt>研究设定</dt><dd>论文研究约束规划（Constraint Programming）中的算法选择问题：给定一个约束优化问题实例，决策对象是应选用哪种求解算法，目标可以是最大化Borda计分或最大化预测准确率，关键信息假设是实例可被转换为图表示并据此提取结构特征，环境为静态离线场景。具体约束形式、候选算法集合与运行时间预算材料未说明。</dd>
+        <dt>研究动机</dt><dd>传统算法选择器依赖人工设定的实例级统计特征，这类特征往往无法刻画问题实例的底层结构，因此作者希望引入自动化的结构特征提取方法来弥补这一差距。</dd>
+        <dt>核心洞察</dt><dd>核心洞察在于：既然1-WL测试界定了标准消息传递GNN的图区分能力上限，且适当GNN可达到该上限，那么直接用基于WL核衍生的结构特征作为算法选择器的输入，可以在不训练GNN的情况下获得对问题实例结构的稳健表示；进一步地，基于割的表示WLc通过建模结构划分提供了更细致的预测信号。</dd>
+        <dt>技术挑战</dt><dd><ul><li>人工实例级统计特征难以捕捉问题底层结构</li><li>标准消息传递GNN受1-WL测试的图区分能力上界限制</li><li>在无需训练GNN的前提下构造有判别力的结构表示</li><li>将约束实例转化为合适的图表示并设计割结构划分特征</li></ul></dd>
+        <dt>问题分析</dt><dd>作者从1-WL测试对GNN表达能力的理论界定出发，论证采用WL图核特征作为替代路线的合理性，并据此设计图转换与特征生成流程，最后通过在MiniZinc Challenge实例上比较不同分类器与特征方案的预测表现来分析特征有效性。</dd>
+        <dt>方法</dt><dd><ul><li>将约束问题实例转换为图表示</li><li>利用Weisfeiler-Lehman图核生成实例的结构表示特征</li><li>提出基于割的表示WLc，用于建模结构划分并提供更细致的预测信号</li><li>将WL类特征与WLc特征输入支持向量机、随机森林和多层感知机等分类器完成算法选择，无需训练GNN</li></ul></dd>
+        <dt>实验</dt><dd><ul><li>在2023至2025年MiniZinc Challenge实例上评估，任务为最大化Borda计分与最大化预测准确率两项。</li><li>比较对象包括现有特征提取方法fzn2feat，分类器包括支持向量机、随机森林和多层感知机。</li><li>结果表明在支持向量机上，基于割的特征优于fzn2feat；在随机森林与多层感知机上两者结果更接近。</li><li>候选算法规模、实例规模、运行时间与训练开销材料未说明。</li></ul></dd>
+        <dt>局限</dt><dd><ul><li>材料未说明</li></ul></dd>
+        <dt>与你的研究关系</dt><dd>该论文与智能优化和AI4OR相关，因为它把算法选择问题形式化为基于实例结构的学习型预测任务，与生产调度中按实例特征选择求解器或启发式规则的思路同源。其WL图核与割结构特征提取机制可直接迁移到约束建模与调度问题的实例表示上（推测），但迁移到柔性作业车间、流水车间或生产运输协同问题需要先将工序、机器、运输等关系编码为图并验证WLc特征对这些结构是否仍有判别力，且需在公平计算预算下与原特征或端到端GNN选择器比较；这些迁移属于推测而非作者结论。</dd>
+        <dt>证据与不确定性</dt>
+        <dd>
+          <p>仅有标题与摘要可用，缺少全文，因此图转换细节、WLc的具体构造、实验数据规模、统计显著性、基线配置与公平计算预算等信息均无法确认，相关性评分与迁移判断存在不确定性。</p>
+          <blockquote><strong>传统特征提取方法依赖人工设定的实例级统计特征，无法捕捉问题底层结构：</strong>yet traditional feature extraction methods often rely on manually decided instance-level statistics that fail to capture the underlying problem structure</blockquote>
+          <blockquote><strong>论文引入结合图转换与Weisfeiler-Lehman图核的自动特征提取方法：</strong>introducing a novel, automated feature extraction methodology that integrates graph conversion and Weisfeiler-Lehman graph kernels to generate robust structural representations of problem instances</blockquote>
+          <blockquote><strong>1-WL测试界定了标准消息传递GNN的图区分能力上界，WL特征无需训练GNN：</strong>The 1-WL test bounds the graph-distinguishing power of standard message-passing Graph Neural Networks (GNNs), and suitable GNN architectures match this bound</blockquote>
+          <blockquote><strong>主要贡献是用于建模结构划分的基于割的表示WLc：</strong>Our primary contribution is a cut-based representation (\texttt{WLc}) designed to model structural partitions and provide a more nuanced predictive signal</blockquote>
+          <blockquote><strong>在2023-2025 MiniZinc Challenge实例上评估，任务为最大化Borda计分与预测准确率：</strong>We evaluate our approach on instances from the 2023--2025 MiniZinc Challenges across two tasks: maximizing Borda count scores and maximizing predictive accuracy</blockquote>
+          <blockquote><strong>在支持向量机上基于割的特征优于fzn2feat，随机森林与多层感知机上结果更接近：</strong>Experimental results across Support Vector Machines, Random Forests, and Multi-Layer Perceptrons demonstrate that cut-based features outperform \texttt{fzn2feat} with SVMs, while results with RFs and MLPs are closer</blockquote>
+        </dd>
+      </dl>
+      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；仅依据标题与摘要。证据范围不足的内容不应视为全文结论。</p>
+    </details>  </div>
+</article><article
+  class="paper-card"
+  data-paper-card
+  data-paper-id="arxiv:2610.12341:v1"
+  data-topic="agents-ai4or"
+>
+<div class="paper-card__cover">
+      <img
+        src="https://JiaqiTan111.github.io/Daily_Opt_Paper/figures/arxiv/2610.12341/v1/fig1-panel1.png"
+        alt="Figure 1：AAArena overview. Left: the 12 games in ascending rule-description size (abstract syntax tree node count), with player counts, role symmetry, and information structure (Table 1 ). Right: retained-champion Elo for seven models and human SOTA. Each spoke reports native Elo, with game-specific tick intervals; higher Elo lies farther outward. Human SOTA forms the dashed regular dodecagon, with its Elo labeled in red. Model colours match Figure 3 ."
+        loading="lazy"
+        decoding="async"
+        referrerpolicy="no-referrer"
+        data-paper-figure
+        data-original-url="https://arxiv.org/html/2610.12341v1/assets_ahl-main-figure.png"
+      >
+      <div class="figure-error" hidden data-figure-error>论文图暂时无法加载，可从原文查看。</div>
+      <p class="paper-card__cover-caption"><strong>Figure 1</strong> AAArena overview. Left: the 12 games in ascending rule-description size (abstract syntax tree node count), with player counts, role symmetry, and information structure (Table 1 ). Right: retained-champion Elo for seven models and human SOTA. Each spoke reports native Elo, with game-specific tick intervals; higher Elo lies farther outward. Human SOTA forms the dashed regular dodecagon, with its Elo labeled in red. Model colours match Figure 3 .</p>
+  </div>
+  <div class="paper-card__body">
+    <div class="paper-card__rubric">
+      <span class="topic-badge">智能体与自动建模</span>
+      <span>摘要级</span>
+      <span>相关性 6/10</span>
+      <span>v1</span>
+    </div>
+
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2610.12341/">AI 智能体能否学会登顶？在长期运行的游戏智能体竞赛中评估启发式学习</a></h3>
+    <p class="original-title" lang="en">Can AI Agents Learn Their Way to the Top? Evaluating Heuristic Learning in a Long-Running Game Agent Competition</p>
+    <p class="authors">Kaisen Yang · Qingle Liu · Kejin Wang · Yicheng Zhao · Jieming Li · Shenghan Zheng · Ruize Yang · Bojun Yang · Heng Gong · Xiang Gao · Lanyue Zhang · Kaiyu Zhong · Zhuo Liu · Shaoxuan Li · Chengxi Li · Yong Yan · Weixuan Zhang · Tianwei Luo · Situ Wang · Youjie Zheng · Sihan Zhao · Shengyuan Wang · Huan-ang Gao · Jiazheng Xu · Xiaohui Xie · Wentao Han · Hongning Wang</p>
+
+<div class="paper-card__takeaway">
+      <p class="field-label">核心洞察</p>
+      <p>核心洞察在于把学习发生的位置从模型参数迁移到可执行代码与配套软件：在模型权重冻结的前提下，智能体通过解读规则、分析回放来生成并迭代策略程序，使经验积累直接体现为策略文本与代码的修改；同时作者强调对手选择与稠密反馈能支撑策略改进，无论回放来自自身对局还是他人对局，这解释了为何不更新权重也能实现行为改进。</p>
+    </div>
+    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>对关注学习辅助搜索、大模型智能体与自动算法设计的研究者而言，该文提供了一个在固定计算与评估预算下评测“智能体改代码而非改权重”的基准协议与负面结果；其中对手选择、稠密反馈、on/off-policy 回放等结论可启发如何为调度启发式设计反馈信号与训练/评估预算分配，但其应用前提是把对抗博弈的设定替换为受约束的优化问题。</p>
+    <ul class="paper-tags" aria-label="研究标签">
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/reinforcement-learning/" data-tag-filter="reinforcement-learning">强化学习</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/agents/" data-tag-filter="agents">多智能体</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/llm/" data-tag-filter="llm">大模型辅助优化</a></li>
+      <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/benchmark/" data-tag-filter="benchmark">基准与泛化</a></li>
+    </ul>
+
+<details class="paper-details">
+      <summary>
+        <span class="summary-open">展开完整解读</span>
+        <span class="summary-close">收起完整解读</span>
+        <span aria-hidden="true" class="summary-arrow">↓</span>
+      </summary>
+
+      <div class="paper-details__meta">
+        <p><strong>模型细分主题：</strong>大模型智能体驱动的对抗性启发式学习与策略改进</p>
+        <p><strong>模型原始标签：</strong>大模型智能体、启发式学习、对抗博弈、策略改进、基准评测、长时程决策</p>
+        <p><strong>第一单位：</strong>证据未提供</p>
+        <p><strong>通讯作者：</strong>证据未提供</p>
+        <p><strong>首次上传：</strong>2026-10</p>
+        <p class="paper-links">
+          <a href="https://arxiv.org/abs/2610.12341">arXiv 摘要 ↗</a>
+<a href="https://arxiv.org/pdf/2610.12341">PDF ↗</a><a href="https://arxiv.org/html/2610.12341v1">官方 HTML ↗</a>        </p>
+      </div>
+
+      <div class="paper-figures">
+        <figure class="paper-figure">
+          <div class="paper-figure__media">
+            <img
+              src="https://JiaqiTan111.github.io/Daily_Opt_Paper/figures/arxiv/2610.12341/v1/fig1-panel1.png"
+              alt="Figure 1：AAArena overview. Left: the 12 games in ascending rule-description size (abstract syntax tree node count), with player counts, role symmetry, and information structure (Table 1 ). Right: retained-champion Elo for seven models and human SOTA. Each spoke reports native Elo, with game-specific tick intervals; higher Elo lies farther outward. Human SOTA forms the dashed regular dodecagon, with its Elo labeled in red. Model colours match Figure 3 ."
+              loading="lazy"
+              decoding="async"
+              referrerpolicy="no-referrer"
+              data-paper-figure
+              data-original-url="https://arxiv.org/html/2610.12341v1/assets_ahl-main-figure.png"
+            >
+            <div class="figure-error" hidden data-figure-error>该论文图暂时无法加载，可从原文查看。</div>
+          </div>
+          <figcaption>
+            <strong>Figure 1.</strong> AAArena overview. Left: the 12 games in ascending rule-description size (abstract syntax tree node count), with player counts, role symmetry, and information structure (Table 1 ). Right: retained-champion Elo for seven models and human SOTA. Each spoke reports native Elo, with game-specific tick intervals; higher Elo lies farther outward. Human SOTA forms the dashed regular dodecagon, with its Elo labeled in red. Model colours match Figure 3 .
+            <a class="figure-source" href="https://arxiv.org/html/2610.12341v1#S1.F1">来源：论文官方 arXiv HTML ↗</a>
+          </figcaption>
+        </figure>
+        <figure class="paper-figure">
+          <div class="paper-figure__media">
+            <img
+              src="https://JiaqiTan111.github.io/Daily_Opt_Paper/figures/arxiv/2610.12341/v1/fig2-panel1.png"
+              alt="Figure 2：Agent for agent iteration loop. An AI agent uses game resources, replays, and retained notes to revise an executable game-agent policy. Validated snapshots enter small matches against selected opponents or full-pool evaluations against the frozen pool. Small matches return dense replays; full-pool evaluations return outcomes, Elo, and rank. The agent retains development history across revisions."
+              loading="lazy"
+              decoding="async"
+              referrerpolicy="no-referrer"
+              data-paper-figure
+              data-original-url="https://arxiv.org/html/2610.12341v1/assets_ahl-method-loop.png"
+            >
+            <div class="figure-error" hidden data-figure-error>该论文图暂时无法加载，可从原文查看。</div>
+          </div>
+          <figcaption>
+            <strong>Figure 2.</strong> Agent for agent iteration loop. An AI agent uses game resources, replays, and retained notes to revise an executable game-agent policy. Validated snapshots enter small matches against selected opponents or full-pool evaluations against the frozen pool. Small matches return dense replays; full-pool evaluations return outcomes, Elo, and rank. The agent retains development history across revisions.
+            <a class="figure-source" href="https://arxiv.org/html/2610.12341v1#S2.F2">来源：论文官方 arXiv HTML ↗</a>
+          </figcaption>
+        </figure>
+      </div>
+      <p class="copyright">图片来自论文官方 arXiv 页面，仅用于论文导航与学术阅读；版权归论文作者或相关权利人所有。</p>
+
+      <dl class="research-note">
+        <dt>研究设定</dt><dd>论文面向对抗性游戏中的策略学习问题，决策对象是可执行的游戏策略及其支撑软件，目标是在固定的对局与评估预算下获得尽可能高的竞赛排名，环境为长期运行的对抗性游戏竞赛，规则以文本形式给出，参赛程序仅能获得有限的样本经验，摘要未说明是否涉及连续状态空间、约束可行性或生产调度类约束，也未说明选手可获得的信息是否完全或存在隐藏信息。</dd>
+        <dt>研究动机</dt><dd>对抗性博弈推动了从启发式搜索到强化学习的进展，但从有限样本中学习并适应策略仍然困难；作者认为 AI 智能体可以作为学习引擎，把游戏经验转化为可执行策略的修订，从而绕开固定模型权重下的参数学习瓶颈。</dd>
+        <dt>核心洞察</dt><dd>核心洞察在于把学习发生的位置从模型参数迁移到可执行代码与配套软件：在模型权重冻结的前提下，智能体通过解读规则、分析回放来生成并迭代策略程序，使经验积累直接体现为策略文本与代码的修改；同时作者强调对手选择与稠密反馈能支撑策略改进，无论回放来自自身对局还是他人对局，这解释了为何不更新权重也能实现行为改进。</dd>
+        <dt>技术挑战</dt><dd><ul><li>从有限样本中学习并适应对抗策略</li><li>游戏规则理解，规则规格越复杂表现越弱</li><li>策略的实现与落地</li><li>长时程策略开发</li><li>在固定对局与评估预算下取得高排名</li></ul></dd>
+        <dt>问题分析</dt><dd>作者将对抗性启发式学习（AHL）形式化为一种以 AI 智能体为学习引擎、保持模型权重固定的范式，并据此设计基准与评测协议；但摘要未说明其是否利用问题结构、分解、下界或图表示等具体分析手段。</dd>
+        <dt>方法</dt><dd><ul><li>形式化 Adversarial Heuristic Learning（AHL）：以 AI 智能体作为学习引擎，在固定模型权重下精炼博弈策略与支撑软件</li><li>构建 AAArena 基准，包含 12 个真实对抗性游戏与 1920 个归档人类程序</li><li>设计模仿真实游戏竞赛的评测协议：智能体解读规则、选择对手、分析回放、修订游戏智能体，并在固定对局与评估预算内追求最高排名</li><li>评估多种模型与执行框架组合（harness 配置），比较其在各游戏天梯上的登顶能力</li><li>分析对手选择、反馈稠密度对策略改进的影响，并区分 on-policy（自身对局回放）与 off-policy（他人对局回放）两种学习信号</li></ul></dd>
+        <dt>实验</dt><dd><ul><li>在 AAArena 上评估了若干模型与 harness 配置：Opus5.5 搭配 Claude Code 获得 6 枚金牌</li><li>没有评估配置能够登顶其余 6 个人类天梯</li><li>规则规格更复杂的游戏上表现总体更弱</li><li>进一步实验表明对手选择与稠密反馈有助于策略改进</li><li>智能体既能从自身对局的 on-policy 回放学习，也能从其他玩家对局的 off-policy 回放学习</li></ul></dd>
+        <dt>局限</dt><dd><ul><li>作者指出在游戏理解、策略实现与长时程策略开发方面仍存在持续挑战</li><li>在规则更复杂的游戏中性能普遍较弱，且多数人类天梯未被任何评估配置攻克</li></ul></dd>
+        <dt>与你的研究关系</dt><dd>本文与智能优化/生产调度并非同一问题域：它研究的是对抗性游戏中由大模型智能体驱动的策略代码迭代，而不是柔性作业车间、流水车间或生产运输协同调度。它对 AI4OR 的可迁移之处在于“学习信号不作用于权重而作用于可执行求解程序”的范式，以及固定对局/评估预算下的公平评测与 on/off-policy 回放利用机制；推测若要迁移到生产调度，需要把游戏规则替换为调度问题描述与约束、把策略程序替换为调度启发式或求解器配置代码，并在可行性、解质量与时间预算上建立可比的评测协议，且需验证其在长时程、多约束场景下的稳定性。</dd>
+        <dt>证据与不确定性</dt>
+        <dd>
+          <p>仅有标题与摘要，未提供全文；无法确认 AAArena 的具体评测指标、金牌判定规则、模型与 harness 的完整配置数量、训练/推理成本、统计显著性与消融设计，因此实验结论只能按摘要表述理解，迁移到生产调度的可行性属于推测而非作者结论。</p>
+          <blockquote><strong>论文形式化了对抗性启发式学习（AHL），以 AI 智能体作为学习引擎在固定模型权重下精炼策略与支撑软件：</strong>we formalize Adversarial Heuristic Learning (AHL), a paradigm that uses AI agents as learning engines to refine game policies and supporting software while keeping model weights fixed</blockquote>
+          <blockquote><strong>作者构建了 AAArena 基准与仿真实竞赛的评测协议，包含 12 个游戏与 1920 个归档人类程序：</strong>We introduce AAArena, a benchmark comprising 12 authentic adversarial games and 1,920 archived human programs, with an evaluation protocol modeled on real-world game competitions</blockquote>
+          <blockquote><strong>实验显示 Opus5.5 搭配 Claude Code 获 6 枚金牌，但无配置登顶其余 6 个人类天梯：</strong>Opus5.5 with Claude Code earns 6 gold medals, while no evaluated configuration tops the remaining 6 human ladders</blockquote>
+          <blockquote><strong>规则规格更复杂的游戏上整体表现更弱：</strong>Performance is generally weaker in games with more complex rule specifications</blockquote>
+          <blockquote><strong>对手选择与稠密反馈支持策略改进，且 on-policy 与 off-policy 回放均可被利用：</strong>opponent selection and dense feedback support policy improvement, and that agents learn from both on-policy replays of their own matches and off-policy replays of other players&#39; matches</blockquote>
+        </dd>
+      </dl>
+      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；仅依据标题与摘要。证据范围不足的内容不应视为全文结论。</p>
+    </details>  </div>
+</article></div>
+      </section>
+    <p class="empty-state" data-no-results hidden>没有符合当前条件的论文，请放宽主题、标签、层级或相关性条件。</p>
+    <script type="application/json" data-paper-json>[{"id":"arxiv:2610.03316:v2","topic":"scheduling","tier":"deep_read","scope":"full_text","score":9,"hasFigure":false,"tags":["job-shop","llm","evolutionary","transfer-surrogate","benchmark"],"searchText":"生产调度 大语言模型驱动的自动化启发式设计在多问题间的零样本跨问题泛化 大语言模型 自动化启发式设计 多任务进化 零样本跨问题泛化 组合优化 柔性作业车间调度 车辆路径问题 multi-task evolution for zero-shot cross-problem generalization using llms 基于大语言模型的多任务进化实现零样本跨问题泛化 zhuoliang xie changliang zhou genghui li zhenkun wang designing effective heuristics for diverse combinatorial optimization problems requires substantial expertise and repeated search. large language models (llms) automate heuristic generation and refinement, but heuristic search typically depends on evaluation feedback from the problem being optimized. generalizing to new problem definitions using only source-task feedback therefore remains a central challenge. we introduce meco, an llm-driven multi-task evolutionary framework for zero-shot cross-problem generalization. meco maintains task-conditioned heuristic populations and uses a transfer gap based on cross-task population performance to guide their interactions. these interactions enable the transfer and recombination of heuristics. a complementary selection criterion then constructs a compact heuristic set by rewarding each member's additional coverage of source combinations. the selected set is applied to target problems without further search or adaptation. experiments on 32 problem variants across vehicle routing (vrp) and flexible job-shop scheduling (fjsp) show that meco achieves the lowest mean costs compared with eight automated heuristic design (ahd) baselines under the same budgets. on out-of-domain problems, it outperforms the strongest baseline in each family. moreover, integrating the framework of meco with different ahd methods improves their id and ood performance in both families, supporting its effectiveness across different methods. 研究问题是如何在仅使用源任务评估反馈、不接触目标任务评估的条件下,为多个组合优化问题设计可零样本迁移的启发式集合。决策对象是任务条件化的启发式程序种群及其交互与选择策略;目标是在给定源任务组合上构造一个紧凑的启发式集合,使其在未见的目标问题变体上直接应用而不进行额外搜索或适配;关键约束是设计阶段不允许使用目标问题的评估反馈,且需在同一预算下与自动化启发式设计基线公平比较;信息假设为设计阶段仅可获取源任务的评估反馈;环境为静态问题定义集合,但覆盖域内与域外问题变体。 为多样化的组合优化问题设计有效启发式需要大量领域专家知识和反复的搜索迭代。大语言模型虽能自动生成与改进启发式,但启发式搜索通常依赖被优化问题本身的评估反馈,从而难以在只有源任务反馈时泛化到新的问题定义。因此,如何在无目标反馈条件下实现跨问题的零样本泛化成为核心挑战。 跨问题泛化的关键在于把多个源任务上的备选启发式组织为任务条件化种群,并让种群之间的交互由一种基于跨任务种群性能的迁移间隙来驱动,从而促进启发式的迁移与重组;同时以互补性选择准则奖励每个成员对源任务组合的额外覆盖,从而得到一个紧凑但覆盖面广的启发式集合,使其在无目标反馈时仍能在目标问题上表现良好。 作者将组合优化启发式设计形式化为跨多个任务的多任务进化搜索问题,维护任务条件化的启发式种群。通过定义基于跨任务种群性能的迁移间隙来度量任务之间的差异并指导种群间交互,进而实现启发式的迁移与重组。设计阶段仅使用源反馈进行进化与互补集合选择,目标问题不参与评估。最终以互补覆盖准则筛选出紧凑启发式集合。材料未说明是否使用具体的图表示或数学下界分析。 meco 维护任务条件化的启发式种群,每个任务对应某个优化问题的启发式设计 使用基于跨任务种群性能的迁移间隙指导不同任务种群之间的交互 通过交互实现启发式之间的迁移与重组 引入互补选择准则,奖励每个成员对源任务组合的额外覆盖,从而构造紧凑的启发式集合 选出的集合直接应用于目标问题,不进行进一步搜索或适配 设计阶段仅使用源任务反馈,不进行目标评估 框架可与不同自动化启发式设计方法结合:将基线方法自身的启发式生成与种群更新规则嵌入 meco 的任务种群中,由 meco 决定交互任务并传递父代启发式以初始化组合任务种群,搜索后由 meco 从任务种群中选出最终四个启发式 在车辆路径问题(vrp)和柔性作业车间调度问题(fjsp)的32个问题变体上,与八种自动化启发式设计基线在相同预算下比较,meco 取得最低平均代价 在域外问题上,meco 在每个问题族中均优于最强基线 将 meco 框架与不同自动化启发式设计方法结合后,在 vrp 和 fjsp 两个族上的域内与域外性能均得到改善 实验报告了 vrp 的 distance 和 fjsp 的 makespan 指标,包含 all、id、ood 分组结果 在重复搜索中平均排名为1.12,平均相对间隙为0.02%,在16个变体上接近最佳观测方法 该论文直接研究大语言模型驱动的自动化启发式设计及其跨问题零样本泛化,覆盖车辆路径问题与柔性作业车间调度问题,与智能优化、生产调度及人工智能驱动运筹优化高度相关。其任务条件化种群、迁移间隙、启发式迁移与重组、互补集合选择等机制可迁移到柔性作业车间、流水车间、分布式制造、生产运输协同等调度问题中;迁移设想属于推测,需要条件包括将不同调度问题定义为源任务、构造可执行启发式程序表示、设计跨任务性能度量以及验证无目标反馈下的泛化能力。该工作未涉及强化学习或神经网络求解器训练,但与学习辅助搜索、进化算法与大语言模型智能体结合的方向直接相关。 对研究智能优化与生产调度的读者而言,该工作提供了在无目标评估反馈下通过大语言模型多任务进化获得可零样本迁移启发式集合的机制,且实验覆盖柔性作业车间调度问题与车辆路径问题的多种变体,报告了域内与域外性能及跨方法集成效果,有助于理解自动化启发式设计的泛化边界与多任务搜索的公平比较方式。"},{"id":"arxiv:2610.10184:v1","topic":"scheduling","tier":"deep_read","scope":"full_text","score":8,"hasFigure":true,"tags":["job-shop","flow-shop","agents","llm","mathematical-programming"],"searchText":"生产调度 大语言模型智能体驱动的约束编程生产调度自动建模 大语言模型智能体 约束编程 自动建模 生产调度 多智能体系统 模型上下文协议 ai4or agentic ai-assisted modeling for production scheduling: assessment in constraint programming 智能体ai辅助的约束编程生产调度建模评估 \\'angel s\\'anchez-fern\\'andez javier pernas-\\'alvarez diego crespo-pereira developing optimization models for production scheduling requires substantial expert effort. research on large language models (llms) has followed two directions: specialized approaches for automated modeling, mostly for mixed-integer linear programming, which often rely on dedicated training or problem-specific architectures that limit industrial deployment; and agentic artificial intelligence for operational decision support, which generally assumes that the optimization model already exists. this study bridges both directions by assessing whether general-purpose llms, orchestrated as agents without task-specific training, can formulate and implement constraint programming models from natural-language problem descriptions. singleagent and multi-agent architectures are integrated with a model context protocol server that provides context-aware retrieval of solver documentation to mitigate hallucinations during implementation. both are compared with a direct llm baseline on six industry-oriented problems covering flow-shop, job-shop, flexible job-shop and resource-constrained warehouse scheduling, using three llms and assessing modeling accuracy, execution success, latency and token consumption. formulation proves largely within reach of current llms, whereas implementation is the main barrier. the multi-agent workflow raises the share of scripts that run correctly as generated from 14.8% with a direct llm call to 59.3%, reaching 80.6% on the four less complex problems, while tightly coupled intralogistics models remain an open challenge. 研究从自然语言问题描述自动生成约束编程模型的问题,决策对象为调度模型的决策变量、约束与目标函数的形式化表达及可执行代码,目标是在无任务特定训练的条件下让通用llm智能体完成建模与实现,关键约束包括无需微调、需避免幻觉与api误用、需覆盖流水车间、作业车间、柔性作业车间和资源约束仓库调度等多类问题,信息假设为智能体仅能访问自然语言描述、实例数据库模式以及通过模型上下文协议服务器动态检索的求解器文档,环境为静态的单轮生成场景,材料未说明是否涉及动态扰动或人机交互循环。 工业实践中优化建模需要专家大量投入,形成实践者与运筹学专家之间的鸿沟;现有llm自动建模研究多面向混合整数线性规划且依赖专用训练或问题特定架构,限制工业部署;而制造业智能体ai研究通常假定优化模型已存在,仅用于运营决策支持。因此需要评估通用llm智能体能否在无任务特定训练下,直接从自然语言描述构建约束编程模型,以弥合自动建模与智能体决策支持两条研究路线之间的空白。 建模任务的瓶颈并不在数学形式化本身,而在于将形式化模型正确映射为求解器api代码;通用llm的推理能力已足以完成问题到决策变量、约束和目标的抽象,但幻觉和api误用集中出现在实现阶段。因此,将形式化与编码分离为独立阶段,并仅在实现阶段通过按需检索求解器文档来约束生成,能有效降低错误率,而不需要微调或问题特定架构。 作者通过对比直接llm调用、单智能体架构和多智能体架构在六个工业导向调度问题上的表现,分析建模成功与失败的模式。采用模型上下文协议服务器提供求解器文档的上下文感知检索,以缓解实现阶段的幻觉。通过统计各类实现错误的频率,发现错误高度集中,少数反复出现的错误解释了超过一半的失败,从而论证文档检索服务器在实现阶段的有效性。材料未说明作者是否使用形式化下界或问题分解等数学分析手段。 直接llm基线:将自然语言问题描述直接输入llm,一次性生成约束编程模型代码 单智能体架构:由单个llm智能体同时完成自然语言信息处理和模型编码两个阶段 多智能体架构:将建模过程分解为两个阶段,一个智能体负责自然语言信息处理与模型形式化,生成决策变量、约束和目标函数;另一个智能体负责根据求解器规范进行模型编码,包括检索和验证所需函数、处理参数格式并组装最终模型 模型上下文协议服务器:托管求解器api文档,通过发现工具和精确检索工具,使智能体能够按需检索相关函数和规格,检索协议在服务器内部强制执行,文档语料、分块和检索自动构建,不使用嵌入或专家人工分类 评估指标:建模准确性、执行成功率、延迟和token消耗量 在六个工业导向问题上进行对比,涵盖流水车间、作业车间、柔性作业车间和资源约束仓库调度;使用三种llm;评估建模准确性、执行成功、延迟和token消耗;多智能体工作流将生成脚本正确运行的比例从直接llm调用的14.8%提升至59.3%,在四个较简单问题上达到80.6%;紧耦合的厂内物流模型仍是开放挑战;实现错误高度集中,五种反复出现的错误解释了超过一半的错误语料。材料未说明具体基线方法名称、实例规模、训练开销明细和消融实验的完整设置。 该论文直接研究生产调度模型的自动生成,涉及流水车间、作业车间、柔性作业车间等本领域核心问题,并使用大语言模型智能体和约束编程求解器,与ai4or和学习辅助搜索方向高度相关。其多智能体分工与文档检索机制可迁移到其他优化求解器的建模辅助中。迁移到生产调度中的动态扰动或分布式制造场景需要额外条件:智能体需能处理时变问题和多工厂协调约束,且检索服务器需覆盖相应求解器的动态建模api,这些属于推测,尚未被作者验证。 推荐阅读因为该论文提供了在生产调度领域使用通用llm智能体自动生成约束编程模型的系统性评估,揭示了形式化可行但实现困难的瓶颈,并给出了多智能体分工结合文档检索的具体机制。其实验设计覆盖多种经典调度问题,报告了成功率、延迟和token消耗,对关注学习辅助建模、智能体优化和约束编程的研究者具有直接参考价值,尤其是在公平计算预算和可复现性意识下评估llm辅助建模效果方面。"},{"id":"arxiv:2610.11294:v1","topic":"mathematical-programming","tier":"deep_read","scope":"full_text","score":8,"hasFigure":false,"tags":["mathematical-programming","benchmark"],"searchText":"数学规划与混合求解 mip 预求解阶段的操作级动作序列生成与序列竞赛 混合整数规划预求解 动作序列生成 自回归序列建模 序列竞赛 零样本跨域泛化 scip 源码改造 ordo: operation-level round-aware dynamic ordering for mip presolve ordo:面向混合整数规划预求解的操作级轮次感知动态排序 zehuan chen chunhe song presolve strongly affects mixed-integer programming (mip) performance, yet learning-based methods only optimize parameter configurations and cannot express the non-commutative temporal dependencies among actions, whose default order is nearly unique on most domains, yet functionally necessary: artificially shuffling the order of the same sequence inflates the tail of the solve-time distribution by up to several-fold. we recast presolve planning as autoregressive sequence generation over a unified atomic action space, moving the decision object to action sequences; we call this framework ordo---operation-level round-aware dynamic ordering for mip presolve. its payoff is cross-domain generalization: on multiple unseen domains it attains end-to-end zero-shot speedup---to our knowledge the first for presolve action sequences---varying by domain and not explained by corpus richness, the strongest domain reaching the largest speedup once racing is added. deployment uses sequence racing, in which candidate sequences run concurrently and the winner is kept, enabled by an execution-and-observation facility, added by modifying the scip source, that injects sequences along the native path and records which actions actually execute and in which round. 论文研究混合整数规划(mip)分支定界前的预求解(presolve)规划问题,决策对象是覆盖多类求解器组件的统一原子动作空间上的完整动作序列,目标是最小化该实例端到端的总求解时间(含后续分支定界)。关键约束在于:mip 离散非凸导致预求解动作不可交换,一个动作的结果会改变其他动作的适用条件与强度,因此动作时序拓扑必须作为独立变量保留;求解器黑盒不提供注入动作序列的接口。信息假设为给定实例描述即可条件生成序列,环境处理为“自回归决策序列 + 在线每实例解码 + 序列竞赛”的半在线部署模式,训练语料离线构建,在线仅做逐实例解码与并发竞赛。其余要素如是否显式建模动态扰动,材料未说明。 预求解对 mip 整体性能影响仅次于割平面,且效果随实例族(域)变化,实测在某些域上比默认慢达 2.4 倍、在其他域上更快。作者指出既有学习型预求解方法存在共同局限:手工预设复用同一专家调度、自适应差;配置调优类方法只搜索固定维配置空间(如 l2p-mip 把 14 个例程的优先级、时机与轮次形式化为 42 维向量),其输出不携带动作调用顺序,也无法干预约束处理回调的调用顺序;规则与子集选择只决定哪些例程参与,不决定顺序;组合与竞赛方法只在配置或完整求解策略层面构造候选。四类方法都停留在配置向量或参与子集层面,无法表达动作之间的时序依赖,因而难以跨问题类泛化。作者通过人为打乱同一序列顺序会令求解时间分布尾部膨胀数倍这一现象,论证顺序在功能上是必要的,从而把预求解规划重铸为动作序列上的自回归生成问题。 贡献有效的关键在于改变了决策对象:一旦从配置向量变为统一的原子动作序列,动作语义在不同域之间天然共享,迁移时无需重新定义动作空间,模型只需以实例特征为条件生成序列,因而跨域零样本加速成为建模范式的自然红利,而非额外施加的域适应模块。顺序携带的时序依赖本身是不可交换求解结果变化的主要来源,把它作为可学习的独立变量,使模型能够捕捉配置向量与参与子集所丢失的跨问题类共性;而序列竞赛进一步针对单条路径预测的重尾风险,用并发候选截断尾部,使内容单路径失效的实例仍能被覆盖,从而在不牺牲正确性的前提下同时获得内容质量增益与竞争放大增益。 作者从 mip 预求解动作不可交换这一结构性质出发,通过人为打乱同一动作序列中元素的顺序,观测到求解时间分布尾部膨胀数倍,从而验证顺序在功能上必要,并据此把决策对象从配置向量提升为完整动作序列。作者以四类既有方法的决策对象为维度进行对照分析(手工启发式与参数调优、实例配置调优、规则与子集选择、组合与竞赛求解),逐项指出它们都止步于配置向量或参与子集,无法表达时序依赖;并明确承认顺序敏感性在 lp 侧与求解阶段已有先例,因此把“首次”限定在 mip 侧的原子动作层级。在求解侧,作者将预求解规划形式化为给定实例描述 x 求生成分布 π(·|x),并把生成过程重铸为自回归条件生成 p_θ(a_t | a_{0,...,t-1}, x),同时强调该形式带来表征能力解耦与空间扩展两个结构差异。部署层面,作者分析单路径预测的重尾风险,引入序列竞赛并将收益分解为候选质量与竞争放大两部分,同时给出可吸收性论证:既有学习型预求解方案的输出都可回放为动作序列,因而原则上可被本框架吸收,反之不成立,但可吸收不等于可获利,作者未作收益声明。 统一原子动作空间:覆盖多类求解器组件,将动作顺序、轮次边界与执行契约全部纳入序列生成的输出空间 序列生成模型架构:以实例特征作为初始状态,与历史动作 token 拼接作为输入,采用 n×blocks 的 transformer 结构,含 layernorm、带因果掩码的多头自注意力(q/k 施加旋转位置编码 rope)、残差连接、前馈网络与最终 layernorm,输出头经线性层自回归预测下一项 轮次与终止符共享输出空间:轮次边界与终止符与动作共享同一输出空间,使“以何顺序、在第几轮执行”由同一分布给出 学习目标:以完整动作序列为决策对象,按 p_θ(a_t | a_{0,...,t-1}, x) 进行自回归条件生成 执行与观测设施:修改 scip 10.0.1 源码,在原生路径上注入给定序列,并记录哪些动作实际执行以及在哪个轮次执行,以支持自定义动作序列的可控执行并保证解的正确性 序列竞赛部署:候选序列并发运行,池大小为 np + content×k + fallback×k = 2k+1 条路径同时启动,最先完成者胜出,其余以 sigkill 撤回;分子取胜出者的求解器内部时间 测量协议:分母为同批次 5 个默认策略同构副本中最先完成者的求解器内部时钟;对比时双方均使用 5 个在线核心与相同时间限制,且对手臂将同一配置复制 5 次取最快完成者,该不对称性被作者指出会压低自身读数 四阶段流水线:语料构建与序列建模各离线执行一次,在线部分仅执行逐实例解码与序列竞赛,测量层报告 sgm 比值与逐实例胜率 运行环境为 scip 10.0.1,实例来自 distributional miplib(d-miplib)的按域实例族基准,使用 easy val 划分的七个 mip 域:ca、gisp、cflp、mis、mvc、sc(各 100 个实例)与 nnv(550 个) 主指标为相对默认策略的移位几何平均(sgm)比值,sgm(t) = (∏_i (t_i+1))^{1/n} − 1,移位为 1 秒,逐实例计算,超时按该实例时间限制计,比值小于 1 表示加速;同时报告逐实例胜率(快于默认的实例比例) 在线对比遵循统一协议:双方均使用 5 个在线核心与相同时间限制,全程使用求解器内部时钟;分母始终取同实例同设置下同批次 5 个默认策略同构副本中最先完成者的时钟,独立重复 零样本评估覆盖 6 个留一域与 1 个自然未见域,结果为 4 个加速、2 个持平、1 个失败;nnv 单路径为 0.8377,加竞赛后为 0.7181(对齐时间限制),增益主要来自分支搜索 内容质量必要性验证:随机内容(负对照)给出 1.1700/1.1954(>1),说明内容质量是增益的必要条件 域内无系统差异:目标域在训练集中时与默认策略无系统差异(域内 ca 0.9804、gisp 1.0050),价值集中在跨域零样本与无先验执行 反直觉现象:在语料退化的域上,不把该域收集的序列训练进模型反而使零样本迁移更好;对语料丰富域(ca)则相反,该域语料是必要锚点,效应双向且依赖域,候选机制为序列空间退化 预算边界:需要插件级源码访问,每实例运行 2k+1 次,其每核核心时间与内容单路径之比为 3.9–5.0 倍,因此增益是在匹配算力下读取的 论文事实层面:该工作直接研究 mip 预求解阶段的操作级动作序列生成与部署,属于 ai4or 中“学习辅助搜索/求解器组件决策”的方向;其决策对象、自回归条件生成、执行观测设施与序列竞赛机制,与神经网络辅助求解、学习辅助搜索的研究兴趣高度一致。迁移设想(推测):把“决策对象从配置向量提升为可执行动作序列并保留时序拓扑”这一思路迁移到生产调度,尤其是柔性作业车间、流水车间与生产运输协同中工序序列或调度规则序列的生成,需要满足若干条件——存在一个可枚举、语义跨实例族共享的原子动作(或工序—资源分配操作)空间;动作之间不可交换且顺序影响目标(如 makespan、能耗或拖期);能够以实例特征为条件进行自回归生成;并具备将候选序列注入仿真或求解器原生执行路径、记录实际执行与轮次的执行—观测设施。而序列竞赛迁移到调度时,需要在匹配算力预算下评估多个候选调度方案的并发求解收益,并注意论文本身提示的每核核心时间比放大问题。以上迁移为本文作者未涉及的推测,不能计作其结论。 该论文把预求解规划从参数配置搜索重铸为统一原子动作空间上的自回归序列生成,并配套改造 scip 源码实现序列注入与执行观测,再以序列竞赛截断单路径重尾风险,这套“改变决策对象 + 学习生成 + 执行设施 + 竞赛部署”的组合对智能优化与 ai4or 研究者具有方法论价值。其对不可交换性、时序依赖、跨域零样本边界、语料丰富度不能预测增益、以及匹配算力下 3.9–5.0 倍核心时间开销的诚实报告,为评估学习辅助搜索的约束可行性、解质量、公平算力预算与泛化提供了可借鉴的实验协议和边界意识。序列竞赛把组合与竞赛方法下沉到动作序列层级、并把增益分解为候选质量与竞争放大的分析思路,也可迁移到生产调度中多候选调度方案的并发求解与评估。"},{"id":"arxiv:2610.11546:v1","topic":"evolutionary-optimization","tier":"deep_read","scope":"full_text","score":8,"hasFigure":true,"tags":["dynamic-robust","reinforcement-learning","evolutionary","benchmark"],"searchText":"进化与智能优化 深度强化学习驱动的进化算法动态编排与混合de-cma-es协同 深度强化学习 进化算法 ddpg de-cma-es混合 学习辅助搜索 结构模型修正 高维优化 learning to orchestrate evolutionary search: progression-aware deep reinforcement learning for dynamic de-cma-es coordination in optimization and structural model updating 学习编排进化搜索:用于优化与结构模型修正中动态de-cma-es协调的进程感知深度强化学习 lechen li (1 2) rongye shi (3) wanhuan zhou (1) ((1) state key laboratory of internet of things for smart city university of macau macau 519000 china (2) college of water conservancy hydropower engineering hohai university nanjing 210098 (3) school of artificial intelligence beihang university beijing 100191 china) solving high-dimensional structural model updating problems requires an algorithm capable of navigating complex, non-convex landscapes with correlated parameters. existing hybrid evolutionary algorithms typically rely on static architectures or fixed switching rules, resulting in disjointed search phases. to address this, this study proposes a deep reinforcement learning-governed dynamic de-cmaes orchestration (drl-dco) algorithm, in which a deep deterministic policy gradient (ddpg)-based actor-critic agent continuously governs the evolutionary process as a single, unified system rather than a mechanical concatenation of algorithms. guided by a progression-aware state representation and a diversity-informed reward, the agent fluidly reallocates computational resources between the differencevector-based exploration of differential evolution (de) and the covariance-guided exploitation of cma-es, while jointly regulating population size, elite preservation, and a restart mechanism to escape local optima. this allows drl-dco to autonomously transition between exploration-dominant, exploitation-dominant, and mixed-strategy regimes across generations. beyond the training phase, the trained actor can operate in a supervision-free inference mode, where the internalized policy autonomously orchestrates de and cma-es control from observed search states through forward inference alone, without critic evaluation or weight updates, enabling faster deployment while retaining full effectiveness. validated on high-dimensional single-objective optimization benchmarks and the iasc-asce structural health monitoring benchmark, drl-dco achieves superior convergence accuracy and robustness compared to state-of-the-art adaptive and hybrid evolutionary algorithms, as well as single-operator drl-governed baselines. 论文研究高维单目标优化问题,特别是结构模型修正(femu)中需要在复杂非凸、参数相关的适应度景观上最小化模型预测响应与观测响应之间差异的优化问题。决策对象是每代中de与cma-es之间的计算资源分配比例、种群规模、精英保留策略和重启机制。目标是在有限计算预算下同时保证收敛精度和鲁棒性,避免过早收敛到局部最优。关键约束包括高维参数空间中的非凸性和变量耦合。信息假设为搜索过程中可观测种群统计信息和进程状态,但未明确说明是否获得梯度或真实函数结构信息。环境为静态优化问题,但搜索过程被视为顺序决策过程,由智能体在代际间连续控制。 现有混合进化算法通常依赖静态架构或固定切换规则,导致搜索阶段割裂,无法根据搜索进程动态调整探索与开发之间的平衡。同时,现有rl辅助ea方法多数将rl组件限制为对单一进化策略的间歇性干预,且缺乏对适应度景观或搜索进程的充分感知。因此,需要一种能够连续、进程感知地协调多种进化搜索策略的统一框架。 该研究的核心洞察在于:将de和cma-es的协同视为一个由深度强化学习智能体连续控制的统一决策过程,而非算法的机械拼接。通过设计进程感知的状态表示和多样性驱动的奖励函数,智能体能够根据搜索进程的当前状态动态分配探索和开发资源,从而在保持cma-es全局分布结构的同时保留de的多样性恢复能力,实现探索主导、开发主导和混合策略模式的自发切换。这种协同方式的有效性来源于对搜索进程的持续感知和资源动态重分配,而非简单的模块叠加。 作者将de-cma-es的混合搜索过程建模为马尔可夫决策过程,利用ddpg的actor-critic架构对进化过程进行连续控制。通过进程感知的状态表示捕捉搜索进程信息,通过多样性驱动的奖励函数引导智能体学习资源分配策略。作者分析了现有rl辅助ea方法将rl限制为间歇性干预单一步骤的局限,并据此设计了对两个并行进化过程进行连续控制的机制。材料未说明作者是否利用了适应度景观的图表示、分解或下界等结构信息。 采用ddpg的actor-critic架构,actor网络根据当前搜索状态输出连续动作,critic网络评估动作价值 状态表示为进程感知的搜索状态,包含种群统计信息和进程指标 动作空间为连续多维,控制de与cma-es之间的资源分配比例、种群规模、精英保留和重启机制 奖励函数为多样性驱动的奖励,引导智能体平衡探索与开发 智能体在每代对非精英子集进行de和cma-es的连续编排,而非对每代整个种群硬切换 训练阶段使用critic监督,通过确定性策略梯度更新actor和critic网络参数 推理阶段仅使用actor进行前向推断,无需critic评估和网络更新,实现无监督部署 支持探索主导、开发主导和混合策略三种模式的自主切换 包含重启机制以逃离局部最优,并支持在达到阈值时提前终止回合 在五个高维单目标基准函数上验证:ackley、griewank、rastrigin、rosenbrock和schwefel函数 在iasc-asce结构健康监测基准上进行femu任务验证 基线包括最先进的自适应和混合进化算法,以及单算子drl治理的基线 drl-dco在收敛精度和鲁棒性上优于对比方法 在iasc-asce基准上,智能体推理阶段在五种损伤工况下识别刚度值,10次独立运行取平均 材料未说明具体的计算预算、种群规模、迭代次数、运行时间或训练开销 该论文与智能优化和生产调度中的学习辅助搜索方向有明确的迁移路径。论文研究的核心问题是利用深度强化学习动态编排多种进化搜索策略,这一思路可直接迁移到柔性作业车间调度、流水车间调度等组合优化问题中,其中不同邻域结构或不同元启发式策略的协同可通过类似框架进行动态协调。迁移设想(推测):将de-cma-es的连续编排机制迁移到生产调度问题时,需要将状态表示从连续优化问题中的种群统计和进程指标扩展为包含调度解特征、机器负载、工序约束满足度等信息的表示;动作空间需要从连续资源分配比例调整为适用于调度问题中的算子选择或参数调节;奖励函数需要融入完工时间、约束违反惩罚等调度目标;同时需要验证在离散解空间和动态扰动下的泛化能力。此外,无监督推理模式对生产调度中的在线决策具有潜在价值,但需要验证在动态环境中的适应性。 该论文对研究智能优化和生产调度的读者具有较高参考价值。首先,它提出了一种将深度强化学习与多种进化策略动态协同的统一框架,可启发生产调度中多算子或多元启发式协同的研究。其次,其进程感知状态表示和多样性驱动奖励设计为学习辅助搜索中的状态和奖励设计提供了具体思路。第三,无监督推理模式为训练后策略的快速部署提供了工程可行性。第四,论文在高维基准函数和实际工程问题上进行了验证,展示了方法的泛化能力,对关注算法机制、约束可行性和求解质量的研究者有借鉴意义。"},{"id":"arxiv:2610.12183:v1","topic":"agents-ai4or","tier":"deep_read","scope":"full_text","score":7,"hasFigure":true,"tags":["agents","llm","benchmark"],"searchText":"智能体与自动建模 大模型智能体用于黑箱优化的跨域基准测试与设计因素分析 黑箱优化 llm智能体 基准测试 有限预算评估 优化工具集成 超参数优化 数据库调优 芯片设计 分子设计 a closer look at agentic bbo: benchmarking llm agents for black-box optimization 深入审视智能体式黑箱优化:面向黑箱优化的llm智能体基准测试 ming chen rong-xi tan ke xue yu-jie zhou taiye lu zhi-xuan gao peng xie zijun shen chen lu haopu shang chao qian black-box optimization (bbo) arises in many scientific and engineering problems where objective evaluations are expensive and limited. recent large language model (llm) agents offer a new way to approach bbo by combining task semantics, computation, optimization tools, and feedback-driven decision making, showing great potential due to the integration with mathematically rigorous tools. however, existing agentic bbo studies use different task domains and system configurations, making their results difficult to compare and the effects of individual design choices hard to isolate. we therefore introduce agenticbbo-bench, a cross-domain benchmark for agentic bbo spanning synthetic functions, hyperparameter optimization, database tuning, chip design, and molecular design under a unified finite-budget evaluation protocol. in our experiments, agentic bbo achieves higher family-averaged scores than direct llm-based methods in all five domains and outperforms the best numerical optimizers in four. we further study three factors shaping agent performance: optimization tools, task information and prior knowledge, and the role of the llm during search. our results show that additional numerical tools do not consistently improve performance, task semantics are broadly useful while more specific priors are less reliable, and numerical optimizers can effectively absorb gains from search trajectories established by the agent. finally, we introduce a five-task frontier challenge within agenticbbo-bench and evaluate seven llms under the codex agent harness, where gpt-6 astra and deepseek-v4.1-flash lie on the pareto frontier of performance and cost among the evaluated models. our code is available at https://github.com/lamda-bbo/agentic-bbo. 研究问题为在目标函数解析形式和梯度不可得、且每次评估代价高昂的黑箱优化(bbo)中,如何使用大语言模型(llm)智能体进行有限预算下的优化。决策对象是智能体在搜索过程中如何调用计算资源、优化工具和反馈驱动决策;目标是在统一有限预算协议下最大化优化得分。关键约束包括统一的有限评估预算、目标函数为黑箱且评估昂贵。信息假设为智能体可获取任务语义、先验知识以及数值优化工具的输出。环境为静态黑箱优化任务,涵盖合成函数、超参数优化、数据库调优、芯片设计和分子设计五个领域;动态扰动未说明。 现有智能体式bbo研究使用不同任务领域和系统配置,导致结果难以比较、单个设计选择的效果难以隔离。作者因此构建统一协议下的跨域基准,以系统比较llm智能体在bbo中的表现并分析影响性能的设计因素。 llm智能体在bbo中的价值不在于简单替换数值优化器,而在于结合任务语义、计算、优化工具与反馈驱动决策;但额外数值工具并不总是带来提升,任务语义普遍有用而更具体的先验知识可靠性较低,且数值优化器可以有效吸收智能体建立的搜索轨迹收益。因此,性能提升依赖智能体设计、任务适配和搜索策略,而非单纯使用更昂贵的前沿模型。 作者通过构建统一有限预算评估协议下的跨域基准 agenticbbo-bench,在五个领域上比较智能体式bbo、直接llm方法和最佳数值优化器,并控制三个因素(优化工具、任务信息与先验知识、llm在搜索中的角色)进行消融分析。此外,作者设计五任务前沿挑战并在codex智能体框架下评估七种llm,分析性能与成本权衡。 构建 agenticbbo-bench 跨域基准,覆盖合成函数、超参数优化、数据库调优、芯片设计和分子设计五个领域 采用统一的有限预算评估协议,使不同任务和系统配置可比较 定义智能体式bbo配置:结合任务语义、计算、优化工具和反馈驱动决策 设计受控实验分析三个因素:优化工具、任务信息与先验知识、llm在搜索中的角色 提出五任务前沿挑战,并在codex智能体框架下评估七种llm,比较性能与成本 在五个领域上,智能体式bbo的家族平均得分高于直接llm方法;在四个领域中优于最佳数值优化器 额外数值工具并不一致地提升性能 任务语义普遍有用,而更具体的先验知识可靠性较低 数值优化器可以有效吸收智能体建立的搜索轨迹收益 在五任务前沿挑战中,使用codex智能体框架评估七种llm,gpt-6 astra 与 deepseek-v4.1-flash 在所评估模型中位于性能与成本的帕累托前沿 离线优化器开发报告了开发集与留出任务得分的差异(开发s=0.607,留出0.279),但作者声明仅三个会话,应视为描述性证据而非因果结论 该论文直接研究智能体式黑箱优化,与ai4or中学习辅助搜索、大模型智能体、自动建模和优化求解器结合密切相关。其统一有限预算评估协议、工具集成分析和性能-成本帕累托前沿分析,可直接迁移到生产调度、柔性作业车间等带约束优化问题的智能体设计评估中。推测:若要将该方法迁移到生产调度,需将调度问题形式化为黑箱优化任务,定义可评估的调度目标与约束可行性检查,并适配调度领域的任务语义与先验知识;还需验证在离散决策、多约束和动态扰动场景下智能体工具调用的有效性。 当前研究者关注神经网络、强化学习、多智能体和学习辅助搜索与优化求解器的结合。该论文提供了跨域智能体式bbo的统一基准、有限预算评估协议以及对优化工具、任务知识和llm角色的大规模控制实验,有助于理解llm智能体在优化中的真实增益与设计取舍,对设计生产调度中的智能体优化系统、评估公平计算预算和泛化性具有直接参考价值。"},{"id":"arxiv:2610.11759:v1","topic":"routing-resources","tier":"deep_read","scope":"full_text","score":6,"hasFigure":false,"tags":["benchmark"],"searchText":"路径与资源优化 ai 与量子计算交叉的自适应组合优化综述 组合优化 量子优化 qaoa 自适应求解流程 学习型策略 资源分配 基准评测 beyond qaoa: a review of ai and quantum computing for adaptive combinatorial optimization 超越 qaoa:面向自适应组合优化的 ai 与量子计算综述 hoong chuin lau near-term quantum approaches to combinatorial optimization are limited by qubit counts, circuit fidelity, sampling cost, and the difficulty of encoding constraints, while machine learning is increasingly used to configure and control quantum optimization workflows. we call such workflows adaptive: decisions conventionally fixed in advance, from formulation and penalties to shot budgets, backends, and whether to invoke a quantum processor at all, are made by learned policies that respond to the instance, the progress of the solve, or the hardware. this review examines three paradigms, ai for quantum optimization, quantum for ai-driven optimization, and ai-quantum co-optimization, and organizes the literature by the decision being learned rather than by application. a structured review of 119 papers, 67 coded in detail, shows that the evidence is considerably stronger for ai-assisted quantum optimization than for the reverse direction: learning already reduces quantum evaluations, improves initialization, supports decomposition and penalty control, and mitigates noise, whereas evidence that quantum computation improves learned optimizers remains largely confined to small-scale simulation. experimental controls are thin: 25 of 57 studies include no classical baseline, the quantum contribution is fully isolated in 10 of 24 studies where an ablation applies, and the median experiment uses 17 qubits. we introduce an m0-m5 evidence hierarchy, from simulation to matched-resource practical advantage, and find no broadly convincing result at the highest level. we argue that scaling is increasingly a systems problem: the question is not only whether a problem fits on a quantum processor, but how classical and quantum resources should be allocated across the optimization process. the review is aimed at researchers in quantum computing, machine learning, and operations research. 论文是一篇综述,研究对象是近中期量子组合优化工作流中的自适应决策问题:传统上预先固定的形式化、惩罚项、分解、线路结构、测量预算、后端选择以及是否调用 qpu 等决策,改由学习型策略依据问题实例、求解进度或硬件状态来做出;目标是在量子硬件受 qubit 数量、线路保真度、采样成本、校准漂移和约束编码困难限制的条件下,提升量子或混合量子优化流水线的效率与可行性;关键约束包括量子资源稀缺、约束编码困难以及缺乏公平的经典基线对比;信息假设方面,学习型策略可以观察实例、求解进度和硬件状态;环境是含噪声近中期量子硬件与经典计算资源并存的静态或动态混合环境,材料未给出更细的动态扰动设定。 近中期量子方法在 qubit 数量、线路保真度、采样成本、校准漂移和约束编码方面受限,而机器学习正越来越多地用于配置和控制量子优化工作流;作者希望回答 ai 如何改变量子组合优化的设计与运行,以及量子计算在何处改变基于 ai 的优化器,并通过证据分级揭示该交叉领域的真实进展与实验控制薄弱问题。 作者的核心洞察是:量子组合优化的瓶颈正在从“问题能否放到量子处理器上”转向“经典与量子资源应在整个优化过程中如何分配”,因此许多围绕 qpu 的决策可以被显式地建模为学习或序贯决策问题;这一视角之所以有效,是因为即使尚未建立量子优势,减少 qpu 调用、改善可行性和选择更好后端本身也具有实用价值,从而为 ai 辅助量子优化提供了独立于量子优势的评估标准。 作者按所做决策而非应用领域组织文献,将其归入 ai for quantum optimization、quantum for ai-driven optimization 和 ai–quantum co-optimization 三类范式,并按流水线阶段编码决策对象,包括参数初始化、查询选择、线路设计、形式化、约束处理、分解、采样、硬件执行、求解器选择与求解器策略控制;同时提出 m0–m5 证据等级,从模拟、泛化、硬件验证、端到端执行到匹配资源的实际优势,用于评估已有证据。 提出自适应工作流概念:将形式化、惩罚项、分解、线路结构、测量预算、后端选择以及是否调用 qpu 等传统上预先固定的决策交由学习型策略,依据实例、求解进度或硬件状态做出 按被学习的决策而非应用领域组织文献,覆盖参数初始化、查询选择、线路设计、形式化、约束处理、分解、采样、硬件执行、求解器选择与求解器策略控制 划分三类范式:ai for quantum optimization、quantum for ai-driven optimization 与 ai–quantum co-optimization 对 119 篇论文进行结构化综述,其中 67 篇详细编码,并按固定类别对证据核心进行编码 提出 m0–m5 证据等级,区分模拟、泛化、硬件验证、端到端执行与匹配资源下的实际优势 在综述中总结选择性量子使用原则:学习型控制器可在量子执行的预期边际价值不足以抵消其成本时拒绝量子执行 结构化综述 119 篇论文,其中 67 篇详细编码 57 项研究中 25 项没有经典基线 24 项涉及消融的研究中仅 10 项完全隔离量子贡献 中位实验使用 17 个 qubit 证据显示 ai 辅助量子优化的证据明显强于反方向;量子计算改进学习型优化器的证据大多局限于小规模模拟 在筛选语料中,最高证据等级未发现广泛令人信服的结果 该综述与智能优化和 ai4or 的关系体现在“学习辅助搜索”与“求解器策略控制”层面:其按决策编码的视角可直接迁移到生产调度中学习何时启用精确求解器、如何分配计算预算、如何选择分解与约束处理方式;量子部分对当前经典生产调度研究属于相邻方向而非直接方法。若将选择性量子使用、学习型控制器和匹配资源评测原则迁移到柔性作业车间、流水车间或分布式制造,需要条件:具备可调用的量子或专用硬件后端、可定义清晰的成本收益信号、以及可与经典基线在同等资源预算下比较的评测协议;这些迁移属于推测,并非作者结论。 推荐阅读的原因在于:该综述虽以量子组合优化为主,但其核心框架是把优化流水线中的关键决策显式建模为学习或序贯决策问题,并强调公平计算预算、经典基线、消融与资源匹配的证据分级;这些原则与生产调度和 ai4or 研究中关注的约束可行性、求解质量、公平预算和可复现性高度一致,可为学习辅助搜索与求解器选择研究提供方法论参照。"},{"id":"arxiv:2610.09890:v1","topic":"mathematical-programming","tier":"browse","scope":"abstract","score":7,"hasFigure":false,"tags":["mathematical-programming","benchmark"],"searchText":"数学规划与混合求解 逆优化与目标函数学习 逆优化 混合整数线性规划 目标函数学习 dc优化 泛化误差界 决策预测 outperformance inverse optimization: learning objective functions that outperform agent decisions 超越性逆优化:学习优于智能体决策的目标函数 akira kitaoka inverse optimization estimates the weights of an objective function that explain observed decisions as optimal solutions, and is used in a variety of fields. for mixed-integer linear programs (milps), existing methods aim to reproduce the observations as optimal solutions, and thus learn compromise weights when the observations are suboptimal. we propose outperformance inverse optimization, which instead seeks weights that induce, at each state, an optimal solution outperforming the observed action in every component. we give a loss function that can be evaluated with forward-problem oracles alone and is thus applicable to milps, together with gradient-based and dc optimization algorithms for minimizing it. for weights inducing a unique outperforming optimal solution at all observations, we prove that the probability of failing to induce such a solution at a new state (the generalization error) is bounded by a quantity inversely proportional to the number of observations, and that this bound is tight in the number of observations up to logarithmic factors. in experiments on synthetic and real data, the proposed methods improve the prediction of solutions outperforming the actions over existing methods. 研究问题是从观测到的决策中估计目标函数的权重,观测对象为混合整数线性规划(milp)中的状态-动作对;目标不是复现观测动作,而是寻求在每个状态下诱导出一个在所有分量上都严格优于观测动作的最优解;关键约束是只能通过前向问题预言机(forward-problem oracle)评估损失,无法直接获取最优解集结构;信息假设是给定一组观测到的状态与相应动作,环境为静态设定,动态性材料未说明。 现有逆优化方法在milp中试图将观测动作复现为最优解,当观测动作是次优时,学到的权重只是折中权重,无法刻画更优决策。作者希望学习能诱导出超越观测动作的目标函数权重,从而支持决策改进而非仅仅模仿。 贡献的有效性来自将逆优化目标从‘解释观测为最优’重新定义为‘在每个状态诱导出分量意义上更优的最优解’,这一重新定义使得损失函数可以仅依赖前向问题预言机评估,从而适配milp;同时,作者证明了在权重诱导唯一超越最优解的条件下,泛化误差随观测数增加而下降,且该界在观测数上紧至对数因子,为方法的统计可靠性提供了理论支撑。 作者利用逆优化的反事实性质,将学习目标从拟合观测最优性条件转变为在每个观测状态上要求存在一个最优解在所有分量上优于观测动作。这一条件可以仅通过前向问题预言机检验,因此适合milp。作者进一步构造可评估的损失函数,并针对其非凸性引入基于梯度和dc优化的最小化算法。在理论方面,作者通过分析权重诱导唯一超越最优解的概率,推导出泛化误差上界并证明其紧性。 提出超越性逆优化框架:寻找权重,使得在每个观测状态处,由该权重定义的前向问题存在一个最优解在所有分量上优于观测动作。 设计损失函数:该损失函数仅依赖前向问题预言机即可评估,因此适用于混合整数线性规划(milp)。 给出最小化算法:包括基于梯度的方法和dc优化算法,用于最小化上述损失函数。 理论分析:对于在所有观测处诱导唯一超越最优解的权重,证明在新状态上失败诱导此类解的概率(泛化误差)被一个与观测数成反比的量所界定,且该界在观测数上紧至对数因子。 实验验证:在合成数据和真实数据上,与现有方法比较,评估预测超越动作的解的能力。 在合成数据和真实数据上进行实验;摘要仅陈述所提方法在预测超越动作的解方面优于现有方法,未提供具体基线名称、实例规模、约束可行性、解质量指标、运行时间、训练开销或消融结果等数字。 本文属于ai4or中学习优化目标函数的方向,与智能优化和生产调度的关系主要体现在:逆优化可用于从调度决策中学习目标权重,而超越性逆优化试图学习能改进决策的权重,而非仅模仿。若迁移到生产调度,需要将调度问题建模为milp并定义状态-动作对,且需要前向求解器作为预言机;该迁移为推测,需验证超越性条件在调度多目标权衡下的实际可解性与计算开销。与强化学习的关系是,本文不直接使用强化学习,但学习目标函数以诱导更优决策的思想可与学习辅助搜索或智能体优化结合。 对于关注学习辅助优化、逆优化和目标函数学习的研究者,本文提供了将逆优化从模仿提升为改进的理论框架,并给出了仅依赖前向预言机的损失函数和泛化误差界,这些机制可能启发生产调度中目标权重学习、多目标权衡以及学习与数学规划结合的研究。尽管实验细节有限,其理论视角和方法设计具有迁移潜力。"},{"id":"arxiv:2610.12119:v1","topic":"mathematical-programming","tier":"browse","scope":"abstract","score":6,"hasFigure":false,"tags":["multi-objective","graph-neural","mathematical-programming"],"searchText":"数学规划与混合求解 约束优化中的算法选择与实例结构特征自动提取 算法选择 约束规划 weisfeiler-leman图核 图表示学习 自动特征提取 minizinc using weisfeiler-leman features for algorithm selection in constraint optimisation 使用weisfeiler-leman特征进行约束优化中的算法选择 alessio pellegrino jacopo mauro algorithm selection is essential for efficient constraint programming. over the years, many algorithm selectors based on machine learning methods have been successfully applied, yet traditional feature extraction methods often rely on manually decided instance-level statistics that fail to capture the underlying problem structure. in this paper we aim to bridge this gap by introducing a novel, automated feature extraction methodology that integrates graph conversion and weisfeiler-lehman graph kernels to generate robust structural representations of problem instances. the 1-wl test bounds the graph-distinguishing power of standard message-passing graph neural networks (gnns), and suitable gnn architectures match this bound \\citep{xuetal2018}. wl-based features offer an alternative that does not require training a gnn. our primary contribution is a cut-based representation (\\texttt{wlc}) designed to model structural partitions and provide a more nuanced predictive signal. we evaluate our approach on instances from the 2023--2025 minizinc challenges across two tasks: maximizing borda count scores and maximizing predictive accuracy. experimental results across support vector machines, random forests, and multi-layer perceptrons demonstrate that cut-based features outperform \\texttt{fzn2feat} with svms, while results with rfs and mlps are closer. 论文研究约束规划(constraint programming)中的算法选择问题:给定一个约束优化问题实例,决策对象是应选用哪种求解算法,目标可以是最大化borda计分或最大化预测准确率,关键信息假设是实例可被转换为图表示并据此提取结构特征,环境为静态离线场景。具体约束形式、候选算法集合与运行时间预算材料未说明。 传统算法选择器依赖人工设定的实例级统计特征,这类特征往往无法刻画问题实例的底层结构,因此作者希望引入自动化的结构特征提取方法来弥补这一差距。 核心洞察在于:既然1-wl测试界定了标准消息传递gnn的图区分能力上限,且适当gnn可达到该上限,那么直接用基于wl核衍生的结构特征作为算法选择器的输入,可以在不训练gnn的情况下获得对问题实例结构的稳健表示;进一步地,基于割的表示wlc通过建模结构划分提供了更细致的预测信号。 作者从1-wl测试对gnn表达能力的理论界定出发,论证采用wl图核特征作为替代路线的合理性,并据此设计图转换与特征生成流程,最后通过在minizinc challenge实例上比较不同分类器与特征方案的预测表现来分析特征有效性。 将约束问题实例转换为图表示 利用weisfeiler-lehman图核生成实例的结构表示特征 提出基于割的表示wlc,用于建模结构划分并提供更细致的预测信号 将wl类特征与wlc特征输入支持向量机、随机森林和多层感知机等分类器完成算法选择,无需训练gnn 在2023至2025年minizinc challenge实例上评估,任务为最大化borda计分与最大化预测准确率两项。 比较对象包括现有特征提取方法fzn2feat,分类器包括支持向量机、随机森林和多层感知机。 结果表明在支持向量机上,基于割的特征优于fzn2feat;在随机森林与多层感知机上两者结果更接近。 候选算法规模、实例规模、运行时间与训练开销材料未说明。 该论文与智能优化和ai4or相关,因为它把算法选择问题形式化为基于实例结构的学习型预测任务,与生产调度中按实例特征选择求解器或启发式规则的思路同源。其wl图核与割结构特征提取机制可直接迁移到约束建模与调度问题的实例表示上(推测),但迁移到柔性作业车间、流水车间或生产运输协同问题需要先将工序、机器、运输等关系编码为图并验证wlc特征对这些结构是否仍有判别力,且需在公平计算预算下与原特征或端到端gnn选择器比较;这些迁移属于推测而非作者结论。 对关注学习辅助求解与算法选择的研究者而言,该文提供了一条不依赖gnn训练、以wl图核和割结构表示刻画实例结构的特征提取路线,并给出在真实minizinc challenge实例上的分类器对比,可作为在调度问题中设计实例-算法匹配特征的参考。"},{"id":"arxiv:2610.12341:v1","topic":"agents-ai4or","tier":"browse","scope":"abstract","score":6,"hasFigure":true,"tags":["reinforcement-learning","agents","llm","benchmark"],"searchText":"智能体与自动建模 大模型智能体驱动的对抗性启发式学习与策略改进 大模型智能体 启发式学习 对抗博弈 策略改进 基准评测 长时程决策 can ai agents learn their way to the top? evaluating heuristic learning in a long-running game agent competition ai 智能体能否学会登顶?在长期运行的游戏智能体竞赛中评估启发式学习 kaisen yang qingle liu kejin wang yicheng zhao jieming li shenghan zheng ruize yang bojun yang heng gong xiang gao lanyue zhang kaiyu zhong zhuo liu shaoxuan li chengxi li yong yan weixuan zhang tianwei luo situ wang youjie zheng sihan zhao shengyuan wang huan-ang gao jiazheng xu xiaohui xie wentao han hongning wang adversarial games have driven advances from heuristic search to reinforcement learning, yet learning and adapting strategies from limited samples remain challenging. ai agents offer an alternative by turning game experience into revisions of executable policies. building on heuristic learning (hl), we formalize adversarial heuristic learning (ahl), a paradigm that uses ai agents as learning engines to refine game policies and supporting software while keeping model weights fixed. we introduce aaarena, a benchmark comprising 12 authentic adversarial games and 1,920 archived human programs, with an evaluation protocol modeled on real-world game competitions. agents interpret rules, choose opponents, analyze replays, and revise game agents to achieve their highest ranking within fixed match and evaluation budgets. we evaluate \\val{completedmodels} model and harness configurations: opus5.5 with claude code earns 6 gold medals, while no evaluated configuration tops the remaining 6 human ladders. performance is generally weaker in games with more complex rule specifications. further experiments show that opponent selection and dense feedback support policy improvement, and that agents learn from both on-policy replays of their own matches and off-policy replays of other players' matches. these results highlight hl's potential in adversarial games and identify persistent challenges in game understanding, strategy implementation, and long-horizon policy development. 论文面向对抗性游戏中的策略学习问题,决策对象是可执行的游戏策略及其支撑软件,目标是在固定的对局与评估预算下获得尽可能高的竞赛排名,环境为长期运行的对抗性游戏竞赛,规则以文本形式给出,参赛程序仅能获得有限的样本经验,摘要未说明是否涉及连续状态空间、约束可行性或生产调度类约束,也未说明选手可获得的信息是否完全或存在隐藏信息。 对抗性博弈推动了从启发式搜索到强化学习的进展,但从有限样本中学习并适应策略仍然困难;作者认为 ai 智能体可以作为学习引擎,把游戏经验转化为可执行策略的修订,从而绕开固定模型权重下的参数学习瓶颈。 核心洞察在于把学习发生的位置从模型参数迁移到可执行代码与配套软件:在模型权重冻结的前提下,智能体通过解读规则、分析回放来生成并迭代策略程序,使经验积累直接体现为策略文本与代码的修改;同时作者强调对手选择与稠密反馈能支撑策略改进,无论回放来自自身对局还是他人对局,这解释了为何不更新权重也能实现行为改进。 作者将对抗性启发式学习(ahl)形式化为一种以 ai 智能体为学习引擎、保持模型权重固定的范式,并据此设计基准与评测协议;但摘要未说明其是否利用问题结构、分解、下界或图表示等具体分析手段。 形式化 adversarial heuristic learning(ahl):以 ai 智能体作为学习引擎,在固定模型权重下精炼博弈策略与支撑软件 构建 aaarena 基准,包含 12 个真实对抗性游戏与 1920 个归档人类程序 设计模仿真实游戏竞赛的评测协议:智能体解读规则、选择对手、分析回放、修订游戏智能体,并在固定对局与评估预算内追求最高排名 评估多种模型与执行框架组合(harness 配置),比较其在各游戏天梯上的登顶能力 分析对手选择、反馈稠密度对策略改进的影响,并区分 on-policy(自身对局回放)与 off-policy(他人对局回放)两种学习信号 在 aaarena 上评估了若干模型与 harness 配置:opus5.5 搭配 claude code 获得 6 枚金牌 没有评估配置能够登顶其余 6 个人类天梯 规则规格更复杂的游戏上表现总体更弱 进一步实验表明对手选择与稠密反馈有助于策略改进 智能体既能从自身对局的 on-policy 回放学习,也能从其他玩家对局的 off-policy 回放学习 本文与智能优化/生产调度并非同一问题域:它研究的是对抗性游戏中由大模型智能体驱动的策略代码迭代,而不是柔性作业车间、流水车间或生产运输协同调度。它对 ai4or 的可迁移之处在于“学习信号不作用于权重而作用于可执行求解程序”的范式,以及固定对局/评估预算下的公平评测与 on/off-policy 回放利用机制;推测若要迁移到生产调度,需要把游戏规则替换为调度问题描述与约束、把策略程序替换为调度启发式或求解器配置代码,并在可行性、解质量与时间预算上建立可比的评测协议,且需验证其在长时程、多约束场景下的稳定性。 对关注学习辅助搜索、大模型智能体与自动算法设计的研究者而言,该文提供了一个在固定计算与评估预算下评测“智能体改代码而非改权重”的基准协议与负面结果;其中对手选择、稠密反馈、on/off-policy 回放等结论可启发如何为调度启发式设计反馈信号与训练/评估预算分配,但其应用前提是把对抗博弈的设定替换为受约束的优化问题。"}]</script>
+  </section>
+
+</main>
+<script>
+(() => {
+  const explorer = document.querySelector('[data-explorer]');
+  if (!explorer) return;
+  const source = explorer.querySelector('[data-paper-json]');
+  let records = [];
+  try { records = JSON.parse(source?.textContent || '[]'); } catch { return; }
+  const byId = new Map(records.map((record) => [record.id, record]));
+  const validTopics = new Set(records.map((record) => record.topic));
+  const validTags = new Set(records.flatMap((record) => record.tags || []));
+  const validTiers = new Set(['deep_read', 'browse', 'explore']);
+  const validScopes = new Set(['full_text', 'abstract']);
+  const validFigures = new Set(['yes', 'no']);
+  const validScores = new Set([0, 8, 9]);
+  const form = explorer.querySelector('[data-filter-form]');
+  const queryInput = explorer.querySelector('[data-filter-query]');
+  const tierInput = explorer.querySelector('[data-filter-tier]');
+  const scopeInput = explorer.querySelector('[data-filter-scope]');
+  const scoreInput = explorer.querySelector('[data-filter-score]');
+  const figureInput = explorer.querySelector('[data-filter-figure]');
+  const topicButtons = [...explorer.querySelectorAll('[data-topic-choice]')];
+  const normalize = (value) => value.normalize('NFKC').toLocaleLowerCase('zh-CN').replace(/\s+/gu, ' ').trim();
+  let state = { query:'', topic:'', tag:'', tier:'', scope:'', score:0, figure:'' };
+
+  const canonicalState = (candidate) => ({
+    query: candidate.query.trim().length <= 200 ? candidate.query.trim() : '',
+    topic: validTopics.has(candidate.topic) ? candidate.topic : '',
+    tag: validTags.has(candidate.tag) ? candidate.tag : '',
+    tier: validTiers.has(candidate.tier) ? candidate.tier : '',
+    scope: validScopes.has(candidate.scope) ? candidate.scope : '',
+    score: validScores.has(Number(candidate.score)) ? Number(candidate.score) : 0,
+    figure: validFigures.has(candidate.figure) ? candidate.figure : '',
+  });
+  const readUrl = () => {
+    const params = new URLSearchParams(location.search);
+    return canonicalState({ query:params.get('q') || '', topic:params.get('topic') || '', tag:params.get('tag') || '', tier:params.get('tier') || '', scope:params.get('scope') || '', score:params.get('score') || 0, figure:params.get('figure') || '' });
+  };
+  const writeUrl = () => {
+    const params = new URLSearchParams();
+    if (state.query) params.set('q', state.query);
+    if (state.topic) params.set('topic', state.topic);
+    if (state.tag) params.set('tag', state.tag);
+    if (state.tier) params.set('tier', state.tier);
+    if (state.scope) params.set('scope', state.scope);
+    if (state.score) params.set('score', String(state.score));
+    if (state.figure) params.set('figure', state.figure);
+    const query = params.toString();
+    history.replaceState(null, '', `${location.pathname}${query ? `?${query}` : ''}${location.hash}`);
+  };
+  const syncControls = () => {
+    queryInput.value = state.query; tierInput.value = state.tier; scopeInput.value = state.scope;
+    scoreInput.value = String(state.score); figureInput.value = state.figure;
+    topicButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.topicChoice === state.topic)));
+    const activeTag = explorer.querySelector('[data-active-tag]');
+    if (activeTag) {
+      const label = explorer.querySelector(`[data-tag-filter="${CSS.escape(state.tag)}"]`)?.textContent?.trim();
+      activeTag.textContent = state.tag ? `· 标签：${label || state.tag}` : '';
+    }
+  };
+  const render = () => {
+    state = canonicalState(state);
+    const query = normalize(state.query);
+    let visibleCount = 0;
+    explorer.querySelectorAll('[data-paper-card]').forEach((card) => {
+      const record = byId.get(card.dataset.paperId);
+      const visible = Boolean(record) && (!query || normalize(record.searchText).includes(query)) && (!state.topic || record.topic === state.topic) && (!state.tag || record.tags.includes(state.tag)) && (!state.tier || record.tier === state.tier) && (!state.scope || record.scope === state.scope) && record.score >= state.score && (!state.figure || (record.hasFigure ? 'yes' : 'no') === state.figure);
+      card.hidden = !visible;
+      if (visible) visibleCount += 1;
+    });
+    explorer.querySelectorAll('[data-tier-section]').forEach((section) => {
+      const count = [...section.querySelectorAll('[data-paper-card]')].filter((card) => !card.hidden).length;
+      section.hidden = count === 0;
+      const counter = section.querySelector('[data-tier-count]');
+      if (counter) counter.textContent = String(count);
+    });
+    explorer.querySelector('[data-result-count]').textContent = String(visibleCount);
+    explorer.querySelector('[data-no-results]').hidden = visibleCount !== 0;
+    syncControls(); writeUrl();
+  };
+
+  state = readUrl(); syncControls(); render();
+  form?.addEventListener('input', () => { state = { ...state, query:queryInput.value, tier:tierInput.value, scope:scopeInput.value, score:Number(scoreInput.value), figure:figureInput.value }; render(); });
+  form?.addEventListener('submit', (event) => event.preventDefault());
+  form?.addEventListener('reset', () => queueMicrotask(() => { state = canonicalState({ query:'', topic:'', tag:'', tier:'', scope:'', score:0, figure:'' }); render(); }));
+  topicButtons.forEach((button) => button.addEventListener('click', () => { state.topic = button.dataset.topicChoice || ''; render(); }));
+  explorer.querySelectorAll('[data-tag-filter]').forEach((link) => link.addEventListener('click', (event) => { event.preventDefault(); state.tag = link.dataset.tagFilter || ''; render(); form?.scrollIntoView({ behavior:'smooth', block:'start' }); }));
+  explorer.querySelector('[data-expand-visible]')?.addEventListener('click', () => { explorer.querySelectorAll('[data-paper-card]:not([hidden]) .paper-details').forEach((details) => { details.open = true; }); });
+  explorer.querySelector('[data-collapse-visible]')?.addEventListener('click', () => { explorer.querySelectorAll('.paper-details[open]').forEach((details) => { details.open = false; }); });
+})();
+
+document.querySelectorAll('[data-paper-figure]').forEach((image) => {
+  const fail = () => {
+    const original = image.dataset.originalUrl;
+    if (original && image.dataset.remoteFallback !== 'used' && image.src !== original) { image.dataset.remoteFallback = 'used'; image.src = original; return; }
+    image.hidden = true; image.parentElement?.querySelector('[data-figure-error]')?.removeAttribute('hidden');
+  };
+  image.addEventListener('error', fail);
+  if (image.complete && image.naturalWidth === 0) fail();
+});
+</script>
+</body>
+</html>
