@@ -747,6 +747,95 @@
       "reading_scope": "full_text"
     }
   },
+  "05ce64337fdab2e10245be3a47af656f3a00fd855321d0cc37666845713b270f": {
+    "analysis": {
+      "analysis": "作者通过分析DMAC在线辨识模型与参考调速器之间的耦合关系，识别出模型变化会导致先前可行参考失效且经典插值方向可能不可用这一关键问题，进而将参考调速器的决策变量从插值因子改为被治理参考本身，并针对可行域为空的情形引入约束违反最小化的备用目标。材料未说明是否使用了问题结构分解、下界推导或图表示等具体分析工具。",
+      "challenges": [
+        "DMAC在线辨识的模型随数据更新而变化，使得约束可行域时变",
+        "经典插值型参考调速器在模型变化后可能无法沿需要的方向调整参考",
+        "在有限时域内可行参考集合可能为空，此时无法同时满足所有约束",
+        "仅依赖部分状态测量，状态信息不完整",
+        "缺乏递归可行性、约束满足和闭环稳定性的理论保证"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "该论文将参考调速器与DMAC结合以在无先验被控对象模型下执行约束",
+          "location": "abstract",
+          "quote": "This paper integrates reference governance with Dynamic Mode Adaptive Control (DMAC) to enforce constraints without a prior plant model."
+        },
+        {
+          "claim": "DMAC在线辨识模型并随自适应更新，导致先前可行的被治理参考可能变为不可行",
+          "location": "abstract",
+          "quote": "Because the prediction model changes as DMAC adapts, a governed reference that was previously feasible may become infeasible, and the classical interpolation-based RG may be unable to move the reference in the direction required to recover predicted constraint satisfaction."
+        },
+        {
+          "claim": "所提框架直接在被治理参考空间搜索而非插值因子",
+          "location": "abstract",
+          "quote": "The proposed DMAC-RG framework instead searches directly over the governed reference rather than over an interpolation factor."
+        },
+        {
+          "claim": "当可行参考存在时，选择跟踪期望指令并可选惩罚偏离上一参考；当可行集为空时最小化预测约束违反",
+          "location": "abstract",
+          "quote": "When feasible references exist, the governed reference is selected to track the desired command, with an optional penalty on deviation from the previously applied reference. When the finite-horizon feasible set is empty, the reference is selected to minimize predicted constraint violation while retaining the same tracking preference."
+        },
+        {
+          "claim": "作者明确说明本文不提供递归可行性、约束满足或闭环稳定性的理论保证",
+          "location": "abstract",
+          "quote": "This work is a numerical investigation and does not provide theoretical guarantees of recursive feasibility, constraint satisfaction, or closed- loop stability."
+        },
+        {
+          "claim": "数值示例包括线性系统、非线性Van der Pol振子和高维Burgers方程，且仅使用DMAC在线辨识模型",
+          "location": "abstract",
+          "quote": "Numerical examples on a linear system, a nonlinear Van der Pol oscillator, and a high-dimensional Burgers equation under partial-state measurement demonstrate that the proposed RG enforces constraints using only the model identified online by DMAC, without access to the true plant dynamics or the complete system state."
+        }
+      ],
+      "experiments": [
+        "在线性系统上进行数值示例",
+        "在非线性Van der Pol振子上进行数值示例",
+        "在高维Burgers方程且部分状态测量下进行数值示例",
+        "结果表明所提参考调速器仅使用DMAC在线辨识的模型即可执行约束，无需访问真实被控对象动态或完整系统状态",
+        "未提供基线对比、实例规模、约束可行性比率、解质量指标、运行时间、训练开销、公平计算预算、泛化或消融等具体数字"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "当预测模型本身在线变化时，将参考调速器的搜索空间从插值因子转变为被治理参考本身，可以避免因模型变化导致的插值方向不可用问题；即在可行域非空时直接优化跟踪性能，在可行域为空时转为最小化预测约束违反量，从而在模型不确定且时变的条件下仍能系统性地执行约束。",
+      "limitations": [
+        "作者明确说明本文是数值研究，不提供递归可行性、约束满足或闭环稳定性的理论保证"
+      ],
+      "method": [
+        "DMAC在线从测量状态和输入数据辨识并更新离散时间模型",
+        "参考调速器使用DMAC辨识的模型而非真实被控对象模型来预测闭环约束行为",
+        "在被治理参考空间直接搜索，而非在插值因子上搜索",
+        "当有限时域内存在可行参考时，选择跟踪期望指令的被治理参考，可选地对偏离上一参考施加惩罚",
+        "当有限时域可行集为空时，选择最小化预测约束违反量的参考，同时保持相同的跟踪偏好",
+        "整体框架为DMAC-RG，不访问真实被控对象动态和完整系统状态"
+      ],
+      "motivation": "经典参考调速器依赖已知的精确被控对象模型进行约束预测，而DMAC在线辨识模型会随自适应过程不断变化，导致先前可行的被治理参考可能变为不可行，且传统基于插值因子的参考调速器可能无法沿所需方向移动参考以恢复预测约束满足，因此需要一种能直接在被治理参考空间搜索的新框架。",
+      "primary_topic": "控制理论中的约束执行与自适应控制",
+      "relation_to_research": "该论文属于控制理论中的自适应约束执行方向，与智能优化、生产调度和AI4OR的核心主题关系较弱。其参考调速器在线搜索被治理参考以处理时变可行域的思路，推测可迁移到生产调度中动态扰动下的约束修复或滚动调度参考轨迹调整，但需要满足以下条件：调度问题需能建模为离散时间动态系统；需有在线辨识或预测模型；约束可行域随模型更新而变化；且需设计适合调度约束的搜索空间。上述迁移为推测，并非作者结论。",
+      "relevance_score": 3,
+      "setting": "该研究考虑在缺乏先验被控对象模型且仅能获得部分状态测量信息的条件下，对动态系统实施约束执行的问题；决策对象是被治理后的参考信号，目标是在保证预测约束满足的同时跟踪期望指令；关键约束包括闭环预测需满足给定约束、仅有不完整状态测量、在线辨识模型随自适应过程变化；信息假设为被控对象模型未知、仅依赖DMAC在线从状态和输入数据辨识的离散时间模型；环境为离散时间动态环境，模型参数随自适应律在线更新。",
+      "tags": [
+        "动态模式自适应控制",
+        "参考调速器",
+        "约束执行",
+        "在线模型辨识",
+        "无模型控制"
+      ],
+      "title_zh": "动态模式自适应控制中基于参考调速器的约束执行",
+      "uncertainty": "本文摘要未提供作者单位、通讯作者、具体实验数字、基线方法、计算预算和消融结果，且全文未提供，因此对实验充分性、方法细节和迁移可行性的判断存在较大不确定性。相关性评分基于摘要判断，可能因缺少全文而低估或高估其与AI4OR的实际关联。",
+      "why_recommended": "对研究智能优化和生产调度的学者而言，本文并非直接相关，但其处理时变可行域、在可行域为空时最小化约束违反、以及在线模型更新导致约束执行失效的机制，可为动态调度中的约束修复和鲁棒参考轨迹生成提供概念性参考。若研究者关注学习辅助搜索与约束执行的结合，可将其视为一个相邻领域的启发来源，但不宜作为核心参考文献。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-10T03:10:36.984010Z",
+      "input_hash": "7ddb32a106825fa12b6eb46910c546433329eca3b6eb9ec7ae52d13aea260f6c",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
   "0653d27e085545d6bd91ea6a4e2f3ac2e2cf01252e0be9307c1311e91d8aaf8a": {
     "analysis": {
       "analysis": "材料未说明作者具体如何分析问题结构，仅从摘要可知作者将融合建模为在树宽约束下最大化保留无约束融合信息的组合优化问题，并采用遗传算法进行搜索。",
@@ -11265,6 +11354,77 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "full_text"
+    }
+  },
+  "31aa0cd61a4aa654cc4ca5d1efeca37f6ebb6eae6bcd4fef879b39b9242f9b6e": {
+    "analysis": {
+      "analysis": "材料未说明作者如何分析问题，仅摘要未提供具体分析技术。",
+      "challenges": [
+        "处理车辆速度异质性带来的最大完成时间目标",
+        "在容量约束下分配客户需求并规划多次行程",
+        "为可分割和不可分割交付设计不同的近似策略",
+        "在满足三角不等式和容量约束下证明近似比"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究具有不同速度车辆的车辆路径问题，目标是最大完成时间最小化。",
+          "location": "abstract",
+          "quote": "We study vehicle routing with vehicles of different speeds on a complete undirected graph whose vertex set consists of a depot and a set of clients, where the distances satisfy the triangle inequality. Each vehicle has a specified speed, and if the total length traveled by a vehicle of speed $s$ is $L$, its completion time is $L/s$."
+        },
+        {
+          "claim": "论文为HetTSP给出6-近似算法，改进了之前90(1+δ)的近似比。",
+          "location": "abstract",
+          "quote": "We give a $6$-approximation algorithm for HetTSP, improving the previous $90(1+\\delta)$-approximation for any fixed $\\delta>0$."
+        },
+        {
+          "claim": "论文为HetCVRP的可分割交付版本给出约7.965-近似算法。",
+          "location": "abstract",
+          "quote": "We give a $\\frac92+2\\sqrt3<7.965$-approximation algorithm for this problem."
+        },
+        {
+          "claim": "论文为HetCVRP的不可分割交付版本给出约9.743-近似算法，改进了之前450(1+δ)的近似比。",
+          "location": "abstract",
+          "quote": "We give a $\\frac{11}{2}+3\\sqrt2<9.743$-approximation algorithm, improving the previous $450(1+\\delta)$-approximation for any fixed $\\delta>0$."
+        }
+      ],
+      "experiments": [
+        "材料未说明实验，仅提供理论近似比结果：HetTSP的近似比为6，改进之前90(1+δ)；HetCVRP可分割交付近似比小于7.965；HetCVRP不可分割交付近似比小于9.743，改进之前450(1+δ)。未提供实验基线、实例规模、运行时间等。"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "通过改进算法设计，显著降低了异构车辆路径问题的近似比，为HetTSP提供了6-近似算法，为HetCVRP的可分割交付版本提供了约7.965-近似算法，为不可分割交付版本提供了约9.743-近似算法。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "针对HetTSP，设计6-近似算法",
+        "针对HetCVRP可分割交付版本，设计(9/2+2√3)-近似算法",
+        "针对HetCVRP不可分割交付版本，设计(11/2+3√2)-近似算法"
+      ],
+      "motivation": "现有异构车辆路径问题的近似比很大，例如HetTSP之前的最佳近似比为90(1+δ)，HetCVRP不可分割交付版本之前的最佳近似比为450(1+δ)，因此需要设计改进的近似算法以提供更好的理论保证。",
+      "primary_topic": "异构车辆路径问题的近似算法",
+      "relation_to_research": "该论文研究车辆路径问题的近似算法，属于组合优化和运筹优化领域。虽然与生产调度、智能优化中的某些问题（如分布式制造中的运输协同）有潜在关联，但论文本身不涉及神经网络、强化学习、图神经网络等学习方法，也不直接处理作业车间调度或流水车间调度。其近似算法设计思路可能对生产运输协同问题中的路径规划有理论参考价值，但迁移需要具体问题结构的对应，例如将车辆速度异质性映射到生产中的机器速度差异，并将目标从最小化最大完成时间调整为调度目标。这种迁移属于推测，需要进一步研究验证。",
+      "relevance_score": 3,
+      "setting": "研究在完全无向图上的车辆路径问题，顶点由仓库和一组客户组成，距离满足三角不等式。每辆车有指定速度，若速度为s的车辆行驶总长度为L，则完成时间为L/s。目标是为一组速度不同的车辆规划路线以服务所有客户，并最小化车辆中的最大完成时间。考虑三种问题设定：异构旅行商问题（HetTSP），每辆车执行一次从仓库出发并返回仓库的路径，所有路径共同访问所有客户；异构容量车辆路径问题（HetCVRP）的可分割交付版本，每个客户有需求，车辆容量相同，一辆车可以执行多次从仓库出发并返回的行程，行程之间在仓库重新装载，每次行程交付的总需求不能超过车辆容量，客户需求可被拆分到多次访问中，可能由不同车辆执行；以及HetCVRP的不可分割交付版本，每个客户的全部需求必须在单次访问中交付。信息假设为确定性、静态环境，其余要素材料未说明。",
+      "tags": [
+        "车辆路径问题",
+        "异构速度",
+        "近似算法",
+        "组合优化",
+        "容量约束"
+      ],
+      "title_zh": "非均匀速度车辆路径问题的改进近似算法",
+      "uncertainty": "仅基于标题和摘要，缺乏全文细节，无法评估算法具体设计、分析技术和实验验证；作者单位、通讯作者等信息未提供。",
+      "why_recommended": "对于研究智能优化和生产调度的学者，该论文提供了车辆路径问题近似算法的最新理论进展，可能为生产运输协同优化中的路径规划子问题提供算法设计灵感。但其方法不涉及学习或智能体优化，相关性有限，建议作为运筹优化理论参考。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-10T03:10:21.182322Z",
+      "input_hash": "c3ac195301bf3d8642e10c28397ac6fc825d99c368ba20df283d953a275edbe9",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
     }
   },
   "320c5d69a38cc44cbd2e32256d3951e8e69e1e028cbd14494ae1461b1171e8da": {
@@ -31992,6 +32152,93 @@
       "reading_scope": "abstract"
     }
   },
+  "8caa1e171e3b7a9b8d8e1eb2146665bfeff56bbb2684bf1f92ee909a55271c8e": {
+    "analysis": {
+      "analysis": "作者通过观察默认顺序近乎唯一且人为打乱同一序列顺序会膨胀求解时间分布尾部，来论证顺序决策的功能必要性，并据此将预求解规划形式化为统一原子动作空间上的自回归序列生成问题；具体的问题结构利用、分解或下界推导材料未说明。",
+      "challenges": [
+        "动作之间的非交换时间依赖难以用参数配置类方法表达",
+        "默认动作顺序在多数域近乎唯一，偏离顺序会显著劣化求解时间分布尾部",
+        "需要跨未见域的端到端零样本加速而非仅在训练分布内有效",
+        "需要在原生求解路径中注入并观测动作序列的执行情况与轮次"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "既有基于学习的方法只优化参数配置，无法表达动作之间的不可交换时间依赖",
+          "location": "abstract",
+          "quote": "yet learning-based methods only optimize parameter configurations and cannot express the non-commutative temporal dependencies among actions"
+        },
+        {
+          "claim": "默认动作顺序在多数域上近乎唯一且功能上必要，打乱顺序会膨胀求解时间分布尾部",
+          "location": "abstract",
+          "quote": "whose default order is nearly unique on most domains, yet functionally necessary: artificially shuffling the order of the same sequence inflates the tail of the solve-time distribution by up to several-fold"
+        },
+        {
+          "claim": "作者将预求解规划重铸为统一原子动作空间上的自回归序列生成",
+          "location": "abstract",
+          "quote": "We recast presolve planning as autoregressive sequence generation over a unified atomic action space, moving the decision object to action sequences"
+        },
+        {
+          "claim": "在多个未见域上取得端到端零样本加速",
+          "location": "abstract",
+          "quote": "on multiple unseen domains it attains end-to-end zero-shot speedup"
+        },
+        {
+          "claim": "部署时采用sequence racing，候选序列并发执行并保留胜出者",
+          "location": "abstract",
+          "quote": "Deployment uses sequence racing, in which candidate sequences run concurrently and the winner is kept"
+        },
+        {
+          "claim": "通过修改SCIP源码新增执行与观测设施，记录动作实际执行情况与轮次",
+          "location": "abstract",
+          "quote": "enabled by an execution-and-observation facility, added by modifying the SCIP source, that injects sequences along the native path and records which actions actually execute and in which round"
+        }
+      ],
+      "experiments": [
+        "在多个未见域上取得端到端零样本加速，作者称为据其所知是预求解动作序列上的首次",
+        "加速幅度随域变化，且不能由语料丰富度解释",
+        "加入racing后，最强域达到最大加速",
+        "材料未说明基线、实例规模、约束可行性、训练开销、公平计算预算、泛化与消融的具体数字"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "预求解的性能瓶颈不只是选哪些动作，而在于这些动作以什么顺序、在哪些轮次被执行；由于动作效果不可交换，顺序本身携带了参数配置无法表达的求解信息。将规划重铸为自回归序列生成，使模型能够显式建模这种时序依赖，从而具备跨域零样本迁移的潜力。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "将预求解规划重铸为统一原子动作空间上的自回归序列生成，决策对象由参数配置改为动作序列",
+        "提出框架ORDO，即算子级轮次感知动态排序（Operation-level Round-aware Dynamic Ordering）",
+        "部署时采用sequence racing：候选序列并发执行，保留胜出者",
+        "通过修改SCIP源码新增执行与观测设施，把序列注入原生路径，并记录哪些动作实际执行、在哪个轮次执行"
+      ],
+      "motivation": "预求解对MIP性能影响很大，但既有基于学习的方法只能优化参数配置，无法表达动作之间的不可交换时间依赖。作者观察到默认顺序在大多数域上近乎唯一却功能上必要，人为打乱同一序列的顺序会使求解时间分布尾部膨胀数倍，因此需要把预求解规划的对象从参数转移到动作序列本身。",
+      "primary_topic": "混合整数规划预求解动作序列的自动生成与排序（学习驱动的预求解规划）",
+      "relation_to_research": "该论文属于AI4OR与学习辅助求解方向：它把求解器预求解阶段的动作规划建模为自回归序列生成，并用并发racing选择候选序列，与学习辅助搜索、自动建模、求解质量与计算预算等议题直接相关。推测其序列生成与racing机制可迁移到生产调度中的工序排序、规则选择或多阶段决策问题，但迁移需要额外的条件：需要定义统一的原子动作空间、明确动作间的非交换依赖、具备可观测执行轮次的求解环境，以及在公平计算预算下验证跨实例分布的零样本或弱监督泛化能力；这些迁移设想并非作者结论，论文本身未涉及调度问题。",
+      "relevance_score": 7,
+      "setting": "研究问题为混合整数规划（MIP）的预求解（presolve）规划：决策对象由传统的参数配置转变为统一原子动作空间上的动作序列，目标是在不同问题域上获得端到端的求解时间加速；关键约束是动作之间存在不可交换的时间依赖，且默认动作顺序在多数域上近乎唯一、打乱顺序会使求解时间分布尾部膨胀数倍；信息假设是求解器可在原生路径上执行序列并观测哪些动作实际执行、在哪个轮次执行；静态或动态环境材料未说明。",
+      "tags": [
+        "混合整数规划",
+        "预求解",
+        "自回归序列生成",
+        "学习辅助搜索",
+        "跨域泛化",
+        "零样本加速",
+        "SCIP"
+      ],
+      "title_zh": "ORDO：面向混合整数规划预求解的算子级轮次感知动态排序",
+      "uncertainty": "仅依据标题与摘要，缺少全文：第一单位、通讯作者、实验规模、基线设置、训练开销与消融结果均无法核实；摘要中“up to several-fold”与“最大加速”等表述缺少具体数字，因此对方法有效性与可复现性的判断存在较大不确定性。",
+      "why_recommended": "对关注学习辅助搜索与约束优化求解的研究者而言，该工作提供了一个把决策对象从参数配置提升到动作序列的建模视角，并通过修改SCIP在原生路径上注入与观测序列，展示了零样本跨域加速的可能，其自回归序列生成与sequence racing的部署思路对生产调度中的排序与规则选择类问题具有可借鉴的机制价值。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-10T03:10:14.466887Z",
+      "input_hash": "5106ead5f10aa95077d29fa173b99f8f497aa303c97c4c81e2d5d81996ae76e9",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
   "8cbd8a792bd5a15a46c160abd464f70a8619005b0de6db3a316a6c0dfea99f19": {
     "analysis": {
       "analysis": "作者从 MILP 的等价重构出发做理论刻画：先刻画对所有输入实例有效的仿射重构，指出其可分解为 re-description（保持变量不变，仅改写约束系统）与 substitution（类型保持的仿射变量替换，可预测地变换变量），并据此推导变量嵌入应满足的不变性与等变性归纳偏置，再把这一结构转化为对比式自监督目标。节选未给出定理细节与证明步骤。",
@@ -34509,6 +34756,79 @@
     "provenance": {
       "analyzed_at": "2026-09-16T02:14:20.696583Z",
       "input_hash": "d65686d38323b5e76ead513888dbbd0fe929cc78df5a3598b8ca082c140d772e",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
+  "959fb8dd343092497cce14dd4508efbb98b4b3d3c3b9dfa2b383341830828a5b": {
+    "analysis": {
+      "analysis": "作者将LLNA规则空间的结构性归因于所提出的jaggedness属性，并论证该指标作为混沌性和敏感性的理论代理，从而解释为何某些规则能产生更具判别力的动态行为。基于此结构，作者设计启发式搜索策略，用jaggedness引导规则选择。材料未说明是否使用分解、下界或图表示等具体分析工具。",
+      "challenges": [
+        "LLNA规则选择是组合优化问题，穷举搜索对大规模应用不可行",
+        "需要在不提供特征的情况下提取尺度不变且计算高效的网络结构描述符",
+        "需要为规则选择提供有效的理论代理指标以指导搜索"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "LLNA规则选择是高成本组合优化问题，现有穷举搜索对大规模应用不可行。",
+          "location": "abstract",
+          "quote": "their efficacy is bottlenecked by a high-cost combinatorial optimization problem: the selection of the automaton transition rule. While current literature relies on exhaustive searches that are unfeasible for large-scale applications"
+        },
+        {
+          "claim": "作者提出jaggedness量化LLNA转移函数与锯齿形状的相似程度，并作为混沌性和敏感性的理论代理。",
+          "location": "abstract",
+          "quote": "this work reveals that the rule space is fundamentally structured by a property we term ``jaggedness'', that quantifies the resemblance of a LLNA transition function with a sawtooth shape. We demonstrate that this metric acts as a theoretical proxy for chaoticity and sensitivity"
+        },
+        {
+          "claim": "作者提出用jaggedness引导规则选择的启发式搜索策略。",
+          "location": "abstract",
+          "quote": "we introduce a heuristic search strategy that uses jaggedness to guide the rule selection"
+        },
+        {
+          "claim": "实验结果显示分类准确率在全局最优的5%以内，计算开销相比穷举降低90%。",
+          "location": "abstract",
+          "quote": "our approach achieves classification accuracies within 5% of the global optimum while reducing computational overhead by 90% compared to exhaustive approach"
+        }
+      ],
+      "experiments": [
+        "实验结果显示，所提方法在分类准确率上达到全局最优的5%以内",
+        "与穷举方法相比，计算开销降低90%",
+        "材料未说明具体基线、实例规模、约束可行性、运行时间、训练开销、公平计算预算、泛化和消融实验细节"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "作者提出用“jaggedness”（锯齿度）量化LLNA转移函数与锯齿形状的相似程度，并揭示规则空间本质上由该属性结构化。该指标可作为混沌性和敏感性的理论代理，而混沌性和敏感性对在网络类别之间生成有判别力的动态行为至关重要，因此用jaggedness引导规则选择能够在避免穷举的同时保持分类性能。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "定义“jaggedness”属性，量化LLNA转移函数与锯齿形状的相似程度",
+        "论证jaggedness可作为混沌性和敏感性的理论代理",
+        "提出使用jaggedness引导规则选择的启发式搜索策略，以替代穷举搜索",
+        "将该框架用于优化基于自动机的模式识别方法"
+      ],
+      "motivation": "基于LLNA的方法能够在不依赖给定特征的情况下，通过涌现时间模式提取网络描述符，但其效能受限于转移规则选择这一高成本组合优化问题。现有文献依赖穷举搜索，对大规模应用不可行，因此需要更高效的规则选择方法。",
+      "primary_topic": "复杂网络分类中生命-like网络自动机（LLNA）规则选择的启发式搜索",
+      "relation_to_research": "该论文研究的是复杂网络分类中元胞自动机规则的组合优化与启发式搜索，属于通用模式识别与自动机方法。它与智能优化、生产调度、神经网络辅助求解、强化学习或多智能体优化的直接关联较弱。可能迁移的是其“用问题结构指标引导组合搜索、以少量性能损失换取大幅计算开销降低”的思路；推测若要迁移到生产调度或AI4OR，需要将该指标替换为对应调度问题中可量化且与解质量相关的结构代理，并验证约束可行性、解质量和公平计算预算下的泛化性，但作者并未给出此类迁移结论。",
+      "relevance_score": 2,
+      "setting": "研究问题为复杂网络分类中，生命-like网络自动机（LLNA）的转移规则选择这一高成本组合优化问题；决策对象是LLNA的转移规则；目标是在大规模网络中高效选出能够产生判别性动态行为的规则，使分类性能接近全局最优；关键约束是穷举搜索在大规模应用中不可行；信息假设为无法获得预先提供的特征，只能依赖网络涌现的时间模式提取描述符；静态或动态环境材料未说明。",
+      "tags": [
+        "复杂网络分类",
+        "元胞自动机",
+        "组合优化",
+        "启发式搜索",
+        "网络描述符"
+      ],
+      "title_zh": "生命-like网络自动机规则的形状不规则性作为分类性能的指标",
+      "uncertainty": "仅能基于标题与摘要判断，未提供全文，实验细节、基线设置、公平计算预算、统计显著性、泛化验证和消融等均无法核实；第一单位和通讯作者信息未在材料中出现。",
+      "why_recommended": "对于关注组合优化中启发式搜索与问题结构指标设计的读者，该论文提供了一个实例：如何通过定义可解释的结构属性来压缩搜索空间并近似全局最优。但其主题与生产调度、柔性作业车间、强化学习辅助求解等核心方向距离较远，推荐程度有限。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-10T03:09:56.692831Z",
+      "input_hash": "5efb5306e92ebcb70b44684375b077a81cbe010dc3eb7b7e93650aecc47a33ee",
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
@@ -43069,6 +43389,106 @@
       "reading_scope": "full_text"
     }
   },
+  "b9aefef6116e21f8e2f3053840a6de643a4e51d61c4d40bffd503b7688bc2ed6": {
+    "analysis": {
+      "analysis": "作者通过识别线性等式约束及其与各二元变量乘积的保留结构，建立降阶对偶可行解到原始对偶的显式延拓，并证明该延拓保持界；对近似乘子，利用谱平移恢复对偶可行性，并将最大化对偶界的问题化为信赖域子问题，将最大化连续 MIQCR 界的问题化为降阶特征值计算，从而把重构参数的选取转化为可求解的凸或谱问题。",
+      "challenges": [
+        "面约简后原始对偶乘子一般不可恢复",
+        "近似乘子估计导致对偶不可行",
+        "在受限乘子族内优化对偶界需要求解信赖域子问题",
+        "优化连续 MIQCR 界只允许做降阶特征值计算",
+        "直接强制凸性而非完整对偶可行性带来构造上的取舍"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文提出 MIQCR-FR 框架，用于等式约束二元二次规划的面约简半定松弛的精确凸重构",
+          "location": "abstract",
+          "quote": "We develop MIQCR-FR, a framework for exact convex reformulation from facially reduced semidefinite relaxations of equality-constrained binary quadratic problems."
+        },
+        {
+          "claim": "面约简降低半定矩阵阶数，但一般不保证恢复原始对偶乘子",
+          "location": "abstract",
+          "quote": "Facial reduction (FR) reduces the semidefinite matrix order, but recovery of the original dual multipliers is not guaranteed in general."
+        },
+        {
+          "claim": "作者识别保留线性等式及其与每个二元变量乘积的结构可实现对偶恢复",
+          "location": "abstract",
+          "quote": "we identify how retaining the linear equalities and their products with each binary variable enables this recovery"
+        },
+        {
+          "claim": "对偶恢复公式给出降阶对偶可行解到原始对偶的显式延拓并保持界",
+          "location": "abstract",
+          "quote": "An established dual recovery formula gives an explicit extension of every feasible solution of the reduced dual to the original dual, preserving its bound."
+        },
+        {
+          "claim": "对近似乘子估计给出谱平移以恢复对偶可行性，并在受限乘子族内构造两种优化不同界的方案",
+          "location": "abstract",
+          "quote": "For approximate multiplier estimates, we give a spectral shift restoring dual feasibility and two constructions optimizing different bounds within a restricted multiplier family."
+        },
+        {
+          "claim": "最大化对偶界化为信赖域子问题，最大化连续 MIQCR 界只需降阶特征值计算",
+          "location": "abstract",
+          "quote": "Maximizing the dual bound yields a trust-region subproblem; maximizing the continuous MIQCR bound requires only a reduced eigenvalue calculation."
+        },
+        {
+          "claim": "使用 ADMM 的乘子估计实现该构造",
+          "location": "abstract",
+          "quote": "We implement it using multiplier estimates from the alternating direction method of multipliers (ADMM)."
+        },
+        {
+          "claim": "在 431 个实例上完整方法证明 296 个最优解，MIQCR-CB 为 156 个，直接 Gurobi 为 187 个",
+          "location": "abstract",
+          "quote": "On 431 instances from six problem families, the complete method certifies 296 optima, compared with 156 for the conic-bundle method MIQCR-CB and 187 for direct Gurobi under a common time budget."
+        }
+      ],
+      "experiments": [
+        "在来自六个问题族的 431 个实例上评估完整方法",
+        "在共同时间预算下，完整方法证明 296 个最优解，锥束方法 MIQCR-CB 证明 156 个，直接使用 Gurobi 证明 187 个",
+        "材料未说明具体时间预算数值、实例规模分布、消融实验、训练开销或泛化测试细节"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "贡献的有效性来自问题结构本身：保留线性等式约束及其与每个二元变量的乘积，使得降阶问题的可行解能够通过既有的对偶恢复公式显式延拓回原始对偶空间并保持对偶界；当只有近似乘子时，用谱平移恢复对偶可行性，并在受限乘子族内构造分别优化不同界的两种方案，从而把凸重构的构造转化为可计算的谱与特征值问题。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "提出 MIQCR-FR 框架，从等式约束二元二次规划的面约简半定松弛出发构造精确凸重构",
+        "识别保留线性等式约束及其与每个二元变量乘积的结构条件，使降阶对偶可行解可恢复原始对偶乘子",
+        "利用既有对偶恢复公式给出降阶对偶可行解到原始对偶的显式延拓并保持界",
+        "对近似乘子估计给出谱平移以恢复对偶可行性",
+        "在受限乘子族内构造两种分别优化不同界的乘子方案",
+        "将最大化对偶界化为信赖域子问题，将最大化连续 MIQCR 界化为降阶特征值计算",
+        "第二种构造直接强制凸性而非完整对偶可行性",
+        "使用 ADMM 提供的乘子估计实现该构造"
+      ],
+      "motivation": "标准 MIQCR 依赖原始松弛的对偶乘子来构造凸重构，而面约简虽能降低半定矩阵阶数却一般无法保证恢复原始对偶乘子，因此需要识别在何种问题结构下可实现对偶恢复，并处理仅有近似乘子估计时的可行性修复问题。",
+      "primary_topic": "二元二次规划的精确凸重构与面约简半定松弛",
+      "relation_to_research": "论文属于数学规划与凸重构方向，研究二元二次规划的精确凸化与半定松弛加速，并未直接处理生产调度、柔性作业车间、流水车间、分布式制造、生产运输协同或动态扰动问题，也未使用神经网络、图神经网络、强化学习或多智能体方法。其与 AI4OR 的关联是间接的：精确凸重构与对偶界提升可作为学习辅助搜索或数学规划求解器中的下界/松弛增强组件，但这一迁移属于推测，需要先把调度或协同优化问题建模为等式约束二元二次规划并验证面约简结构可保留，同时确认对偶恢复条件成立。",
+      "relevance_score": 5,
+      "setting": "研究等式约束二元二次规划（binary quadratic program）的精确凸重构问题，决策对象是重构后混合整数二次规划中的凸化参数即对偶乘子，目标是在面约简（facial reduction）降阶半定松弛后恢复原始对偶乘子并保持对偶界，从而获得更紧的精确凸重构并加速精确求解；关键约束包括二元变量、线性等式约束及其与各二元变量的乘积结构，信息假设是可由面约简后的降阶松弛获取对偶信息，静态优化环境，材料未说明是否涉及动态扰动或多阶段决策。",
+      "tags": [
+        "二元二次规划",
+        "半定松弛",
+        "面约简",
+        "凸重构",
+        "对偶恢复",
+        "ADMM"
+      ],
+      "title_zh": "等式约束二元二次规划的精确凸重构：基于面约简半定松弛",
+      "uncertainty": "仅依据标题与摘要，无法确认对偶恢复公式的具体形式、谱平移与两种乘子构造的完整数学细节、实验的时间预算与实例规模、以及该方法相对基线在解质量与运行时间上的完整权衡；对生产调度等目标领域的迁移可行性完全属于推测，材料未提供任何直接证据。",
+      "why_recommended": "对于关注数学规划与学习辅助求解结合的研究者，该工作提供了从降阶半定松弛恢复对偶乘子并构造精确凸重构的可计算机制，其中的谱平移、信赖域子问题与降阶特征值计算思路，可能为设计更紧的松弛界或以学习估计乘子初始化凸重构提供参考；但若研究重心是生产调度、强化学习或多智能体调度，则本文与主题距离较远，阅读优先级应偏低。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-10T03:10:54.717772Z",
+      "input_hash": "f4ab8f48181cd77f8b58df3d71c2c1d5315cef2a4b86deffd22be49571954758",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
   "b9f2ff16c27c3a1c6cad89f6c51447b5cef880d25229fb7304bd2e3ae7b16472": {
     "analysis": {
       "analysis": "作者将问题建模为序列算法组合构建问题，组合由算法-运行时间对序列定义，总预算约束下预算分配给各算法。性能度量基于经验达到函数（EAF）的派生指标，支持多目标精度级别和效用加权，从而灵活捕捉不同目标层次下的性能。作者对组合搜索空间进行了结构分析，指出其组合爆炸性和对预算的敏感性，并通过全枚举在小规模场景下观察解分布与多样性，同时对比贪婪方法与遗传算法、CMA-ES等黑盒优化器在搜索空间上的表现。",
@@ -47901,6 +48321,78 @@
     "provenance": {
       "analyzed_at": "2026-09-17T02:21:06.274684Z",
       "input_hash": "303aafbc8e1c3347e318181da237f9158230b8691eeade92354fcabd942cbd23",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
+  "cb65f4816755625aabca6ca70cee326426adac4f502107882299fc132fe91889": {
+    "analysis": {
+      "analysis": "材料未说明作者如何分析问题结构；从摘要仅能看出其采用逐像素分割加后处理提取行对齐的两阶段处理思路。",
+      "challenges": [
+        "在极低参数量约束下保持分割与作物行检测的可靠性",
+        "满足边缘设备的计算、内存、功耗和推理时间限制",
+        "将分割掩码稳定转化为可用于视觉伺服的导航线/行对齐"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文提出了一种参数量极小的编码器-解码器分割网络用于作物行感知",
+          "location": "abstract",
+          "quote": "UltraLight Luma, a compact encoder-decoder segmentation network with a progressive learning strategy and only 13.1k trainable parameters"
+        },
+        {
+          "claim": "预测掩码通过后处理估计行对齐以供视觉伺服",
+          "location": "abstract",
+          "quote": "The predicted crop-row masks are processed using a post-processing algorithm to estimate row alignment for downstream visual servoing."
+        },
+        {
+          "claim": "该模型相比 U-Net、YOLOv8、YOLOv26 提升了参数效率",
+          "location": "abstract",
+          "quote": "UltraLight Luma improves parameter efficiency over U-Net, YOLOv8, and YOLOv26 while maintaining reliable crop-row detection performance."
+        },
+        {
+          "claim": "单次推理能耗为 25.23 mJ",
+          "location": "abstract",
+          "quote": "The model required only 25.23 mJ per inference"
+        }
+      ],
+      "experiments": [
+        "与 U-Net、YOLOv8、YOLOv26 相比提升了参数效率，同时保持可靠的作物行检测性能",
+        "单次推理仅需 25.23 mJ，表明适合资源受限的农业机器人",
+        "材料未说明数据集、实例规模、分割精度指标、运行时间细节、训练开销、消融实验与统计显著性"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "作者的核心思路是通过紧凑的编码器-解码器结构配合渐进式学习策略，把可训练参数量压缩到极低水平（13.1k），同时维持可靠的作物行检测性能，再以专门的后处理从掩码中提取行对齐信息供下游视觉伺服使用；其有效性来自参数效率与推理能耗的联合优化，而非单纯堆叠复杂模块。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "UltraLight Luma：紧凑的编码器-解码器分割网络，可训练参数仅 13.1k",
+        "采用渐进式学习策略训练分割网络",
+        "对预测的作物行掩码使用后处理算法估计行对齐，供下游视觉伺服使用"
+      ],
+      "motivation": "可靠作物行感知对自主农业机器人至关重要，但低成本部署受计算、内存、功耗与推理时间限制，因此需要参数极少且单次推理能耗低的感知网络。",
+      "primary_topic": "农业机器人作物行分割的轻量级语义分割网络",
+      "relation_to_research": "论文属于农业机器人视觉感知与轻量级分割网络方向，与智能优化、生产调度基本无关。其渐进式学习与参数高效设计思想在原则上可迁移到需要边缘部署的制造视觉检测任务，但这只是推测，且迁移需要满足具体工业图像数据集、实时性与精度约束等条件，作者并未讨论此类迁移。",
+      "relevance_score": 2,
+      "setting": "研究问题为在资源受限的农业机器人上实现低成本、可靠的作物行感知，包括作物行检测与导航线提取；决策对象是逐像素的作物行分割掩码以及由后处理得到的行对齐/导航线；目标是在控制参数量与能耗的前提下保持可靠的作物行检测性能；关键约束为计算、内存、功耗与推理时间受限；信息假设为基于视觉图像的监督式分割，材料未说明具体传感器、输入分辨率与数据集；环境为农业机器人田间作业，属于静态视觉感知任务而非动态调度或决策优化问题。",
+      "tags": [
+        "轻量级分割网络",
+        "编码器-解码器",
+        "边缘部署",
+        "农业机器人",
+        "视觉伺服"
+      ],
+      "title_zh": "UltraLight Luma：一种用于农业机器人作物行分割的边缘可部署新型感知网络",
+      "uncertainty": "证据仅限标题与摘要，缺少数据集、精度指标、学习策略细节、后处理算法与对比实验设置；因此对方法机制与实验充分性的判断存在较大不确定性。",
+      "why_recommended": "仅当研究者关注边缘设备上极低参数量的轻量网络训练策略（如渐进式学习）时，可作为方法参考；对柔性作业车间、流水车间、分布式制造、生产运输协同、动态扰动或多目标约束优化等当前核心主题没有实质帮助。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-10T03:10:26.851717Z",
+      "input_hash": "469df1329dac26abfc612cb48f4b8acee3d470792d09908873e4203d38d51797",
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
@@ -57815,6 +58307,76 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "full_text"
+    }
+  },
+  "fd85d9853039a37f26082d973a2b0fc9074f758e5d8909cb1637be993c0131e1": {
+    "analysis": {
+      "analysis": "作者通过将CMA-ES分解为采样、选择与重组、步长自适应、矩阵自适应和重启等模块，并为每个模块提供可互换选项，把算法设计问题转化为对模块化设计空间的系统探索问题，并借助两个示例研究分析单个设计选择及其组合。",
+      "challenges": [
+        "不同CMA-ES改进机制之间的交互作用未被充分理解",
+        "大量设计选项的组合导致设计空间巨大",
+        "需要在统一实现中兼顾各机制的兼容性与可复现性",
+        "自动配置需针对具体基准问题特化且保持可分析性"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文提出模块化CMA-ES框架，将CMA-ES分解为可互换选项的模块以系统探索现代进化策略设计空间",
+          "location": "abstract",
+          "quote": "we present the Modular CMA-ES (ModCMA), a configurable framework that integrates a wide range of mechanisms from modern evolution strategies within a single implementation. By decomposing CMA-ES into modules with interchangeable options for sampling, selection and recombination, step-size adaptation, matrix adaptation, and restarting, ModCMA enables systematic exploration of a large design space of modern evolution strategies"
+        },
+        {
+          "claim": "论文动机是现代进化策略改进多被孤立研究，机制间交互未被充分探索",
+          "location": "abstract",
+          "quote": "However, because these developments have largely been introduced and studied in isolation, their interactions remain comparatively underexplored."
+        },
+        {
+          "claim": "论文包含两个示例研究：比较矩阵自适应机制的计算开销与优化性能；用自动算法配置特化ModCMA并分析配置",
+          "location": "abstract",
+          "quote": "First, we compare several matrix-adaptation mechanisms in terms of their computational cost and optimization performance. Second, we use automated algorithm configuration to specialize ModCMA to individual benchmark problems and analyze the resulting configurations."
+        }
+      ],
+      "experiments": [
+        "示例研究一：比较若干矩阵自适应机制的计算开销与优化性能",
+        "示例研究二：使用自动算法配置将ModCMA特化到单个基准问题，并分析所得的配置",
+        "摘要未提供具体基线、实例规模、约束可行性、解质量、运行时间、训练开销、公平计算预算、泛化和消融的数值结果"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "将CMA-ES按功能分解为可互换选项的模块（采样、选择与重组、步长自适应、矩阵自适应、重启），使得原本孤立研究的机制可以在同一实现中被统一组合与对比。这种模块化之所以有效，是因为它把算法设计从单个机制的局部改进转变为对设计空间的系统性探索，并让自动算法配置能够在组合层面针对具体基准问题特化算法行为。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "将CMA-ES分解为采样、选择与重组、步长自适应、矩阵自适应、重启等模块，每个模块提供可互换选项",
+        "在同一实现中集成现代进化策略的多种机制，形成可配置框架ModCMA",
+        "通过模块组合构建现代进化策略的设计空间，支持新算法变体的构造与比较",
+        "支持自动算法配置，将ModCMA特化到单个基准问题并分析所得配置",
+        "以两个示例研究展示框架用途：比较多种矩阵自适应机制的计算开销与优化性能；用自动配置特化ModCMA并分析配置结果"
+      ],
+      "motivation": "现代进化策略（如CMA-ES）的各类改进通常被单独提出和研究，导致不同机制之间的交互作用相对缺乏探索。作者希望提供一个统一的、可配置的实现，将分散的机制整合进同一框架，从而支持系统化地探索现代进化策略的设计空间，并促进新变体的构建、比较和自动配置。",
+      "primary_topic": "连续黑箱优化的模块化进化策略框架",
+      "relation_to_research": "该论文属于连续黑箱优化中的进化策略算法框架研究，与智能优化和进化算法结合方向有明确的相邻关系。论文事实是：它提出模块化CMA-ES框架并支持自动算法配置和系统比较机制组合。迁移到生产调度或柔性作业车间等离散/组合优化问题并非作者结论；若要迁移，推测需要将调度问题编码为可被CMA-ES处理的形式（如连续松弛或混合编码），并重新设计采样、重组与自适应模块以处理约束可行性和离散决策变量，同时验证自动配置在调度实例上的泛化性与公平计算预算。",
+      "relevance_score": 6,
+      "setting": "研究面向连续黑箱优化问题，决策对象是CMA-ES算法内部各模块的设计选项组合（采样、选择与重组、步长自适应、矩阵自适应、重启），目标是系统性地构建、比较和自动配置现代进化策略的算法变体；关键约束是这些机制以往被孤立研究导致交互作用未被充分探索；信息假设为黑箱优化中仅能获取目标函数评估值；静态或动态环境材料未说明。",
+      "tags": [
+        "CMA-ES",
+        "进化策略",
+        "模块化算法框架",
+        "自动算法配置",
+        "黑箱优化"
+      ],
+      "title_zh": "模块化CMA-ES：面向现代进化策略的框架",
+      "uncertainty": "仅有标题与摘要，无法获知具体实验设置、基线选择、计算预算、统计检验和可复现性细节；第一单位和通讯作者信息未提供；自动配置方法与迁移到生产调度的可行性均缺少全文证据，因此相关性分数和迁移判断存在不确定性。",
+      "why_recommended": "对关注进化算法与自动算法配置结合的研究者，该框架提供了系统探索算法设计空间和自动化配置的方法论，其模块化与自动配置思路可启发将进化策略迁移到生产调度或与学习辅助搜索结合的实验中；但其核心是连续黑箱优化，需结合约束处理和离散编码才能直接服务生产调度研究。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-10T03:10:41.022471Z",
+      "input_hash": "b1065f279c05a7bf9391d07e41e5e7fa9680ee170107424054646300c6f1e268",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
     }
   },
   "fd9e0baace7a023009ae7e2a34687bde720ecf4776dbe40ba19053fcd8468f2c": {

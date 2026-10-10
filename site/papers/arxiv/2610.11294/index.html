@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ORDO：面向混合整数规划预求解的操作级轮次感知动态排序</title>
+  <title>ORDO：面向混合整数规划预求解的算子级轮次感知动态排序</title>
   <link rel="icon" href="data:,">
   <style>
     :root {
@@ -161,7 +161,7 @@
 <main>
   <header class="page-header">
     <div class="masthead">
-      <span>PAPERDAILY · 智能优化与生产调度 · 2026-10-09 11:29</span>
+      <span>PAPERDAILY · 智能优化与生产调度 · 2026-10-10 11:08</span>
       <nav aria-label="站点导航">
         <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/">今日</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/daily/">每日日报</a>
         <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/library/">长期论文库</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/topics/">主题</a>
@@ -169,7 +169,7 @@
         <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/search/">搜索</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/feed.xml">订阅</a>
       </nav>
     </div>
-    <h1>ORDO：面向混合整数规划预求解的操作级轮次感知动态排序</h1>
+    <h1>ORDO：面向混合整数规划预求解的算子级轮次感知动态排序</h1>
 <p class="lede">本次检索最近 3 天的论文版本，首次发表日期见各篇详情。</p><p class="lede">ORDO: Operation-level Round-aware Dynamic Ordering for MIP Presolve</p>  </header>
 
   <section class="detail-layout" aria-label="论文完整解读"><article
@@ -188,20 +188,20 @@
   <div class="paper-card__body">
     <div class="paper-card__rubric">
       <span class="topic-badge">数学规划与混合求解</span>
-      <span>正文节选</span>
-      <span>相关性 8/10</span>
+      <span>摘要级</span>
+      <span>相关性 7/10</span>
       <span>v1</span>
     </div>
 
-    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2610.11294/">ORDO：面向混合整数规划预求解的操作级轮次感知动态排序</a></h3>
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2610.11294/">ORDO：面向混合整数规划预求解的算子级轮次感知动态排序</a></h3>
     <p class="original-title" lang="en">ORDO: Operation-level Round-aware Dynamic Ordering for MIP Presolve</p>
     <p class="authors">Zehuan Chen · Chunhe Song</p>
 
 <div class="paper-card__takeaway">
       <p class="field-label">核心洞察</p>
-      <p>贡献有效的关键在于改变了决策对象：一旦从配置向量变为统一的原子动作序列，动作语义在不同域之间天然共享，迁移时无需重新定义动作空间，模型只需以实例特征为条件生成序列，因而跨域零样本加速成为建模范式的自然红利，而非额外施加的域适应模块。顺序携带的时序依赖本身是不可交换求解结果变化的主要来源，把它作为可学习的独立变量，使模型能够捕捉配置向量与参与子集所丢失的跨问题类共性；而序列竞赛进一步针对单条路径预测的重尾风险，用并发候选截断尾部，使内容单路径失效的实例仍能被覆盖，从而在不牺牲正确性的前提下同时获得内容质量增益与竞争放大增益。</p>
+      <p>预求解的性能瓶颈不只是选哪些动作，而在于这些动作以什么顺序、在哪些轮次被执行；由于动作效果不可交换，顺序本身携带了参数配置无法表达的求解信息。将规划重铸为自回归序列生成，使模型能够显式建模这种时序依赖，从而具备跨域零样本迁移的潜力。</p>
     </div>
-    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>该论文把预求解规划从参数配置搜索重铸为统一原子动作空间上的自回归序列生成，并配套改造 SCIP 源码实现序列注入与执行观测，再以序列竞赛截断单路径重尾风险，这套“改变决策对象 + 学习生成 + 执行设施 + 竞赛部署”的组合对智能优化与 AI4OR 研究者具有方法论价值。其对不可交换性、时序依赖、跨域零样本边界、语料丰富度不能预测增益、以及匹配算力下 3.9–5.0 倍核心时间开销的诚实报告，为评估学习辅助搜索的约束可行性、解质量、公平算力预算与泛化提供了可借鉴的实验协议和边界意识。序列竞赛把组合与竞赛方法下沉到动作序列层级、并把增益分解为候选质量与竞争放大的分析思路，也可迁移到生产调度中多候选调度方案的并发求解与评估。</p>
+    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>对关注学习辅助搜索与约束优化求解的研究者而言，该工作提供了一个把决策对象从参数配置提升到动作序列的建模视角，并通过修改SCIP在原生路径上注入与观测序列，展示了零样本跨域加速的可能，其自回归序列生成与sequence racing的部署思路对生产调度中的排序与规则选择类问题具有可借鉴的机制价值。</p>
     <ul class="paper-tags" aria-label="研究标签">
       <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/mathematical-programming/" data-tag-filter="mathematical-programming">数学规划</a></li>
       <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/benchmark/" data-tag-filter="benchmark">基准与泛化</a></li>
@@ -215,10 +215,10 @@
       </summary>
 
       <div class="paper-details__meta">
-        <p><strong>模型细分主题：</strong>MIP 预求解阶段的操作级动作序列生成与序列竞赛</p>
-        <p><strong>模型原始标签：</strong>混合整数规划预求解、动作序列生成、自回归序列建模、序列竞赛、零样本跨域泛化、SCIP 源码改造</p>
-        <p><strong>第一单位：</strong>中国科学院工业人工智能研究院（Institute of Industrial Artificial Intelligence, CAS）</p>
-        <p><strong>通讯作者：</strong>Zehuan Chen, Chunhe Song</p>
+        <p><strong>模型细分主题：</strong>混合整数规划预求解动作序列的自动生成与排序（学习驱动的预求解规划）</p>
+        <p><strong>模型原始标签：</strong>混合整数规划、预求解、自回归序列生成、学习辅助搜索、跨域泛化、零样本加速、SCIP</p>
+        <p><strong>第一单位：</strong>证据未提供</p>
+        <p><strong>通讯作者：</strong>证据未提供</p>
         <p><strong>首次上传：</strong>2026-10</p>
         <p class="paper-links">
           <a href="https://arxiv.org/abs/2610.11294">arXiv 摘要 ↗</a>
@@ -227,52 +227,27 @@
 
 
       <dl class="research-note">
-        <dt>研究设定</dt><dd>论文研究混合整数规划（MIP）分支定界前的预求解（presolve）规划问题，决策对象是覆盖多类求解器组件的统一原子动作空间上的完整动作序列，目标是最小化该实例端到端的总求解时间（含后续分支定界）。关键约束在于：MIP 离散非凸导致预求解动作不可交换，一个动作的结果会改变其他动作的适用条件与强度，因此动作时序拓扑必须作为独立变量保留；求解器黑盒不提供注入动作序列的接口。信息假设为给定实例描述即可条件生成序列，环境处理为“自回归决策序列 + 在线每实例解码 + 序列竞赛”的半在线部署模式，训练语料离线构建，在线仅做逐实例解码与并发竞赛。其余要素如是否显式建模动态扰动，材料未说明。</dd>
-        <dt>研究动机</dt><dd>预求解对 MIP 整体性能影响仅次于割平面，且效果随实例族（域）变化，实测在某些域上比默认慢达 2.4 倍、在其他域上更快。作者指出既有学习型预求解方法存在共同局限：手工预设复用同一专家调度、自适应差；配置调优类方法只搜索固定维配置空间（如 L2P-MIP 把 14 个例程的优先级、时机与轮次形式化为 42 维向量），其输出不携带动作调用顺序，也无法干预约束处理回调的调用顺序；规则与子集选择只决定哪些例程参与，不决定顺序；组合与竞赛方法只在配置或完整求解策略层面构造候选。四类方法都停留在配置向量或参与子集层面，无法表达动作之间的时序依赖，因而难以跨问题类泛化。作者通过人为打乱同一序列顺序会令求解时间分布尾部膨胀数倍这一现象，论证顺序在功能上是必要的，从而把预求解规划重铸为动作序列上的自回归生成问题。</dd>
-        <dt>核心洞察</dt><dd>贡献有效的关键在于改变了决策对象：一旦从配置向量变为统一的原子动作序列，动作语义在不同域之间天然共享，迁移时无需重新定义动作空间，模型只需以实例特征为条件生成序列，因而跨域零样本加速成为建模范式的自然红利，而非额外施加的域适应模块。顺序携带的时序依赖本身是不可交换求解结果变化的主要来源，把它作为可学习的独立变量，使模型能够捕捉配置向量与参与子集所丢失的跨问题类共性；而序列竞赛进一步针对单条路径预测的重尾风险，用并发候选截断尾部，使内容单路径失效的实例仍能被覆盖，从而在不牺牲正确性的前提下同时获得内容质量增益与竞争放大增益。</dd>
-        <dt>技术挑战</dt><dd><ul><li>MIP 离散非凸导致预求解动作不可交换，顺序变化会改变约简结果与后续分支定界成本</li><li>现有学习型方法只能优化参数配置，无法表达动作间非交换的时序依赖，输出不含动作调用顺序</li><li>黑盒求解器不暴露注入动作序列的接口，需要在求解器源码层面改造以支持序列注入与执行观测</li><li>跨域零样本泛化困难，增益随域变化且不能被语料丰富度解释</li><li>单路径生成存在重尾失败风险，需要以并发生成截断尾部分布</li><li>序列搜索比内容单路径消耗更多核心时间（每核核心时间比为 3.9–5.0 倍），需在匹配算力下评估收益</li></ul></dd>
-        <dt>问题分析</dt><dd>作者从 MIP 预求解动作不可交换这一结构性质出发，通过人为打乱同一动作序列中元素的顺序，观测到求解时间分布尾部膨胀数倍，从而验证顺序在功能上必要，并据此把决策对象从配置向量提升为完整动作序列。作者以四类既有方法的决策对象为维度进行对照分析（手工启发式与参数调优、实例配置调优、规则与子集选择、组合与竞赛求解），逐项指出它们都止步于配置向量或参与子集，无法表达时序依赖；并明确承认顺序敏感性在 LP 侧与求解阶段已有先例，因此把“首次”限定在 MIP 侧的原子动作层级。在求解侧，作者将预求解规划形式化为给定实例描述 x 求生成分布 π(·|x)，并把生成过程重铸为自回归条件生成 p_θ(a_t | a_{0,…,t-1}, x)，同时强调该形式带来表征能力解耦与空间扩展两个结构差异。部署层面，作者分析单路径预测的重尾风险，引入序列竞赛并将收益分解为候选质量与竞争放大两部分，同时给出可吸收性论证：既有学习型预求解方案的输出都可回放为动作序列，因而原则上可被本框架吸收，反之不成立，但可吸收不等于可获利，作者未作收益声明。</dd>
-        <dt>方法</dt><dd><ul><li>统一原子动作空间：覆盖多类求解器组件，将动作顺序、轮次边界与执行契约全部纳入序列生成的输出空间</li><li>序列生成模型架构：以实例特征作为初始状态，与历史动作 token 拼接作为输入，采用 N×Blocks 的 Transformer 结构，含 LayerNorm、带因果掩码的多头自注意力（Q/K 施加旋转位置编码 RoPE）、残差连接、前馈网络与最终 LayerNorm，输出头经线性层自回归预测下一项</li><li>轮次与终止符共享输出空间：轮次边界与终止符与动作共享同一输出空间，使“以何顺序、在第几轮执行”由同一分布给出</li><li>学习目标：以完整动作序列为决策对象，按 p_θ(a_t | a_{0,…,t-1}, x) 进行自回归条件生成</li><li>执行与观测设施：修改 SCIP 10.0.1 源码，在原生路径上注入给定序列，并记录哪些动作实际执行以及在哪个轮次执行，以支持自定义动作序列的可控执行并保证解的正确性</li><li>序列竞赛部署：候选序列并发运行，池大小为 np + content×K + fallback×K = 2K+1 条路径同时启动，最先完成者胜出，其余以 SIGKILL 撤回；分子取胜出者的求解器内部时间</li><li>测量协议：分母为同批次 5 个默认策略同构副本中最先完成者的求解器内部时钟；对比时双方均使用 5 个在线核心与相同时间限制，且对手臂将同一配置复制 5 次取最快完成者，该不对称性被作者指出会压低自身读数</li><li>四阶段流水线：语料构建与序列建模各离线执行一次，在线部分仅执行逐实例解码与序列竞赛，测量层报告 SGM 比值与逐实例胜率</li></ul></dd>
-        <dt>实验</dt><dd><ul><li>运行环境为 SCIP 10.0.1，实例来自 Distributional MIPLIB（D-MIPLIB）的按域实例族基准，使用 easy val 划分的七个 MIP 域：CA、GISP、CFLP、MIS、MVC、SC（各 100 个实例）与 NNV（550 个）</li><li>主指标为相对默认策略的移位几何平均（SGM）比值，SGM(t) = (∏_i (t_i+1))^{1/n} − 1，移位为 1 秒，逐实例计算，超时按该实例时间限制计，比值小于 1 表示加速；同时报告逐实例胜率（快于默认的实例比例）</li><li>在线对比遵循统一协议：双方均使用 5 个在线核心与相同时间限制，全程使用求解器内部时钟；分母始终取同实例同设置下同批次 5 个默认策略同构副本中最先完成者的时钟，独立重复</li><li>零样本评估覆盖 6 个留一域与 1 个自然未见域，结果为 4 个加速、2 个持平、1 个失败；NNV 单路径为 0.8377，加竞赛后为 0.7181（对齐时间限制），增益主要来自分支搜索</li><li>内容质量必要性验证：随机内容（负对照）给出 1.1700/1.1954（&gt;1），说明内容质量是增益的必要条件</li><li>域内无系统差异：目标域在训练集中时与默认策略无系统差异（域内 CA 0.9804、GISP 1.0050），价值集中在跨域零样本与无先验执行</li><li>反直觉现象：在语料退化的域上，不把该域收集的序列训练进模型反而使零样本迁移更好；对语料丰富域（CA）则相反，该域语料是必要锚点，效应双向且依赖域，候选机制为序列空间退化</li><li>预算边界：需要插件级源码访问，每实例运行 2K+1 次，其每核核心时间与内容单路径之比为 3.9–5.0 倍，因此增益是在匹配算力下读取的</li></ul></dd>
-        <dt>局限</dt><dd><ul><li>作者明确把“首次”限定在 MIP 侧与原子动作层级，不作出“首次把预求解变为排序问题”的全局声明，因为顺序敏感性在 LP 侧与求解阶段已有先例</li><li>目标域在训练集中时与默认策略无系统差异，价值仅限于跨域零样本与无先验执行</li><li>增益随域变化且不能被语料丰富度预测，SC 与 NNV 成功而 CA 失败标出了该边界</li><li>可吸收性不等于可获利，论文不作收益声明</li><li>预算边界包括需要插件级源码访问，以及每实例 2K+1 次运行带来的 3.9–5.0 倍每核核心时间比</li></ul></dd>
-        <dt>与你的研究关系</dt><dd>论文事实层面：该工作直接研究 MIP 预求解阶段的操作级动作序列生成与部署，属于 AI4OR 中“学习辅助搜索/求解器组件决策”的方向；其决策对象、自回归条件生成、执行观测设施与序列竞赛机制，与神经网络辅助求解、学习辅助搜索的研究兴趣高度一致。迁移设想（推测）：把“决策对象从配置向量提升为可执行动作序列并保留时序拓扑”这一思路迁移到生产调度，尤其是柔性作业车间、流水车间与生产运输协同中工序序列或调度规则序列的生成，需要满足若干条件——存在一个可枚举、语义跨实例族共享的原子动作（或工序—资源分配操作）空间；动作之间不可交换且顺序影响目标（如 makespan、能耗或拖期）；能够以实例特征为条件进行自回归生成；并具备将候选序列注入仿真或求解器原生执行路径、记录实际执行与轮次的执行—观测设施。而序列竞赛迁移到调度时，需要在匹配算力预算下评估多个候选调度方案的并发求解收益，并注意论文本身提示的每核核心时间比放大问题。以上迁移为本文作者未涉及的推测，不能计作其结论。</dd>
+        <dt>研究设定</dt><dd>研究问题为混合整数规划（MIP）的预求解（presolve）规划：决策对象由传统的参数配置转变为统一原子动作空间上的动作序列，目标是在不同问题域上获得端到端的求解时间加速；关键约束是动作之间存在不可交换的时间依赖，且默认动作顺序在多数域上近乎唯一、打乱顺序会使求解时间分布尾部膨胀数倍；信息假设是求解器可在原生路径上执行序列并观测哪些动作实际执行、在哪个轮次执行；静态或动态环境材料未说明。</dd>
+        <dt>研究动机</dt><dd>预求解对MIP性能影响很大，但既有基于学习的方法只能优化参数配置，无法表达动作之间的不可交换时间依赖。作者观察到默认顺序在大多数域上近乎唯一却功能上必要，人为打乱同一序列的顺序会使求解时间分布尾部膨胀数倍，因此需要把预求解规划的对象从参数转移到动作序列本身。</dd>
+        <dt>核心洞察</dt><dd>预求解的性能瓶颈不只是选哪些动作，而在于这些动作以什么顺序、在哪些轮次被执行；由于动作效果不可交换，顺序本身携带了参数配置无法表达的求解信息。将规划重铸为自回归序列生成，使模型能够显式建模这种时序依赖，从而具备跨域零样本迁移的潜力。</dd>
+        <dt>技术挑战</dt><dd><ul><li>动作之间的非交换时间依赖难以用参数配置类方法表达</li><li>默认动作顺序在多数域近乎唯一，偏离顺序会显著劣化求解时间分布尾部</li><li>需要跨未见域的端到端零样本加速而非仅在训练分布内有效</li><li>需要在原生求解路径中注入并观测动作序列的执行情况与轮次</li></ul></dd>
+        <dt>问题分析</dt><dd>作者通过观察默认顺序近乎唯一且人为打乱同一序列顺序会膨胀求解时间分布尾部，来论证顺序决策的功能必要性，并据此将预求解规划形式化为统一原子动作空间上的自回归序列生成问题；具体的问题结构利用、分解或下界推导材料未说明。</dd>
+        <dt>方法</dt><dd><ul><li>将预求解规划重铸为统一原子动作空间上的自回归序列生成，决策对象由参数配置改为动作序列</li><li>提出框架ORDO，即算子级轮次感知动态排序（Operation-level Round-aware Dynamic Ordering）</li><li>部署时采用sequence racing：候选序列并发执行，保留胜出者</li><li>通过修改SCIP源码新增执行与观测设施，把序列注入原生路径，并记录哪些动作实际执行、在哪个轮次执行</li></ul></dd>
+        <dt>实验</dt><dd><ul><li>在多个未见域上取得端到端零样本加速，作者称为据其所知是预求解动作序列上的首次</li><li>加速幅度随域变化，且不能由语料丰富度解释</li><li>加入racing后，最强域达到最大加速</li><li>材料未说明基线、实例规模、约束可行性、训练开销、公平计算预算、泛化与消融的具体数字</li></ul></dd>
+        <dt>局限</dt><dd><ul><li>材料未说明</li></ul></dd>
+        <dt>与你的研究关系</dt><dd>该论文属于AI4OR与学习辅助求解方向：它把求解器预求解阶段的动作规划建模为自回归序列生成，并用并发racing选择候选序列，与学习辅助搜索、自动建模、求解质量与计算预算等议题直接相关。推测其序列生成与racing机制可迁移到生产调度中的工序排序、规则选择或多阶段决策问题，但迁移需要额外的条件：需要定义统一的原子动作空间、明确动作间的非交换依赖、具备可观测执行轮次的求解环境，以及在公平计算预算下验证跨实例分布的零样本或弱监督泛化能力；这些迁移设想并非作者结论，论文本身未涉及调度问题。</dd>
         <dt>证据与不确定性</dt>
         <dd>
-          <p>输入材料为摘要加全文节选，节选中部分句子被截断（如“This paper theref”“the decision object is the orde”“ol of concurrent racing”“deploymen”“designing and pro”等），因此方法细节（如动作空间具体覆盖的求解器组件类别定义、候选 K 的取值、训练语料规模与训练开销、网络层数与隐藏维度、消融实验的完整设置）以及部分实验数值的上下文无法完整确认。作者身份与单位依据节选中作者标注与致谢脚注判断为中国科学院工业人工智能研究院，但节选未提供完整机构章节。关系与迁移部分已明确区分论文事实与推测。</p>
-          <blockquote><strong>论文把预求解规划重铸为统一原子动作空间上的自回归序列生成，决策对象是动作序列：</strong>We recast presolve planning as autoregressive sequence generation over a unified atomic action space, moving the decision object to action sequences; we call this framework ORDO---Operation-level Round-aware Dynamic Ordering for MIP Presolve.</blockquote>
-          <blockquote><strong>MIP 离散非凸导致预求解动作不可交换，执行顺序改变约简结果与后续分支定界成本：</strong>Because MIP is discrete and non-convex, presolve actions do not commute and the execution order changes the reduction outcome and the solving cost of the subsequent branch and bound.</blockquote>
-          <blockquote><strong>既有四类学习型预求解方法都止步于配置向量或参与子集层面，无法表达动作间时序依赖：</strong>The common limitation of the four classes is that none can express the temporal dependencies among actions: all of them stop at the configuration-vector or participation-subset level, so they capture no commonality across problem classes and cannot generalize</blockquote>
-          <blockquote><strong>作者通过修改 SCIP 源码实现序列注入与执行观测设施：</strong>Black-box solvers expose no interface for injecting an action sequence, so we modify the SCIP 10.0.1 source to inject a given sequence along the native path and to record which actions actually execute and in which round.</blockquote>
-          <blockquote><strong>序列竞赛的并发路径数为 2K+1，最先完成者胜出，其余被撤回：</strong>Pool = np + content×
-K
-K
-+ fallback×
-K
-K
-=
-2
-​
-K
-+
-1
-2K+1
-paths launched together; the first to finish wins and the others are withdrawn (SIGKILL)</blockquote>
-          <blockquote><strong>实验使用 D-MIPLIB 的七个 MIP 域，主指标为移位几何平均比值与逐实例胜率：</strong>Seven MIP domains are used: CA, GISP, CFLP, MIS, MVC, SC (100 instances each) and NNV (550), all from the easy val split.</blockquote>
-          <blockquote><strong>零样本跨域结果为 4 个加速、2 个持平、1 个失败，NNV 单路径 0.8377、加竞赛后 0.7181：</strong>The dividend of that reformulation on unseen domains is 4 accelerated, 2 tied and 1 failed, with NNV at 0.8377 single-path and 0.7181 after racing with aligned limits—and the gain comes mainly from branch search.</blockquote>
-          <blockquote><strong>序列竞赛每实例运行 2K+1 次，其每核核心时间与内容单路径之比为 3.9–5.0 倍：</strong>the
-2
-​
-K
-+
-1
-2K+1
-runs per instance, whose core-time ratio per core against content single-path is 3.9–5.0
-×
-\times
-—gains are therefore read under matched compute.</blockquote>
+          <p>仅依据标题与摘要，缺少全文：第一单位、通讯作者、实验规模、基线设置、训练开销与消融结果均无法核实；摘要中“up to several-fold”与“最大加速”等表述缺少具体数字，因此对方法有效性与可复现性的判断存在较大不确定性。</p>
+          <blockquote><strong>既有基于学习的方法只优化参数配置，无法表达动作之间的不可交换时间依赖：</strong>yet learning-based methods only optimize parameter configurations and cannot express the non-commutative temporal dependencies among actions</blockquote>
+          <blockquote><strong>默认动作顺序在多数域上近乎唯一且功能上必要，打乱顺序会膨胀求解时间分布尾部：</strong>whose default order is nearly unique on most domains, yet functionally necessary: artificially shuffling the order of the same sequence inflates the tail of the solve-time distribution by up to several-fold</blockquote>
+          <blockquote><strong>作者将预求解规划重铸为统一原子动作空间上的自回归序列生成：</strong>We recast presolve planning as autoregressive sequence generation over a unified atomic action space, moving the decision object to action sequences</blockquote>
+          <blockquote><strong>在多个未见域上取得端到端零样本加速：</strong>on multiple unseen domains it attains end-to-end zero-shot speedup</blockquote>
+          <blockquote><strong>部署时采用sequence racing，候选序列并发执行并保留胜出者：</strong>Deployment uses sequence racing, in which candidate sequences run concurrently and the winner is kept</blockquote>
+          <blockquote><strong>通过修改SCIP源码新增执行与观测设施，记录动作实际执行情况与轮次：</strong>enabled by an execution-and-observation facility, added by modifying the SCIP source, that injects sequences along the native path and records which actions actually execute and in which round</blockquote>
         </dd>
       </dl>
-      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；读取了全文节选。证据范围不足的内容不应视为全文结论。</p>
+      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；仅依据标题与摘要。证据范围不足的内容不应视为全文结论。</p>
     </details>  </div>
 </article></section>
 </main>
