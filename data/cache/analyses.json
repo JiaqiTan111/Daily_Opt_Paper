@@ -33898,6 +33898,95 @@
       "reading_scope": "abstract"
     }
   },
+  "923def2dfa4d1cec4fdda6fd335d5eec8fbb840df8c4e2f50676a63d0ca1f797": {
+    "analysis": {
+      "analysis": "作者将多目标优化问题重构为协态空间中从未归一化目标分布的采样问题，利用同伦沿系统质量参数α逐步推进，在每个同伦步用上一个参数值的样本初始化下一参数值的多条马尔可夫链，从而传递已学习的解结构。通过比较三种MCMC算法（RWM、MALA、HMC）在样本质量与计算成本间的权衡，并利用梯度信息近似来指导采样。最终用MCMC生成的高奖励样本微调条件扩散模型，使其学习以α为条件的全局解分布。",
+      "challenges": [
+        "低推力轨迹在CR3BP中非线性强且存在混沌行为，解空间复杂、多局部极小",
+        "间接法对初始协态敏感，边值问题求解困难",
+        "训练数据生成成本高，先前方法只能在已有参数值间插值",
+        "多目标帕累托前沿的完整覆盖与样本质量需要兼顾",
+        "MCMC方法在高维协态空间中的混合与覆盖效率"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文提出结合任务参数同伦与MCMC的迁移学习框架以更高效生成训练数据",
+          "location": "abstract",
+          "quote": "We propose a transfer-learning framework that combines homotopy in a mission parameter with Markov chain Monte Carlo (MCMC) to generate training data more efficiently."
+        },
+        {
+          "claim": "所提框架比先进间接方法多生成40%可行解并获得更优帕累托前沿",
+          "location": "abstract",
+          "quote": "For the test transfer, the proposed framework generates 40 % more feasible solutions and achieves a higher-quality Pareto front than a state-of-the-art indirect approach based on adjoint control transformations and gradient-based optimization."
+        },
+        {
+          "claim": "MCMC生成的样本被用于微调条件扩散模型以学习全局解分布",
+          "location": "abstract",
+          "quote": "Finally, the MCMC-generated samples are used to fine-tune a diffusion model conditioned on the mass parameter, enabling it to learn a global representation of the underlying solution distribution and efficiently generate new solutions."
+        },
+        {
+          "claim": "梯度MCMC变体在样本质量与计算成本间取得最佳权衡",
+          "location": "abstract",
+          "quote": "The results show that gradient-based MCMC variants achieve the best trade-off between sample quality and computational cost."
+        },
+        {
+          "claim": "论文将多目标优化重构为协态空间中未归一化目标分布的采样",
+          "location": "abstract",
+          "quote": "The approach reformulates a multiobjective optimization problem as sampling from an unnormalized target distribution in costate space."
+        }
+      ],
+      "experiments": [
+        "在CR3BP中的平面多圈转移问题上比较了三种MCMC算法（RWM、MALA、HMC），以系统质量参数为同伦参数",
+        "结果表明基于梯度的MCMC变体（特别是MALA）在样本质量与计算成本之间取得最佳权衡；HMC在较小τs区域遗漏部分帕累托前沿，且覆盖广度不及MALA",
+        "MALA样本在目标空间中展现出最大多样性，具有更大的标准差；梯度方法整体获得更密集的帕累托前沿，尤其在较大τs值处",
+        "在测试转移中，所提框架比基于伴随控制变换和梯度优化的先进间接方法多生成40%的可行解，并获得更高质量的帕累托前沿",
+        "10个同伦阶段中MALA共产生96,850个样本，丢弃最差10%后用于训练；模型训练约90分钟（GPU），生成50,000个样本约需13分钟",
+        "微调后的扩散模型在α=1.0时生成50,000个样本，其中21,000个满足e<5×10⁻⁵的可行性容差",
+        "超体积指标在归一化目标空间（τs: [124.08, 228.41]天; Δv: [173.68, 193.67]m/s）中计算，参考点为(1.0, 1.0)"
+      ],
+      "first_affiliation": "普林斯顿大学机械与航空航天工程系",
+      "insight": "核心洞察在于：通过在任务参数上做同伦、并在协态空间中对整个解分布进行MCMC采样（而非对单个解做同伦），可以将已获得参数值的样本作为下一个参数值MCMC链的初始化，从而在连续参数范围内传递解结构并避免同伦路径终止问题。这使得训练数据能够超越原始数据集覆盖的参数范围，支持外推；最终用这些样本微调条件扩散模型，使其学到对质量参数α的全局解分布表示，从而高效生成新解。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "将多目标间接最优控制问题重构为协态空间中对未归一化目标分布的采样问题，目标分布反映解的优劣（奖励/目标值）",
+        "在任务参数（系统质量参数α）上执行同伦，将连续参数范围离散为多个同伦阶段，逐步转移解分布",
+        "在每个同伦阶段使用MCMC算法（比较了随机游走Metropolis RWM、Metropolis调整的朗之万算法MALA和哈密顿蒙特卡洛HMC）在协态空间中采样",
+        "使用上一参数值的样本初始化下一参数值的马尔可夫链，实现跨参数的样本传递与解结构迁移",
+        "对MCMC样本按目标值J*排序，丢弃最差10%的样本，将剩余样本归一化后用于微调扩散模型",
+        "扩散模型以质量参数α为条件进行训练，学习协态空间中的全局解分布，训练完成后可高效生成新参数下的初始协态样本",
+        "生成的样本作为初始猜测输入数值求解器以获得可行轨迹，并通过目标函数评估筛选可行解"
+      ],
+      "motivation": "初步任务设计阶段需要跨不同参数值高频率生成解，而间接法结合扩散模型虽能通过学习高质量初始协态分布加速搜索，但训练数据生成成本高昂，且先前工作只能在已表示的参数值间插值而无法外推。因此需要一种迁移学习框架，利用同伦和MCMC更高效地生成训练数据，并支持向新任务参数的外推。",
+      "primary_topic": "低推力航天器轨迹优化的间接法求解与迁移学习",
+      "relation_to_research": "该论文研究的是航天器低推力轨迹优化的间接法求解，属于最优控制与全局搜索问题，与智能优化和生产调度领域中的连续参数优化、多目标帕累托前沿生成、学习辅助搜索有方法论上的相通之处。其迁移学习框架（同伦+MCMC+条件扩散模型）在概念上可迁移至生产调度中的参数化问题族求解，例如当调度问题参数（如工件数量、机器配置）变化时，利用已求解参数的样本初始化新参数的求解过程。但需注意：该论文未涉及离散调度决策、车间约束、机器分配等生产调度核心要素，迁移需要重新定义协态/解空间、目标分布和可行性评估。强化学习、多智能体或图神经网络在此论文中未被使用，因此与AI4OR中的强化学习/多智能体分支无直接联系。推测该论文的'分布采样+条件生成+迁移学习'范式对参数化调度问题的学习辅助搜索有启发价值，但需验证其在离散组合空间中的可行性。",
+      "relevance_score": 4,
+      "setting": "研究问题为初步低推力航天器任务设计中的全局搜索问题，决策对象是间接最优控制中的初始协态向量，目标是在燃料消耗（Δv）和飞行时间（τs）两个冲突目标下高效生成帕累托最优解，关键约束包括动力学方程、边值条件、路径约束以及终端精度容差（e<5×10⁻⁵ NU），信息假设为任务参数（如系统质量参数α）尚未完全确定且需要在连续参数范围上快速生成解，环境为确定性动态系统（圆型限制性三体问题CR3BP）下的静态参数变化场景。",
+      "tags": [
+        "扩散模型",
+        "马尔可夫链蒙特卡洛",
+        "间接最优控制",
+        "多目标优化",
+        "迁移学习",
+        "同伦",
+        "低推力轨迹"
+      ],
+      "title_zh": "基于扩散模型与马尔可夫链蒙特卡洛的多目标间接低推力轨迹迁移学习",
+      "uncertainty": "第一单位和作者信息来自全文节选中的脚注，但通讯作者未明确标注；局限性章节内容未在节选中提供，因此无法列出作者明确陈述的局限；部分实验细节（如基线方法的具体配置、公平计算预算的详细讨论）在节选中不完整；该论文与生产调度的关联属于推断性迁移，实际可行性未经作者验证。",
+      "why_recommended": "虽然该论文的应用领域是航天轨迹优化而非生产调度，但其核心方法论——将多目标优化重构为分布采样问题、利用同伦在参数空间迁移样本、用条件扩散模型学习解分布以加速搜索——对智能优化和AI4OR研究者具有跨域启发价值。特别是：1）同伦+样本传递的思想可借鉴到参数化调度问题的求解中；2）条件生成模型学习解分布以替代重复搜索的思路，与学习辅助搜索方向高度契合；3）对MCMC采样质量与计算成本权衡的实证分析，对设计基于采样的优化方法有参考意义。对于关注学习辅助搜索、生成模型驱动优化、参数化问题族求解的研究者，该论文提供了可迁移的框架设计思路。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-11T02:42:01.347233Z",
+      "input_hash": "a8e3dcba1b3963588b0b2a68bc06c4c6c7a56351897be489be2eceb3ba0f2310",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "92bbfb9118c10ed89c8c9b51b632608c6145e4395646ada80ce8603bbaa593ff": {
     "analysis": {
       "analysis": "材料未说明作者如何从问题结构、分解或理论下界角度分析该感知问题；从摘要只能看出作者采用工程流水线思路，通过地面去除、IMU 运动补偿、DBSCAN 聚类和几何特征分类逐步处理点云，并利用特征重要性分析裁剪模型输入特征。",
@@ -48141,6 +48230,102 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
+    }
+  },
+  "caea01a5d2f9452b83ce9ae1be85fc8f7430c352671995a6be9a29e4e79a1e47": {
+    "analysis": {
+      "analysis": "材料未详细说明作者对问题结构的形式化分析过程；从可见内容看，作者通过构造统一基准与统一的两预算协议来度量问题，并通过消融实验分析对手选择、反馈密度以及 on-policy 与 off-policy 回放对策略改进的作用，再由代码修改记录与轨迹的定性分析归纳出博弈理解、策略实现与长时程规划方面的挑战。",
+      "challenges": [
+        "在规则描述更复杂的博弈中，智能体的表现整体更弱，说明博弈理解本身构成瓶颈",
+        "从理解规则到落地为可执行且有效的策略实现之间存在困难",
+        "长时程策略（long-horizon policy）的持续发展仍然困难",
+        "在固定对局与评测预算下，样本有限且对手策略动态变化，学习目标不断漂移",
+        "没有评测配置能登顶剩余 6 个人类排行榜，说明仍有机制性障碍"
+      ],
+      "corresponding_authors": [
+        "Hongning Wang"
+      ],
+      "evidence": [
+        {
+          "claim": "论文将 AI 智能体作为学习引擎、在固定权重下通过改写程序改进策略形式化为对抗启发式学习（AHL）",
+          "location": "abstract",
+          "quote": "we formalize Adversarial Heuristic Learning (AHL), a paradigm that uses AI agents as learning engines to refine game policies and supporting software while keeping model weights fixed"
+        },
+        {
+          "claim": "论文构建了 AAArena 基准，包含 12 个真实对抗博弈与 1,920 个归档人类程序，并采用模拟真实竞赛的评测协议",
+          "location": "abstract",
+          "quote": "We introduce AAArena, a benchmark comprising 12 authentic adversarial games and 1,920 archived human programs, with an evaluation protocol modeled on real-world game competitions"
+        },
+        {
+          "claim": "评测 7 种模型与 harness 配置，其中 Opus5.5 配合 Claude Code 获得 6 枚金牌，而没有配置能登顶剩余 6 个人类排行榜",
+          "location": "abstract",
+          "quote": "We evaluate 7 model and harness configurations: Opus5.5 with Claude Code earns 6 gold medals (rank-1 finishes), while no evaluated configuration tops the remaining 6 human ladders"
+        },
+        {
+          "claim": "在规则描述更复杂的博弈中表现整体更弱",
+          "location": "abstract",
+          "quote": "Performance is generally weaker in games with more complex rule specifications"
+        },
+        {
+          "claim": "对手选择与稠密反馈有助于策略改进，且智能体可从 on-policy 与 off-policy 回放中学习",
+          "location": "abstract",
+          "quote": "Further experiments show that opponent selection and dense feedback support policy improvement, and that agents learn from both on-policy replays of their own matches and off-policy replays of other players' matches"
+        },
+        {
+          "claim": "第一单位与通讯作者信息来自正文作者列表与标注",
+          "location": "supplied_full_text",
+          "quote": "1 Department of Computer Science and Technology, Tsinghua University"
+        },
+        {
+          "claim": "作者在结论中总结 AAArena 的定位与后续研究方向",
+          "location": "supplied_full_text",
+          "quote": "We present AAArena to evaluate AI agents that develop executable game policies through adversarial heuristic learning (AHL)."
+        }
+      ],
+      "experiments": [
+        "评测了 7 种模型与 harness 配置；其中 Opus5.5 配合 Claude Code 获得 6 枚金牌（即 rank-1 名次）",
+        "没有任何被评测配置能够登顶剩余 6 个人类排行榜",
+        "在规则描述更复杂的博弈中表现整体更弱",
+        "额外实验表明：对手选择与稠密反馈有助于策略改进",
+        "智能体既能从自身对局的 on-policy 回放中学习，也能从其他玩家对局的 off-policy 回放中学习",
+        "材料未给出具体的数值指标、运行时间、训练开销与公平计算预算的量化对比，也未说明消融实验的具体规模"
+      ],
+      "first_affiliation": "清华大学计算机科学与技术系",
+      "insight": "该工作的核心洞察在于把“学习”从更新神经网络权重转移到更新可执行程序这一外部载体上：由于模型权重固定，策略改进必须通过智能体对失败日志、回放与代码的结构化修改来实现，从而在样本受限、对手不断变化的对抗环境中获得可迭代、可执行且可被竞赛协议检验的策略更新路径；其价值能否成立，取决于改写后的程序是否真正转化为排行榜上的名次提升，因此需要真实竞赛式的评测协议加以度量。",
+      "limitations": [
+        "作者明确指出的持续挑战包括博弈理解、策略实现与长时程策略发展",
+        "作者在结论中提出未来方向：混合学习器可用启发式学习修改策略结构、用强化学习训练其组件；后续计划研究智能体如何在回放查看与对局分配之间权衡以消解不确定性，并将验证过的策略转化为可复用的策略模块——这暗示当前工作尚未覆盖这些能力"
+      ],
+      "method": [
+        "形式化“对抗启发式学习”（AHL）：把 AI 智能体当作学习引擎，在保持模型权重固定的前提下改进博弈策略及其支撑软件",
+        "构建 AAArena 基准，包含 12 个真实对抗博弈与 1,920 个归档人类程序",
+        "采用模拟真实游戏竞赛的评测协议与统一的两预算协议（对局预算与评测预算）",
+        "智能体的工作流程包括：解释规则、选择对手、分析回放、修改游戏智能体，以在预算内取得最高排名",
+        "评估 7 种模型与 harness 配置，并对对手选择、反馈密度、on-policy / off-policy 回放进行额外实验"
+      ],
+      "motivation": "对抗博弈一直是 AI 的试验场，从手工启发式与树搜索发展到强化学习与自博弈；但在对手策略随时间改变、交互样本有限的动态环境中，学习和调整策略仍然困难。作者关注的是：既然大模型智能体已能在代码仓库与图形界面中工作，并能改写支撑自身行为的软件，那么它是否也能像人类参赛者一样，通过读懂规则、参加对局、复盘并改写程序来提升策略排名。",
+      "primary_topic": "以 AI 智能体作为学习引擎、在对抗博弈竞赛场景中通过修改可执行程序改进策略的启发式学习基准评估",
+      "relation_to_research": "论文事实层面：该工作研究的是智能体如何通过改写可执行游戏策略程序在对抗博弈竞赛中提升排名，属于“AI 智能体驱动的策略改进”与基准评测，并未涉及生产调度、车间调度、分布式制造或数学规划与进化算法的结合。迁移设想（推测）：其“大模型智能体读取反馈并修改可执行程序、在固定预算下迭代改进”的机制，原则上可迁移到生产调度中的启发式规则或调度器代码自动改写场景，即让智能体读取车间实例、调度日志与方案回放，自动修订派工规则或局部搜索算子；但迁移需要满足若干条件，例如存在可执行的调度程序接口、可解析的约束与可行性反馈、可信的仿真或回放环境、在有限评估预算下能稳定衡量解质量与约束违反，且必须解决调度问题中硬约束可行性难以被程序改写自动保证的困难。上述迁移属于推测，不是作者结论。",
+      "relevance_score": 4,
+      "setting": "论文面向长期运行的对抗博弈智能体竞赛（清华智能体竞赛）这一环境，决策对象是参赛游戏智能体的可执行策略程序及其支撑软件；目标是在固定的对局预算与评测预算内获得尽可能高的排行榜名次；关键约束是模型权重保持固定、只能通过改写程序获得策略更新，且交互样本（对局次数）与评测资源受限；信息假设是智能体可以读取规则文本、选择对手、分析对局回放并修改游戏智能体代码；环境属于对手策略会随他人程序变化而改变的动态对抗环境。材料未说明具体的对局预算或评测预算数值。",
+      "tags": [
+        "大模型智能体",
+        "启发式学习",
+        "程序改写",
+        "对抗博弈竞赛",
+        "基准评测",
+        "策略改进"
+      ],
+      "title_zh": "AI 智能体能否学会登顶？在长期运行的博弈智能体竞赛中评估启发式学习",
+      "uncertainty": "输入材料为标题、摘要与部分正文节选，正文中间部分缺失，因此无法确认具体实验设置、预算数值、消融规模、基线细节与统计方法；12 个博弈的具体类型、人类排行榜数据规模、以及“gold medal / rank-1”判定细则在可见文本中均未展开，故对方法细节与实验结论强度的判断存在不确定性。",
+      "why_recommended": "对关注 AI 智能体驱动优化、学习辅助搜索与自动算法设计的博士生而言，本篇提供了一个“无权重更新、仅靠程序改写进行策略学习”的评测范式与统一预算协议，可用于思考如何把大模型智能体的迭代改进用于启发式规则或算子的自动修订；同时其明确指出在规则复杂、长时程策略上的失败模式，对判断智能体方法在约束优化问题上的可行边界有参考价值。需要提醒的是，该工作与生产调度、能效或多目标约束优化没有直接联系，属于机制与评测层面的邻近参考。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-11T02:42:00.557076Z",
+      "input_hash": "cf6f4dd165955325d1f7143042f7434ee0aa66532002f0a47911a389d7c754e7",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
     }
   },
   "cb39664d55720df895f46aa02b4ca6e4d43f5e539300a2cb6ddc08b90bf2eae4": {
