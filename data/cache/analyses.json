@@ -9124,6 +9124,106 @@
       "reading_scope": "full_text"
     }
   },
+  "271705d64d727f9938c82b1236b4a89396f9300fb76b6568c68372ca17e75b11": {
+    "analysis": {
+      "analysis": "作者将 AVSE 架构设计建模为强化学习驱动的神经架构搜索问题：在保持音视频时序对齐的搜索空间内，用 PPO 配合约束感知动作掩码进行搜索，奖励函数联合优化 SI-SNR 提升与模型紧凑度。摘要未说明是否使用问题分解、下界或图表示等具体分析工具。",
+      "challenges": [
+        "在资源受限设备上平衡语音增强性能与模型紧凑度",
+        "搜索空间必须保持音频与视觉流的时序对齐",
+        "仅用极少量候选架构评估就找到高效结构",
+        "在移动 CPU 上满足实时性要求"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文使用强化学习驱动的神经架构搜索来发现紧凑高效的音视频语音增强架构。",
+          "location": "abstract",
+          "quote": "This paper introduces a reinforcement learning-driven neural architecture search (RL-NAS) framework to discover compact, efficient AVSE architectures."
+        },
+        {
+          "claim": "搜索空间保持音频流与视觉流的时序对齐。",
+          "location": "abstract",
+          "quote": "The search space preserves temporal alignment between audio and visual streams"
+        },
+        {
+          "claim": "奖励函数联合优化语音增强性能与模型紧凑度。",
+          "location": "abstract",
+          "quote": "a novel reward function jointly optimises speech enhancement performance, measured by SI-SNR improvement, and model compactness"
+        },
+        {
+          "claim": "方法采用 PPO 与约束感知动作掩码，仅评估 35 个候选架构。",
+          "location": "abstract",
+          "quote": "Using proximal policy optimisation with constraint-aware action masking, the framework evaluates only 35 candidate architectures and identifies a model with 2.9 million parameters, compared with 22 million in the baseline."
+        },
+        {
+          "claim": "最终架构取得 14.5 dB SI-SNR 提升，仅比基线低 0.7 dB，模型规模约缩小九倍。",
+          "location": "abstract",
+          "quote": "The proposed architecture achieves a 14.5 dB SI-SNR improvement, only 0.7 dB below the baseline, while reducing model size by approximately nine-fold."
+        },
+        {
+          "claim": "在商用移动 CPU 上实时因子降低 4.3 倍。",
+          "location": "abstract",
+          "quote": "Evaluation on commercial mobile CPUs demonstrates a 4.3-fold reduction in real-time factor, supporting practical on-device deployment."
+        },
+        {
+          "claim": "与随机搜索相比，RL-NAS 搜索效率提高 92%。",
+          "location": "abstract",
+          "quote": "Compared with random search, RL-NAS achieves 92% higher search efficiency."
+        },
+        {
+          "claim": "架构分析表明更浅但更宽的时间卷积块和激进视觉通路剪枝可维持性能并降低计算需求。",
+          "location": "abstract",
+          "quote": "Architectural analysis reveals that shallower but wider temporal convolutional blocks and aggressive visual pathway pruning can maintain enhancement performance while substantially reducing computational requirements."
+        }
+      ],
+      "experiments": [
+        "最终架构参数量为 290 万，对比基线 2200 万，模型规模约缩小九倍。",
+        "所提架构取得 14.5 dB 的 SI-SNR 提升，仅比基线低 0.7 dB。",
+        "在商用移动 CPU 上实时因子降低 4.3 倍。",
+        "与随机搜索相比，RL-NAS 搜索效率提高 92%。",
+        "架构分析显示，更浅但更宽的时间卷积块以及激进的视觉通路剪枝可在显著降低计算需求的同时维持增强性能。",
+        "摘要未提供数据集名称、噪声条件、训练开销、消融实验细节或公平计算预算的具体设置。"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "作者的核心洞察是：把架构搜索的奖励函数同时绑定到增强性能与模型紧凑度上，可以让强化学习智能体在保持多模态时序对齐的搜索空间内，主动发现“更浅但更宽的时间卷积块”以及大幅剪除视觉通路的配置；这种结构在性能损失很小的前提下显著降低参数量和实时因子，说明多模态增强任务的精度与多模态融合深度之间并非单调关系。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "构建面向音视频语音增强的神经架构搜索空间，明确保持音频流与视觉流的时序对齐。",
+        "使用强化学习驱动架构搜索，采用近端策略优化（PPO）作为搜索策略。",
+        "引入约束感知动作掩码，限制搜索过程中的非法或不可行动作。",
+        "设计联合奖励函数，同时优化语音增强性能（SI-SNR 提升）和模型紧凑度。",
+        "仅评估 35 个候选架构即确定最终模型，并与随机搜索比较搜索效率。"
+      ],
+      "motivation": "音视频语音增强能提升噪声环境下的语音可懂度，但现有模型计算开销大，不适合资源受限的边缘设备。因此需要自动搜索既紧凑又高效的 AVSE 架构，而不是依赖人工设计或直接压缩大型模型。",
+      "primary_topic": "基于强化学习的神经架构搜索用于音视频语音增强",
+      "relation_to_research": "论文事实：该工作属于强化学习驱动的神经架构搜索，核心机制是 PPO 结合约束感知动作掩码与多目标奖励，用于在保持多模态时序对齐的搜索空间中发现轻量网络。与智能优化和生产调度的关系是间接的：它不涉及作业、机器、工序、运输或动态扰动等调度要素。推测：其“约束感知动作掩码 + 联合性能与紧凑度奖励”的搜索机制可能迁移到生产调度中求解器配置或调度规则的自动设计，但迁移需要把搜索空间重新定义为调度策略或规则结构，把奖励重新定义为调度目标与约束可行性，并验证在组合决策空间中的搜索效率，这些均未被原文验证。",
+      "relevance_score": 3,
+      "setting": "论文研究音视频语音增强（AVSE）模型在资源受限边缘设备上的高效部署问题。决策对象是多模态语音增强网络的架构配置，目标是在保持语音增强性能（以 SI-SNR 提升衡量）的同时最小化模型规模与推理开销。关键约束包括搜索空间中必须保持音频流与视觉流之间的时序对齐，以及移动端 CPU 的实时性要求。信息假设方面，摘要未说明训练数据规模、噪声类型或视觉模态的具体形式；环境被描述为面向边缘部署的静态架构搜索场景，未涉及动态扰动或在线自适应。",
+      "tags": [
+        "强化学习",
+        "神经架构搜索",
+        "音视频语音增强",
+        "PPO",
+        "动作掩码",
+        "轻量化模型",
+        "边缘部署"
+      ],
+      "title_zh": "基于强化学习神经架构搜索的高效音视频语音增强",
+      "uncertainty": "仅能获取标题与摘要，无法确认搜索空间的具体编码方式、PPO 的状态与动作定义、动作掩码的实现细节、训练数据与噪声条件、基线模型身份、统计显著性以及是否存在公平计算预算对比。摘要中的数字未给出置信区间或重复次数，因此对结论稳健性存在不确定性。",
+      "why_recommended": "若研究者关注强化学习驱动的自动结构搜索、约束感知动作掩码以及性能与资源开销的联合优化，本文提供了一种在极小评估预算下取得高效架构的机制参考。但其应用域为音视频语音增强，与生产调度、柔性作业车间或流水车间等目标领域没有直接问题对应，因此仅建议作为方法机制层面的相邻阅读，而非核心调度文献。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-13T04:22:35.058469Z",
+      "input_hash": "a3cc55468216d49849d5b8039de8b479c4ff5ade0a359b043a7f3df9f37b8896",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
   "271d9de1854e211648bc68d986017c14c0bf32af794835b1f74038f2c3505559": {
     "analysis": {
       "analysis": "作者将问题刻画为多年度、多目标、带周期性检查与维修坞容量约束的混合整数规划，通过目标函数中的多个竞争项显式表达飞机使用与维修之间的耦合；为应对长时域求解困难，作者采用滚动时域分解思路把多年问题拆成较短的滚动窗口求解；为处理权重设定问题，把代价函数系数调节交给贝叶斯优化自动完成；并进一步利用机队状态统计构造逐机权重方案，使模型优先级随机队实际状况自适应。摘要未说明是否使用下界、图表示或具体分解理论。",
@@ -9627,6 +9727,104 @@
     "provenance": {
       "analyzed_at": "2026-09-18T02:00:37.777557Z",
       "input_hash": "32cc23e19551dc044bf9a3b1e1006b563799ff0e3a3534c78a263cd137ca75f3",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
+  "2b02d157ec6319f8f0a12839258cd3e0302b59fc09ffb70826b4b7665c83fa33": {
+    "analysis": {
+      "analysis": "作者通过将约束编程实例转换为图结构，并利用Weisfeiler-Lehman图核生成结构表示，从而将问题结构编码为特征向量供经典机器学习模型使用。他们分析指出，1-WL测试界定消息传递GNN的区分能力上界，因此WL核特征可作为一种无需训练GNN的结构感知替代方案。进一步，他们设计基于割的表示（WLc）来显式建模结构划分，以提供更细粒度的预测信号。实验上通过Borda计分和预测准确率两项任务，对比WL/WLc特征与fzn2feat在不同分类器下的表现，分析特征有效性。",
+      "challenges": [
+        "传统实例级统计特征无法捕捉问题的潜在结构信息",
+        "图表示虽能捕捉结构，但通常需要深度神经网络，计算开销大，难以实际部署",
+        "经典机器学习方法缺乏结构感知能力，形成表示鸿沟",
+        "WL特征提取本身可能带来额外计算开销，需在特征质量与提取成本间权衡",
+        "不同机器学习模型对特征表示的偏好不同，需验证特征的跨模型稳健性"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "算法选择对约束编程的效率至关重要，但传统特征提取方法依赖手工统计量，无法捕捉问题结构。",
+          "location": "abstract",
+          "quote": "Algorithm Selection is essential for efficient Constraint Programming. Over the years, many algorithm selectors based on machine learning methods have been successfully applied, yet traditional feature extraction methods often rely on manually decided instance-level statistics that fail to capture the underlying problem structure."
+        },
+        {
+          "claim": "论文引入了一种新的自动特征提取方法，整合图转换和Weisfeiler-Lehman图核生成结构表示。",
+          "location": "abstract",
+          "quote": "In this paper we aim to bridge this gap by introducing a novel, automated feature extraction methodology that integrates graph conversion and Weisfeiler-Lehman graph kernels to generate robust structural representations of problem instances."
+        },
+        {
+          "claim": "1-WL测试界定消息传递GNN的区分能力上界，WL特征无需训练GNN即可提供替代方案。",
+          "location": "abstract",
+          "quote": "The 1-WL test bounds the graph-distinguishing power of standard message-passing Graph Neural Networks (GNNs), and suitable GNN architectures match this bound \\citep{Xuetal2018}. WL-based features offer an alternative that does not require training a GNN."
+        },
+        {
+          "claim": "主要贡献是基于割的表示（WLc），用于建模结构划分并提供更精细的预测信号。",
+          "location": "abstract",
+          "quote": "Our primary contribution is a cut-based representation (\\texttt{WLc}) designed to model structural partitions and provide a more nuanced predictive signal."
+        },
+        {
+          "claim": "在2023-2025 MiniZinc Challenge实例上评估，任务为最大化Borda计分和最大化预测准确率。",
+          "location": "abstract",
+          "quote": "We evaluate our approach on instances from the 2023--2025 MiniZinc Challenges across two tasks: maximizing Borda count scores and maximizing predictive accuracy."
+        },
+        {
+          "claim": "实验结果显示基于割的特征配合SVM时优于fzn2feat，而RF和MLP结果更接近。",
+          "location": "abstract",
+          "quote": "Experimental results across Support Vector Machines, Random Forests, and Multi-Layer Perceptrons demonstrate that cut-based features outperform \\texttt{fzn2feat} with SVMs, while results with RFs and MLPs are closer."
+        },
+        {
+          "claim": "第一作者所属单位为University of Southern Denmark, Denmark。",
+          "location": "supplied_full_text",
+          "quote": "Affiliation:\nUniversity of Southern Denmark, Denmark"
+        }
+      ],
+      "experiments": [
+        "在MiniZinc Challenge 2023-2025的实例上进行评估，构建两个算法选择任务：最大化Borda计分和最大化预测准确率。",
+        "使用SVM、RF和MLP三种分类器，对比WL/WLc特征与fzn2feat特征。",
+        "采用重复五折嵌套交叉验证（10个随机种子，共50次外折评估）确保稳健性。",
+        "结果显示：WLc特征配合SVM时在两项任务上均优于fzn2feat；RF和MLP的对比差异较小，部分RF配置下fzn2feat略优。",
+        "对特征提取成本进行了比较（WLc-n/WLc-ne vs fzn2feat），但具体数字材料未提供。",
+        "消融方面评估了1步和2步聚合的WL特征，但详细消融结果未在节选中给出。"
+      ],
+      "first_affiliation": "University of Southern Denmark, Denmark",
+      "insight": "贡献的有效性在于：1-WL测试为消息传递GNN的图区分能力设定了上界，因此基于WL的特征在表达能力上不劣于标准GNN，同时避免了训练GNN的计算开销。此外，作者提出基于割的表示（WLc）显式建模结构划分，能提供比标准图特征更细粒度的预测信号。这使得经典机器学习模型（如SVM）也能利用结构信息，从而在保持部署轻量化的同时提升算法选择的性能。",
+      "limitations": [
+        "特征提取管道尚未完全优化，可通过算法改进和并行化独立图操作进一步降低大规模实例集的开销。",
+        "未来工作将聚焦于优化计算效率、探索动态在线算法选择框架、结合经典特征集（如fzn2feat）以及推广到CP社区其他任务。"
+      ],
+      "method": [
+        "图转换：将FlatZinc格式的约束编程实例转换为图表示，以便应用图核方法。",
+        "Weisfeiler-Lehman图核特征：使用1-WL和2-WL聚合步骤生成结构特征，聚合步数通过后缀（如-1、-2）标识。",
+        "基于割的表示（WLc）：在WL基础上显式建模结构划分，生成更细粒度的特征，增强预测信号。",
+        "特征嵌入FlatZinc生态：将特征提取过程集成到FlatZinc工作流中，便于实际使用。",
+        "分类器训练：使用SVM、随机森林（RF）和多层感知机（MLP，三个隐藏层）作为算法选择的预测模型。",
+        "训练协议：采用重复五折嵌套交叉验证，10个随机种子，共50次外折评估；包括超参数网格搜索、模型选择（平局时偏向简单模型）、PCA降维（20到min(n_features, n_samples)步长20，MLP跳过降维）和最终特征选择。"
+      ],
+      "motivation": "算法选择对约束编程的效率至关重要，因为不同求解器在不同实例上的性能差异显著。然而，传统特征提取方法（如fzn2feat）依赖手工决定的实例级统计量，无法捕捉问题底层结构或变量间的复杂互联，形成“表示鸿沟”：非神经网络的经典机器学习方法“结构盲”，而结构感知模型通常因深度神经网络的开销而难以实际部署。作者旨在通过自动化的图转换与Weisfeiler-Lehman图核特征来弥合这一鸿沟，无需训练GNN即可提供结构感知的表示。",
+      "primary_topic": "约束编程中的算法选择与自动特征提取",
+      "relation_to_research": "该论文直接涉及约束编程中的算法选择，属于AI4OR与智能优化范畴。其核心贡献——使用WL图核自动提取结构特征以辅助经典机器学习进行求解器选择——与生产调度中柔性作业车间、流水车间等问题的算法选择有相似的决策结构：都需要根据问题实例的结构特征从算法组合中选取最合适的求解器。论文提出的图转换与WL特征方法可迁移到生产调度问题，但需要条件：需将调度问题实例（如工序、机器、约束）转换为合适的图表示，并验证WL特征能否保留调度问题的关键结构信息；此外，生产调度常涉及动态扰动和多目标，而本文设定为静态离线，迁移到动态环境需重新设计特征提取与在线选择机制。以上迁移为推测，非作者结论。",
+      "relevance_score": 7,
+      "setting": "本论文研究约束编程（CP）中的算法选择问题：给定一个约束优化问题实例，从求解器组合中选出最合适的求解器。决策对象是求解器选择，目标有两个任务——最大化Borda计分和最大化预测准确率。关键约束包括传统特征提取方法依赖人工设计的实例级统计量、无法捕捉问题潜在结构，而图表示虽能捕捉结构但通常与需要大量计算开销的深度神经网络耦合。信息假设是实例已转换为FlatZinc格式并可转化为图，环境为静态的离线场景（在MiniZinc Challenge 2023-2025实例集合上评估）。材料未说明实时动态或在线部署的具体约束。",
+      "tags": [
+        "约束编程",
+        "算法组合",
+        "Weisfeiler-Leman图核",
+        "自动特征提取",
+        "算法选择",
+        "图表示学习",
+        "经典机器学习"
+      ],
+      "title_zh": "面向约束优化的算法选择：使用Weisfeiler-Leman特征",
+      "uncertainty": "本文发表于arXiv，尚未经过同行评审。全文节选缺失部分关键细节：具体实验数字（如Borda计分、准确率、提取时间）未在节选中完整呈现，无法核验性能提升幅度；WL与WLc特征的具体构造细节、图转换算法、PCA降维效果、消融实验完整结果等材料未提供；因此对方法创新性和实验充分性的判断存在不确定性。此外，生产调度迁移的可行性纯属推测，需进一步验证。",
+      "why_recommended": "对研究智能优化与生产调度的博士生而言，本文提供了一个新颖的视角：利用图核自动提取结构特征，无需训练GNN即可让经典机器学习模型感知问题结构，从而在保持低计算开销的同时提升算法选择性能。其方法论可启发将WL特征应用于调度问题的实例表示与求解器选择；消融实验和嵌套交叉验证设计也值得借鉴，有助于理解结构特征在算法选择中的鲁棒性和提取成本。此外，对学习辅助搜索与自动建模方向，本文的图转换与特征提取思路可作为预处理组件与强化学习或元启发式结合。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-13T04:23:00.779976Z",
+      "input_hash": "0a254eaa8b89f12704c2ae451b12ea40ae3f09ecbd2d87f1b4d80523ad0334a3",
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "full_text"
@@ -14787,6 +14985,107 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
+    }
+  },
+  "3e9bd14be1d5fc9d273106e156095a68f7a6f1bbaeb71886363952cdedb5196e": {
+    "analysis": {
+      "analysis": "作者通过对比父代局部、一次性的变异接口与生产级 AI 系统的实际失败模式来分析问题，指出失败原因与相关证据常常分散在搜索历史中，并借助 AdaEvolve 在 Lockpicking 上的停滞案例、GEPA 在 go_emotions 上把 LATERAL FLATTEN 放入 UDF 导致最多 71% 预算被浪费的案例，说明仅在前沿重述残余错误或缺少廉价验证器都会限制搜索；在此基础上提出元反思的两个机制：跨谱系按需查询历史证据、以及在提交前对实时系统进行探针与自验证。",
+      "challenges": [
+        "孤立失败无法揭示复杂隐藏交互的根因，局部有益的编辑可能在其他能力上造成回归",
+        "变异器无法与目标环境交互、测试假设或根据中间结果修正候选，搜索可能在不同任务间此消彼长或重复已穷尽的策略",
+        "历史上下文的成本随档案累积而增长，涉及隐藏回归、对初始任务集过拟合等系统性脆弱性",
+        "缺乏廉价验证器时，变异可能把大量预算浪费在无法执行的程序上（如编译错误导致零分且无诊断反馈）"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "现有 LLM 引导进化优化器多从搜索前沿选单一父代并仅依据其失败做一次 LLM 变异，这种父代局部一次性接口在生产级 AI 系统上会停滞。",
+          "location": "abstract",
+          "quote": "Most optimization methods select a candidate from the search frontier, then mutate it in one LLM pass based only on its failures. This focus on the frontier can stall on production AI systems, where isolated failures reveal little about complex, hidden interactions."
+        },
+        {
+          "claim": "CoCoEvolve 以元反思为核心，使用智能体变异器 Cortex Code 从整个进化历史选择性检索证据并在提出变异前探针实时系统。",
+          "location": "abstract",
+          "quote": "We introduce CoCoEvolve (Cortex Code Evolve), an evolutionary optimizer built around what we call meta-reflection, wherein an agentic mutator (Cortex Code) selectively retrieves evidence from the entire evolutionary history and probes the live system before verifying and proposing mutations."
+        },
+        {
+          "claim": "CoCoEvolve 在 DABStep 上达到 92.8% 留出困难准确率，匹配条件下高于 Meta-Harness 的 78.4% 与 GEPA 的 30.4%。",
+          "location": "abstract",
+          "quote": "On DABStep, CoCoEvolve tops the public leaderboard, reaching 92.8% held-out hard accuracy compared to 78.4% for Meta-Harness and 30.4% for GEPA under matched conditions."
+        },
+        {
+          "claim": "CoCoEvolve 在 data-eng-bench 上将测试集求解率从 59.1% 提升到 77.4%，超过最佳基线 73.6%。",
+          "location": "abstract",
+          "quote": "On data-eng-bench, CoCoEvolve lifts test-set solve rate from 59.1% to 77.4%, past the best baseline of 73.6%."
+        },
+        {
+          "claim": "作者以结构变化比提示变化更稳健为例，说明仅改写提示的搜索会遇到平台期，而探针实时环境可发现结构性修复。",
+          "location": "supplied_full_text",
+          "quote": "Structural changes are more robust than prompt changes."
+        },
+        {
+          "claim": "作者指出缺乏廉价验证器会导致变异把大量预算浪费在无法执行的 SQL 程序上。",
+          "location": "supplied_full_text",
+          "quote": "Without a cheap validator, mutation can waste substantial search budget on SQL programs that never execute."
+        },
+        {
+          "claim": "作者称 CoCoEvolve 通过廉价样本执行草稿并在同一多轮变异中修复语法失败，把编译器错误转为可操作上下文。",
+          "location": "supplied_full_text",
+          "quote": "CoCoEvolve instead executes drafts on a cheap sample and repairs syntax failures within the same multi-turn mutation before commit."
+        },
+        {
+          "claim": "第一作者单位在提供的全文节选中标注为 Snowflake。",
+          "location": "supplied_full_text",
+          "quote": "Affiliation:\nSnowflake"
+        }
+      ],
+      "experiments": [
+        "在 DABStep 上，CoCoEvolve 登顶公开排行榜，达到 92.8% 的留出困难准确率，在匹配条件下对比 Meta-Harness 的 78.4% 与 GEPA 的 30.4%",
+        "在六个 LLM 数据管道工作负载上，CoCoEvolve 优于所有评估基线",
+        "在 data-eng-bench 上，CoCoEvolve 将测试集求解率从 59.1% 提升到 77.4%，超过最佳基线 73.6%",
+        "在 HotpotQA 上比 GEPA 准确率高 11 个百分点，同时在既有数学与系统基准上与专用优化器保持竞争力",
+        "匹配的消融实验确认 CoCoEvolve 每个组件都对增益有贡献；材料未提供具体消融设置与数值细节",
+        "材料未提供训练开销、公平计算预算的完整对照与泛化性的系统评估细节"
+      ],
+      "first_affiliation": "Snowflake",
+      "insight": "作者的核心洞察在于：当失败信号被局限在单一父代时，优化器无法区分根因、无法验证假设、也无法复用分散在历史中的互补发现；因此把反思从“父代局部”扩展为“对整个搜索过程与实时环境的元反思”，即选择性检索跨谱系的历史证据、主动探针实时系统并在提交前自验证，才能让变异器做出结构性而非表面性的修改，从而突破仅凭提示改写所遇到的平台期。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "使用 Cortex Code 作为编码智能体变异器，能够检视父代、运行聚焦实验、修订实现并在提交子代前验证结果",
+        "变异器通过紧凑摘要与结构化查询两种方式访问进化历史，从而按需检索先前程序与跨谱系证据，而非只看被选父代的失败",
+        "变异器在构造和验证变异时主动探针实时目标环境，测试假设并据中间结果修正候选",
+        "在数据智能体场景中进行结构性编辑验证：探针 schema、执行草稿 SQL、在提交前对照已知总数校验输出，最终发现并验证向量化费用引擎存储过程与物化每笔交易费用的动态表两种修复",
+        "在 AI 函数场景中搜索可执行 SQL 程序，允许同时重构 LLM 提示与算子组合（CTE、join 等）以适配多样行分布",
+        "自验证机制在廉价样本上执行草稿并在同一多轮变异内修复语法失败，把编译器错误从终止分数转化为可操作上下文，把外层评估留给可执行程序"
+      ],
+      "motivation": "现有 LLM 引导的进化优化器大多从搜索前沿选择单一父代，仅依据其失败反馈在一次 LLM 调用中完成变异，这种父代局部、一次性的接口在失败原因与修复方式都显而易见时有效，但在生产级 AI 系统中往往会因隐藏交互、根因不可见而停滞，甚至用一个已解任务的退化解换另一个任务的提升。",
+      "primary_topic": "LLM 驱动的进化式优化器，用于改进生产级 AI 系统（数据智能体、LLM 数据管道、数据工程工作流）",
+      "relation_to_research": "该论文属于 LLM 智能体驱动的自动优化/自动建模方向，与 AI4OR 中的学习辅助搜索、大模型智能体、自动建模在方法论上有共通之处：都以智能体作为变异/搜索算子，都关注历史证据检索、在提交前验证以及避免局部最优停滞。但论文的优化对象是提示、代码、工具、SQL 管道与数据模型等文本化 AI 系统构件，实验基准是 DABStep、数据管道工作负载、data-eng-bench、HotpotQA 及数学与系统基准，并未涉及生产调度、柔性作业车间、流水车间、分布式制造或生产运输协同等约束优化问题，因此不是直接的目标领域工作。推测来看，其“元反思+历史证据检索+廉价自验证”的机制有可能迁移到调度求解器配置、启发式规则或数学规划模型的自动改进上，但迁移的前提是把目标问题包装成可评估、可探针、可查询历史的结构化搜索问题，并建立廉价可行性检查以确保约束可行，这些均需另行验证，不能视为作者结论。",
+      "relevance_score": 6,
+      "setting": "研究问题是用 LLM 引导的进化优化改进生产级 AI 系统的文本化构件（提示、代码、工具、SQL 管道与数据模型）；决策对象是候选系统规格的变异与选择，目标是在整体任务准确率或求解率上取得提升；关键约束是孤立失败往往无法揭示隐藏的交互性根因、且相关证据可能分散在整个搜索历史中，同时需要控制上下文成本与评估预算；信息假设是优化器可在变异过程中主动探针实时系统并查询结构化进化历史，环境被描述为生产级 AI 系统，具体静态或动态属性材料未明确说明。",
+      "tags": [
+        "LLM 引导进化优化",
+        "元反思",
+        "智能体变异器",
+        "代码智能体",
+        "生产级 AI 系统优化",
+        "数据管道",
+        "数据工程"
+      ],
+      "title_zh": "元反思进化有效改进生产级人工智能系统",
+      "uncertainty": "输入为全文节选，正文在多个位置被截断（如第 1 节第 3.2 节中间、第 3.3 节与第 5 节附近），因此方法细节（如 Cortex Code 检索历史的具体接口、消融设置、基线匹配条件与计算预算定义）与部分实验数值表格不完整；此外摘要与正文未给出通讯作者与代码地址信息，相关性评分根据当前可见内容判断，若完整正文包含更明确的约束优化求解机制，评分可能需要上调。",
+      "why_recommended": "对关注大模型智能体驱动优化、学习辅助搜索与自动建模的研究者，该文提供了一个较完整的设计范式：变异器不只是看当前父代的失败，而是查询跨谱系历史并按需探针实时系统，在提交前做低成本自验证。其消融与多基准对照（DABStep、data-eng-bench、HotpotQA 等）展示了该范式在多类真实系统上的增益，其中的历史证据检索、自验证与预算分配思路，对设计面向调度与运筹问题的智能体优化器具有参考价值；但需要注意其问题设定与约束优化求解仍有明显距离，迁移需谨慎。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-13T04:22:26.258091Z",
+      "input_hash": "07fd9a43e2c212296b86791480a7e2ac9a23e9bf2411a890d0e75a1ec23ca8a9",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
     }
   },
   "3ed8421dd1b9451d7195f51e758d0304c1c1bea6517d57ce93435e26a3f9a52e": {
@@ -21747,6 +22046,88 @@
       "reading_scope": "abstract"
     }
   },
+  "5d204e15d905440539cbd1f6079347069c9ee960597566c170174fdf649b06cb": {
+    "analysis": {
+      "analysis": "作者通过观察少样本蒸馏中样本选择的影响，发现靠近教师决策边界的不确定样本会显著降低蒸馏性能，并据此采用反事实对来提供额外监督。作者进一步从几何角度分析事实—反事实对如何约束教师与学生决策边界之间的偏差，并引入上下文跟随难度（Context Following Difficulty, CFD）指标，在蒸馏前基于与预期替代答案的一致性以及对修改后上下文的依赖程度来验证反事实样本的质量。材料未说明是否使用问题结构分解或数学规划等更形式化的分析工具。",
+      "challenges": [
+        "少样本蒸馏性能对训练样本选择高度敏感，不确定样本可能损害蒸馏效果",
+        "在生成式问答中构造有效的反事实样本需要最小化上下文修改并确保教师输出发生预期改变",
+        "缺乏对反事实样本质量的预先验证机制，低质量反事实可能引入错误监督",
+        "在极少量样本预算下平衡事实样本与反事实样本的监督贡献"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "少样本蒸馏性能严重依赖训练样本选择，靠近教师决策边界的不确定样本会显著恶化蒸馏性能",
+          "location": "abstract",
+          "quote": "we observe that few-shot distillation performance is heavily dependent on the choice of these training samples. In fact, we demonstrate that using more uncertain samples near the teacher's decision boundary can significantly deteriorate distillation performance."
+        },
+        {
+          "claim": "反事实被定义为最小修改上下文以诱导教师改变回答为替代答案",
+          "location": "abstract",
+          "quote": "we define a counterfactual as a minimally modified context that induces the teacher to change its response to an alternative answer."
+        },
+        {
+          "claim": "作者从几何角度分析事实—反事实对如何约束教师与学生决策边界之间的偏差",
+          "location": "abstract",
+          "quote": "We provide geometric insights on how factual-counterfactual pairs can constrain the deviation between the teacher's and student's decision boundaries."
+        },
+        {
+          "claim": "引入CFD指标在蒸馏前验证反事实样本",
+          "location": "abstract",
+          "quote": "We further introduce a new metric, Context Following Difficulty (CFD) that further validates counterfactuals prior to distillation based on agreement with the intended alternative answer and dependence on the modified context."
+        },
+        {
+          "claim": "在TriviaQA上，T5设定下32个少样本对时，COFFEQA相较仅事实基线平均提升8.77个EM点和9.98个F1点",
+          "location": "abstract",
+          "quote": "on TriviaQA, COFFEQA improves over the factual-only baseline by 8.77 average EM points and 9.98 average F1 points under the T5 setting with 32 few-shot pairs."
+        }
+      ],
+      "experiments": [
+        "在五个域内和三个域外问答基准上，使用T5和Qwen2.5模型家族进行实验",
+        "在相同少样本预算下，COFFEQA优于仅使用事实样本的蒸馏基线",
+        "在TriviaQA数据集上，T5设定下使用32个少样本对时，COFFEQA相较仅事实基线平均提升8.77个EM点和9.98个F1点",
+        "材料未说明是否报告运行时间、训练开销、公平计算预算、消融实验或泛化到其他任务的结果"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "核心洞察在于：单纯增加靠近教师决策边界的不确定样本会引入噪声，而围绕困难事实样本构造的“事实—反事实”对能够提供互补且方向明确的监督信号。反事实被定义为对上下文进行最小修改后使教师改变回答的样本，这类配对隐含了教师决策边界在输入空间中的局部几何约束，从而在少样本条件下更有效地对齐教师与学生的决策边界。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "提出COFFEQA策略，在开放域问答的少样本蒸馏中使用反事实样本提供额外监督",
+        "定义反事实为对上下文进行最小修改、诱导教师模型改变回答为替代答案的样本",
+        "从几何角度论证事实—反事实对能够约束教师与学生决策边界之间的偏差",
+        "引入Context Following Difficulty（CFD）指标，基于与预期替代答案的一致性以及对修改后上下文的依赖程度对反事实进行验证",
+        "使用经CFD验证的事实—反事实对进行少样本知识蒸馏",
+        "在T5和Qwen2.5模型家族上进行实验，覆盖五个域内和三个域外问答基准"
+      ],
+      "motivation": "知识蒸馏通常数据密集且计算昂贵，尤其在生成任务中。少样本蒸馏虽可利用有限样本迁移教师知识，但作者观察到其性能严重依赖所选训练样本：靠近教师决策边界的不确定样本反而会显著恶化蒸馏效果。因此需要一种策略，在少样本预算下提供额外监督以约束学生模型与教师模型决策边界之间的偏差。",
+      "primary_topic": "大语言模型知识蒸馏与少样本问答",
+      "relation_to_research": "该论文与大语言模型的知识蒸馏和少样本学习直接相关，但其研究域为开放域问答，未涉及智能优化、生产调度、组合优化或约束决策问题。论文中的反事实样本构造思想在抽象层面可被推测迁移至生产调度中的场景生成或鲁棒性测试，例如通过最小修改调度实例中的参数来观察求解器或调度策略输出的变化，但这一迁移需要将“上下文修改”映射为调度实例参数修改、将“教师回答改变”映射为调度方案或目标值改变，并重新定义验证指标；这些均为推测，并非作者结论，且论文未提供任何与调度或优化求解相关的实验证据。",
+      "relevance_score": 2,
+      "setting": "该研究面向资源受限环境下的大语言模型部署，目标是训练一个较小的学生模型以模仿较大的教师模型在开放域问答任务上的生成行为；决策对象是少样本蒸馏训练样本的选择策略；关键约束是训练预算极为有限（少样本），且学生模型需在生成式问答任务中逼近教师的决策边界；信息假设为可以获得教师模型的输出以及可对输入上下文进行最小修改以构造反事实样本；环境未涉及动态或在线调度，属于静态的离线模型训练设定，材料未说明是否考虑推理时延或多轮交互。",
+      "tags": [
+        "知识蒸馏",
+        "少样本学习",
+        "反事实推理",
+        "开放域问答",
+        "大语言模型"
+      ],
+      "title_zh": "COFFEQA：反事实引导的少样本蒸馏用于大语言模型问答",
+      "uncertainty": "本次判断仅基于标题和摘要，未提供全文，因此对方法细节、实验公平性、消融分析、训练开销以及是否存在与优化问题的隐含联系等方面存在较大不确定性。相关性评分基于当前研究画像，若论文全文包含未在摘要中体现的优化或调度相关内容，评分可能需要调整。",
+      "why_recommended": "该论文与当前研究主题的相关性较弱，不建议作为智能优化或生产调度方向的优先阅读材料。若研究者对大模型蒸馏、少样本学习或反事实推理在自然语言处理中的应用感兴趣，可将其作为方法参考，但其核心问题、实验设定和应用场景均不在运筹优化或生产调度范围内。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-13T04:22:46.220666Z",
+      "input_hash": "d81a9cfc035304fe862d4fbdb50e7f823434d0a9384ea1e1f6e4c261c025b0e4",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
   "5dc092a27072250abe48264236060a2bc3d0531164aace0d129194b3fb99d444": {
     "analysis": {
       "analysis": "作者通过引用 Ligthart (2026) 关于广义 n-fold 整数规划的结构性质，以及 Veselov 等 (2020) 优化离散凸函数的算法，建立 4-块整数规划与这些工具之间的联系，从而构造 FPT 算法。摘要未说明作者如何进一步分析具体问题结构或推导下界，材料未说明。",
@@ -22470,6 +22851,102 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
+    }
+  },
+  "61760c15e347f28e380525179ccdb75598451be31575c199485cfdbede782510": {
+    "analysis": {
+      "analysis": "作者将问题结构化为三类方向性保真检查：问题-模型保真、模型-代码一致性、数据接地，从而产生有证据支撑的发现（findings）；随后依据受影响范围与证据确定修复粒度，并用契约规定允许的编辑、预期效果与受保护内容，所有候选在提交前经过产物审计，Clean 输入被保留。作者还构建了包含 24 个类别（O01–O24）的修复分类体系（RepairCard 目录）用于归因错误类型。材料未说明是否使用下界、图表示等更形式化的分析工具。",
+      "challenges": [
+        "优化建模要求把问题需求转化为相互关联的数学模型与求解器代码，仅做支撑性检查无法验证需求是否被完整表示",
+        "代码可成功执行不能排除数学模型层面的错误",
+        "需要在修复错误的同时避免对原本正确的内容造成回归",
+        "需要根据受影响范围决定修复粒度并协调模型-代码的耦合更新",
+        "需要在不依赖上游求解状态、目标值等捷径信息的条件下完成检测与修复"
+      ],
+      "corresponding_authors": [
+        "Zhong Li",
+        "Mingyang Sun"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究 LLM 优化建模中生成产物与原问题不一致的幻觉问题",
+          "location": "abstract",
+          "quote": "which we refer to as optimization modeling hallucinations"
+        },
+        {
+          "claim": "OPT-Kraken 是一个训练无关的幻觉修复框架，作者称其为首个面向 LLM 优化建模产物的后验修复框架",
+          "location": "abstract",
+          "quote": "We introduce OPT-Kraken, a training-free hallucination repair framework. To the best of our knowledge, it is the first post-hoc framework for repairing hallucinations in LLM-based optimization modeling artifacts."
+        },
+        {
+          "claim": "检测依赖问题-模型保真、模型-代码一致性与数据接地三类检查",
+          "location": "abstract",
+          "quote": "localizes errors by checking problem–model fidelity, model–code consistency, and data grounding, and selects repair granularity by the affected scope"
+        },
+        {
+          "claim": "局部修复通过契约规定允许的编辑、预期效果与受保护内容",
+          "location": "abstract",
+          "quote": "category rules and instance evidence are compiled into contracts specifying permitted edits, expected effects, and protected content"
+        },
+        {
+          "claim": "在多个基准上提升了准确率与 Rescue，同时保持较广 Error Coverage 与低 Regression",
+          "location": "supplied_full_text",
+          "quote": "Across six benchmarks, OPT-Kraken improves accuracy and Rescue while maintaining broad Error Coverage and low Regression"
+        },
+        {
+          "claim": "修复目标是不依赖上游求解状态、报错信息、目标值与参考答案等捷径信息",
+          "location": "supplied_full_text",
+          "quote": "It excludes upstream solve status, error messages, objective values, and reference answers."
+        },
+        {
+          "claim": "对原本正确的产物做不必要的编辑本身被视为失败",
+          "location": "supplied_full_text",
+          "quote": "unnecessary edits to initially correct model–code pairs are themselves failures"
+        }
+      ],
+      "experiments": [
+        "在既有优化建模基准上实验，显示对自动建模框架与微调模型均有正向收益",
+        "对多个基础模型的零样本产物，OPT-Kraken 能有效修复优化建模幻觉并保留原本正确的产物",
+        "在六个基准上，OPT-Kraken 提升了 accuracy 与 Rescue，同时保持较广的 Error Coverage 与较低的 Regression",
+        "对 688 条训练无关（train-free）与 950 条微调前修复发现按冻结分类体系做了错误画像：训练无关发现中 implementation and reporting 占 24.3%；微调输出中 balance and bounds 占 31.3%，relational algebra 占 14.9%",
+        "材料未提供具体基线名称、实例规模、运行时间、训练开销与计算预算对比的明确数字"
+      ],
+      "first_affiliation": "Peking University",
+      "insight": "修复优化建模幻觉不能等同于“再生成一份模型和代码”，而应视为对冻结产物的后处理变换，其中“错误修正”与“内容保留”是同等重要的联合要求——对原本正确的模型-代码对做不必要修改本身就是一种失败。该洞察的有效性来自于优化建模产物具有问题需求、数学模型、求解器代码与实例数据等多个相互约束的证据空间：只有基于原始问题证据定位错误、按受影响范围选择修复粒度、并用契约约束局部编辑边界，才能既有针对性地修复错误、又不破坏正确内容。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "OPT-Kraken 为训练无关（training-free）的幻觉修复框架，输入为自然语言问题 P 与上游生成产物 M0、S0，输出为修复后的 (M*, S*)",
+        "双证据与方向性保真检查：需求 O 刻画决策语义，实例数据 D 绑定取值、索引、键与单位，二者构成互补证据空间，在一次 TraceDetect LLM 请求中联合评估并做确定性验证",
+        "错误定位：通过检查问题-模型保真、模型-代码一致性、数据接地来定位错误",
+        "按受影响范围选择修复粒度，并进行契约约束下的局部修复；契约规定允许的编辑、预期效果与受保护内容",
+        "候选修复需经过产物级审计（artifact auditing）后才能提交，Clean 输入被保留",
+        "使用冻结的 24 类 RepairCard 分类体系（O01–O24）对修复发现进行归因"
+      ],
+      "motivation": "LLM 被越来越多用于自动化运筹优化建模以降低建模时间与专业门槛，但生成的数学模型与求解器代码常与原始问题不一致，可能误导下游决策。通用幻觉缓解方法不足以应对优化建模场景：仅检查生成陈述是否有支撑无法保证所有问题需求都被表示，代码能成功执行也不能排除数学模型错误。因此需要把优化建模幻觉修复作为一个独立的、事后的、模型-代码协同更新任务来处理。",
+      "primary_topic": "大语言模型自动优化建模产物的幻觉检测与修复",
+      "relation_to_research": "该论文直接属于 AI4OR／大语言模型驱动运筹优化方向，研究 LLM 自动优化建模产物的错误检测与修复，与自动建模、学习辅助求解中的“生成产物可靠性”问题直接相关，而非通用神经网络训练或聊天智能体。就生产调度而言，论文使用制造、物流、资源分配等作为建模动机场景，但未针对柔性作业车间、流水车间、分布式制造、生产运输协同或动态扰动做专门实验，因此不能声称其结论已在这些调度问题上得到验证。推测：其“问题-模型-代码多重保真检查 + 证据约束的局部修复 + 契约限定的编辑边界 + 提交前审计”的机制，有迁移到生产调度自动建模流水线的潜力，但迁移需要满足条件——调度问题需能被表述为含实例数据绑定的自然语言优化问题，且需要构建针对调度特有约束（如工序顺序、机器能力、时间窗、能耗）的 RepairCard 分类与契约模板，并验证修复后解的约束可行性而不只是模型-代码一致性。",
+      "relevance_score": 8,
+      "setting": "研究问题为大语言模型在将自然语言运筹优化问题转化为数学模型 M 与求解器代码 S 时产生的“优化建模幻觉”，即生成产物与原始问题 P 不一致。决策对象是是否修复以及修复哪些模型与代码位置，目标是使修复后的 (M*, S*) 对 P 忠实、代码忠实实现模型、并正确绑定实例数据，同时保留原本正确的内容。关键约束包括：禁止使用上游求解状态、报错信息、目标值和参考答案等“捷径”信息；领域需求只能来自 P；等价形式视为有效。信息假设为检测阶段可读取固定的 P/M0/S0 及来自 P 的证据，执行检查发生在候选生成之后，参考解仅用于离线评估。环境为静态的后处理修复任务，材料未说明动态或在线设置。",
+      "tags": [
+        "大语言模型优化建模",
+        "幻觉修复",
+        "AI4OR",
+        "自动建模",
+        "模型-代码一致性",
+        "训练无关后处理"
+      ],
+      "title_zh": "修正错误、保留正确：面向基于大语言模型的优化建模的幻觉修复",
+      "uncertainty": "全文节选不完整（方法与实验章节有截断），无法获得具体基线、实例规模、运行时间、消融设计与计算预算等细节，因此实验部分的量化结论只能依据摘要与结论中的概括性表述；错误画像中的百分比来自节选片段，其统计口径（按家族归一化）需查阅附录确认。是否覆盖生产调度类实例亦未在给定材料中说明。",
+      "why_recommended": "对关注 AI 驱动运筹优化的研究者，该工作把“LLM 建模可靠性”从单纯提升初始生成成功率推进到事后的、证据接地的错误筛查与风险可控修复，其“错误修正与内容保留并重”“按受影响范围选择修复粒度”“契约约束编辑边界”的思路，可为自动建模流水线、学习辅助搜索中的模型校验模块设计提供借鉴，也可启发在调度问题自动建模中加入模型-代码-数据三层一致性校验。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-13T04:22:24.576589Z",
+      "input_hash": "1309665179907810e65c7654be5a29c444567634c75a2633991c27e797161c68",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
     }
   },
   "62609b926a91a95b9bf1d91752666e55dd78619bba215b1515ef13d51254e60c": {
@@ -25393,6 +25870,80 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "full_text"
+    }
+  },
+  "6cfb696be8dbbf281cab51e92763286f069f9cb45f7fcb2a9f2cc6cda04ab6bf": {
+    "analysis": {
+      "analysis": "作者将贝叶斯优化的决策流程按时间分解，识别出目标评估等待时间这一可利用的空档。其分析核心是：在目标值尚未观测时先基于先验或当前后验采样超参数，待观测到目标值后仅对样本进行重加权，从而以并行而非串行方式获得完全贝叶斯后验近似，避免在决策时刻承担完整后验推断的代价。材料未说明作者是否利用问题结构、下界或图表示等其他分析工具。",
+      "challenges": [
+        "完全贝叶斯方法需要对超参数后验进行采样和模型平均，计算开销通常过高，难以用于实时决策。",
+        "在评估结果尚未返回时进行采样，需要保证采样分布能够通过后续重加权正确反映观测后的后验，同时避免额外决策延迟。",
+        "低数据情形下点估计不确定性不可靠，而完全贝叶斯方法又因计算昂贵难以落地。"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文提出利用目标函数评估延迟来提前计算下一次建议，从而实现完全贝叶斯优化。",
+          "location": "abstract",
+          "quote": "In this work, we propose ELF-BO, an algorithm that uses the objective evaluation latency to headstart the computation of the next suggestion, allowing for fully Bayesian optimization without incurring substantial decision-time costs."
+        },
+        {
+          "claim": "完全贝叶斯方法通过对超参数做模型平均改善不确定性估计，但通常因昂贵而很少使用。",
+          "location": "abstract",
+          "quote": "Alternatively, a fully Bayesian approach uses model averaging to account for uncertainty over the hyperparameters, leading to better uncertainty estimates---useful in the low-data regime that is pervasive in BO. However, it is often prohibitively expensive and thus rarely used."
+        },
+        {
+          "claim": "ELF-BO在目标评估期间从超参数后验采样，观测到目标值后仅需重加权样本。",
+          "location": "abstract",
+          "quote": "This is done by sampling from the hyperparameter posterior \\emph{while} the objective is being evaluated, only requiring reweighting of the samples once the objective value is observed."
+        },
+        {
+          "claim": "实验在合成函数和真实世界应用上表明ELF-BO性能匹配完全贝叶斯方法，决策延迟与标准BO相当或更优。",
+          "location": "abstract",
+          "quote": "Across synthetic functions and real-world applications, we show that ELF-BO matches the performance of fully Bayesian methods while only incurring decision latency on par with or better than standard BO."
+        }
+      ],
+      "experiments": [
+        "在合成函数和真实世界应用上评估ELF-BO。",
+        "摘要声称ELF-BO达到完全贝叶斯方法的性能，同时决策延迟与标准BO相当或更优。",
+        "摘要未提供具体基线名称、实例规模、约束可行性、解质量数值、运行时间、训练开销、公平计算预算、泛化或消融实验的细节；材料未说明。"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "完全贝叶斯优化的核心障碍是决策时刻的计算开销，而非算法本身不适用。作者注意到目标函数评估本身会带来一段不可用于决策的等待时间，因此可将超参数后验采样与目标评估并行执行；待目标值返回后，只需对已采样的超参数样本重新加权即可得到自适应后验。这样就把原本串行叠加在决策时间上的贝叶斯计算隐藏到评估延迟中，从而在保持完全贝叶斯不确定性估计的同时，使决策延迟与标准BO相当甚至更优。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "提出ELF-BO算法，在目标函数评估进行期间提前启动下一次建议点的计算。",
+        "在评估目标值的同时从超参数后验中采样，而不是在决策时刻才进行完整后验推断。",
+        "一旦观测到目标值，对已采样的超参数样本进行重新加权，以得到反映新观测的后验样本。",
+        "使用重加权后的样本完成模型平均，生成下一个建议点，使完全贝叶斯优化不带来显著决策时间成本。"
+      ],
+      "motivation": "黑箱优化中目标函数评估代价高昂，评估时间支配总执行时间，因此必须使用样本高效的算法。贝叶斯优化虽为事实上的选择，但标准BO对代理模型超参数做点估计，在BO常见的低数据情形下不确定性估计不准确；完全贝叶斯方法通过模型平均改善不确定性估计，却因计算过于昂贵而很少被实际使用。作者希望在不显著增加决策延迟的前提下，使完全贝叶斯优化变得实用。",
+      "primary_topic": "贝叶斯优化中的完全贝叶斯超参数后验推断与评估延迟利用",
+      "relation_to_research": "该论文属于通用黑箱优化与贝叶斯优化方法，并未直接研究生产调度问题，也未涉及柔性作业车间、流水车间、分布式制造、生产运输协同、动态扰动、能效或多目标约束优化等具体场景。其完全贝叶斯超参数后验建模与评估延迟利用机制，与智能优化中“学习辅助搜索”和不确定性感知代理模型有概念上的邻近性：在生产调度中，若目标评估（如仿真调度）存在显著延迟，可推测将该思想迁移到调度仿真优化中，把代理模型超参数后验采样与仿真评估并行，但迁移需要满足目标评估可延迟返回、计算资源可并行、且调度问题中的约束可行性需额外处理等条件。该迁移仅为推测，不是作者结论。",
+      "relevance_score": 3,
+      "setting": "论文研究黑箱优化问题，目标函数评估代价高昂且存在评估延迟（objective latency）。决策对象是在有限样本下为贝叶斯优化（BO）规划器选择下一个试验点；代理模型为高斯过程或类似代理，其超参数在标准BO中通过点估计拟合，而完全贝叶斯方法对超参数做模型平均以更好地刻画不确定性。关键约束是决策时间预算有限，完全贝叶斯方法通常计算开销过大。信息假设为：目标函数可被评估但评估返回需要时间，且在该等待时间内可并行执行计算。环境类型在摘要中未明确说明，材料未说明是静态还是动态环境。",
+      "tags": [
+        "贝叶斯优化",
+        "完全贝叶斯",
+        "超参数后验",
+        "评估延迟",
+        "黑箱优化",
+        "样本效率"
+      ],
+      "title_zh": "他们入睡时工作：利用评估延迟实现完全贝叶斯优化",
+      "uncertainty": "仅有标题与摘要，无全文，无法确认具体基线、实验规模、统计显著性、并行计算假设以及重加权方案的理论保证。相关领域匹配度较低，主要依据摘要中黑箱优化与评估延迟利用的通用机制判断，未发现与生产调度或AI4OR的直接关联。",
+      "why_recommended": "对于关注学习辅助搜索与代理模型不确定性量化的研究者，该文提供了一个将昂贵推断隐藏于评估延迟中的机制，虽然不直接针对生产调度，但其思想在仿真优化、调度参数调优等存在评估延迟的场景中可能具有迁移价值。若研究者正探索在有限计算预算下结合贝叶斯优化与调度仿真，可作为方法参考。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-13T04:22:44.151508Z",
+      "input_hash": "d131bcd063c2002dd896a96d588be11b7b6f97e76bfe94fb13f88491c47b9ff5",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
     }
   },
   "6d200ef76eff81aa6cb2d0e673b4a28b042d1f4a4ff6cb3db70d76d51cd10641": {
@@ -38188,6 +38739,88 @@
       "reading_scope": "abstract"
     }
   },
+  "a02d8c3be5cffeff0fd08021935b41d0315e84ec8a37befd46f865312ab204ba": {
+    "analysis": {
+      "analysis": "作者将数据点分配到空间分段的问题建模为连通图划分问题，目标函数为最小化各分段内个体预测值的平方偏差之和，并形式化为混合整数二次规划；随后分析该MIQP的计算瓶颈，利用图划分的结构条件设计近似方案，即先对邻近数据点进行聚合形成聚合单元，再在聚合后的图上求解划分，从而降低问题规模，并给出近似性能保证。",
+      "challenges": [
+        "精确MIQP随数据点数量增加计算复杂度急剧上升",
+        "需要在近似过程中保持分段连通性",
+        "需要避免通过少量顶点连接地理上遥远的区域",
+        "近似方案需要提供性能保证"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文提出用图划分构建空间分段，目标是使各分段内个体预测的方差之和最小。",
+          "location": "abstract",
+          "quote": "we propose a graph partitioning problem to construct spatial segments that minimize the sum of within-segment variances of individual predictions"
+        },
+        {
+          "claim": "该划分问题可形式化为混合整数二次规划，但计算复杂度随数据点数量增加而变得不可接受。",
+          "location": "abstract",
+          "quote": "The assignment of data points to segments can be formulated as a mixed-integer quadratic programming problem. While this formulation potentially enables the identification of exact segments, its computational complexity becomes prohibitive as the number of data points increases."
+        },
+        {
+          "claim": "作者开发了利用图划分结构性质的近似方案，并带有性能保证。",
+          "location": "abstract",
+          "quote": "we develop an approximation scheme that leverages the structural properties of graph partitioning"
+        },
+        {
+          "claim": "近似方案通过预先聚合邻近数据点实现，并具有性能保证。",
+          "location": "supplied_full_text",
+          "quote": "This formulation is approximated, with a performance guarantee, by aggregating nearby data points in advance."
+        },
+        {
+          "claim": "实验结果表明近似方案在识别空间分段方面具有计算效率。",
+          "location": "abstract",
+          "quote": "Experimental results demonstrate the computational efficiency of this approximation in identifying spatial segments."
+        }
+      ],
+      "experiments": [
+        "实验结果表明该近似方案在识别空间分段方面具有计算效率",
+        "实验结果显示该方法能有效识别沿海等高预测值区域的分段",
+        "通过先验聚合施加约束可有效避免远距离区域通过少量顶点相连",
+        "具体基线、实例规模、运行时间、训练开销、消融和公平计算预算的数值在提供的材料中未说明"
+      ],
+      "first_affiliation": "The Graduate University for Advanced Studies",
+      "insight": "论文的核心洞察在于将空间分段问题转化为图划分问题，并用分段内个体预测方差之和作为划分质量度量，从而把黑箱预测的解释问题变为一个具有明确组合优化结构的MIQP问题。由于直接求解MIQP的计算复杂度随数据点数量增长而不可接受，作者进一步利用图划分问题的结构性质，通过预先聚合邻近数据点来近似该MIQP，并给出近似性能保证，从而在保持分段连通性和解释性的同时提升计算效率。",
+      "limitations": [
+        "对于某些应用，近似保证的间隙必须保持很小，这需要进一步研究假设5.12的满足条件以更有效地利用定理5.13"
+      ],
+      "method": [
+        "将空间数据点表示为图的顶点，顶点颜色表示黑箱模型对个体的预测值，边表示空间邻近关系",
+        "将连通图划分问题形式化为MIQP，目标为最小化各分段内预测值方差之和，约束包括分段连通性",
+        "针对MIQP规模过大问题，提出近似方案：预先聚合邻近数据点形成聚合单元，在聚合后的图上进行划分",
+        "近似方案利用图划分的结构性质，并提供近似性能保证",
+        "通过约束条件避免远距离区域通过少量顶点相连"
+      ],
+      "motivation": "尽管空间预测模型（如高斯过程回归及嵌入深度神经网络的协方差函数）表达能力强，但在保险等对可解释性有严格要求的行业中难以直接用于承保、定价和准备金等基于分段的运营实践。全局代理模型可以近似黑箱模型的整体行为，但现有决策树等代理模型在空间分段场景下的构建仍面临最优树构建NP难以及难以兼顾空间连通性与解释性的问题，因此需要一种新的可解释代理构建方式。",
+      "primary_topic": "空间预测中基于图划分的可解释代理模型",
+      "relation_to_research": "该论文核心是空间统计预测中的可解释代理模型，与智能优化、生产调度和AI4OR的直接关联较弱，但其图划分MIQP建模、近似算法及性能保证思路可迁移到生产调度中的分区、分组或资源分配问题，例如将柔性作业车间中的机器分组或分布式制造中的地理/逻辑分区建模为带连通性约束的图划分问题。这种迁移是推测，需要条件包括：目标函数可表示为分段内某种方差或代价之和、存在明确的连通性约束、以及可接受近似性能保证。",
+      "relevance_score": 4,
+      "setting": "研究问题是为黑箱空间预测模型构建可解释的全局代理模型，决策对象是将空间数据点划分为若干连通的空间分段，目标是最小化每个分段内个体预测值的方差之和，关键约束包括分段连通性以及通过预先聚合邻近点来避免远距离区域被少量顶点连接，信息假设为可以访问黑箱模型在所有已观测数据点上的预测值但无法直接解释其内部机制，环境被隐含为静态空间域，动态扰动未在材料中说明。",
+      "tags": [
+        "图划分",
+        "混合整数二次规划",
+        "代理模型",
+        "空间预测",
+        "可解释性",
+        "近似算法"
+      ],
+      "title_zh": "面向空间预测的代理图划分方法",
+      "uncertainty": "提供的材料仅为摘要和部分全文节选，缺少具体的实验设置、基线对比、数据规模、运行时间以及近似保证的具体形式，因此对方法的实际性能、与现有代理模型（如决策树、LIME、SHAP）的比较优势以及可迁移性的判断存在较大不确定性。此外，论文的统计学习背景与AI4OR的交叉程度有限。",
+      "why_recommended": "对关注约束优化建模、混合整数规划与近似算法结合的研究者，本文提供了一个将可解释性需求转化为图划分MIQP并设计近似方案的案例。虽然不直接面向生产调度，但其利用问题结构降低MIQP规模的思路、预聚合策略和近似性能保证分析，可启发调度问题中大规模组合优化的分解与近似求解，尤其是需要保持分区连通性或避免远距离连接的场景。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-13T04:22:20.827495Z",
+      "input_hash": "fada512b449c4b14362a79b7ab90ed3f2b66dfa79f57ecd4dab824a4bd004f60",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "a08ba024bc14e40be800bfebf3158fae56f95d88141db30ad9a0402821414b8d": {
     "analysis": {
       "analysis": "作者将问题形式化为双目标进化优化问题，同时优化期望折现利润及其标准差；在变化检测后，采用多样性驱动的变化响应机制，通过修复子集不可行解并引入额外可行解来适应动态变化。材料未说明具体的约束处理技术、概率评估方法或多样性度量细节。",
@@ -44337,6 +44970,79 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "full_text"
+    }
+  },
+  "b8bd52f7d4449f94dd739f1a7dfb393046e2c25d5b41c19ee3a9312ee5fe086b": {
+    "analysis": {
+      "analysis": "作者从种群级带约束负对数似然最小化出发，采用流匹配参数化速度场，并在正则性假设与速度场族充分表达能力的条件下，对相应原对偶优化算法推导约束满足概率的保证；随后给出实用实现 PDFM。材料未说明作者是否利用特定问题结构、分解或下界等更细粒度的分析手段。",
+      "challenges": [
+        "样本级约束满足概率需要理论保证，而不仅凭经验调节",
+        "约束集可能非凸、不可微且没有投影算子，只能获取二值成员性反馈",
+        "在提升约束满足率的同时保持分布保真度，避免生成分布退化",
+        "在流匹配的速度场参数化下设计可收敛的原对偶优化算法"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究在满足样本级约束且具有用户指定约束满足概率的条件下学习生成数据。",
+          "location": "abstract",
+          "quote": "We consider the problem of learning to generate data while satisfying a prescribed \\emph{sample-wise} constraint with a user-specified probability of constraint satisfaction."
+        },
+        {
+          "claim": "作者从种群级约束负对数似然最小化出发，使用流匹配参数化，并推导原对偶优化算法的约束满足概率保证。",
+          "location": "abstract",
+          "quote": "Starting with a population-level constrained negative log-likelihood minimization and using a flow-matching (FM) parameterization, under regularity assumptions and sufficient expressivity of the velocity field family, we derive guarantees on the probability of constraint satisfaction for the corresponding primal-dual optimization algorithm."
+        },
+        {
+          "claim": "PDFM 只需二值成员性 oracle 反馈，避免了对可微距离、投影或约束集凸性等结构的要求。",
+          "location": "abstract",
+          "quote": "which has direct control over constraint satisfaction rate and requires only binary membership oracle feedback for constraint satisfaction, avoiding the need for differentiable distances, projections, or special structure of the constraint set, such as convexity."
+        },
+        {
+          "claim": "实验上 PDFM 相比普通流匹配提升了约束满足，并在保持分布保真度的同时与约束感知基线具有竞争性能。",
+          "location": "abstract",
+          "quote": "We show that PDFM improves constraint satisfaction over vanilla FM and achieves competitive performance against constraint-aware baselines while maintaining distributional fidelity."
+        }
+      ],
+      "experiments": [
+        "摘要称 PDFM 相较 vanilla FM 提升了约束满足，并在保持分布保真度的同时与约束感知基线相比具有竞争性能；具体数据集、基线名称、实例规模、约束满足率数值、分布保真度指标、运行时间与训练开销均未提供。"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "作者将约束满足率要求嵌入种群级约束负对数似然的最小化中，并用流匹配参数化速度场，从而把“生成分布拟合”和“样本级约束满足”统一到一个原对偶优化框架；由于约束反馈只需二值成员性 oracle，算法无需可微距离或投影，因而能覆盖非凸、结构未知的约束集，其有效性来自原对偶更新对约束满足率的显式概率控制以及流匹配对连续概率路径的可学习参数化。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "以种群级约束负对数似然最小化为起点，引入流匹配参数化速度场",
+        "在正则性假设与速度场族充分表达能力下，推导原对偶优化算法的约束满足概率保证",
+        "提出 Primal-Dual Flow Matching（PDFM）实用实现，直接控制约束满足率",
+        "约束反馈仅使用二值成员性 oracle，避免可微距离、投影或约束集凸性等特殊结构要求"
+      ],
+      "motivation": "真实生成任务中常需要输出满足硬性样本级约束的样本，而传统流匹配只拟合数据分布、无法直接控制单个样本是否满足约束；同时很多约束难以提供可微距离或投影，只能给出是否满足的二值反馈，因此需要一种仅依赖成员性查询、能直接控制约束满足率的生成方法。",
+      "primary_topic": "带样本级约束的生成建模与流匹配",
+      "relation_to_research": "该论文属于生成建模与约束优化交叉方向，核心是利用流匹配对连续概率路径建模，并通过原对偶算法在仅二值成员性反馈下控制样本级约束满足概率。与智能优化、生产调度、神经网络辅助求解、强化学习或智能体优化没有直接关系；若迁移到生产调度，推测需要将调度约束编码为可判定成员性的约束集，并把调度解生成视为条件采样问题，同时验证约束满足率与调度可行性、解质量之间的权衡，但论文本身未涉及这些内容。",
+      "relevance_score": 3,
+      "setting": "研究问题是在生成模型采样时满足用户指定的样本级约束，并以用户给定的概率保证约束满足；决策对象是流匹配模型中的速度场参数以及原对偶算法中的对偶变量；目标是在约束满足概率约束下最小化种群级带约束负对数似然，同时保持分布保真度；关键约束是约束仅通过二值成员性 oracle 反馈获得，不要求约束集可微、可投影或具有凸性等特殊结构；信息假设是速度场族具有足够表达能力且满足正则性假设；静态或动态环境未说明。",
+      "tags": [
+        "流匹配",
+        "原对偶优化",
+        "约束生成",
+        "样本级约束",
+        "成员性查询",
+        "生成模型"
+      ],
+      "title_zh": "面向样本级约束生成的原对偶流匹配",
+      "uncertainty": "仅依据标题与摘要，未获取全文，因此无法确认理论假设的具体形式、实验设置、基线选择、约束满足率与分布保真度的具体数值、训练开销以及作者明确陈述的局限；第一单位与通讯作者信息在输入材料中未提供。",
+      "why_recommended": "当前研究者关注约束可行性、学习辅助搜索与优化求解的结合，该论文提供了一种在仅二值约束反馈下控制样本级约束满足概率的原对偶学习框架，可能对需要生成可行解的约束优化问题有方法迁移价值；但其应用场景为生成建模，且未涉及调度或组合优化，因此仅建议作为方法借鉴阅读，相关性有限。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-13T04:22:35.727169Z",
+      "input_hash": "6eec2d2311ecaa2282a1c39eadef5fd7b303f3f169d3bb4e00bd7acf78f48db2",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
     }
   },
   "b9032f202cce487bbbed2825b1b0ad1f714e545cb7f7858a0d74560c9900ea0a": {
@@ -56693,6 +57399,80 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "full_text"
+    }
+  },
+  "eff4c226db3452e7c4ab827aee0fc8241c002559f19a81d96ee1baa16ac13e13": {
+    "analysis": {
+      "analysis": "材料未说明作者如何利用问题结构、分解、下界或图表示来设计求解方法，仅说明将相对权重替换为显式优先级层级，并约束低优先级更新以保持高优先级目标。",
+      "challenges": [
+        "多角色与物体交互引入额外接触和空间关系，需在重定向中保留",
+        "加权多目标优化中冲突目标需要精心调参且仍可能损害重要运动特征",
+        "在优先级层级下保证低优先级更新不破坏高优先级目标"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文将运动重定向建模为加权多目标优化问题，并指出冲突目标需要调参且可能损害重要运动特征",
+          "location": "abstract",
+          "quote": "Retargeting is commonly formulated as a weighted multi-objective optimization problem, where conflicting objectives can require careful tuning of relative weights and can still compromise important motion characteristics."
+        },
+        {
+          "claim": "论文用显式优先级层级替代相对目标加权，并约束低优先级更新以保持高优先级目标",
+          "location": "abstract",
+          "quote": "We introduce PriMoRetarget, a prioritized motion-retargeting framework that replaces relative objective weighting with an explicit priority hierarchy. Lower-priority updates are constrained to preserve higher-priority objectives"
+        },
+        {
+          "claim": "论文在四个数据集上评估，覆盖单角色、角色-物体操作和角色-角色交互",
+          "location": "abstract",
+          "quote": "The method is evaluated on four datasets spanning single-character motion, character-object manipulation, and character-character interactions."
+        },
+        {
+          "claim": "结果运动更好地保留任务相关交互，且参考轨迹比常用方法更可靠地被跟踪",
+          "location": "abstract",
+          "quote": "The resulting motions better preserve task-relevant interactions and provide reference trajectories that can be tracked more reliably than those produced by widely used retargeting methods."
+        }
+      ],
+      "experiments": [
+        "在四个数据集上评估，覆盖单角色运动、角色-物体操作和角色-角色交互",
+        "结果运动更好地保留了任务相关交互",
+        "结果提供的参考轨迹比广泛使用的重定向方法更可靠地被跟踪",
+        "材料未提供具体基线名称、实例规模、数值指标、运行时间或消融实验细节"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "作者用显式的优先级层级替代相对权重加权，使关键特征（脚部落点、交互接触）在优化中天然获得优先保障；低优先级更新被约束在保持高优先级目标的可行范围内，从而避免权重调参带来的权衡失控，因此能更好地保留任务相关交互。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "将运动重定向建模为多目标优化问题",
+        "用显式优先级层级替代相对目标加权",
+        "对低优先级更新施加约束，要求其保持高优先级目标",
+        "在优先级体系中让脚部落点和交互接触优先于较低优先级的姿态目标"
+      ],
+      "motivation": "现有重定向方法对单角色运动有效，但当涉及多角色与物体交互时，会产生额外的接触和空间关系，必须被保留。常见做法是将重定向建模为加权多目标优化，但冲突目标需要仔细调节相对权重，且仍可能损害重要的运动特征。",
+      "primary_topic": "人形机器人运动重定向中的多目标优先级优化",
+      "relation_to_research": "该论文直接研究机器人运动重定向中的多目标优化优先级机制，与智能优化和生产调度中的约束优先级、多目标权衡有概念层面的相似性，但并未涉及生产调度、作业车间、流水车间、分布式制造或强化学习求解。方法结论（用优先级层级替代加权来保证关键约束不被破坏）推测可迁移到生产调度中的分层目标或硬约束保持问题，但需满足条件：目标之间存在明确的优先级语义、低优先级调整必须不破坏高优先级约束，且决策变量与约束可类似地分解为优先级更新；这属于迁移设想，并非作者结论。",
+      "relevance_score": 4,
+      "setting": "研究问题为将人类运动数据迁移到人形机器人上。决策对象是重定向后的机器人运动轨迹；目标是在多角色与物体交互场景中保留关键运动特征（如脚部落点与交互接触），同时兼顾较低优先级的姿态目标。关键约束是低优先级目标的更新不得破坏高优先级目标；信息假设与静态或动态环境材料未说明。",
+      "tags": [
+        "运动重定向",
+        "多目标优化",
+        "优先级约束",
+        "人形机器人",
+        "动作迁移"
+      ],
+      "title_zh": "PriMoRetarget：通过优先级运动重定向实现人形机器人动作迁移",
+      "uncertainty": "仅有标题和摘要，未提供全文、具体算法细节、实验数值、基线对比和消融结果；作者单位、通讯作者和局限均无法确认。相关性评分基于与生产调度和 AI4OR 的距离判断，存在一定主观性。",
+      "why_recommended": "尽管与生产调度和 AI4OR 的核心主题不直接相关，但该论文提出的优先级多目标处理方式对关注约束可行性、分层目标优化和关键特征保持的研究者有借鉴意义，可作为一种替代加权和法的机制参考。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-13T04:22:42.521688Z",
+      "input_hash": "c085f5a068d332c3f13025949fe7976f92111f95fd75331a697428ab934b1ec1",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
     }
   },
   "f06bf730ee42e34a117ce10d1ae086120caccf691a695777301f43ef128fc956": {
