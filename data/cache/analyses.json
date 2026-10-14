@@ -1004,6 +1004,93 @@
       "reading_scope": "abstract"
     }
   },
+  "08939732832daf2d9330bff1bcd6834143a9111cb9ac534cf61ea2629318710d": {
+    "analysis": {
+      "analysis": "材料未说明作者如何在理论上分析问题结构、分解或下界；摘要仅表明其将压缩拆分为两个环节：用生成感知梯度构造白化变换，以及在全局压缩率约束下用进化方法搜索逐层秩分配。",
+      "challenges": [
+        "在一次性低秩压缩中同时保持多选题与生成任务性能",
+        "启发式秩分配难以在全局压缩率下取得良好层间权衡",
+        "白化变换如何与生成行为对齐而非仅拟合静态权重",
+        "方法需扩展到数十亿至 700 亿参数规模的模型"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "现有基于 SVD 的方法主要面向多选题基准，在生成任务上往往难以保持性能。",
+          "location": "abstract",
+          "quote": "However, existing SVD-based methods primarily target multiple-choice benchmarks and often fail to preserve performance on generation tasks."
+        },
+        {
+          "claim": "作者提出 GA-SVD，一种面向大语言模型的生成感知低秩压缩框架。",
+          "location": "abstract",
+          "quote": "We propose GA-SVD, a generation-aware low-rank compression framework for LLMs."
+        },
+        {
+          "claim": "GAWW 利用在线策略知识蒸馏的梯度来构造与生成行为对齐的白化变换。",
+          "location": "abstract",
+          "quote": "First, we introduce Generation-Aware Weight Whitening (GAWW), which leverages gradients from on-policy knowledge distillation to construct whitening transformations aligned with generative behavior."
+        },
+        {
+          "claim": "作者提出进化式全局秩分配方法，在给定全局压缩率下搜索有效的逐层秩分配。",
+          "location": "abstract",
+          "quote": "Second, we develop an evolutionary global rank allocation method that searches for effective layer-wise rank allocation under a given global compression ratio."
+        },
+        {
+          "claim": "在 Mistral-7B、Qwen3 系列与 Llama-3.3 模型上，GA-SVD 持续优于现有 SVD 基线并取得 SoTA。",
+          "location": "abstract",
+          "quote": "Across extensive experiments on Mistral-7B, Qwen3 series, and Llama-3.3 models, evaluated on both multiple-choice and generative benchmarks, GA-SVD consistently outperforms existing SVD-based baselines and achieves state-of-the-art (SoTA) results."
+        },
+        {
+          "claim": "作者将方法扩展到最高 700 亿参数的模型以展示可扩展性。",
+          "location": "abstract",
+          "quote": "We further demonstrate scalability by applying our method to models with up to 70B parameters."
+        }
+      ],
+      "experiments": [
+        "在 Mistral-7B、Qwen3 系列与 Llama-3.3 模型上进行大量实验，评测包含多选题与生成类基准。",
+        "GA-SVD 持续优于现有基于 SVD 的基线，并取得 state-of-the-art 结果。",
+        "将方法扩展到参数量最高达 700 亿的模型以展示可扩展性。",
+        "摘要未提供具体数值、基线名称、实例规模、运行时间、训练开销、公平计算预算、泛化与消融等细节。"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "该工作有效的核心在于把压缩目标的“对齐信号”从静态权重或通用校准数据，改为来自在线策略知识蒸馏的梯度，使白化变换与模型真实生成行为一致；同时把逐层秩分配从启发式规则提升为在全局压缩率约束下的进化搜索问题，从而在相同压缩预算下更合理地分配各层容量，兼顾多选题与生成任务表现。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "提出 GA-SVD 生成感知低秩压缩框架，用于大语言模型的一次性低秩压缩。",
+        "Generation-Aware Weight Whitening（GAWW）：利用在线策略知识蒸馏产生的梯度构造白化变换，使白化与生成行为对齐。",
+        "进化式全局秩分配方法：在给定全局压缩率下搜索有效的逐层秩分配方案。",
+        "将上述两部分结合，在压缩后模型上开展多选题与生成任务评测。"
+      ],
+      "motivation": "现有基于 SVD 的一次性低秩压缩方法主要面向多选题类基准评测，在生成任务上往往难以保持性能，同时它们的秩分配策略通常是启发式的，缺乏针对生成行为的全局优化，因此作者希望提出一种生成任务感知的压缩框架来同时改进白化变换与秩分配。",
+      "primary_topic": "大语言模型低秩压缩与奇异值分解",
+      "relation_to_research": "该论文研究的是大语言模型压缩中的低秩分解与进化式秩分配，属于通用神经网络压缩与进化搜索方向，与智能优化、生产调度、生产运输协同、动态扰动、能效多目标约束优化等当前研究主题没有直接问题或方法上的对应关系；其进化式全局秩分配思路在形式上属于组合优化搜索，但面向的是层间秩配置，迁移到生产调度需要重新定义决策变量、约束与目标函数，并可推测需要结合调度问题的结构编码与可行性修复机制，这一迁移为推测而非作者结论。",
+      "relevance_score": 2,
+      "setting": "研究问题是大语言模型因参数量庞大带来显存与计算成本过高、难以在资源受限场景部署，决策对象为各层权重矩阵的低秩分解与逐层秩分配方案，目标是在给定全局压缩率下尽量保持模型在生成任务上的性能，关键约束是整体压缩率固定且需保证分解后模型的可用性；信息假设方面，方法利用在线策略知识蒸馏的梯度信号来构造白化变换，属于一次性（one-shot）压缩设定，环境为静态（无需在线交互或动态扰动），材料未说明推理阶段的具体部署约束与硬件假设。",
+      "tags": [
+        "LLM压缩",
+        "低秩近似",
+        "SVD",
+        "进化算法",
+        "秩分配",
+        "知识蒸馏",
+        "生成任务"
+      ],
+      "title_zh": "GA-SVD：面向生成任务感知的大语言模型低秩压缩奇异值分解方法",
+      "uncertainty": "仅有标题与摘要，缺少全文，无法核实具体实验设置、基线、压缩率、评测指标、计算开销、消融与作者自述局限；第一单位与通讯作者信息也未提供，因此单位、作者相关性与方法细节的判断存在较大不确定性。",
+      "why_recommended": "若研究者关注进化算法与神经网络压缩中资源分配型组合优化的结合方式，或想了解如何用梯度信号指导一次性压缩中的结构决策，该文提供了一个具体案例；但就智能优化、生产调度与 AI4OR 而言，其主题相关性弱，不构成优先阅读项。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:33:43.554434Z",
+      "input_hash": "4eb096ff2bcd226e0fc9d7b72f01f174951de60d890e4ca23a492eb2b751d99c",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
   "08b3ef06d3fc1fb404c2378b81a6b3e8e007b68dff0c71f3df1b896f2e2fedd0": {
     "analysis": {
       "analysis": "作者借鉴优化理论，设计了层次化反思系统，将优化术语映射到语言层面，形成引导搜索的信号；利用树结构组织研究过程，显式管理分支和回溯，并通过协调生成想法来增加多样性。",
@@ -6946,6 +7033,90 @@
       "reading_scope": "abstract"
     }
   },
+  "1dff5b8907d57c2eda2a0f3bad1e286e8aec8c014770279f5203b9dda6817c68": {
+    "analysis": {
+      "analysis": "作者的分析思路是按决策层的性质进行分层解耦：识别出机组组合问题中的离散决策层，将其编码为 move-based MWIS 问题以匹配硬件可编程结构，同时把连续调度与可行性恢复归入经典计算层，从而在保留可行性的前提下利用硬件求解离散内核。摘要指出通过比较硬件解经经典精修后与精确 MWIS 得到的调度裕度来评估编码与硬件质量，并在扩展节点数时分析编码质量与阵列存活概率对规模化的影响；更细致的理论分析材料未说明。",
+      "challenges": [
+        "如何将真实运行模型映射为硬件兼容的实例表示",
+        "如何把含噪声的硬件输出转换回可行决策",
+        "连续调度与可行性恢复无法直接在量子硬件上表达",
+        "扩大问题规模时全原子阵列存活概率成为瓶颈"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文将随机机组组合的离散决策层编译为基于移动的最大权独立集问题，连续调度与可行性恢复保留在经典层",
+          "location": "abstract",
+          "quote": "we introduce a backend-agnostic computational interface that compiles the discrete decision layer of stochastic unit commitment into a move-based maximum-weight independent set (MWIS) problem, while retaining continuous dispatch and feasibility recovery in the classical computational layer"
+        },
+        {
+          "claim": "论文在中性原子量子处理器 QuEra Aquila 上进行了绿色氢能调度场景的验证",
+          "location": "abstract",
+          "quote": "We validate the approach in a green hydrogen scheduling setting and deploy it on the QuEra Aquila neutral-atom quantum processor"
+        },
+        {
+          "claim": "50 节点 15 天硬件实验中，经典精修后的硬件解在每一天的调度裕度均达到或超过精确 MWIS",
+          "location": "abstract",
+          "quote": "Across a 15-day hardware campaign on 50-node instances, hardware-generated solutions after classical refinement match or exceed the dispatch margins obtained from exact MWIS on every day"
+        },
+        {
+          "claim": "扩展到 144 节点时编码质量稳定，而全原子阵列存活概率成为主要规模化瓶颈",
+          "location": "abstract",
+          "quote": "When scaling to 144 nodes, encoding quality remains stable, while the probability that the full atom array survives, rather than graph embedding, emerges as the dominant bottleneck to further scaling"
+        },
+        {
+          "claim": "作者将量子硬件实际应用的两大障碍表述为模型到硬件的映射与噪声输出到可行决策的转换",
+          "location": "abstract",
+          "quote": "two steps still block practical use: mapping real operational models onto hardware-compatible instances, and converting noisy hardware output back into feasible decisions"
+        }
+      ],
+      "experiments": [
+        "在绿色氢能调度设定下验证方法，并部署于 QuEra Aquila 中性原子量子处理器",
+        "开展为期 15 天的硬件实验活动，实例规模为 50 节点；硬件生成的解经经典精修后，每一天的调度裕度均达到或超过精确 MWIS 得到的调度裕度",
+        "扩展到 144 节点时编码质量保持稳定，但整个原子阵列的存活概率而非图嵌入成为进一步规模化的主要瓶颈",
+        "摘要未给出基线集合的完整列表、运行时间、训练开销、公平计算预算对比、消融实验与泛化性结果，材料未说明"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "其贡献有效的关键在于把问题按计算特性解耦：将难以在硬件上直接表达的连续调度与可行性判断留在经典层，而把本质离散的启停决策层编译为求解器无关的 MWIS 表示，使同一离散内核可以对接不同后端硬件；同时经典精修（classical refinement）承担了把噪声硬件解恢复为可行决策的角色，从而让硬件输出能够与经典精确 MWIS 的调度裕度相竞争。",
+      "limitations": [
+        "扩展到更大规模时，全原子阵列存活概率成为主要瓶颈",
+        "作者指出该工作是为探索经典精确优化可能不再高效扩展的区间奠定基础，暗示当前规模仍可由经典方法处理"
+      ],
+      "method": [
+        "构建后端无关（backend-agnostic）的计算接口，将随机机组组合的离散决策层编译为基于移动的最大权独立集（MWIS）问题",
+        "连续调度与可行性恢复保留在经典计算层，硬件只负责离散决策内核",
+        "采用求解器无关的 MWIS 表示，使同一表示可对接不同后端",
+        "在中性原子量子处理器 QuEra Aquila 上部署该工作流，并在绿色氢能调度场景中进行验证",
+        "对硬件输出施加经典精修（classical refinement），恢复为可行决策后再评估调度裕度"
+      ],
+      "motivation": "量子硬件已开始处理结构化组合优化问题，但实际应用仍受两个环节制约：一是如何把真实运行模型映射为硬件兼容的实例，二是如何把含噪声的硬件输出转换回可行的决策。作者希望打通从真实工业调度决策到可编程中性原子硬件的端到端流程。",
+      "primary_topic": "将随机机组组合的离散决策层编译为最大权独立集问题并映射到中性原子量子硬件求解",
+      "relation_to_research": "该论文的核心是随机机组组合的离散决策建模与硬件求解，属于电力系统调度而非柔性作业车间或流水车间调度，与当前研究画像的生产调度主题存在明显领域距离。其可迁移之处在于问题分解机制：把调度问题中的离散决策层剥离为图/独立集形式的组合内核，连续与可行性部分交由经典求解器处理，并保留可行性恢复与经典精修环节——这一模式对生产调度中的机台分配、序列决策等离散层与连续时间/资源约束的分层求解有借鉴价值（推测）。若要迁移到生产调度，需要具备可表示为 MWIS 或类似图结构的离散决策层、明确的可行性恢复流程，以及可用的量子或专用硬件后端（推测）。本文不涉及神经网络、图神经网络、强化学习或大模型智能体，因此对学习辅助搜索与智能体优化方向的直接贡献有限。",
+      "relevance_score": 6,
+      "setting": "论文研究随机机组组合（stochastic unit commitment）这一电力系统调度优化问题，决策对象包括机组启停等离散决策以及连续出力调度，目标是在不确定性下获得可行且具有调度裕度的运行方案，关键约束通过将离散决策层转化为基于移动（move-based）的最大权独立集（MWIS）问题来编码，连续调度与可行性恢复保留在经典计算层完成。信息假设为随机场景下的机组组合模型，环境为静态优化问题而非在线动态扰动场景；硬件为 QuEra Aquila 中性原子量子处理器，具体场景为绿色氢能调度（green hydrogen scheduling）。其他约束细节与问题规模假设材料未说明。",
+      "tags": [
+        "随机机组组合",
+        "最大权独立集",
+        "量子计算",
+        "中性原子硬件",
+        "组合优化",
+        "可行性恢复",
+        "工业调度"
+      ],
+      "title_zh": "面向随机机组组合的后端无关最大权独立集内核及中性原子硬件验证",
+      "uncertainty": "仅有标题与摘要，无法核实方法细节（如 MWIS 编码的具体构造、经典精修机制、基线与测试集设置）、实验的公平计算预算与统计学显著性，作者机构与通讯作者信息也未提供；相关性评分基于领域距离判断，若全文显示其分解与可行性恢复机制可更直接地迁移到生产调度，评分可能上调。",
+      "why_recommended": "尽管领域不完全重合，本文提供了一个清晰的“离散决策层与连续可行性层解耦、以求解器无关图表示对接专用硬件”的架构范例，并明确报告了可行性恢复与经典精修在评估中的位置。对关注约束可行性、求解质量与规模化瓶颈（如硬件/资源存活率）的调度研究者而言，其在分层建模、规模化瓶颈分析和硬件-经典协同流程上的做法具有方法论参考价值。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:33:29.190089Z",
+      "input_hash": "8ba4fe818ae0585c2fb5862ce21e2b6ca854939133dfcf38a40936c5fba7dfec",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
   "1e03653246bb19cc52b5f1e1393d4357b01dc86456e7995f741e58a8a8a92b7a": {
     "analysis": {
       "analysis": "作者以分布感知编程的形式化框架分析问题，将样本访问视为在分布无关算法设计与分布知情算法设计之间的插值，并给出离线专用化成本被部署期更低成本回收的条件分析；方法层面通过 LLM 智能体提出结构假设、分析训练实例并合成专用求解代码来实例化该框架，材料未说明更细的问题结构分解、下界或图表示利用方式。",
@@ -7196,6 +7367,84 @@
     "provenance": {
       "analyzed_at": "2026-09-16T02:13:35.945381Z",
       "input_hash": "1ba4d22f9bfd8c7a1d8383a931eec7116ff65c99ac657a7cb29a6300e5f7ff26",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
+  "1f6bd7af050cc1196c6a6e11f4b7dc462f7a748b39cfb2b401ef8b205f5b9fb0": {
+    "analysis": {
+      "analysis": "作者通过将任务空间速度增广为状态变量，利用雅可比运动学关系分析可行性保持问题，并将可行性包络的保守内近似嵌入嵌套二次规划中，从而把可行性保障转化为可在线求解的优化问题；具体分解与下界推导材料未说明。",
+      "challenges": [
+        "预测安全滤波器与参考调速器方法计算开销大",
+        "一步短视滤波易导致可行性丧失",
+        "可行性核的精确近似计算代价高",
+        "在保持安全性的同时在线计算可行规划",
+        "向更高自由度机械臂的可扩展性验证不足"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "该论文提出一种基于雅可比的运动学安全滤波器，使用增广状态并过滤任务空间加速度。",
+          "location": "abstract",
+          "quote": "This work introduces a Jacobian-based kinematic safety filter leveraging an augmented state variable with task-space velocity and filters task-space acceleration to preserve the feasibility of a low-level filter while enforcing joint position and velocity."
+        },
+        {
+          "claim": "方法引入嵌套二次规划并定义可行性包络的保守内近似以在线计算可行规划。",
+          "location": "abstract",
+          "quote": "The proposed method introduces a nested Quadratic Program (QP) formulation, defines a conservative inner approximation of viability envelope and computes a viable planner online."
+        },
+        {
+          "claim": "在简化 2R 平面机械臂仿真中与 CBF-QP 基线相比有显著改进，并在 6 自由度机械臂上做简化演示。",
+          "location": "abstract",
+          "quote": "The method is validated in a simplified 2R planar manipulator simulation environment and shows significant improvement compared to a baseline Control Barrier Function Quadratic Program (CBF-QP) based filter."
+        },
+        {
+          "claim": "与预测安全滤波器和参考调速器相比计算时间改进且可行性违规显著减少。",
+          "location": "abstract",
+          "quote": "The experiments highlights the improvements in terms of computation time compared to traditional PSF and Reference Governor approach while also showing significant reduction in feasibility violations."
+        }
+      ],
+      "experiments": [
+        "在简化 2R 平面机械臂仿真环境中验证，与 CBF-QP 基线滤波器相比显示显著改进。",
+        "与预测安全滤波器（PSF）和参考调速器（Reference Governor）方法相比，计算时间有所改进，可行性违规显著减少。",
+        "在模拟 6 自由度机械臂上的简化演示表明方法对更高自由度设置具有潜在可扩展性。",
+        "未提供具体数值、实例规模、训练开销、消融实验或公平计算预算的细节。"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "将任务空间速度作为增广状态并直接对任务空间加速度进行滤波，可以在不显式求解完整可行性核的前提下，构造一个保守的可行性包络内近似，从而在嵌套二次规划中在线生成可行规划，兼顾底层滤波器的可行性与关节位置/速度约束的满足；其有效性来自利用雅可比运动学结构将高维约束转化为可在线求解的低维保守近似，而非单纯增加约束项。",
+      "limitations": [
+        "仅在简化的 2R 平面机械臂仿真中验证，6 自由度仅为简化演示，未在真实系统或复杂场景中验证；其他局限材料未说明。"
+      ],
+      "method": [
+        "引入雅可比状态增广变量，将任务空间速度纳入状态表示。",
+        "对任务空间加速度进行滤波以保持底层滤波器可行性。",
+        "定义可行性包络的保守内近似。",
+        "构造嵌套二次规划（QP）在线计算可行规划。",
+        "在仿真中与基于控制屏障函数的二次规划（CBF-QP）基线滤波器对比。",
+        "在简化 2R 平面机械臂仿真环境验证，并在 6 自由度机械臂上做简化演示以展示可扩展性潜力。"
+      ],
+      "motivation": "现有安全滤波器（SF）在可行时能保证安全集前向不变，但预测安全滤波器（PSF）计算代价高，而基于可行性的方法近似可行性核需要大量计算；同时短视的一步滤波容易导致可行性丧失，因此需要一种在保持安全约束的同时降低计算开销并减少可行性违规的方法。",
+      "primary_topic": "机器人运动学安全滤波与嵌套二次规划",
+      "relation_to_research": "该论文属于机器人运动学安全控制领域，与生产调度、柔性作业车间、流水车间、分布式制造、能效多目标优化等核心主题无直接关联。其嵌套二次规划与可行性保持机制对学习辅助搜索或数学规划结合的约束优化问题可能具有方法迁移价值，但迁移到生产调度需要将状态增广、可行性包络内近似和在线二次规划映射到调度决策变量与约束可行性维护上，属于推测，且需克服离散决策与动态事件等差异。",
+      "relevance_score": 3,
+      "setting": "研究问题是为机械臂设计可证明安全且可行的运动学控制器；决策对象是任务空间加速度（经滤波后映射到关节控制），目标是在满足关节位置与速度约束的前提下保持底层滤波器的可行性并减少可行性丧失，关键约束包括关节位置与速度约束以及可行域内近似，信息假设为已知闭环模型与雅可比运动学，环境为仿真中的静态运动学场景，动态扰动未说明。",
+      "tags": [
+        "安全滤波器",
+        "控制屏障函数",
+        "二次规划",
+        "可行性保持",
+        "运动学约束"
+      ],
+      "title_zh": "基于雅可比状态增强的可行运动学安全滤波器",
+      "uncertainty": "仅依据标题与摘要判断，未提供全文，方法细节、实验数值、基线设置、约束定义与可扩展性验证的具体条件均不明确，因此相关性评分较低且迁移设想具有较高不确定性。",
+      "why_recommended": "该论文不直接研究生产调度或智能优化，但其利用问题结构构造保守可行域并在线求解嵌套二次规划的思路，对学习辅助搜索中如何维护约束可行性、降低在线计算开销具有一定跨领域参考价值；若研究者关注约束可行性维护与在线优化结合，可从中获取方法启发。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:33:12.885572Z",
+      "input_hash": "4bb4eed29fb0f09fa405549777e0a88ed54d54aebfa75d88ce3378d387144b54",
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
@@ -8756,6 +9005,99 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
+    }
+  },
+  "261491876abadf98a4d13afb451b36b78b0a03b482da2f7f8c10324ba8eebd84": {
+    "analysis": {
+      "analysis": "作者将自动运筹学流程分解为语义对齐、数学建模与代码生成等阶段，把语义不确定性定义为影响问题规范的前置风险；通过构建带用户画像、模糊语义线索和受控规范错误的三层分类基准，并用多轮对话扩展来考察澄清对对齐和下游解准确率的影响，从而分析对齐质量与后续求解结果之间的关联。",
+      "challenges": [
+        "识别模糊描述中的语义错误与遗漏，而非仅做语言润色",
+        "判断现有上下文是否足以唯一支持所需修正",
+        "在信息不足时决定是否以及如何向用户提问",
+        "在澄清收益与用户交互负担之间权衡",
+        "将语义对齐质量与下游数学模型和求解准确率关联评估"
+      ],
+      "corresponding_authors": [
+        "Caihua Chen"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究自动运筹学中的语义不确定性对齐问题",
+          "location": "abstract",
+          "quote": "We study semantic alignment to identify and correct errors or omissions in these descriptions before mathematical modeling."
+        },
+        {
+          "claim": "AMAO 是两阶段对齐的多智能体框架，集成 OR 引导的 MoE 微调和基于轨迹的 harness 演化",
+          "location": "abstract",
+          "quote": "Its two-stage alignment process first uses semantic cues and contextual information to identify and correct potential semantic errors, then obtains additional information via human--AI interaction for further revision when the available context is insufficient. Specifically, AMAO integrates OR-guided mixture-of-experts (MoE) tuning and trajectory-based harness evolution to enhance semantic alignment capabilities."
+        },
+        {
+          "claim": "论文提出了歧义感知基准及其多轮对话扩展",
+          "location": "abstract",
+          "quote": "In addition, an ambiguity-aware benchmark and its matched multi-turn dialogue extension are proposed."
+        },
+        {
+          "claim": "第一阶段对齐在 32B 骨干下达到 86.8% SR 和 60.4% 解 AC",
+          "location": "supplied_full_text",
+          "quote": "First-stage alignment achieved 86.8% SR and 60.4% solution AC with a 32B backbone."
+        },
+        {
+          "claim": "交互修复在 gold routing 与 verifier 派生问题槽位下达到 90.71% 描述级 Repair AC",
+          "location": "supplied_full_text",
+          "quote": "Interactive repair achieved 90.71% description-level Repair AC under gold routing with verifier-derived issue slots."
+        },
+        {
+          "claim": "作者指出评估使用了 unchanged-outcome 假设，并建议未来研究误报澄清的下游影响和交互负担",
+          "location": "supplied_full_text",
+          "quote": "Such studies can also examine the downstream effects and interaction burden of false-positive clarification, extending the unchanged-outcome assumption used in the present evaluation."
+        }
+      ],
+      "experiments": [
+        "提出歧义感知对齐基准及其匹配的多轮对话扩展基准",
+        "主结果在 NL4Opt-view、NLP4LP-view、MAMO-C-view 等视图上报告 SR 与 AC，结果为 3 次运行平均并给出标准差",
+        "Claude-sonnet-4.5 达到 71.6% 总体 SR 和 45.1% AC；DeepSeek-V4-Flash 的 AC 与之相当，SR 为 67.5%",
+        "第一阶段对齐在 32B 骨干下达到 86.8% SR 和 60.4% 解 AC；8B 模型在总体 AC 上超过最佳评估的 API 变体",
+        "交互修复在 gold routing 与 verifier 派生问题槽位下达到 90.71% 的描述级 Repair AC",
+        "记录分支分析表明澄清可带来下游收益"
+      ],
+      "first_affiliation": "南京大学工程管理学院",
+      "insight": "语义对齐之所以有效，是因为它把“问题理解”从建模求解中显式分离并作为独立决策阶段处理：先利用语义线索与上下文修复描述，再在信息不足时通过有针对性的提问获取缺失信息，从而避免在错误的问题定义上优化。OR 引导的专家结构和基于轨迹的 harness 演化则让对齐能力随任务反馈持续改进。",
+      "limitations": [
+        "评估使用了 unchanged-outcome 假设，可能未充分反映误报澄清的下游影响和交互负担",
+        "研究将设置扩展到与运营用户对话时，记录访问、响应延迟和利益相关者视角会变化，需进一步研究；作者在结论中提及这些扩展方向"
+      ],
+      "method": [
+        "AMAO 是一个面向语义不确定性的歧义感知多智能体框架",
+        "两阶段对齐：第一阶段用语义线索和上下文识别并修正潜在语义错误，第二阶段在上下文不足时通过人机交互获取补充信息进一步修正",
+        "集成 OR 引导的混合专家（MoE）微调，按句子级组件标签等 OR 监督信号组织专家",
+        "采用基于轨迹的 harness 演化增强语义对齐能力",
+        "设置 source-sufficiency verifier 判断描述是否唯一支持所需修正，未解决案例升级由人工处理",
+        "对齐完成后才进行数学建模与编码"
+      ],
+      "motivation": "已有 LLM4OR 工作主要面向结构良好、自包含的问题描述翻译为数学模型，但在真实运营请求中，用户描述可能不准确，模型数学上有效且求解正确却偏离用户真实意图，例如漏报加班产能导致错误外包建议。因此需要在数学建模之前进行语义对齐，识别并修正描述中的错误或遗漏。",
+      "primary_topic": "自动运筹学中自然语言问题描述与数学模型构建之间的语义对齐",
+      "relation_to_research": "该论文不直接求解柔性作业车间、流水车间或分布式生产调度问题，也不提出新的调度优化算法或强化学习求解机制，因此与当前研究的直接相关性有限。但其关于在优化建模前对齐问题描述的框架，可能为生产调度等场景中的自动建模提供前处理思路：**推测**，若将 AMAO 式语义对齐迁移到生产调度，需要用户描述中包含任务、机器、产能、运输等约束语义，并构建对应的调度领域模糊描述基准与下游调度模型接口；作者并未验证这类迁移。",
+      "relevance_score": 7,
+      "setting": "研究问题是在自动运筹学流水线中，用户以自然语言描述运营决策问题（如生产计划中的产能约束遗漏），但用户建模知识有限、表达模糊或不完整，导致描述与真实意图之间存在语义不确定性；决策对象是是否以及如何修正问题描述中的错误与遗漏；目标是恢复用户意图的优化问题并提升下游建模与求解准确率；关键约束包括可用语义线索与上下文是否足以唯一确定修正、以及何时需要向用户提问；信息假设强调描述本身可能不足以唯一确定修正；环境为静态的文本描述场景，并扩展到多轮对话的人机交互设定。",
+      "tags": [
+        "自动运筹学",
+        "语义对齐",
+        "多智能体系统",
+        "大语言模型",
+        "混合专家模型",
+        "问题建模",
+        "人机交互澄清"
+      ],
+      "title_zh": "决策的第一步：面向自动运筹学的语义不确定性下对齐",
+      "uncertainty": "全文为节选，实验表格中的大量数字被截断或排版混乱，无法核对全部基线对比；未提供 AMAO 各组件消融的完整细节、训练开销和公平计算预算信息；相关性评分基于摘要与节选判断，若完整论文包含调度或组合优化求解实验，评分可能改变。",
+      "why_recommended": "对 AI4OR 研究者而言，该文关注了优化求解之前的问题理解与规范对齐环节，提出了可复用的歧义感知基准和多轮对话评估思路，并给出了语义对齐对下游解准确率影响的实证结果。若研究方向涉及大模型辅助自动建模、人机交互式问题澄清或学习辅助搜索的前置问题定义，这些基准和评估协议可能具有参考价值；但它不提供新的调度求解算法，因此不建议作为调度优化方法的核心参考。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:32:39.987476Z",
+      "input_hash": "881b7cb2d95241edaf9cf0e192ebe6ea6e563c0068868eaeb6435c15754d6218",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
     }
   },
   "2627e0cee6ccd1887484424620fe09bf47a8cf6244ba92d40b7d58af38a1e4b9": {
@@ -15364,6 +15706,86 @@
       "reading_scope": "abstract"
     }
   },
+  "3f6438439621cd8e7a20d61762a8ce9a49b418ca2cb191e216c56627dac823c7": {
+    "analysis": {
+      "analysis": "作者通过谱系与哈密顿回路的一一对应关系，将成员资格判定转化为分层网络上的流可行性问题：在每个阶段k递归构造分层网络，检验其可行性；当需要时进一步求解多商品流问题MCF(k-1)并检验其是否达到最大可能流量z_max。分析依赖问题结构（阶段递进、递归构造、多商品流）来分解原始高维凸包判定，而不是依赖通用算法。",
+      "challenges": [
+        "谱系多胞体的线性描述涉及指数级可能约束，直接枚举不可行",
+        "充要条件的必要性方向需要论证多商品流可行性，证明结构复杂",
+        "多商品流问题本身是经典难问题，需要证明此处MCF(k-1)在特定递归结构下可解",
+        "将上述证明完整形式化到Lean 4/Mathlib4并做到零sorry"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文给出谱系多胞体成员资格问题M3P的充要条件，其成员资格由分层网络可行性与多商品流达到最大流量共同刻画。",
+          "location": "abstract",
+          "quote": "membership of $X$ in $\\mathrm{conv}(P_n)$ is characterised by the feasibility, at every stage $k=4,\\dots,n-1$, of a recursively constructed layered network, together with, when needed, a multicommodity flow problem $\\mathrm{MCF}(k-1)$ achieving its maximum possible flow $z_{\\max}$."
+        },
+        {
+          "claim": "论文给出M3P的多项式时间算法。",
+          "location": "abstract",
+          "quote": "together with the resulting polynomial-time algorithm for M3P"
+        },
+        {
+          "claim": "充分性与必要性两个方向均在Lean 4/Mathlib4中机器验证，依赖链零sorry。",
+          "location": "abstract",
+          "quote": "Both directions of the \\NS{} condition --- sufficiency and necessity (the multicommodity-flow feasibility argument of the book's Chapter~5) --- are machine-verified in Lean~4/Mathlib4 with zero unresolved \\texttt{sorry}s in either dependency chain."
+        },
+        {
+          "claim": "谱系与哈密顿回路一一对应。",
+          "location": "abstract",
+          "quote": "The set \\(P_{n}\\) consists of the characteristic vectors of pedigrees, which are combinatorial encodings in one-to-one correspondence with Hamiltonian cycles."
+        },
+        {
+          "claim": "存在面向更广读者的姊妹篇导论文章，不含Lean 4验证。",
+          "location": "abstract",
+          "quote": "A companion introductory article (arXiv:2507.09069) presents the same material for a broader readership, without the Lean~4 verification"
+        }
+      ],
+      "experiments": [
+        "材料未说明计算实验；论文报告的是证明陈述与Lean 4机器验证证书，而非数值实验。摘要明确指出充分性与必要性两个方向均已在Lean 4/Mathlib4中机器验证，且依赖链上零未解决的sorry。没有可引用的运行时间、实例规模或基线对比数据。"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "该充要条件的有效性来自于把高维凸包成员资格判定沿阶段k逐步分解为一族递归构造的分层网络可行性问题，并在网路可行性不足时用多商品流MCF(k-1)是否能达到最大流量z_max作为补充判据。这种分层递进的刻画使得原本在Q^{τ_n}上的全局凸包判定被转化为可逐阶段检验的网络流可行性，从而有可能在多项式时间内完成判定。Lean 4验证零sorry则从证明论角度保证充分性与必要性两个方向的推理链条完整。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "将谱系编码与哈密顿回路建立一一对应，把成员资格问题定位为凸包判定",
+        "定义X∈Q^{τ_n}隶属于conv(P_n)的充要条件：对每个阶段k=4,…,n-1，递归构造的分层网络可行",
+        "在必要时额外要求多商品流问题MCF(k-1)达到其最大可能流量z_max",
+        "基于该充要条件给出求解M3P的多项式时间算法",
+        "用Lean 4/Mathlib4形式化验证充分性与必要性两个方向，确保依赖链上零sorry",
+        "公开完整Lean 4工程，并提供面向更广读者的导论性姊妹篇（arXiv:2507.09069）"
+      ],
+      "motivation": "TSP及其相关多面体的成员资格判定是组合优化复杂度理论的核心问题之一；已有的谱系多胞体充要条件散见于专著章节，缺少机器可检验的完整证明。作者希望给出完整证明陈述与Lean 4机器验证证书，使得该充要条件及其多项式时间算法具有可验证的严格性，从而增强这一复杂度结果的可信度。",
+      "primary_topic": "组合优化中谱系多胞体成员资格问题的多项式时间判定与形式化验证",
+      "relation_to_research": "该论文属于组合优化的复杂度与多面体理论，与智能优化、生产调度、神经网络/强化学习辅助求解、多智能体优化的直接联系较弱。其多商品流与分层网络可行性判定的思想，在原理上可被推测性地迁移用于某些含网络结构约束的生产调度或资源分配问题，但这需要额外论证：需要把调度问题建模成类似的阶段递归网络，并使可行性判定在多商品流框架下可解；这些迁移属于推测，不是作者结论。",
+      "relevance_score": 3,
+      "setting": "论文研究谱系多胞体（Pedigree Polytope）的成员资格判定问题M3P：给定有理向量X∈Q^{τ_n}（τ_n=binom(n,3)-1，n≥4），判定X是否属于谱系特征向量集合P_n的凸包conv(P_n)；谱系是TSP哈密顿回路的一一对应组合编码，因此该判定与哈密顿回路/TSP的凸包刻画紧密相关。目标是对该判定建立精确的充要条件并给出多项式时间算法。关键约束在于需要刻画出conv(P_n)的完整线性描述，论文给出的核心条件是：对每个阶段k=4,…,n-1递归构造的分层网络可行，且必要时多商品流问题MCF(k-1)达到最大流量z_max。信息假设、静态/动态环境：材料未说明（属于静态的组合优化判定问题，不涉及在线或动态扰动）。",
+      "tags": [
+        "谱系多胞体",
+        "哈密顿回路",
+        "多商品流",
+        "多项式时间算法",
+        "Lean 4形式化验证",
+        "组合优化"
+      ],
+      "title_zh": "一种高效、经Lean 4验证的谱系多胞体成员资格充要条件",
+      "uncertainty": "仅依据标题与摘要分析，无法确认算法的具体复杂度、MCF(k-1)的求解细节、Lean 4工程的规模与验证粒度，也未获得任何实验数据。作者单位、通讯作者、基金信息均未提供，因此无法从机构或团队背景进一步判断其对AI4OR方向的迁移价值。",
+      "why_recommended": "若研究者关心TSP/哈密顿回路多面体的精确刻画、约束可行性判定以及形式化验证如何增强优化算法正确性保证，本文提供了经Lean 4验证的充要条件与多项式时间算法，具有方法论参考价值。但对于柔性作业车间、流水车间、动态扰动、能效多目标等研究主题，本文不提供直接的方法或实验证据，建议仅在需要精确组合优化理论基础或形式化验证思路时阅读。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:33:13.634804Z",
+      "input_hash": "aea6aff62b9201807cf3a9419676c2e0e9a75dc902d415d2d0535e629e226df6",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
   "3fdd1ead41c8f5dc7c701003f25caca54ccb42c9440b89a325949c8ce15420e8": {
     "analysis": {
       "analysis": "作者采用结构化技术综述方式，将文献按强化学习在运筹学中的三种角色组织，并进一步按算法范式分类。对于序贯决策问题，作者使用“问题签名”（动作空间、可观测性、时间跨度、动态性）与强化学习算法及训练方式、基线进行表格化对照；对于组合优化，作者按强化学习范式与架构、所求解组合优化问题、基线、问题规模进行归类，并总结路由问题倾向于策略梯度配合指针或 Transformer 解码器、一般图问题倾向于基于价值方法配合图神经网络编码器、问题规模增大时从指针网络转向 Transformer 等模式；对于数字孪生，作者区分数字孪生作为虚拟训练环境、加速强化学习、以及作为扩展现实分析平台三类用途。",
@@ -20470,6 +20892,96 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
+    }
+  },
+  "56d14c5067247ccf952d421d1926d42c0b9fc64d2c5678a396f39959d8326d53": {
+    "analysis": {
+      "analysis": "作者先定义连续时间线性动力学与所支持的 STL 语法（包含 ⊤、⊥、仿射谓词 μ(x)≥0、否定、合取、析取以及 G[a,b] 与 F[a,b] 时序算子），并采用定量（鲁棒）语义。随后在时间零点对完整规范进行空间编译，得到矩阵 A 与向量 b_eff，使得在初始状态 x0 处的局部矩阵检查 A x0 ≤ b_eff 等价于 ⟦ψ⟧(x0) ≥ 0，并在联合控制器假设下蕴含存在容许控制使连续时间鲁棒度非负。该分析利用问题结构将时间需求转译为空间约束，并以定理形式给出几何可靠性证明；材料未说明是否使用分解、下界或图表示等其他分析工具。",
+      "challenges": [
+        "MILP 编码将时间离散为显式时间步，并为每个时间步的每个谓词引入二进制变量，嵌套时序算子会成倍放大变量数量，导致模型规模随视界和公式复杂度增长。",
+        "离散时间检查可能在采样点之间接受违反连续时间 STL 语义的控制见证，即通过离散检查但不符合连续语义。",
+        "需要在不引入时间采样循环的情况下给出连续时间鲁棒性的保证，并处理嵌套公式与执行器限幅。",
+        "修复不可行规范时需要提供可操作的诊断反馈，并在保持驻留与安全需求之间权衡保守性。"
+      ],
+      "corresponding_authors": [
+        "Avinash Malik"
+      ],
+      "evidence": [
+        {
+          "claim": "论文提出一种针对 STL 可行性与时序修复的几何方法，将时序需求转译为在初始状态处求值的空间约束。",
+          "location": "abstract",
+          "quote": "We propose a geometric approach to STL feasibility and temporal repair that translates temporal requirements into spatial constraints evaluated at the initial state."
+        },
+        {
+          "claim": "编译后的可行性检查在固定编译维度下不依赖时间域长度。",
+          "location": "abstract",
+          "quote": "Its compiled feasibility check is independent of horizon length for fixed compiled dimensions."
+        },
+        {
+          "claim": "在联合控制器假设下证明了非负连续鲁棒性。",
+          "location": "abstract",
+          "quote": "We prove nonnegative continuous robustness under a joint controller assumption."
+        },
+        {
+          "claim": "在 6 维 UAV 基准上几何修复时间中位数为 0.265–1.510 ms，相对 MILP 可行性检查器最高加速 1.68×10^4 倍。",
+          "location": "abstract",
+          "quote": "On 6D UAV benchmarks, median geometric repair times are 0.265--1.510 ms; we show up to 1.68x10^4 speedup over MILP feasibility checker."
+        },
+        {
+          "claim": "所有几何运行通过连续 STL 验证，而大多数完成的 MILP 控制见证违反连续时间 STL。",
+          "location": "abstract",
+          "quote": "All geometric runs pass continuous STL validation, whereas majority of completed MILP control witnesses violate continuous-time STL."
+        },
+        {
+          "claim": "作者在结论中指出未来工作将降低保守性并扩展到非线性动力学。",
+          "location": "supplied_full_text",
+          "quote": "Future work will reduce conservatism and extend the approach to nonlinear dynamics."
+        }
+      ],
+      "experiments": [
+        "在 6 维 UAV 基准上评估：几何修复时间中位数为 0.265–1.510 ms，相对 MILP 可行性检查器最高加速 1.68×10^4 倍。",
+        "所有几何运行均通过连续 STL 验证，而多数完成的 MILP 控制见证违反连续时间 STL。",
+        "在动机示例中，MILP 流水线计算时序修复的耗时约为该方法的 4.67×10^3 倍。",
+        "实验测量了编译与修复成本，包括深层嵌套公式；材料未说明基线设置、实例规模、约束可行性的系统统计、训练开销、公平计算预算、泛化与消融的具体内容。"
+      ],
+      "first_affiliation": "奥克兰大学电气、计算机与软件工程系",
+      "insight": "把时序需求转译为在初始状态处求值的空间约束，从而把连续时间的可行性判定压缩为一次局部矩阵-向量不等式检查，避免构造基于离散时间的轨迹优化问题。其有效性来自编译后的证书评估不依赖时间域长度，并借助联合控制器假设将初始状态的空间证书与一条容许轨迹上的连续时间鲁棒性联系起来，因此只需一次点态检查即可认证整条时间域上的可行性。",
+      "limitations": [
+        "作者在结论中明确表示未来工作将降低保守性并把方法扩展到非线性动力学，说明当前方法存在保守性且限于线性动力学。",
+        "原文提到几何修复具有保守性。",
+        "材料未说明其他明确陈述的局限。"
+      ],
+      "method": [
+        "对连续时间线性动力学与所支持的 STL 语法进行预处理，构造规范的编译过程。",
+        "在时间零点对完整规范 ψ 在 x*=x0=x(0) 处编译得到矩阵 A 与有效向量 b_eff。",
+        "通过局部矩阵-向量不等式检查 A x0 ≤ b_eff 判定可行性，证书评估不依赖时间域长度。",
+        "在联合控制器假设下，由成功的局部检查证明存在容许控制输入，使连续时间鲁棒度在整个有效时间域上非负。",
+        "当不可行时，利用最大赤字给出解析的首个时序修复；迭代重新编译，先扩展 liveness 需求，若允许的保驻留修复失败则收缩 safety 需求。",
+        "实验中基于 Xiao 等人的高阶控制器构造并持续验证一个具体控制器实现。"
+      ],
+      "motivation": "STL 综合在自主系统、CBF-QP 控制器、LLM 到形式规范的翻译、任务与运动规划以及规范挖掘中都是基础构件；不可行性的处理是核心挑战，因为 LLM 生成的任务可能逻辑错误或物理上不可实现，而仅返回二值失败信号不足以指导纠正。当前最先进的 MILP 方法随着时间域和公式复杂度增长而模型规模膨胀，并且可能接受在采样点之间违反连续时间 STL 语义的控制见证，因此需要一种可扩展且能认证连续时间可行性的决策过程。",
+      "primary_topic": "信号时序逻辑（STL）规范的可满足性与修复的几何决策方法",
+      "relation_to_research": "该论文研究的是形式化方法中信号时序逻辑的可行性判定与规范修复，属于控制综合与形式验证方向，与智能优化、生产调度、神经网络辅助求解、强化学习或智能体优化的核心问题没有直接对应关系。不过，其将时间需求转译为时间零点处空间约束、并把证书评估与时间域长度解耦的思路，推测在概念上可能对生产调度中约束满足与不可行性诊断有启发，但迁移需要把调度约束映射为类似的几何或空间约束结构，并处理离散决策变量与资源约束，这些在当前材料中并未涉及。",
+      "relevance_score": 4,
+      "setting": "研究问题为：给定连续时间线性动力学系统 ẋ(τ)=ℱx(τ)+𝒢u(τ)、有界控制输入 u(τ)∈𝒰 以及信号时序逻辑（STL）规范 ψ，从给定初始状态 x(0) 出发是否存在容许控制输入使得规范在整个连续时间范围内得到满足；决策对象是规范的可行性以及不可行时的时序修复；目标是以不依赖时间离散化的方式判定可行性并给出修复建议；关键约束包括执行器限幅（如加速度与速度有界）与连续时间 STL 语义；信息假设是编译后的检查只依赖初始状态 x0 处的局部矩阵-向量不等式，并且假设存在一个满足联合控制器假设的单一容许轨迹；环境为连续时间、静态规范给定，材料未说明是否处理动态扰动或在线重规划。",
+      "tags": [
+        "信号时序逻辑",
+        "可行性判定",
+        "规范修复",
+        "混合整数线性规划",
+        "连续时间鲁棒性",
+        "UAV 基准"
+      ],
+      "title_zh": "STL 可行性与时序修复的几何决策过程",
+      "uncertainty": "本次判断基于摘要和全文节选，节选内容不完整，缺少第 3 至 7 节的编译与评估细节以及部分实验设置，因此对方法内部机制、实验基线、实例规模与公平计算预算的解读存在不确定性；相关性评分基于当前主题与生产调度等方向的明显距离给出，若读者关注的是形式化方法的约束可行性判定，则相关性会更高。",
+      "why_recommended": "对于关注约束可行性判定、不可行集诊断与规范修复的研究者，该论文提供了一种不依赖时间离散化的证书式判定思路，与基于 MILP 的不可行集方法形成对比，其关于连续时间语义与离散采样之间差距的讨论可能对处理动态调度中的时间约束有参考价值；但若研究核心是生产调度、学习辅助搜索或多智能体优化，该论文的相关性有限。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:32:52.848330Z",
+      "input_hash": "6656dff77b71482453c0ff5269def707ac93900da6ff25f0b49f1b9eca1a82b6",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
     }
   },
   "570b5b04a98b0d746c9ccc46869b6d2aefb0b46079aa5a37f65e9460d5348e4e": {
@@ -26747,6 +27259,88 @@
       "reading_scope": "full_text"
     }
   },
+  "702565d8684e6e8ea532d13dfba0da1f5745584403cb18594e26d7d799af173b": {
+    "analysis": {
+      "analysis": "作者沿两条线分析问题：一是通过归约论证含互补的二值子模偏好下功利/Nash 最优分配的 NP 难性，刻画扩展带来的计算障碍；二是以互补捆绑规模 k 为参数，构造多项式时间近似算法，并推导其 maxUSW、EF-X 以及每个智能体效用下界（形式为 (MMS_i − k)/(k+1+1/n)）的理论保证；作者还指出标准二值子模情形可用简单顺序技巧，而互补情形需要更复杂的组合优化工具，这一对比是分析的核心依据。",
+      "challenges": [
+        "在物品互补偏好下计算功利最优或 Nash 最优分配是 NP 难的",
+        "PO+EF-1 分配在互补偏好下可能不存在，需要改用 EF-X 等替代公平概念",
+        "标准二值子模设定中的简单顺序分配技术无法直接推广，需要更复杂的组合优化工具",
+        "需在效用近似与公平（MMS、EF-X）保证之间同时给出可证明的界"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究智能体对物品组合而非单个物品具有二值子模偏好、且含互补的公平分配问题",
+          "location": "abstract",
+          "quote": "We study the problem of fair allocation when agents have dichotomous submodular preferences over groups of, rather than individual, items."
+        },
+        {
+          "claim": "在含物品互补时计算功利最优或 Nash 最优分配是 NP 难的",
+          "location": "abstract",
+          "quote": "computing a utilitarian or Nash-optimal allocation with item complements is NP-hard"
+        },
+        {
+          "claim": "当互补捆绑规模至多 k 时存在多项式时间算法给出 1/k-maxUSW 与近似 Nash 福利最大化分配",
+          "location": "abstract",
+          "quote": "when agents' complementary bundles have size at most $k$, there exist poly-time algorithms that compute $\\frac1k$-\\maxUSW allocations and approximate Nash-welfare-maximizing allocations"
+        },
+        {
+          "claim": "互补偏好下 PO+EF-1 分配可能不存在，但可在多项式时间计算 1/(k+1)-近似 maxUSW 的 EF-X 分配并给出 MMS 效用下界",
+          "location": "abstract",
+          "quote": "While PO+EF-1 allocations may not exist in the complementary preference setting, it is possible to compute $\\frac1{k+1}$-approximately \\maxUSW EF-X allocations in polynomial time"
+        },
+        {
+          "claim": "标准二值子模设定的简单顺序技术不足以处理互补情形，需要更复杂的组合优化工具",
+          "location": "abstract",
+          "quote": "While the standard dichotomous binary submodular setting admits simple sequential techniques for computing fair and efficient allocations, our results for the complements setting require more complex tools from combinatorial optimization."
+        }
+      ],
+      "experiments": [
+        "摘要仅报告理论结果：NP 难性、近似比 1/k 与 1/(k+1)、EF-X 保证及 MMS 效用下界；材料未提供实验基线、实例规模、求解质量数值、运行时间、训练开销或消融实验，故无法确认任何实证验证。"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "贡献的有效性来自对互补结构的参数化：一旦把互补捆绑的规模限制在 k 以内，原本 NP 难的效用最优问题便可被多项式时间近似，近似比明确依赖 k（1/k 的 maxUSW、1/(k+1) 的 EF-X 与 MMS 界）；同时作者揭示，在互补偏好下 PO 与 EF-1 可能无法同时满足，说明传统公平-效率共存结论在互补设定下并不成立，必须转向 EF-X 等放松概念。",
+      "limitations": [
+        "材料未说明作者明确陈述的局限；从摘要可客观看到结果均为理论保证，未给出实验评估，且 EF-1 与 PO 在互补设定下不保证存在。"
+      ],
+      "method": [
+        "将公平分配模型从单个物品上的二值子模偏好扩展为物品组合上的二值子模偏好，并引入互补捆绑规模上限 k",
+        "证明功利最优与 Nash 最优分配在含互补设定下为 NP 难",
+        "在互补捆绑规模至多 k 的假设下设计多项式时间算法，计算 1/k-maxUSW 分配",
+        "设计多项式时间近似算法计算 Nash 福利最大化的近似解",
+        "构造多项式时间算法计算 1/(k+1)-近似 maxUSW 且满足 EF-X 的分配，并证明每个智能体 i 的效用至少为 (MMS_i − k)/(k+1+1/n)",
+        "借助组合优化工具替代标准二值子模设定中可用的简单顺序分配技术"
+      ],
+      "motivation": "既有公平分配模型多假设智能体对单个物品有偏好，而课程分配等现实场景中智能体关心的是物品组合且组合间存在互补关系；作者希望厘清这一看似微小的模型扩展是否会带来新的计算与公平性障碍。",
+      "primary_topic": "带互补偏好的公平资源分配（计算社会选择/博弈论）",
+      "relation_to_research": "该论文属于公平分配与组合优化的理论工作，本身不涉及生产调度、柔性作业车间、强化学习或图神经网络辅助求解，也不涉及学习辅助搜索或数学规划与进化算法的混合框架。其潜在迁移价值（推测）在于：若把生产调度中工人/机器对任务或工件组合的偏好建模为二值子模并含互补约束，则其以互补规模 k 为参数的近似比为约束可行性-公平性权衡提供了理论参考；但迁移需要满足偏好二值子模、互补捆绑规模可界定、且分配问题可静态建模等条件，属于推测，并非作者结论。",
+      "relevance_score": 3,
+      "setting": "研究多个自利智能体对物品组合（而非单个物品）具有二值子模偏好、且偏好中存在互补性（某些物品需成组才有价值）的公平分配问题；决策对象是把物品集合划分给各智能体的分配方案，目标是同时兼顾效用（utilitarian/Nash 社会福利）与公平（EF-X、EF-1、PO、MMS 等），关键约束是互补捆绑的规模至多 k，信息假设为已知各智能体的偏好，环境为静态一次性分配，材料未说明动态或在线情形。",
+      "tags": [
+        "公平分配",
+        "二值偏好",
+        "子模偏好",
+        "物品互补",
+        "NP难",
+        "近似算法",
+        "EF-X",
+        "MMS"
+      ],
+      "title_zh": "物品互补性下二值偏好的公平分配",
+      "uncertainty": "仅有标题与摘要，缺少全文；无法确认算法细节、归约方式、证明技术以及是否存在实验部分，因此对方法要点与局限的判断仅限于摘要陈述；与生产调度等目标领域的关联属于推测。",
+      "why_recommended": "对当前研究者而言，这篇论文与 AI4OR 主题的关联较弱，仅在“组合结构参数化带来近似保证”“公平与效率冲突导致经典概念不可用”的方法论层面有借鉴意义；若研究者关注带组合约束的资源分配建模、约束可行性与近似界的理论分析，或希望理解互补结构如何破坏传统分配结论，可作方法论参考，否则不建议优先阅读。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:33:34.038530Z",
+      "input_hash": "e88163e12eccdb54715a0423eeb184e557aa1786546b7ba5525e45814c9a6823",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
   "7073c211b69f310640d889965c61fd8503ede144409dd6cac4a327610b1af685": {
     "analysis": {
       "analysis": "材料未说明作者如何形式化分析问题；摘要显示其分析路径是通过对照目标 NPU 的算子与执行约束，识别原 LiSenNet 中不兼容的循环瓶颈与不受支持的运算，并将其重构为静态 int8 兼容原语。",
@@ -28613,6 +29207,96 @@
       "reading_scope": "full_text"
     }
   },
+  "7919d42a7a5fd656589bf45517b7ba89ddcc4a60bfd4df9a9a3524b31e6f68a3": {
+    "analysis": {
+      "analysis": "作者基于车辆-障碍物有符号间隙构造逐步安全成本，取各障碍中最临界者（s_t=min_m s_{t,m}），并设计有界间隙成本函数c(s)，其结合tanh饱和项与指数衰减项，在边界附近提供信息性梯度而在严重侵入时饱和有界。随后使用log-mean-exp聚合将轨迹各步与批次内违规平滑聚合为单一约束，由单个对偶变量控制。在理论上证明所提优化在温和假设下收敛到可行策略。",
+      "challenges": [
+        "安全约束成本函数需在安全边界附近提供信息性梯度，同时在严重障碍侵入时保持有界，避免破坏原始-对偶优化稳定性",
+        "需将轨迹中各时刻、各批次的逐步安全违规平滑聚合为单一由单个对偶变量控制的约束",
+        "原始-对偶梯度下降-上升与可微仿真结合时的收敛性缺乏保证",
+        "需要在稠密分布外环境中保持泛化并实现零样本仿真到现实迁移"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "作者将避障表述为显式约束并用原始-对偶梯度下降-上升训练策略",
+          "location": "abstract",
+          "quote": "We instead formulate obstacle avoidance as an explicit constraint and train quadrotor policies using primal--dual gradient descent--ascent through a differentiable simulator."
+        },
+        {
+          "claim": "提出有界间隙约束成本函数，在安全边界附近提供信息性梯度并防止大违规破坏原始-对偶优化",
+          "location": "abstract",
+          "quote": "we propose a bounded clearance-based constraint function that provides informative gradients around the safety boundary while preventing large violations from destabilizing primal--dual optimization"
+        },
+        {
+          "claim": "引入log-mean-exp聚合以在单一由单个对偶变量控制的约束中平滑强调关键逐步违规",
+          "location": "abstract",
+          "quote": "we introduce log-mean-exp (LME) aggregation to smoothly emphasize critical per-step safety violations across a trajectory and training batch within a single constraint governed by one dual variable"
+        },
+        {
+          "claim": "理论上证明优化在温和假设下收敛到可行策略",
+          "location": "abstract",
+          "quote": "We theoretically prove that the proposed optimization with differentiable simulation converges to feasible policy under mild assumptions."
+        },
+        {
+          "claim": "实验展示改进的安全-性能权衡、分布外泛化与零样本迁移到Gazebo/PX4及物理四旋翼",
+          "location": "abstract",
+          "quote": "Experiments demonstrate improved safety--performance trade-offs over fixed-penalty and existing policy-learning baselines, as well as generalization to denser out-of-distribution environments. Finally, the learned policy transfers zero-shot to Gazebo/PX4 and a physical quadrotor without additional fine-tuning."
+        },
+        {
+          "claim": "未来工作将扩展到部分可观测与基于视觉的导航，去除对直接可用状态和障碍信息的依赖",
+          "location": "supplied_full_text",
+          "quote": "Future work will extend the framework to partially observable settings and vision-based navigation, removing the reliance on directly available state and obstacle information."
+        }
+      ],
+      "experiments": [
+        "在相同10,240个场景（64个随机障碍布局）上评估所有方法，使用任务成本、LME、第5百分位最小间隙（Clear. p5）、碰撞率（Coll.）与成功率（Success）五项指标",
+        "与固定惩罚（fixed-penalty）及现有策略学习基线（如B2N的BPTT和PPO变体、CGPO）比较，显示安全-性能权衡更优",
+        "B2N(BPTT)相比B2N(PPO)收敛到性能更好的策略",
+        "在更稠密的分布外环境中展现泛化能力",
+        "稠密中心场地实验：四个0.71 m半径圆柱障碍，最小走廊宽1.01 m，3 m半径环上连续执行12个航点，到达全部12个目标，11段无碰撞，剩余一段最大侵入8 cm",
+        "零样本迁移到Gazebo/PX4及物理四旋翼，无需额外微调，实现无碰撞飞行"
+      ],
+      "first_affiliation": "新加坡国立大学（National University of Singapore）",
+      "insight": "将安全从固定加权惩罚改为由单一对偶变量控制的显式约束，使期望安全水平可以直接指定，并由对偶变量自适应调节惩罚强度，从而把安全需求与任务目标解耦；同时通过构造在安全边界附近提供信息性梯度、且在严重侵入时饱和有界的成本函数，并借助log-mean-exp平滑聚合轨迹级约束，使得原始-对偶梯度下降-上升在可微仿真中保持稳定收敛，这是安全-性能权衡得以改善的根本原因。",
+      "limitations": [
+        "未来工作将扩展到部分可观测设置和基于视觉的导航，去除对直接可用的状态和障碍信息的依赖，表明当前方法依赖直接可得的完整状态与障碍信息"
+      ],
+      "method": [
+        "将避障表述为显式约束C(θ)≤α，采用原始-对偶梯度下降-上升，在可微仿真器中通过BPTT训练四旋翼策略",
+        "定义车辆-障碍物有符号间隙s_{t,m}（正为分离、零为边界、负为侵入），对多障碍取最临界值s_t=min_m s_{t,m}",
+        "提出有界间隙成本函数：c(s)=[1+(c_max-1)·tanh(K·S(-s;κ_s))]·exp(-β·S(s;κ_s))，其中S为光滑max(0,x)近似；β控制间隙增大时的衰减，K控制侵入时的饱和速率，κ_s控制平滑度",
+        "使用log-mean-exp（LME）聚合将逐步违规跨轨迹与批次平滑聚合为单一由单个对偶变量控制的约束",
+        "采用置换不变的策略网络架构，将车辆状态与可变障碍配置映射为控制动作",
+        "提供收敛到可行策略的理论证明，并在仿真与真实四旋翼上验证"
+      ],
+      "motivation": "现有可微仿真方法普遍将安全作为固定加权惩罚项，需要人工调节任务性能与约束满足之间的权衡；惩罚过弱导致不安全轨迹，过强则损害任务性能，且合适权重随环境和任务变化。作者希望将避障表述为显式约束，从而可直接指定期望的安全水平，并由原始-对偶算法自适应调整惩罚。",
+      "primary_topic": "可微仿真中的约束策略优化与安全四旋翼导航",
+      "relation_to_research": "本文属于机器人约束策略优化与可微仿真方向，而非生产调度或车间调度。其核心机制——将安全需求建模为显式约束、用原始-对偶梯度下降-上升自适应调整对偶变量、以平滑聚合处理逐步约束——与AI4OR中约束可行性、学习辅助搜索和数学规划结合的思想在方法论上相通。推测该原始-对偶+平滑约束聚合模式可迁移到生产调度中的约束满足问题（如截止期、能耗、运输协同约束），但迁移需要重新定义约束成本函数与聚合方式，并证明在离散调度决策下的收敛性，这些均为推测，作者未在优化调度问题上验证。",
+      "relevance_score": 4,
+      "setting": "研究问题是在存在圆柱形障碍物的环境中训练四旋翼避障导航策略。决策对象为四旋翼的状态到控制动作的映射策略；目标是在完成导航任务（到达目标）的同时满足避障安全约束。关键约束是以车辆-障碍物间隙为度量、要求约束成本C(θ)≤α的显式安全约束，环境为静态障碍布局且状态与障碍信息可直接获得（材料中未来工作指出将扩展到部分可观测设置，说明当前假设状态和障碍信息直接可用）。动态由可微仿真器提供解析梯度，策略通过时间反向传播（BPTT）训练。",
+      "tags": [
+        "可微仿真",
+        "原始-对偶优化",
+        "约束策略学习",
+        "安全强化学习",
+        "四旋翼导航",
+        "零样本仿真到现实迁移"
+      ],
+      "title_zh": "面向安全四旋翼导航的约束可微策略学习",
+      "uncertainty": "全文仅为节选，缺少完整的实验数据表、训练开销对比、消融完整结果及部分方法细节；全部为机器人领域，与生产调度无直接实验关联；对迁移到调度问题的可行性与效果完全未经验证，本判断主要基于约束优化方法的可迁移性推测。",
+      "why_recommended": "虽然应用领域是四旋翼导航，但本文对约束处理方法具有方法论参考价值：它清晰展示了如何用原始-对偶优化替代手工加权惩罚来处理硬约束，如何设计有界且梯度信息丰富的约束成本，以及如何用log-mean-exp平滑聚合逐步约束，并给出收敛性证明。这些思路可启发生产调度中多约束、能耗与运输协同约束的建模与学习求解，同时对公平计算预算、约束可行性与泛化验证的设计也有借鉴意义。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:32:16.500730Z",
+      "input_hash": "46925d869da92af4a8885adb942304b805cf18c487f63aefc8a58cade2c0684d",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "797fa6ebb7cbe3f143387aa280fa3db2eedf0208c7449ca4323701bde52ab25c": {
     "analysis": {
       "analysis": "作者将批大小视为影响吞吐量和学习动态的关键超参数，并利用贝叶斯优化进行高效的自动调优。通过实验探究批大小对硬件吞吐量的影响，发现吞吐量上限，并据此确定最优批大小。同时，作者研究了与梯度累积和线性学习率缩放相结合的效果，以提升训练效率。材料未明确说明更深入的机制分析。",
@@ -29184,6 +29868,86 @@
     "provenance": {
       "analyzed_at": "2026-09-25T02:20:08.707576Z",
       "input_hash": "f0eb8ae25afd25535e842f326ad17ebf238ae77249a90d3f02aa5b5ea686f86d",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
+  "7b370bcfb5a8728ed61abf214bcff266a566e0809532b7a91538ba2cec44ff99": {
+    "analysis": {
+      "analysis": "材料未说明作者如何具体分析问题结构、分解或推导下界；摘要仅表明作者通过跨多个EMG数据集的预训练来学习可泛化表示，并设计层次唤醒架构以利用无效活动占比高的信号特性来降低平均计算量。",
+      "challenges": [
+        "EMG信号在个体、身体区域、采集会话和硬件间的分布差异导致跨被试泛化困难",
+        "现有时间序列基础模型对实时可穿戴部署而言计算开销过高",
+        "通用时序模型常无法捕获EMG特有的时频特征",
+        "在资源受限设备上同时满足延迟、功耗和内存约束"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文关注EMG信号跨个体、身体区域、采集会话和硬件差异导致的泛化问题。",
+          "location": "abstract",
+          "quote": "Electromyography (EMG) signals vary substantially across individuals, body regions, recording sessions, and sensing hardware, limiting the generalization of models for assistive devices and human-computer interaction."
+        },
+        {
+          "claim": "论文提出混合CNN-Transformer基础模型，并在16个上、下肢EMG数据集上预训练。",
+          "location": "abstract",
+          "quote": "We present LiteEMG-FM, an efficient hybrid CNN-Transformer foundation model for practical EMG sensing. Pretrained on 16 diverse upper- and lower-limb EMG datasets, LiteEMG-FM learns representations that generalize across users and datasets."
+        },
+        {
+          "claim": "论文设计了轻量常开1D-CNN过滤静息和非目标活动，仅对有效手势激活大模型的层次唤醒架构。",
+          "location": "abstract",
+          "quote": "For resource-constrained deployment, we implement a hierarchical wake-up architecture in which a lightweight, always-on 1D-CNN filters rest and non-target activity and activates LiteEMG-FM only for valid gestures."
+        },
+        {
+          "claim": "论文评估了全推理卸载、分割推理和全端侧处理，并刻画延迟、功耗和内存占用的权衡。",
+          "location": "abstract",
+          "quote": "We evaluate full inference offloading, split inference, and full on-device processing, characterizing their trade-offs in latency, power consumption, and memory footprint."
+        },
+        {
+          "claim": "论文声称在零校准跨被试和数据稀缺条件下优于最先进时序基础模型和有监督基线。",
+          "location": "abstract",
+          "quote": "Across diverse evaluation settings, LiteEMG-FM outperforms state-of-the-art time-series foundation models and supervised baselines, particularly under zero-calibration cross-participant and data-scarce conditions."
+        }
+      ],
+      "experiments": [
+        "在多种评估设置下，LiteEMG-FM优于最先进的时间序列基础模型和有监督基线，尤其是在零校准跨被试和数据稀缺条件下。",
+        "评估了全推理卸载、分割推理和全端侧处理三种部署模式，并刻画其在延迟、功耗和内存占用方面的权衡。",
+        "材料未提供具体数据集规模、基线名称、数值指标、运行时间或训练开销的明确数字。"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "该工作的有效性来自将通用时序表示学习与EMG域特性及部署约束联合设计：一方面用混合CNN-Transformer在多种上/下肢EMG数据上预训练以获得跨用户、跨数据集的表示；另一方面用轻量常开1D-CNN过滤静息和非目标活动，仅对有效手势激活大模型，从而在保持识别能力的同时显著降低平均计算与能耗开销。其贡献不在于模块堆叠，而在于预训练泛化与层次化激活策略共同匹配了EMG感知中信噪比低、无效片段多和端侧资源紧的实际约束。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "构建混合CNN-Transformer的基础模型LiteEMG-FM，用于EMG信号表示学习。",
+        "在16个不同的上、下肢EMG数据集上进行预训练，以学习跨用户和跨数据集的泛化表示。",
+        "面向资源受限部署，设计层次唤醒架构：轻量常开1D-CNN过滤静息和非目标活动，仅在检测到有效手势时激活LiteEMG-FM。",
+        "评估全推理卸载、分割推理和全端侧处理三种部署模式，刻画其在延迟、功耗和内存占用方面的权衡。"
+      ],
+      "motivation": "EMG信号在个体、身体区域、采集会话和硬件之间存在显著差异，限制了辅助设备和人机交互模型的泛化能力。现有时序基础模型计算开销大，难以满足可穿戴实时部署，且常无法捕获EMG特有的时频特征。因此需要一种既高效可部署、又能跨用户和数据集泛化的EMG基础模型。",
+      "primary_topic": "面向肌电信号感知的高效可部署基础模型，涉及跨被试泛化与资源受限端侧推理",
+      "relation_to_research": "该论文核心是EMG信号感知的基础模型与端侧部署，不属于智能优化、生产调度或AI4OR的直接研究。其混合CNN-Transformer表示学习、层次唤醒式条件计算和端侧推理权衡，可作为学习辅助搜索或资源受限智能体推理的邻近参考。推测：若要迁移到生产调度或柔性作业车间，需要将时序信号换成调度状态/工序图表示，将唤醒过滤换成对候选动作或子问题的选择性激活，并重新定义与调度目标和约束可行性对齐的训练信号；这些迁移条件在原文中并未涉及。",
+      "relevance_score": 2,
+      "setting": "研究问题是如何在肌电（EMG）信号因个体、身体部位、采集会话和传感硬件差异而分布变化的情况下，构建可泛化且可在可穿戴资源受限设备上实时部署的模型。决策对象是EMG手势/活动的识别与推理路径调度。目标是在跨被试和数据稀缺条件下保持识别性能，同时降低实时可穿戴部署的延迟、功耗与内存占用。关键约束包括个体与设备异质性带来的分布偏移、可穿戴设备的计算与能耗预算、以及肌电特有的时频特征。信息假设为存在多个上/下肢EMG数据集可用于预训练，并可利用轻量常开模型过滤无效活动。环境为静态数据集预训练与端侧推理部署，材料未说明在线动态扰动或持续学习设定。",
+      "tags": [
+        "时序基础模型",
+        "CNN-Transformer",
+        "肌电信号",
+        "端侧部署",
+        "层次唤醒架构",
+        "跨被试泛化"
+      ],
+      "title_zh": "LiteEMG-FM：一种高效可部署的稳健肌电感知基础模型",
+      "uncertainty": "仅依据标题与摘要判断，无法确认方法细节、实验设置、基线选择、具体指标和局限性；第一单位和通讯作者信息未提供；与生产调度或智能优化的迁移路径属于推测，未在原文中验证。",
+      "why_recommended": "对当前研究者而言，该论文相关性较弱，不涉及调度、约束优化或生产系统。但其层次唤醒与条件计算思想可能为学习辅助搜索中的计算预算分配提供类比，且端侧部署的延迟-功耗-内存权衡分析对边缘智能体优化有参考价值。若研究兴趣集中在AI4OR核心问题，可快速略过。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:33:35.358063Z",
+      "input_hash": "e7fae33314f8a6da7320d43e038abfdcebe006a40acdd98a20c1f4a5ca32d701",
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
@@ -32410,6 +33174,99 @@
     "provenance": {
       "analyzed_at": "2026-09-28T02:24:50.525897Z",
       "input_hash": "db80f3ce039969d21d697d58e86177eb7a4106788f43ff15d866d558edc26f65",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
+  "882a3a1f64ac8c1ae78c7eb75fbf1865e3b5dd7c2b0cba8dc3a0c32310e2dba1": {
+    "analysis": {
+      "analysis": "作者通过识别传统模型的两个理想化假设来建立问题缺口，将问题分解为电气侧与信息侧耦合的优化：电气侧沿用AC/DC最优潮流的线性近似或凸松弛以保持可解性，信息侧显式建模通信路径、链路容量和路由成本；随后把切换状态与通信可用性关联，并加入DCCB延迟开断能力约束，最终将问题转化为可由现成求解器高效求解的MISOCP模型。材料未说明作者是否分析了模型的下界或使用分解算法。",
+      "challenges": [
+        "输电切换中网络拓扑与运行状态需同时确定，候选开关数量增加时MINLP求解代价极高",
+        "通信资源可用性、链路容量与时延需与电力潮流决策耦合建模",
+        "DCCB开断能力受故障后延迟影响，需将延迟开断电流限制在断路器能力内",
+        "通信路由成本与DCCB低时延需求之间可能存在冲突，需要在同一优化框架中权衡"
+      ],
+      "corresponding_authors": [
+        "Aleksandra Lekić"
+      ],
+      "evidence": [
+        {
+          "claim": "论文提出将信息传输显式纳入故障后输电切换优化的OIPF公式",
+          "location": "abstract",
+          "quote": "this paper develops an explicit optimal info–power flow (OIPF) formulation that incorporates information transmission into the post-fault transmission-switching optimization for AC/MTDC grids."
+        },
+        {
+          "claim": "切换状态由通信路径可用性和通信资源决定",
+          "location": "abstract",
+          "quote": "The switching status of each DC branch is determined by the availability of its communication path and associated communication resources."
+        },
+        {
+          "claim": "加入DCCB可行性约束限制延迟开断电流",
+          "location": "abstract",
+          "quote": "binary switching decisions are supplemented by a DCCB feasibility constraint that limits the estimated delayed-interruption current to the DCCB breaking capability."
+        },
+        {
+          "claim": "问题被建模为MISOCP并用现成求解器求解",
+          "location": "abstract",
+          "quote": "The resulting problem is formulated as a mixed-integer second-order cone programming (MISOCP) model that can be efficiently solved using off-the-shelf optimization solvers."
+        },
+        {
+          "claim": "案例结果显示通信容量与路由成本会改变切换决策，延迟约束可能偏好低时延高成本路由",
+          "location": "abstract",
+          "quote": "Numerical results reveal that limited communication capacity and additional routing costs may render electrically beneficial switching actions infeasible or uneconomical, while delay-aware DCCB interruption constraints may favor lower-delay communication routes despite their higher costs."
+        },
+        {
+          "claim": "DCCB相关参数为假设值，案例用于验证优化公式",
+          "location": "supplied_full_text",
+          "quote": "Since this study focuses on validating the optimization formulation, assumed parameter values are adopted in the case study to demonstrate the coupling between communication delay and DCCB interruption capability and its influence on DC transmission switching decisions."
+        }
+      ],
+      "experiments": [
+        "采用自定义AC/MTDC测试系统进行案例研究，相关参数在表VI–VIII中给出",
+        "首先将松弛模型与原始非线性潮流模型比较，验证所提AC/DC潮流公式的精度",
+        "随后与基于传统OPF的输电切换方法比较，展示所提OIPF公式的有效性",
+        "结果显示：有限的通信容量和额外路由成本可能使电气上有益的切换动作不可行或不经济",
+        "结果显示：延迟感知的DCCB开断约束可能倾向于选择低时延但成本更高的通信路由",
+        "通信路由结果显示不同链路的通信量大小与节点带宽需求分布",
+        "材料未说明具体实例规模、解质量数值、运行时间、训练开销或消融实验细节"
+      ],
+      "first_affiliation": "TU Delft, Faculty of Electrical Engineering, Mathematics and Computer Science",
+      "insight": "贡献的有效性来自将“信息可达性”提升为与电气可行性同等地位的决策约束：切换状态不再仅由电气效益决定，而由通信路径可用性和资源决定；同时把通信时延与DCCB延迟开断电流挂钩，用延迟感知的开断能力约束筛除虽电气可行但无法安全执行的切换。这样得到的最优解在物理可实施性上更强，并揭示了通信容量、路由成本与DCCB能力之间的耦合会改变最优切换方案（例如倾向于低时延但高成本的路由）。",
+      "limitations": [
+        "作者在案例说明中指出，DCCB开断相关参数（I_{jk,f}^{dc}、K_{jk,f}^{dc}、κ_{jk}^{dc}）可通过离线EMT仿真或特定系统的实验表征获得，但本研究聚焦于验证优化公式，案例中采用了假设参数值来展示通信时延与DCCB开断能力之间的耦合及其对直流输电切换决策的影响",
+        "结论指出所提OIPF模型是朝着更实际可实施的输电切换决策迈出的一步，整体上材料未提供其他明确局限陈述"
+      ],
+      "method": [
+        "建立显式的最优信息-功率潮流（OIPF）公式，将信息传输纳入故障后输电切换优化",
+        "各直流支路的切换状态由对应通信路径可用性及相关通信资源决定",
+        "在二进制切换决策之外补充DCCB可行性约束，将估计的延迟开断电流限制在DCCB开断能力内",
+        "将整体问题构造为混合整数二阶锥规划（MISOCP），用现成优化求解器求解",
+        "案例中使用Gurobi求解MISOCP/SOCP模型，用Ipopt求解NLP模型以验证AC/DC潮流公式精度",
+        "采用自定义AC/MTDC测试系统验证，包含海上可再生能源经MTDC送端到陆上AC电网的配置，每个VSC站假设配备一个通信代理"
+      ],
+      "motivation": "传统输电切换模型通常用二进制变量表示开关动作，隐含假设切换命令总能及时可靠送达且开关总能成功执行，忽略了通信资源可用性以及DCCB受时延影响能否开断故障电流这两个物理实现问题。这种理想化假设造成了“最优拓扑”与“可物理实现拓扑”之间的概念鸿沟：从电气角度可行的切换动作可能因通信受限或DCCB能力不足而无法执行或不安全。因此需要将信息传输显式纳入故障后输电切换优化。",
+      "primary_topic": "AC/MTDC电网故障后输电切换的信息-功率耦合优化建模",
+      "relation_to_research": "该论文研究的是电力系统输电切换的数学规划建模（MISOCP），属于智能优化与AI4OR中“约束优化建模+现成求解器”的研究范式，与生产调度、柔性作业车间、流水车间等主题没有直接问题关联；但其“将信息/通信可行性作为显式约束嵌入组合优化”的思路，对生产调度中考虑通信时延、控制器指令可达性或分布式制造中的信息-物理耦合约束具有方法论迁移价值（推测）。若迁移到生产调度，需要将DCCB延迟开断约束类比为设备响应时间/指令延迟约束，并将通信路由成本映射为调度中的信息传输代价，同时需要验证MISOCP在调度规模下的求解可扩展性。该论文未涉及神经网络、强化学习或多智能体学习求解，因此与学习辅助搜索、神经组合优化方向的关联较弱。",
+      "relevance_score": 6,
+      "setting": "研究AC/多端直流（MTDC）电网在直流侧故障后的输电切换问题：决策对象是各直流支路的开关状态（二进制变量）以及发电机有功/无功出力、直流拓扑相关变量和通信路由；目标是最小化系统运行成本，同时保证切换指令可通过通信网络送达且直流断路器（DCCB）能在延迟影响下可靠开断故障电流；关键约束包括网络物理运行约束、通信路径可用性与资源约束、通信时延与DCCB开断能力约束；信息假设为控制中心需通过通信网络向各VSC站配置的通信代理下发命令，通信路径的可用性和带宽、时延均为显式建模对象；环境为故障后的静态（准稳态）优化场景，未讨论时域动态过程。",
+      "tags": [
+        "输电切换",
+        "最优信息-功率潮流",
+        "AC/MTDC混合电网",
+        "直流断路器",
+        "MISOCP",
+        "通信约束",
+        "拓扑重构"
+      ],
+      "title_zh": "面向AC/MTDC电网输电切换的、考虑直流断路器能力的通信-功率最优潮流",
+      "uncertainty": "输入材料为全文节选，缺少方法部分的完整公式、案例参数表、具体数值结果和与基线的定量比较，因此无法确认所提MISOCP模型的具体约束形式、求解时间、解质量、实例规模以及消融实验；对DCCB参数假设值的敏感性分析也未见完整描述。相关性评分6是基于问题领域为电力系统优化而非生产调度、但方法论可迁移的判断，若读者仅关注生产调度本身则相关性可能更低。",
+      "why_recommended": "虽然该论文的应用领域是电力系统而非生产调度，但其核心贡献——把物理执行层面的信息传输约束与设备能力约束显式写入组合优化模型，并用MISOCP保持可解性——对研究“优化模型与信息/执行约束耦合”的博士生有参考价值；案例中揭示的“通信容量与路由成本改变最优切换决策”“低时延路由可能被优先选择”等现象，可启发在分布式制造或生产运输协同中考虑通信时延对调度可行性的影响。此外，论文展示了凸松弛与现成求解器在整数-连续耦合问题上的使用方式，对约束可行性建模与公平求解预算的讨论有间接借鉴意义。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:32:19.103178Z",
+      "input_hash": "510aef93702da36139cc5aadbaf8d229fda7eb888346ebaf9b574f91f1e7c090",
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "full_text"
@@ -39674,6 +40531,90 @@
       "reading_scope": "abstract"
     }
   },
+  "a36f12be561fe261be4c3b5bd61e8c3c3fff2734bbd2d6577de2a594d8ea0133": {
+    "analysis": {
+      "analysis": "作者利用扩展多线性扩展刻画次模函数，并围绕递归引导框架分析其所需条件；通过设计方向预言机并限定其支撑集至多包含两个分割拟阵基，将更新条件与近似驻留条件统一到同一构造中，从而在有限支撑表示下精确计算相关期望与边际值。材料未说明更细的分解、下界或图表示分析。",
+      "challenges": [
+        "在拟阵约束下处理非单调次模函数，缺乏单调性带来的结构便利",
+        "随机 0.401 近似算法依赖递归引导框架，直接确定性化困难",
+        "需要同时满足扩展多线性更新的增长条件与构造递归引导的近似驻留条件",
+        "需要避免随机采样并保证期望与边际值的精确求值"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究拟阵约束下非单调次模最大化的确定性近似算法",
+          "location": "abstract",
+          "quote": "For maximizing nonnegative, non-monotone submodular functions subject to a matroid constraint, randomized algorithms achieve a $0.401$-approximation, whereas obtaining comparable deterministic guarantees remains challenging."
+        },
+        {
+          "claim": "论文给出确定性 0.401 近似算法，改进了此前 (0.385-ε) 的确定性保证",
+          "location": "abstract",
+          "quote": "we present a deterministic $0.401$-approximation algorithm in the exact value and independence oracle model, improving upon the previous deterministic guarantee of $(0.385-\\varepsilon)$"
+        },
+        {
+          "claim": "算法建立在扩展多线性扩展之上，并确定性实现递归引导框架",
+          "location": "abstract",
+          "quote": "Our algorithm builds on the extended multilinear extension and provides a deterministic implementation of the recursive guided framework underlying the randomized $0.401$-approximation algorithm."
+        },
+        {
+          "claim": "核心技术是支撑在至多两个分割拟阵基上的方向预言机",
+          "location": "abstract",
+          "quote": "The main technical ingredient is a direction oracle supported on at most two partitioned matroid bases."
+        },
+        {
+          "claim": "有限支撑表示使相关期望和边际值可精确求值而无需随机采样",
+          "location": "abstract",
+          "quote": "The resulting finite-support representation enables exact evaluation of the relevant expectations and marginal values without random sampling."
+        },
+        {
+          "claim": "算法使用多项式数量的值与独立性预言机查询",
+          "location": "abstract",
+          "quote": "The algorithm uses polynomially many value- and independence-oracle queries."
+        }
+      ],
+      "experiments": [
+        "摘要未报告实验或数值结果；该工作为理论近似算法分析，仅给出近似比 0.401 与查询复杂度为多项式数量"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "贡献之所以有效，在于作者为递归引导框架构造了一个支撑在至多两个分割拟阵基上的方向预言机，该预言机同时满足扩展多线性更新所需的增长条件与构造递归引导所需的近似驻留条件；这种有限支撑表示使相关期望和边际值可被精确计算，从而无需随机采样即可确定性实现原本依赖随机的 0.401 近似框架。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "建立在扩展多线性扩展（extended multilinear extension）之上",
+        "给出随机 0.401 近似算法所依赖的递归引导框架的确定性实现",
+        "构造方向预言机（direction oracle），其支撑集至多包含两个分割拟阵基",
+        "该方向预言机同时满足扩展多线性更新所需的增长条件与构造递归引导所需的近似驻留条件",
+        "利用有限支撑表示精确求值相关期望与边际值，不进行随机采样",
+        "算法使用多项式数量的值预言机与独立性预言机查询"
+      ],
+      "motivation": "次模最大化广泛出现在组合优化问题中，在拟阵约束的非单调设定下，随机算法可达到 0.401 近似比，但取得可比的确定性保证仍然困难；此前最好的确定性保证为 (0.385-ε)，因此作者希望缩小确定性与随机算法之间的差距。",
+      "primary_topic": "拟阵约束下非单调次模函数最大化的确定性近似算法",
+      "relation_to_research": "该论文属于组合优化与近似算法的理论研究，与生产调度、柔性作业车间、流水车间、分布式制造等具体调度模型无直接联系，也未涉及神经网络、强化学习、多智能体或学习辅助搜索。其拟阵约束、次模最大化与预言机查询模型在理论上可视为一类带组合约束的子集选择问题，若将调度问题中的资源分配或作业选择抽象为拟阵约束下的非单调次模目标，则可能提供确定性近似保证的思路；但这一迁移属于推测，需要先建立调度问题到拟阵约束次模最大化的严格归约，并验证目标函数满足次模性与非单调性。",
+      "relevance_score": 3,
+      "setting": "研究问题为在拟阵约束下最大化非负、非单调次模函数，决策对象是被选入解集的元素子集，目标为最大化次模函数值，关键约束为拟阵独立性约束；信息假设为精确值与独立性预言机模型（exact value and independence oracle model），即算法通过查询函数值和判断独立性来获取信息；环境为静态组合优化设定，摘要未说明动态扰动或在线要素。",
+      "tags": [
+        "次模最大化",
+        "拟阵约束",
+        "确定性近似算法",
+        "扩展多线性扩展",
+        "组合优化"
+      ],
+      "title_zh": "拟阵约束下非单调次模最大化的确定性 0.401 近似算法",
+      "uncertainty": "仅有标题与摘要，未提供全文，因此无法确认算法的完整步骤、证明细节、查询复杂度的具体阶数以及是否存在实验验证；作者单位、通讯作者与局限均未在材料中给出。相关性评分基于摘要判断，存在因缺少全文而低估或高估其与调度优化可迁移性的可能。",
+      "why_recommended": "虽然与当前聚焦的智能优化、生产调度和 AI4OR 方向关联较弱，但该论文提供了在精确值与独立性预言机模型下处理组合约束子集选择的确定性近似技术，对于关注约束可行性、解质量保证和算法可复现性的研究者具有理论参考价值；阅读时可重点关注其如何将随机框架确定性化以及有限支撑表示精确求值期望的思路，但不应将其误认为可直接应用于调度的学习方法。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:33:02.019982Z",
+      "input_hash": "b6cb9d98396745de0358de69246c6eabb7ab68d0a421e5de363f3e1a2e15534c",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
   "a4278f4a74c839df86b336ce709ad5b3387dea6e96e4cbd38cd72d6754572b12": {
     "analysis": {
       "analysis": "作者将混合范数聚类写成带 Heaviside 复合约束的混合整数规划，并区分普通局部极小与强中心局部极小两种概念：前者在中心与二元分配的乘积空间中局部，后者要求当中心足够接近时对所有可行分配都最优。基于此，作者通过限制中心在凸有界集内并构造部分整数规划（PIP），将原问题转化为一系列受限混合整数子问题，并证明在当前迭代为自定 PIP 子问题的全局解时，可得到强中心局部极小性，从而为非凸模型提供局部极小性证书。对 q=1 情形，作者利用差异凸规划对受限子问题中的非凸约束做凸内近似（线性化），使子问题可全局求解。",
@@ -40809,6 +41750,75 @@
     "provenance": {
       "analyzed_at": "2026-09-24T02:02:29.099610Z",
       "input_hash": "2a57de78c05b41edad2b5a4e1c42d1b0806bf0413f37d104461a857ede56614b",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
+  "a8e379593be8f6e3f084cee95a2c0f9d281bb873c8bcd7f250786acc18548fe7": {
+    "analysis": {
+      "analysis": "作者利用信念的信息形式参数化来表示高斯信念，并针对信念动力学引入凸松弛，从而将原问题重构为混合整数凸程序；随后从理论上证明该 MICP 的可靠性与完备性，以及松弛保持全局最优输入轨迹。材料未说明作者是否使用其他问题结构分解或下界技术。",
+      "challenges": [
+        "信念空间规划问题一般是非凸的",
+        "基于梯度的方法既不完整也不具备全局最优性",
+        "风险 STL 规范与信念动力学的耦合使问题复杂",
+        "需要在存在测量不确定性的条件下保证任务规范满足"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究高斯信念空间中的风险 STL 规划，并证明问题可转化为混合整数凸规划。",
+          "location": "abstract",
+          "quote": "In this paper, we consider Risk STL (RiSTL) planning in Gaussian belief space and show that an information-form parameterization of the belief, together with a convex relaxation of the belief dynamics, yields a mixed-integer convex program (MICP)."
+        },
+        {
+          "claim": "作者证明了 MICP 的可靠性与完备性，以及凸松弛保持全局最优输入轨迹。",
+          "location": "abstract",
+          "quote": "We prove that the MICP is sound and complete, and that the relaxation preserves the globally optimal input trajectories."
+        },
+        {
+          "claim": "论文仅在数值仿真中验证方法有效性，未在摘要中报告具体数值结果。",
+          "location": "abstract",
+          "quote": "We validate the effectiveness of our method in numerical simulations."
+        }
+      ],
+      "experiments": [
+        "摘要仅说明在数值仿真中验证了方法的有效性；未提供基线、实例规模、约束可行性、解质量、运行时间、训练开销、公平计算预算、泛化或消融等具体信息。"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "作者通过信息形式参数化信念，并对信念动力学进行凸松弛，将风险 STL 信念空间规划转化为混合整数凸规划；该转化的有效性在于凸松弛保留了全局最优输入轨迹，同时混合整数结构能够精确表达逻辑约束，从而在保证可靠性与完备性的同时实现全局最优。",
+      "limitations": [
+        "材料未说明；摘要未明确陈述任何局限。"
+      ],
+      "method": [
+        "采用信息形式参数化表示高斯信念",
+        "对信念动力学进行凸松弛",
+        "将风险 STL 信念空间规划建模为混合整数凸规划（MICP）",
+        "证明 MICP 的可靠性与完备性",
+        "证明凸松弛保持全局最优输入轨迹"
+      ],
+      "motivation": "实际中机器人从噪声测量估计状态，当测量所获信息依赖状态时，机器人可主动在信念空间中规划以减少不确定性；然而由此产生的问题通常非凸，基于梯度的方法既不完整也无法保证全局最优，因此需要一种兼具可靠性与全局最优性的求解途径。",
+      "primary_topic": "风险信号时序逻辑在信念空间中的规划，通过混合整数凸规划求解",
+      "relation_to_research": "该论文研究机器人信念空间中的风险信号时序逻辑规划，属于形式化方法与凸优化结合的方向。其与智能优化、生产调度、神经网络辅助求解、强化学习或多智能体优化的直接关联较弱；若将其迁移到生产调度或动态扰动下的调度问题，需要将调度约束与不确定性建模转化为类似的信念空间或混合整数凸规划框架，这一迁移属于推测，并需验证凸松弛在调度问题中的紧致性与可扩展性。",
+      "relevance_score": 4,
+      "setting": "论文研究机器人在高斯信念空间中执行带有空间与时间要求的任务时的规划问题，决策对象是机器人输入轨迹，目标是在满足风险信号时序逻辑（RiSTL）规范的前提下进行规划；关键约束包括信念动力学、风险 STL 规范以及测量不确定性，信息假设是机器人从噪声测量中估计状态，当测量获得的信息依赖于状态时机器人可通过信念空间规划主动降低不确定性；环境为静态或动态材料未说明。",
+      "tags": [
+        "Signal Temporal Logic",
+        "Risk STL",
+        "信念空间规划",
+        "混合整数凸规划",
+        "轨迹优化",
+        "机器人规划"
+      ],
+      "title_zh": "风险信号时序逻辑的信念空间规划：基于混合整数凸规划",
+      "uncertainty": "仅依据标题与摘要进行分析，缺少全文中的实验设置、基线对比、规模、运行时间与消融等具体信息；因此对方法实际性能、计算可扩展性以及向生产调度迁移的可行性判断存在较大不确定性，相关性评分主要基于问题领域与方法论距当前研究主题的远近。",
+      "why_recommended": "论文展示了如何通过问题重构将非凸的时序逻辑规划转化为混合整数凸规划，并给出可靠性、完备性和全局最优性的理论保证；这种将逻辑约束与凸优化结合、并关注全局最优与求解可靠性的思路，对研究学习辅助搜索、约束优化以及不确定性下决策的研究者具有方法层面的参考价值，尽管其应用领域与生产调度相距较远。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:32:53.728308Z",
+      "input_hash": "bedae8f9aa5f02b559b7da40e81cec3bd642833f639e5fc666a390f6e65d4532",
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
@@ -44050,6 +45060,89 @@
       "reading_scope": "full_text"
     }
   },
+  "b4d4690886d727dd43104e34b201d51a1507739042ae8345d2c12440757b522c": {
+    "analysis": {
+      "analysis": "作者利用一阶方法的迭代结构，将验证问题形式化为混合整数线性规划，其中目标为最大化固定点残差的无穷范数。通过构造分段仿射步骤的凸包来精确表示迭代约束，并结合区间传播、算子理论和基于优化的界紧缩技术来收紧变量界，从而提高求解效率。此外，采用顺序技术逐步增加迭代步数直至达到目标迭代次数。",
+      "challenges": [
+        "一阶方法迭代中分段仿射步骤（如软阈值、ReLU、饱和线性单元）的精确凸包构造",
+        "验证问题随迭代次数增加的可扩展性",
+        "处理非凸迭代函数并保持求解精度",
+        "与现有PEP框架在无穷范数和热启动方面的兼容性"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究一阶优化算法的性能验证，与生产调度问题无直接关联。",
+          "location": "abstract",
+          "quote": "We present exact mixed-integer linear programming formulations for verifying the performance of first-order methods for parametric quadratic optimization."
+        },
+        {
+          "claim": "论文的方法可用于分析一阶方法在有限迭代内的最坏情况性能。",
+          "location": "abstract",
+          "quote": "We formulate the verification problem as a mixed-integer linear program where the objective is to maximize the infinity norm of the fixed-point residual after a given number of iterations."
+        },
+        {
+          "claim": "论文构建了分段仿射步骤的凸包公式以提高验证精度。",
+          "location": "abstract",
+          "quote": "We derive tight polyhedral convex hull formulations of the constraints representing the algorithm iterations."
+        },
+        {
+          "claim": "论文的实验表明方法能提供数量级减少的最坏情况残差。",
+          "location": "abstract",
+          "quote": "Numerical examples, including linear and quadratic programs from network optimization, sparse coding using Lasso, and optimal control, show that our method provides several orders of magnitude reductions in the worst-case fixed-point residuals, closely matching the true worst-case performance."
+        },
+        {
+          "claim": "作者指出分析仅限于二次规划，但认为可激励类似研究。",
+          "location": "supplied_full_text",
+          "quote": "While our analysis was restricted to QPs in this work, we believe it motivates similar studies in parametric convex settings."
+        }
+      ],
+      "experiments": [
+        "与四种基线比较：样本最大值（N=500）、SDP-PEP、ℓ∞缩放的SDP-PEP、QCQP-PEP。",
+        "在来自网络优化、Lasso稀疏编码和最优控制的LP和QP实例上进行测试。",
+        "结果表明，所提方法在最坏情况固定点残差上提供了几个数量级的减少，紧密匹配真实最坏情况性能。",
+        "实验展示了方法可用于调整步长参数，如OSQP算法不同步长ρ下的最坏情况残差比较。"
+      ],
+      "first_affiliation": "Princeton University（根据致谢推断，但论文正文未明确标注第一单位，证据未提供）",
+      "insight": "通过将一阶方法的迭代步骤建模为混合整数线性规划中的仿射或分段仿射约束，并构造凸包公式，可以精确刻画算法在有限迭代内的最坏情况残差。利用算子理论的收敛性质进行界紧缩，提高了求解可扩展性，从而在验证中同时处理热启动和无穷范数等PEP难以处理的因素。",
+      "limitations": [
+        "分析仅限于二次规划（包括线性规划），作者认为这激励了对参数化凸设置的类似研究。"
+      ],
+      "method": [
+        "将验证问题建模为MILP：目标最大化给定迭代次数后的固定点残差无穷范数，约束包括参数化问题的定义和一阶方法的迭代步骤。",
+        "将梯度、投影和近端迭代步骤表示为仿射或分段仿射约束。",
+        "构造软阈值算子、ReLU和饱和线性单元的凸包公式，并证明分离问题可多项式时间求解。",
+        "开发自定义界紧缩技术：结合区间传播、算子理论收敛性质和基于优化的界紧缩。",
+        "采用顺序技术求解验证问题：迭代增加步数直到达到期望迭代次数。",
+        "在分支定界中，通过分离过程向根节点连续松弛添加割平面以收紧松弛。"
+      ],
+      "motivation": "一阶方法在实时和嵌入式优化中应用广泛，其实际收敛行为可能远优于理论最坏情况界，但现有理论界未考虑问题特定结构和热启动。因此需要一种精确且可扩展的方法来验证一阶方法在给定迭代预算下的最坏性能，以确保实时部署的安全性。",
+      "primary_topic": "一阶优化算法的性能验证",
+      "relation_to_research": "论文研究一阶优化算法的性能验证，与智能优化和生产调度中的求解器性能评估有间接关联。其MILP验证框架和凸包构造技术可能启发对调度问题中学习辅助搜索算法的性能保证研究，但迁移需要将调度问题的特定约束和迭代结构适配到验证框架中，属于推测。",
+      "relevance_score": 4,
+      "setting": "研究问题是对参数化二次优化问题（包含线性规划）的一阶方法在固定迭代次数下的性能进行精确验证。决策对象是验证问题的变量，目标是在给定参数族和初始迭代集上最大化固定点残差的无穷范数，关键约束是一阶方法的迭代步被建模为仿射或分段仿射约束。信息假设是问题参数属于已知的紧集，环境是静态的。",
+      "tags": [
+        "混合整数线性规划",
+        "一阶方法",
+        "性能验证",
+        "二次规划",
+        "凸包",
+        "界紧缩"
+      ],
+      "title_zh": "基于混合整数线性规划的一阶方法精确验证",
+      "uncertainty": "论文的第一单位和通讯作者未在提供的材料中明确给出，因此相关字段填写为证据未提供。论文与生产调度的直接关联较弱，相关性评分基于方法迁移潜力。",
+      "why_recommended": "虽然论文不直接涉及生产调度，但其对一阶方法性能的精确验证方法，特别是MILP建模、凸包构造和界紧缩技术，对研究学习辅助搜索算法的可靠性、约束可行性和泛化性有方法论上的参考价值。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:32:28.049082Z",
+      "input_hash": "2c5c54b92edc3729dc538939747158a087448f4a780a82c6c52248f5829f8661",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "b55433b104643d67bd23a358954cef72596a7a5395993326c309fad4e32a5942": {
     "analysis": {
       "analysis": "材料未明确说明作者如何利用问题结构进行分析，但摘要显示他们开发了新的理论工具来识别非线性模态，并通过仿真和硬件验证其存在，然后使用黑盒优化确定步长，使模态发展为步态。这暗示了一种基于动力学分析和优化的方法。",
@@ -46905,6 +47998,77 @@
       "reading_scope": "abstract"
     }
   },
+  "bf143aff691fc515deb43f90e46c0f80ff3a35e27a84d1f7ace33af1e0091f88": {
+    "analysis": {
+      "analysis": "材料未说明作者如何分析问题；从摘要可知其设计围绕分布尾部系数的重要性和生成阶段的异质性展开，但具体的问题结构分析、分解或下界推导未提供。",
+      "challenges": [
+        "已有 PTQ 方法在低比特量化下图像质量明显下降",
+        "需在给定比特预算下平衡不同生成阶段的重要性和计算成本",
+        "需在不引入额外参数或高精度分支的前提下校准权重量化器"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文提出一个训练无关的 ARVG 后训练量化框架，由 T-BGR 和 CAPS 组成。",
+          "location": "abstract",
+          "quote": "we propose a training-free PTQ framework for ARVG, consisting of Tail-Aware Bounded-init Grid Refinement (T-BGR) and Coarse-to-Fine Activation Precision Scheduling (CAPS)."
+        },
+        {
+          "claim": "T-BGR 引入尾部感知重建目标，更重视分布尾部系数。",
+          "location": "abstract",
+          "quote": "T-BGR introduces a tail-aware reconstruction objective for weight quantizer calibration, assigning greater importance to distribution-tail coefficients and preserving fine-grained information without introducing additional parameters or high-precision branches."
+        },
+        {
+          "claim": "CAPS 联合考虑不同生成阶段的重要性和计算成本，在给定比特预算下进行混合精度分配。",
+          "location": "abstract",
+          "quote": "CAPS performs coarse-to-fine activation precision scheduling by jointly considering the importance and computational cost of different generation stages, enabling efficient mixed-precision allocation under a given bit budget."
+        },
+        {
+          "claim": "在 Infinity 上，该框架在有效 W4A5.6 下达到接近全精度的生成质量。",
+          "location": "abstract",
+          "quote": "on Infinity, our framework achieves near full-precision image generation quality at an effective W4A5.6 activation precision, while existing methods at W4A6 still exhibit noticeable quality degradation or inconsistent performance."
+        }
+      ],
+      "experiments": [
+        "在多个 ARVG 骨干网络上进行大量实验，结果表明所提框架在激进低比特量化下持续提升稳健性。",
+        "在 Infinity 上，所提框架在有效 W4A5.6 激活精度下达到接近全精度的图像生成质量，而现有方法在 W4A6 下仍表现出明显质量下降或不一致性能。"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "作者认为量化误差对分布尾部系数的影响尤为关键，因此在权重量化器校准中引入尾部感知的重建目标，可更重视分布尾部系数并保留细粒度信息，且不引入额外参数或高精度分支；同时认为不同生成阶段的重要性与计算成本存在异质性，需在比特预算约束下进行由粗到细的激活精度调度，从而在低比特下提升稳健性。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "T-BGR（Tail-Aware Bounded-init Grid Refinement）：为权重量化器校准引入尾部感知的重建目标，对分布尾部系数赋予更高重要性，以保留细粒度信息，且不额外增加参数或高精度分支。",
+        "CAPS（Coarse-to-Fine Activation Precision Scheduling）：联合考虑不同生成阶段的重要性和计算成本，进行由粗到细的激活精度调度，在给定比特预算下实现高效的混合精度分配。",
+        "整体为训练无关（training-free）的 PTQ 框架，由 T-BGR 与 CAPS 两部分组成。"
+      ],
+      "motivation": "ARVG 模型已成为高质量图像合成的有竞争力范式，但其计算与内存需求使其难以部署在资源受限的边缘设备上；已有的后训练量化方法在低比特量化下往往导致明显的图像质量下降。",
+      "primary_topic": "自回归视觉生成模型的训练后量化",
+      "relation_to_research": "该论文属于视觉生成模型的量化压缩方向，与智能优化、生产调度、神经网络辅助求解、强化学习或智能体优化的关系较弱。其“重要性感知的比特分配”思路与资源分配类优化存在表面相似性，但论文本身未涉及约束决策或调度求解，迁移到生产调度等方向需要重新定义决策变量、约束与目标，属于推测。",
+      "relevance_score": 2,
+      "setting": "研究问题为自回归视觉生成（ARVG）模型在资源受限边缘设备上部署时计算与内存开销过大的问题；决策对象是权重量化器的初始化/校准参数以及不同生成阶段的激活精度分配；目标是在给定比特预算下尽可能保持与全精度模型接近的图像生成质量；关键约束包括低比特量化（如 W4A5.6）、给定比特预算、训练无关（training-free）；信息假设与静态或动态环境材料未说明。",
+      "tags": [
+        "后训练量化",
+        "自回归视觉生成",
+        "低比特量化",
+        "混合精度",
+        "边缘部署"
+      ],
+      "title_zh": "HGA-Quant：面向自回归视觉生成模型的异构感知量化",
+      "uncertainty": "仅提供标题与摘要，未提供全文；无法确认方法的具体实现、实验设置、基线细节、计算预算公平性、消融实验与作者陈述的局限，因此相关性判断为弱相关。",
+      "why_recommended": "当前研究者若关注通用神经网络量化与混合精度分配机制，可了解其尾部感知校准和阶段感知精度调度的设计；但该论文与生产调度、智能优化或 AI4OR 的核心主题没有直接关系，不推荐作为主参考文献。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:33:22.649349Z",
+      "input_hash": "6e32715dfeac1c16c8124c046b2a653efa484784b78dc794f29fff6c5ecb1f26",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
   "bff8630a64dbd25d48a4e36e3a10edc58c76f6a99cd9614c64dfd5ee5252513d": {
     "analysis": {
       "analysis": "作者将集体视觉导航问题形式化为一个深度强化学习问题并给出其形式化规格，把全局奖励按个体动作拆分为个体奖励以直接缓解空间信用分配难题。方法上不追求集中式大模型，而是从问题结构出发，将控制器的自动设计分解为两个阶段：先通过多智能体强化学习获得预训练的个体导航策略，再用神经进化策略对该策略参数进行优化，从而把学习信号与进化搜索结合。奖励函数通过人工信用分配设计，按前进、左转/右转、停止与碰撞分别给予不同数值，以塑造反应式避障与无地图探索行为。材料未说明作者是否使用下界、图表示或其他结构分解手段。",
@@ -49065,6 +50229,80 @@
     "provenance": {
       "analyzed_at": "2026-09-30T02:50:41.075173Z",
       "input_hash": "f6078ea6bc138d7c4bdbde614701b590377b7fd7e111755e4081a41d839d3922",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
+  "c6b1285543f745aae22ac07cc0bc639754097cb8e8aa1d701ec3b3cd97e59ef2": {
+    "analysis": {
+      "analysis": "作者将改进信号构造为测试套件搜索问题，利用质量-多样性进化算法在测试套件规模这一行为描述符上维持多样性，使每个规模维度上的质量都被追求。同时学习搜索过程中的转移核，对 LLM 作为描述符上动作执行器的噪声进行去噪。具体问题结构、分解或下界材料未说明。",
+      "challenges": [
+        "智能体 rollout 验证昂贵且主观",
+        "仓库自带测试过于稀疏，只能拒绝约四分之一行为改变型改写",
+        "需要同时优化测试套件的小规模与高强度",
+        "LLM 作为搜索执行器带有噪声"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究自演化智能体的改进信号问题，并提出用测试反馈作为可执行信号。",
+          "location": "abstract",
+          "quote": "We instead take test feedback as the executable signal, and search for test suites that are both small and strong with a quality-diversity evolutionary algorithm, so that the signal is dense and informative."
+        },
+        {
+          "claim": "TeSearch 将测试套件规模作为行为描述符，并学习转移核去噪 LLM 执行器。",
+          "location": "abstract",
+          "quote": "TeSearch treats suite size as a behavior descriptor, so that quality is pursued at every size and a small, strong suite is reachable, and learns a transition kernel during the search that denoises the LLM as an actuator on that descriptor."
+        },
+        {
+          "claim": "在 129 个真实世界模块和三个骨干模型上，TeSearch 给出了最高质量的测试套件，并且在基于 LLM 的方法中规模最小。",
+          "location": "abstract",
+          "quote": "Across 129 real-world modules and three backbones, TeSearch delivers the highest-quality suites of any method compared, LLM-driven evolutionary search included, and the smallest of any LLM-based one."
+        },
+        {
+          "claim": "作为自演化智能体的改进信号，TeSearch 拒绝 59.9% 的行为改变型改写，而仓库自带测试为 25.3%，误报率 4.0%，每次决策耗时 3.5 秒。",
+          "location": "abstract",
+          "quote": "Used as the improvement signal of a self-evolving agent, it rejects 59.9% of behavior-changing rewrites against 25.3% for the repository's tests, at a 4.0% false-alarm rate and 3.5 s per decision."
+        }
+      ],
+      "experiments": [
+        "在 129 个真实世界模块和三个骨干模型上，TeSearch 在对比方法（包括 LLM 驱动的进化搜索）中给出最高质量的测试套件，并且在基于 LLM 的方法中规模最小。",
+        "作为自演化智能体的改进信号，TeSearch 拒绝 59.9% 的行为改变型改写，而仓库自带测试为 25.3%，误报率为 4.0%，每次决策耗时 3.5 秒。",
+        "代码和数据可在 https://github.com/ccsnow127/TeSearch 获取。"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "将测试套件规模作为行为描述符纳入质量-多样性进化搜索，使搜索能在每个规模上追求质量，从而可达小而强的测试套件；同时在搜索过程中学习转移核，对 LLM 在该描述符上的动作去噪，使 LLM 作为执行器更有效。其贡献在于把改进信号的构造从稀疏可执行检查转向密集且可搜索的测试反馈。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "TeSearch 将测试套件大小视为行为描述符，使质量在每个大小上都被追求，从而可达小而强的套件。",
+        "采用质量-多样性进化算法搜索既小又强的测试套件。",
+        "在搜索过程中学习转移核，对 LLM 在该描述符上作为执行器的动作去噪。",
+        "将搜索得到的测试套件用作自演化智能体的改进信号，决定保留哪些改写。"
+      ],
+      "motivation": "自演化智能体通过改写自身 harness 并选择保留哪些改写来提升能力，但改写是否值得保留取决于验证信号。智能体 rollout 验证昂贵且主观，仓库自带测试又过于稀疏，只能拒绝约四分之一行为改变型改写，导致改进信号既不密集也不可靠。因此需要寻找既小又强的测试套件，作为可执行的密集改进信号。",
+      "primary_topic": "自演化智能体的改进信号与测试套件搜索",
+      "relation_to_research": "论文事实：该工作面向自演化智能体的改进信号构造，使用质量-多样性进化算法搜索测试套件，并将 LLM 作为搜索执行器并学习转移核去噪。与智能优化、生产调度和 AI4OR 的关系：它不直接处理柔性作业车间、流水车间、分布式制造、生产运输协同或能效多目标约束优化，也不直接求解调度问题。推测：其质量-多样性进化搜索框架以及“将 LLM 作为带噪执行器并学习转移核去噪”的思想，在满足一定条件时可迁移到生产调度中的解空间多样性维护或启发式生成器搜索，但这需要将行为描述符替换为调度解的结构特征，并验证约束可行性与解质量，且迁移属于推测而非作者结论。",
+      "relevance_score": 3,
+      "setting": "研究问题为自演化智能体改写自身 harness 后需决定保留哪些改写，其核心是改进信号即改写必须通过的检查。决策对象为用于验证改写的测试套件，目标是在测试套件规模小且强度高之间取得平衡，使改进信号既密集又有信息量。关键约束包括：智能体 rollout 验证昂贵且主观，仓库自带测试过于稀疏，仅能拒绝四分之一行为改变型改写。信息假设为可执行检查（测试）可作为反馈信号，且测试套件质量与规模可通过质量-多样性进化算法搜索。环境为面向 129 个真实世界模块的静态代码改写验证场景，动态性材料未说明。",
+      "tags": [
+        "自演化智能体",
+        "测试套件搜索",
+        "质量-多样性进化算法",
+        "LLM",
+        "可执行信号"
+      ],
+      "title_zh": "小而强：将测试套件作为自演化智能体的改进信号",
+      "uncertainty": "只能依据标题与摘要判断，无法确认方法细节、实验公平计算预算、训练开销、泛化与消融设置、具体领域迁移可行性。相关性评分较低是因为论文主题与生产调度、智能优化求解没有直接关联，仅在最抽象的“进化搜索与 LLM 执行器去噪”层面可能存在迁移路径，且该路径为推测。",
+      "why_recommended": "若关注进化算法与 LLM 结合、学习辅助搜索以及搜索过程中的噪声处理，该文展示了将质量-多样性进化算法用于构造可执行验证信号的机制，其中“以规模为行为描述符”和“学习转移核去噪 LLM 执行器”可作为方法层面的参考。但该文不涉及生产调度或约束优化求解，相关性有限，按当前研究画像不作为核心推荐，仅建议对 LLM 辅助进化搜索机制感兴趣时泛读。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:33:03.301002Z",
+      "input_hash": "e446987ce98e47554f3aa813431be4d3d5920730debbcf82223c2af6c813a7d9",
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
@@ -51816,6 +53054,119 @@
       "reading_scope": "abstract"
     }
   },
+  "d0afb15a007597b423606b57fb85cc7b0766a2d5541376edf83282d1851ae904": {
+    "analysis": {
+      "analysis": "作者将 LLM 红队测试形式化为多目标黑盒优化问题，定义了攻击成功函数 sigma(x,t,e)，其中 x 为攻击提示、t 为有害行为任务、e 为部署环境，通过评判器 J 判断目标模型 M 的输出是否为 harmful；目标包括最大化 ASR 与 XFER、最小化 Detectability 与 Length。作者进一步将 REPRO 刻画为双层优化问题，并设计结构化失败分析来利用目标模型拒绝响应的语义结构，将其分类到防御类型并映射到反制策略，再以 Thompson Sampling 维护各策略的后验表现并进行选择。问题分析还涉及进化搜索中的种群多样性维持、探索控制以及计算开销讨论。",
+      "challenges": [
+        "在无法获取目标模型梯度或 logits 的纯黑盒条件下进行有效搜索",
+        "避免依赖人工为每个目标模型设计攻击模板",
+        "在优化单一攻击成功目标的同时保持攻击种群多样性",
+        "将目标模型的自由文本拒绝响应转化为可用于搜索决策的结构化信号",
+        "在单张消费级 GPU 和有限查询预算下运行进化优化",
+        "公平比较不同评判器、预算和模型版本下的基线结果"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究的是大语言模型对抗提示的自动化红队测试，而非生产调度或 AI4OR 问题。",
+          "location": "abstract",
+          "quote": "We present REPRO (Reflective Evolutionary Prompt Optimization), a pure black-box framework that discovers adversarial prompts through evolutionary optimization driven entirely by a compressed open-weight 7B reflective model on a single consumer GPU."
+        },
+        {
+          "claim": "论文使用进化优化、结构化失败分析和 Thompson Sampling 进行黑盒搜索。",
+          "location": "abstract",
+          "quote": "REPRO introduces two mechanisms absent from prior work, both isolated in a component ablation: semantic crossover, an LLM-guided multi-parent recombination operator, and Bayesian strategy selection via Thompson Sampling informed by structured failure analysis."
+        },
+        {
+          "claim": "作者明确说明 ASR 达到 100% 但该数字受到评判器与搜索终止协议两个条件的限定。",
+          "location": "abstract",
+          "quote": "Two properties of the protocol qualify that figure. The judge scoring candidates during optimization also produces the reported ASR, and search halts when it accepts, so ASR reports whether search succeeded within the iteration budget rather than success at a fixed budget."
+        },
+        {
+          "claim": "作者承认基线比较不是同条件比较，而是同一协议下的模型覆盖目录。",
+          "location": "abstract",
+          "quote": "All baseline figures are transcribed from their original papers, which use different judges, budgets, and model versions. We therefore present this as a catalog of model coverage under one protocol rather than a head-to-head ranking, and develop both qualifications in the paper."
+        },
+        {
+          "claim": "论文将红队测试形式化为多目标黑盒优化问题，目标包括 ASR、XFER、Detectability 和 Length。",
+          "location": "supplied_full_text",
+          "quote": "We formalize LLM red-teaming as a multi-objective black-box optimization problem."
+        },
+        {
+          "claim": "结构化失败分析将拒绝响应分类为防御类型并路由到反制策略，且维护每个行为的尝试状态。",
+          "location": "supplied_full_text",
+          "quote": "We introduce a purpose-built feedback routine that classifies target-model refusals into a taxonomy of defense types, routes each type to a ranked list of counter-strategies, and maintains per-behavior state about which counter-strategies have been tried and with what outcomes."
+        },
+        {
+          "claim": "多目标 Pareto 前沿能力仅报告为已实现机制而非已评估结果。",
+          "location": "supplied_full_text",
+          "quote": "The experiments in this paper exercise only the attack-success objective, so we report this as an implemented mechanism rather than an evaluated result"
+        },
+        {
+          "claim": "论文报告在 211 个行为、五个目标模型上每个行为中位 24 次查询，先前灰盒方法最多 10,000 次查询。",
+          "location": "supplied_full_text",
+          "quote": "REPRO terminates with a median of 24 target queries per behavior, with over half of behaviors completing within 24 queries, compared to up to 10,000 target queries per behavior for prior gray-box state of the art."
+        }
+      ],
+      "experiments": [
+        "在 AdvBench、JailbreakBench 和 HarmBench 三个基准上评估，覆盖来自 11 个模型族的 36 个目标模型，包括 GPT-5-nano、Claude-3.5-Sonnet、Gemini-2.5-Pro 和 Grok-4.1。",
+        "在作者协议下，REPRO 对每个评估目标在单轮中达到 100% attack success rate (ASR)，每个行为中位数为 24 次目标查询。",
+        "协议存在两个限定：优化期间用于给候选打分的评判器同时产生所报告的 ASR；搜索在接受时即停止，因此 ASR 报告的是搜索是否在迭代预算内成功，而不是固定预算下的成功率。",
+        "所有基线数字均转录自原始论文，这些论文使用不同的评判器、预算和模型版本，因此作者将其呈现为同一协议下的模型覆盖目录，而非直接头对头排名。",
+        "在一个包含 211 个行为、五个目标模型的设置中，REPRO 以每个行为中位数 24 次目标查询终止，超过一半的行为在 24 次查询内完成，相比先前灰盒最优方法每个行为最多 10,000 次目标查询。",
+        "REPRO 在攻击强度、迁移性和隐蔽性上维持多样的非支配解 Pareto 前沿，但实验仅运行攻击成功目标，因此该能力报告为已实现机制而非已评估结果。",
+        "组件消融用于隔离语义交叉和贝叶斯策略选择两个机制的贡献，摘要称两者均被组件消融隔离，但材料未给出消融具体数值。",
+        "由于 ASR 达到 100% 上限，作者指出该指标对比较 REPRO 变体之间差异的区分能力有限。"
+      ],
+      "first_affiliation": "King Fahd University of Petroleum & Minerals, Information and Computer Science Department, Dhahran, Saudi Arabia",
+      "insight": "REPRO 的核心洞察在于将对抗提示发现视为一个由反思信号驱动的闭环进化搜索问题：不是独立地变异每个攻击，而是借助一个压缩的开放权重反思模型对目标模型拒绝行为进行结构化失败分析，把拒绝归入防御类型分类体系并路由到反制策略，再通过 Thompson Sampling 在策略层面进行贝叶斯选择，同时使用语义交叉让多个父代攻击重组互补技术。这样搜索能够在攻击策略空间而非仅仅是提示字符串空间中进行有信息的探索与利用，从而在黑盒条件下提高查询效率并维持种群多样性。",
+      "limitations": [
+        "优化期间给候选打分的评判器同时产生所报告的 ASR，存在评判器与优化目标耦合的问题。",
+        "搜索在接受时即停止，因此 ASR 报告的是搜索是否在迭代预算内成功，而不是固定预算下的成功率。",
+        "所有基线比较均基于其他作者在其各自评判器、评估协议和模型版本下发表的数字，论文在表格中标注了这些差异，而不是作为同条件比较呈现。",
+        "100% 的 ASR 上限使该指标在比较 REPRO 变体之间时缺乏区分度。",
+        "粗粒度的二元攻击成功判定降低了该指标作为部署风险信号的实用性，作者认为需要严重程度分级指标，并将重新评分现有攻击语料列为未来工作方向。",
+        "REPRO 在攻击强度、迁移性和隐蔽性上维持 Pareto 前沿的能力仅在实验中实现了攻击成功目标，报告中将其定位为已实现机制而非已评估结果。",
+        "作者未对评估的商业模型进行提交前厂商通告，并在文中明确说明了这一点。",
+        "论文使用两种披露级别展示攻击示例：占位目标的结构模式，以及少量一个完整的攻击-响应对以证明攻击能诱导真实有害输出。"
+      ],
+      "method": [
+        "纯黑盒框架：仅通过查询目标模型获取文本输出，不依赖 logits 或梯度，由压缩的开放权重 7B 反思模型驱动整个搜索循环。",
+        "语义交叉 semantic crossover：一种由 LLM 引导的多父代重组算子，将来自不同策略族的互补攻击技术组合成新的攻击提示，而不是孤立地进化每个攻击。",
+        "结构化失败分析：将目标模型的拒绝响应分类为防御类型分类体系，将每种类型路由到排序后的反制策略列表，并维护每个行为上已尝试的反制策略及其结果状态。",
+        "贝叶斯策略选择：使用 Thompson Sampling，并以上述结构化失败分析为信息，在反制策略层面进行选择。",
+        "反思式进化生成循环：结合攻击库（覆盖 14 个策略族）、反思机制和生成周期来产生候选攻击提示。",
+        "探索控制：框架包含探索控制机制，材料未给出具体细节。",
+        "多目标机制：支持在攻击强度、迁移性和隐蔽性上维持非支配解 Pareto 前沿，但论文实验仅实际运行了攻击成功目标，因此该机制报告为已实现机制而非已评估结果。"
+      ],
+      "motivation": "安全对齐的大语言模型仍然容易被对抗提示绕过安全训练。现有自动化红队方法要么需要生产环境中不可用的特权访问（如白盒梯度），要么依赖人工为每个模型定制模板，要么只优化单一目标而缺少种群级别的多样性。作者希望构建一个纯黑盒、模型无关、可在单张消费级 GPU 上运行、并能维持多样化攻击提示的自动化红队框架。",
+      "primary_topic": "大语言模型红队测试中的对抗提示自动进化优化",
+      "relation_to_research": "论文事实：REPRO 研究的是大语言模型对抗提示的自动红队测试，核心方法是进化搜索、Thompson Sampling、LLM 引导的多父代重组以及结构化失败分析，属于通用黑盒提示优化，并未直接处理生产调度、柔性作业车间、流水车间、分布式制造或多目标约束生产优化问题。迁移设想（推测）：其反思式进化搜索框架、失败分析驱动的策略选择机制和种群多样性维持思路，在概念上可能迁移到生产调度中的启发式策略选择或算法配置问题，例如用类似 Thompson Sampling 的机制在多种调度规则或邻域算子之间进行自适应选择，但迁移需要将目标模型替换为调度问题评估器、将攻击提示替换为调度规则或解表示，并重新定义失败分析与收益信号，且迁移有效性需要独立实验验证，不能由本文结论直接推出。",
+      "relevance_score": 2,
+      "setting": "研究问题为在纯黑盒设定下自动发现能绕过安全对齐的大语言模型对抗提示，决策对象是攻击提示文本 x，目标是同时优化攻击成功率 ASR（最大化）、跨环境迁移率 XFER（最大化）、可检测性 Detectability（最小化）和提示长度 Length（最小化）；关键约束包括仅能通过查询访问目标模型、无法获取 logits 或梯度、单张消费级 GPU 上运行一个压缩的 7B 反思模型；信息假设为可获取目标模型对给定提示的文本输出，并可借助评判器 J 判定是否 elicits harmful content；环境既包含不同部署系统提示或安全上下文集合 E，本质上是静态查询式黑盒优化，材料未说明目标模型权重或内部状态是否随时间变化。",
+      "tags": [
+        "对抗提示优化",
+        "LLM红队测试",
+        "进化算法",
+        "黑盒优化",
+        "Thompson Sampling",
+        "多目标优化",
+        "AI安全"
+      ],
+      "title_zh": "REPRO：用于自动化大语言模型红队测试的反思式进化提示优化器",
+      "uncertainty": "输入材料为摘要与不完整全文节选，缺少完整的实验数值表、消融结果、方法伪代码细节和部分超参数设置；全文节选存在多处明显截断，作者单位信息来自全文片段而非摘要；通讯作者未在材料中明确标注；因此对实验公平性、消融贡献量和迁移价值的判断存在较高不确定性。",
+      "why_recommended": "对于研究智能优化和生产调度的读者，本文的参考价值主要在于其黑盒、多目标、种群式进化搜索机制设计：语义交叉算子、基于结构化失败分析的贝叶斯策略选择以及查询预算下的搜索终止逻辑，可能为学习辅助搜索中的策略选择和算子组合提供跨领域启发。但由于研究问题是 LLM 安全测试而非生产调度，相关性有限，建议仅从通用黑盒进化优化与策略自适应选择的角度选择性阅读，不应将其视为 AI4OR 或生产调度的直接相关工作。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:32:35.278642Z",
+      "input_hash": "6a2e58c189998ad1b04fbbd5a2aad8bd6cd351c0fafda8b5d19043d22b0260b7",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "d1cf2902827de6114ef6cdd5438cd29e2d6adb976afb0ce48abef96ef0d018d3": {
     "analysis": {
       "analysis": "作者对鲁棒稀疏均值-方差问题进行了支撑级分解，刻画了支撑限制、局部和全局极小点，推导了全局最优解非零分量的界，并证明了稀疏水平可通过正则化参数进行阈值控制；在此基础上将结构性质转化为分支定界中的下界、上界和热启动策略。",
@@ -52448,6 +53799,91 @@
     "provenance": {
       "analyzed_at": "2026-09-24T02:02:36.836405Z",
       "input_hash": "59d2c67fa72025c479594069ae2ac3baafaa6dbe53fdd51afb19a5b1a0c8ca6b",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
+  "d48a3edf25531d7ea85288621df377b8cfd17358f52b7da60be742f022860a70": {
+    "analysis": {
+      "analysis": "作者通过分析残差正则化扩散模型中残差代价对预测误差的依赖，指出残差惩罚对状态的敏感度差异会带来规避与泄漏两种后果，并以此作为设计数据锚定惩罚的依据。具体的理论推导形式与证明材料未说明。",
+      "challenges": [
+        "同一预测误差在不同可行状态产生不同残差代价，导致偏好低敏感状态",
+        "可行但落在数据支撑之外的状态同样使残差消失，引发分布泄漏",
+        "需在不改变模型架构与采样流程的前提下修正偏差",
+        "残差雅可比的计算与归一化带来的额外代价在摘要中未量化"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "提升约束满足不必提升对数据分布的忠实度，二者存在冲突",
+          "location": "abstract",
+          "quote": "improving constraint satisfaction need not improve fidelity to the data distribution"
+        },
+        {
+          "claim": "残差代价对状态的敏感度差异会导致规避与泄漏两种后果",
+          "location": "abstract",
+          "quote": "the same prediction error can incur different residual costs near different feasible states, preferring states with lower residual sensitivity (avoidance)"
+        },
+        {
+          "claim": "偏好可延伸到数据支撑之外但残差同样为零的可行状态",
+          "location": "abstract",
+          "quote": "this preference can extend to feasible states outside the data support, where the residual also vanishes (leakage)"
+        },
+        {
+          "claim": "提出用干净训练样本处的残差雅可比加权并归一化的数据锚定惩罚",
+          "location": "abstract",
+          "quote": "we propose a data-anchored penalty that weights prediction errors by the residual Jacobian at the clean training sample and normalizes the resulting magnitude"
+        },
+        {
+          "claim": "该方法不改变模型架构与采样流程",
+          "location": "abstract",
+          "quote": "This removes the incentive to relocate to less sensitive states without changing the model architecture or sampling procedure"
+        },
+        {
+          "claim": "实验涵盖受控合成系统、三个 PDE 系统与分子过渡态生成",
+          "location": "abstract",
+          "quote": "Experiments on a controlled synthetic system, three PDE systems, and molecular transition-state generation with flow matching demonstrate the benefits of anchoring"
+        }
+      ],
+      "experiments": [
+        "在受控合成系统上进行实验",
+        "在三个 PDE 系统上进行实验",
+        "在分子过渡态生成任务上结合流匹配进行实验",
+        "摘要称实验展示了锚定方法的好处，但未给出基线、实例规模、解质量或运行时间等具体数字"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "残差惩罚在可行域内并非均匀：不同可行状态对同一预测误差的残差敏感度不同，优化会偏向残差敏感度更低的状态，形成规避；当数据支撑之外也满足残差为零时，这种偏好会进一步导致泄漏，即样本迁出数据分布。核心洞察是应让惩罚权重反映干净训练样本处的残差敏感度，从而消除状态迁移的激励。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "在数据拟合目标上叠加物理残差惩罚的物理信息生成模型框架下分析偏差",
+        "提出数据锚定惩罚：用干净训练样本处的残差雅可比对预测误差加权",
+        "对加权后的残差量进行归一化，以控制其尺度",
+        "该修正不改变模型架构，也不改变采样流程"
+      ],
+      "motivation": "作者指出物理信息生成模型中提升约束满足并不一定提升对数据分布的忠实度，二者可能存在冲突，需要刻画该冲突的成因并给出不改变模型结构与采样流程的缓解手段。",
+      "primary_topic": "物理信息扩散/流匹配生成模型中的分布偏差与残差正则化",
+      "relation_to_research": "该论文属于物理信息生成建模方向，与智能优化、生产调度、学习辅助搜索、数学规划结合等主题没有直接联系。其关于残差正则化会诱导优化偏向低敏感状态的分析思路，推测可能对带约束惩罚的优化问题有启发，例如在调度问题中惩罚项对决策变量的敏感度不均可能造成解分布偏移；但迁移需要重新定义残差、雅可比与数据支撑，并验证约束可行性与解质量，这些均为推测，并非作者结论。",
+      "relevance_score": 2,
+      "setting": "研究设定为以扩散模型和流匹配为代表的生成建模任务：模型在拟合数据分布的同时通过物理残差惩罚强制满足物理约束，目标是生成既符合物理约束又忠实于数据分布的样本。决策对象为生成样本的分布位置，关键约束是物理残差需接近零，信息假设为可计算残差及其对预测的雅可比，环境为静态的离线训练与采样过程。生产调度、约束优化求解等要素材料未说明。",
+      "tags": [
+        "物理信息生成模型",
+        "扩散模型",
+        "流匹配",
+        "残差正则化",
+        "分布偏差"
+      ],
+      "title_zh": "物理信息生成模型中分布偏差的表征与缓解",
+      "uncertainty": "仅有标题与摘要，无法获知方法的形式化推导、实验基线、规模、计算开销与消融结果；对物理残差与调度约束之间的类比属于推测，迁移可行性未经任何验证。",
+      "why_recommended": "对当前研究者而言，该论文仅在一般意义上提供了关于惩罚项敏感度差异可能扭曲优化偏好的分析视角，可作为带约束优化中惩罚设计的类比参考，但缺乏与生产调度、强化学习求解器或 AI4OR 流程的直接接口，阅读优先级较低。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:33:22.059093Z",
+      "input_hash": "3f5c315304a4689229d332d0eb9a28d8990ccfe4cfc8c1fa6fb5db8470b159da",
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
@@ -56745,6 +58181,88 @@
       "reading_scope": "abstract"
     }
   },
+  "eddb4530e8ff97ddaed9e87fb1f0b9da6fb5ffb64bd6d7644da36ae947390758": {
+    "analysis": {
+      "analysis": "材料未说明作者具体如何分析问题结构、如何构造训练标签或如何做跨程序归一化；摘要只表明模型读取测试输出、失败诊断和所提编辑，并预测通过该编辑达到修复所需的修复步数分布，再据此在所有待处理编辑之间排序。",
+      "challenges": [
+        "如何在未生成修订代码之前估计某个编辑的修复代价，缺少执行反馈。",
+        "如何有效利用测试失败细节和编辑文本，而不仅依赖测试通过率或搜索统计。",
+        "如何在多个程序之间统一排序待处理编辑，使搜索预算分配高效。",
+        "如何保证学到的排序策略在不同修复LLM上无需重训练即可泛化。"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究LLM代码修复中生成与测试修订昂贵，需选择修复方向以提高效率。",
+          "location": "abstract",
+          "quote": "Large language model (LLM) code-repair systems fix faulty programs by repeatedly generating and testing revisions. Each revision is costly, making the choice of which repair to pursue important for efficiency."
+        },
+        {
+          "claim": "现有搜索策略依赖测试通过率和搜索统计，忽略测试失败细节和所提编辑。",
+          "location": "abstract",
+          "quote": "Existing search policies rely on test pass rates and search statistics, ignoring the details of test failures and proposed edits."
+        },
+        {
+          "claim": "CodeTriage在生成和测试修订代码之前对编辑排序，预测修复所需步数分布。",
+          "location": "abstract",
+          "quote": "We introduce CodeTriage, a learned policy that prioritizes edits before their revised programs are generated and tested. Its 0.6B-parameter model reads the test output, failure diagnosis, and proposed edit, then predicts a distribution over the number of repair steps needed to reach a fix through that edit."
+        },
+        {
+          "claim": "该方法在留出任务上减少程序修订和输出token，并在未见修复LLM上取得最高平均成功率。",
+          "location": "abstract",
+          "quote": "On held-out repair tasks, CodeTriage finds fixes with 21% fewer program revisions and 12% fewer output tokens than the strongest baseline on each metric. Without retraining, it achieves the highest average success across search budgets for each of 11 unseen repair LLMs."
+        },
+        {
+          "claim": "消融表明失败上下文、编辑文本和跨程序比较都带来提升，并发布了大规模语料库。",
+          "location": "abstract",
+          "quote": "Ablations show that both the failure context and edit text, as well as comparisons across programs, improve search. We also release a corpus of 12.2 million program versions from four LLMs, organized into repair trees with proposed edits and test results."
+        }
+      ],
+      "experiments": [
+        "在留出的修复任务上，CodeTriage相比各自指标最强的基线减少21%的程序修订次数，并减少12%的输出token数。",
+        "无需重新训练，在11个未见的修复LLM上，在每个搜索预算下均取得最高的平均成功率。",
+        "消融实验表明，失败上下文与编辑文本二者都对搜索有帮助，并且跨程序比较也带来提升。",
+        "作者发布了一个包含来自四个LLM的1220万个程序版本的语料库，组织为带有所提编辑和测试结果的修复树。",
+        "摘要未说明具体基线、实例规模、运行时间、训练开销和公平计算预算的细节。"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "该工作核心洞察在于：修复是否容易成功，不只取决于历史测试通过率或搜索统计，还取决于具体的失败模式与候选编辑之间的匹配关系；因此可以训练一个轻量策略模型，在尚未生成和测试修订代码之前，根据“测试输出+失败诊断+编辑文本”预测该编辑达到修复所需的修复步数分布，并据此跨程序统一排序待处理编辑。提前预测而不是事后评估，是把学习信号前移，从而让昂贵的生成与测试预算花在更可能快速修复的候选上；跨程序比较则提供了相对优先级的额外信息。",
+      "limitations": [
+        "摘要未明确陈述作者承认的局限；但模型规模0.6B参数并在未见的修复LLM上测试，泛化边界与失败模式材料未说明。"
+      ],
+      "method": [
+        "训练一个0.6B参数的学习策略模型CodeTriage。",
+        "模型输入为测试输出、失败诊断以及所提出的编辑文本。",
+        "模型输出为通过该编辑达到修复所需的修复步数分布。",
+        "在生成和测试修订代码之前，用该预测对所有程序中的待处理编辑进行优先级排序。",
+        "基于排序结果决定接下来生成并测试哪些修订版本。"
+      ],
+      "motivation": "现有搜索策略主要依赖测试通过率和搜索统计来挑选修复方向，忽略了测试失败的具体细节和所提出编辑的内容，导致搜索效率不高。由于每次生成和测试修订版本都很昂贵，选择追哪一个修复方向对整体效率至关重要，因此作者希望利用失败诊断与编辑文本信息，在学习后提前对编辑进行排序，从而减少无效的程序修订。",
+      "primary_topic": "LLM代码修复中的学习式搜索策略（test-time search）",
+      "relation_to_research": "该论文属于LLM代码修复中的学习式搜索，关注在昂贵验证前对候选编辑排序，与智能优化中的“学习辅助搜索”有方法论上的相似性。其核心机制——用轻量模型预测候选操作的价值并据此分配搜索预算——在概念上可迁移到生产调度中的候选邻域选择、动态扰动下的修复性重调度、或分布式制造中的任务-机器分配优先级排序。但需注意：该论文的决策对象是代码编辑，不是车间作业或资源分配；其状态、动作和测试反馈来自代码修复，材料未提供任何约束满足或可行解修复的实验。因此，迁移到生产调度属于推测，需满足条件：将“测试输出/失败诊断/编辑文本”替换为调度状态与扰动诊断特征，将“修复步数分布”替换为候选调度动作的改进代价或可行性代价，并验证在有限计算预算下能否保持约束可行性和解质量。",
+      "relevance_score": 3,
+      "setting": "研究设定为大型语言模型（LLM）驱动的代码修复系统：给定有缺陷的程序，系统可以提出多个编辑（repair edit）候选，每个候选需要通过生成修订后的程序并运行测试来验证，目标是在有限搜索预算内尽快找到修复。决策对象是“在生成并测试修订代码之前，对多个待处理编辑进行优先级排序”；目标是最小化达到修复所需的程序修订次数以及输出token数；关键约束是每一次修订与测试都要付出代价，因此搜索预算有限。信息假设方面，策略可以读取测试输出、失败诊断和候选编辑文本，并在生成修订代码前进行预测；静态或动态环境材料未说明，但任务本身隐含跨程序批量的待处理编辑池。",
+      "tags": [
+        "LLM code repair",
+        "learned search policy",
+        "test-time search",
+        "failure diagnosis",
+        "edit prioritization"
+      ],
+      "title_zh": "让每一次扩展都有价值：面向LLM代码修复的高效搜索学习",
+      "uncertainty": "本次判断仅基于标题与摘要，未提供全文。因此对训练数据构造、奖励/标签定义、基线细节、公平计算预算、约束可行性的处理、以及模型架构与推理开销等均无法确认；相关性分数较低主要因为应用领域是LLM代码修复而非生产调度或制造优化，但方法机制有迁移潜力。",
+      "why_recommended": "对于研究学习辅助搜索、多智能体/LLM智能体在优化中的搜索策略，以及有限计算预算下候选方案优先级排序的研究者，该论文提供了一个清晰的范式：在昂贵生成/验证之前，用小模型预测候选操作所需步数分布并进行全局排序。其消融设计与跨模型泛化评估思路，可启发生产调度中“学习如何选择下一个邻域或修复动作”的研究；同时，论文提供的大规模修复树语料库也可能为研究序列决策与搜索轨迹学习提供参考。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:32:31.671091Z",
+      "input_hash": "a5d8512075b7bf6ae738398c438a23c5e4377619f7f3ce75fcd545f115fd07ed",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
   "ede2fe04c3443a7eef6b7e5724def726b3b161d0fcd3bd398e274ee288caef81": {
     "analysis": {
       "analysis": "作者利用分支变量选择问题的结构，将强分支示范数据构造为离线数据对 (X_t, a*_t)，其中 X_t 为候选变量特征、a*_t 为强分支选出的变量，从而把“分支决策与专家示范的一致性”定义为低保真目标 F_LF 的指标。基于此，作者用 F_LF 与 F_HF（真实实例上的求解表现）之间的散点关系来诊断分布漂移，指出在 MIS 与 CA 等基准上从最佳 F_LF 到最佳 F_HF 的性能退化最严重，并恰好对应 EoH 与 ReEvo 的失败案例，据此论证必须保留 F_HF 作为细粒度验证器，并据此设计双保真度评估分配机制。",
@@ -57570,6 +59088,93 @@
       "reading_scope": "abstract"
     }
   },
+  "f147df34bccaddc4ec796c09833f4f757cd168268813044e7991dd9dad71c6a5": {
+    "analysis": {
+      "analysis": "作者将问题分解为已解决部分与未解决部分，把未解决部分归入冲突聚类，并设计协调层将通信限制在同一冲突区域内的智能体之间。在此基础上引入记忆引导重启，使智能体和聚类能够基于相邻冲突状态暂停、修正并适应修复策略。材料未说明是否使用了下界、图表示或形式化收敛分析。",
+      "challenges": [
+        "如何在分布式环境下动态识别并划分冲突聚类，而不引入过多的协调开销",
+        "如何在冲突区域内部设计受限但有效的协调层结构",
+        "如何用轻量学习机制检测停滞并引导重启，避免过重的训练或通信负担",
+        "在未知或变化的问题结构上保持修复策略的鲁棒性"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "DCSP中的智能体为本地变量赋值并需满足共享约束，现有多数求解器依赖广泛重复的点对点通信且偏被动反应式",
+          "location": "abstract",
+          "quote": "Distributed Constraint Satisfaction Problems (DCSPs) model distributed decision-making in multi-agent systems, where agents assign values to local variables while satisfying shared constraints. However, many DCSP solvers still rely on broad, repeated peer-to-peer communication and are largely reactive, with limited support for strategic coordination or learning."
+        },
+        {
+          "claim": "作者提出DCC-Incomplete，结合冲突中心分解、结构化协调、策略性修复与轻量学习进行停滞恢复",
+          "location": "abstract",
+          "quote": "we propose Dynamic Conflict Clustering-Incomplete (DCC-Incomplete), a repair-based solver that combines conflict-centred decomposition, structured coordination, strategic repair, and lightweight learning for stagnation recovery"
+        },
+        {
+          "claim": "该方法将未解决部分分组为冲突聚类，并通过协调层将通信限制在同一冲突区域内的智能体之间",
+          "location": "abstract",
+          "quote": "DCC-Incomplete groups the unsolved part of the problem into conflict clusters and restricts communication via a coordination layer to agents within the same conflict region."
+        },
+        {
+          "claim": "记忆引导重启使智能体和聚类能够基于相邻冲突状态暂停、修正和适应修复",
+          "location": "abstract",
+          "quote": "It also introduces memory-guided restart, enabling agents and clusters to pause, revise, and adapt repairs based on neighbouring conflict states."
+        },
+        {
+          "claim": "在分布式图着色基准上，记忆引导重启将成功率从37.50%提升至61.11%，中位运行时间从0.565秒降至0.367秒，每条约束的中位通信量从12.493降至6.503条消息",
+          "location": "abstract",
+          "quote": "its memory-guided restart improves the success rate from 37.50% to 61.11%, reduces median runtime from 0.565s to 0.367s, and cuts median communication from 12.493 to 6.503 messages per constraint"
+        },
+        {
+          "claim": "作者认为动态冲突聚类结合轻量策略与学习引导的修复，能提高不完整DCSP求解的通信效率与鲁棒性",
+          "location": "abstract",
+          "quote": "These results suggest that dynamic conflict clustering, combined with lightweight strategic and learning-guided repair, improves both communication efficiency and robustness in incomplete DCSP solving."
+        }
+      ],
+      "experiments": [
+        "在具有植入可满足赋值的分布式图着色基准上进行评估",
+        "记忆引导重启将成功率从37.50%提升至61.11%",
+        "记忆引导重启将中位运行时间从0.565秒降至0.367秒",
+        "记忆引导重启将每条约束的中位通信量从12.493条消息降至6.503条消息",
+        "材料未说明基线求解器名称、实例规模范围、训练开销、公平计算预算、泛化测试或消融实验的细节"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "该工作的核心洞察在于：DCSP中真正需要频繁协调的往往只是尚未解决且彼此冲突的局部变量集合，因此将通信与修复限制在动态划定的冲突聚类内部，可以同时减少无效消息和打破全局停滞。记忆引导重启之所以有效，是因为它让智能体和聚类能够根据相邻冲突状态暂停、修正并调整修复行为，从而在局部失败时转向新的搜索区域，而不是在全局范围内重复广播。",
+      "limitations": [
+        "材料未说明"
+      ],
+      "method": [
+        "冲突中心分解：将问题的未解决部分分组为冲突聚类，而非让所有智能体参与全局协调",
+        "受限通信的协调层：仅在属于同一冲突区域的智能体之间进行通信，以降低消息开销",
+        "策略性修复：以修复为基础的不完整求解框架，对未满足约束进行有针对性的调整",
+        "轻量学习与记忆引导重启：允许智能体和聚类根据相邻冲突状态暂停、修正并适应修复行为，用于停滞恢复"
+      ],
+      "motivation": "现有DCSP求解器仍依赖广泛且重复的点对点通信，且大多是被动反应式的，对策略性协调或学习的支持有限。这导致通信开销增加、搜索容易停滞，并使困难实例的求解成功率偏低。作者希望借助冲突驱动的分解与轻量学习机制来缓解这些缺陷。",
+      "primary_topic": "分布式约束满足问题的修复式求解与多智能体协调",
+      "relation_to_research": "该论文研究的是分布式约束满足问题中的多智能体协调与修复式求解，与智能优化和生产调度中的分布式决策、约束可行性维护、通信受限协同等方向有概念层面的关联。其动态冲突聚类和受限通信机制，推测可迁移到分布式制造或生产运输协同场景中，用于减少智能体间不必要的协调消息，但迁移到柔性作业车间或流水车间调度需要将变量赋值对应到工序排序或机器分配，并将约束图结构替换为调度问题的析取图或时间约束网络，且需验证冲突聚类在调度问题中的划分效果。该论文未涉及神经网络、图神经网络、强化学习或大模型智能体，其轻量学习具体形式在摘要中未明确说明。",
+      "relevance_score": 6,
+      "setting": "研究问题为分布式约束满足问题（DCSP），其中多个智能体各自为本地变量赋值并需满足共享约束。决策对象是各智能体的变量赋值及其修复策略，目标是在不完整求解框架下提高硬实例的成功率、降低运行时间与通信开销。关键约束是智能体之间只能通过受限的协调层进行通信，信息假设为智能体仅能获取同一冲突区域内相邻冲突状态的信息。环境为静态基准测试下的分布式问题，未说明是否存在动态扰动；材料未说明变量域大小、约束图密度等具体参数。",
+      "tags": [
+        "分布式约束满足",
+        "多智能体系统",
+        "冲突聚类",
+        "策略性修复",
+        "轻量学习",
+        "通信效率"
+      ],
+      "title_zh": "面向分布式约束满足的动态冲突聚类与轻量学习及策略性修复",
+      "uncertainty": "仅能依据标题与摘要进行判断，未提供全文，因此无法确认轻量学习的具体实现（是否为强化学习、监督学习或启发式规则）、冲突聚类的动态划分算法、实验的完整基线与统计显著性、问题规模及约束可行性验证细节。相关性评分基于该工作与分布式约束决策及多智能体协调的相邻关系，若需要判断其学习机制是否与神经网络辅助求解直接相关，需查阅全文。",
+      "why_recommended": "对于关注多智能体分布式决策、通信效率约束下的修复式搜索以及局部协调机制的研究者，该论文提供了一种冲突驱动的分解与重启思路，并给出了通信量、运行时间和成功率的具体对比数字。虽然其应用领域是图着色而非生产调度，但其聚类协调与记忆引导重启机制可能为分布式调度中的智能体通信治理和停滞恢复提供可借鉴的类比，属于具有明确迁移路径的相邻工作。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:32:25.469238Z",
+      "input_hash": "1d0c6bc7e39a805ab2a864e9d8cf7e59885ee34e1660af72bcf292c70df39e57",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
   "f173a893458b2efcecf6b2bcd0b357c1244bee2a5bc91ff44818a3374f224b18": {
     "analysis": {
       "analysis": "作者从 Lovász 局部引理的“非对称”形式出发，把每个约束 a 的违反概率 p_a 通过逐点变量 x_a 与依赖图中距离一、二邻域上的 (1−x_b) 乘积联系起来，将局部独立性条件转化为可算法化利用的结构；在此基础上构造“所有约束均被满足”事件的 FPRAS 与条件乘积分布的近似采样器。具体如何分解、如何构造下界或利用图结构，摘要未展开，材料未说明。",
@@ -57849,6 +59454,103 @@
     "provenance": {
       "analyzed_at": "2026-09-15T02:17:02.324541Z",
       "input_hash": "7a7a7aa3d40dd69a77b84aed93ad7ecfd360e0c099fa56aa7ee44c6be11b0174",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
+  "f3159dcc19be07f3e07d5985033d7aafee9ace61ce7574f8dfddb424c75fa762": {
+    "analysis": {
+      "analysis": "作者将 DM 的非线性单变量效用函数用连续分段线性函数近似，以增量向量作为待估计参数，从而将效用 elicitation 视为对增量向量多面体可行域的逐步收缩。成对彩票比较被转化为对增量向量的线性约束，即超平面切割。针对 PLF 近似误差引起的切割方向偏差，作者动态地将新产生的彩票结果加入为 PLF 的额外断点，以自适应地提高近似精度。在决策阶段，作者由 elicited 响应构造效用函数模糊集，取其解析中心作为名义效用增量向量，并通过对偶重构推导出对增量向量偏离解析中心施加非对称界与方向性权重的模型，最终在分段线性效用下化为单一 MILP 重构。材料未说明作者是否利用了其他问题特定结构如下界或图表示。",
+      "challenges": [
+        "效用函数形状、Lipschitz 模和拐点均未知，无法直接参数化估计",
+        "PLF 近似误差导致由成对比较生成的超平面偏离理想切割方向",
+        "偏好信息有限时模糊集过大导致 maximin 决策过度保守",
+        "需要在保持鲁棒性的同时提供可调节的保守性控制",
+        "分段线性效用下模型需保持可处理的 MILP 形式"
+      ],
+      "corresponding_authors": [
+        "Shaoyan Guo",
+        "Huifu Xu"
+      ],
+      "evidence": [
+        {
+          "claim": "论文提出改进多面体方法，在效用函数形状、Lipschitz 模与拐点均未知的情况下 elicit 非线性单变量效用函数",
+          "location": "abstract",
+          "quote": "we propose a modified polyhedral method to elicit a decision maker’s (DM’s) nonlinear univariate utility function without explicit knowledge of its shape, Lipschitz modulus, or inflection point"
+        },
+        {
+          "claim": "用连续分段线性函数的增量向量表示效用，并将 elicitation 视为多面体可行域的逐步收缩",
+          "location": "abstract",
+          "quote": "we approximate the nonlinear utility function using a continuous piecewise linear function (PLF) represented by its increment vector, such that utility elicitation can be viewed as progressively reducing a polyhedral feasible region of increment vectors"
+        },
+        {
+          "claim": "通过动态加入新彩票结果作为额外断点来修正 PLF 近似误差导致的切割方向偏差",
+          "location": "abstract",
+          "quote": "Since PLF approximation errors may cause the resulting hyperplanes to deviate from ideal cutting directions, we dynamically enrich the PLF by incorporating newly generated lottery outcomes as additional breakpoints"
+        },
+        {
+          "claim": "以模糊集解析中心作为名义效用增量向量，通过对偶重构得到控制保守性的灵活加权方案",
+          "location": "abstract",
+          "quote": "we use the analytic center of the ambiguity set as a nominal estimate of the DM’s utility increment vector and derive, through dual reformulation, a flexible weighting scheme for controlling conservatism"
+        },
+        {
+          "claim": "分段线性效用下模型可重构为单一混合整数线性规划",
+          "location": "abstract",
+          "quote": "admits a single mixed-integer linear programming reformulation for piecewise linear utilities"
+        },
+        {
+          "claim": "数值实验表明 elicitation 方法与保守性削减方法的有效性",
+          "location": "abstract",
+          "quote": "Numerical results demonstrate the effectiveness of the proposed elicitation method and conservatism-reduction approach"
+        },
+        {
+          "claim": "在投资组合优化问题上新 UPRO 模型在鲁棒性与保守性之间取得平衡",
+          "location": "supplied_full_text",
+          "quote": "They also demonstrate the advantages of the new UPRO model when applied to a portfolio optimization problem, achieving a balance between robustness and conservatism"
+        }
+      ],
+      "experiments": [
+        "材料指出已开展大量数值实验，用于验证所提改进多面体方法（MPM）与 UPRO 模型保守性削减的有效性",
+        "结果表明 MPM 在缺乏效用形状或 Lipschitz 模先验知识时尤其有效",
+        "在投资组合优化问题上，新的 UPRO 模型在鲁棒性与保守性之间取得平衡",
+        "材料未提供具体基线、实例规模、约束可行性、解质量数字、运行时间或训练开销等细节"
+      ],
+      "first_affiliation": "Department of Systems Engineering and Engineering Management, The Chinese University of Hong Kong, Shatin, N.T., Hong Kong",
+      "insight": "核心洞察有两点。其一，将非线性单变量效用的 elicitation 转化为对分段线性函数增量向量的多面体可行域的渐进收缩：用增量向量表征连续分段线性函数（PLF），成对彩票比较生成超平面切割，使 elicitation 成为逐步缩小多面体的过程。其二，由于 PLF 近似误差会使超平面偏离理想切割方向，作者通过把新生成的彩票结果动态加入为额外断点来丰富 PLF，从而让切割方向随信息增加而更准确。对于保守性，作者利用模糊集的解析中心作为 DM 效用增量向量的名义估计，并通过其对偶重构得到可在解析中心两侧施加非对称界与不同权重的灵活加权方案，从而在鲁棒性与保守性之间调节平衡。",
+      "limitations": [
+        "材料未明确陈述所提方法的局限；仅提及若干潜在扩展方向，包括结合二分策略的混合 elicitation 方案、推广到多变量非线性效用函数以及应用于动态定价问题"
+      ],
+      "method": [
+        "用连续分段线性函数（PLF）近似 DM 的非线性单变量效用函数，以增量向量表示该 PLF",
+        "将效用 elicitation 建模为增量向量多面体可行域的逐步收缩，成对彩票比较生成超平面切割",
+        "迭代地通过超平面切割收缩多面体，并动态将新生成的彩票结果加入为 PLF 的额外断点以修正切割方向",
+        "由 elicited 响应构造效用函数模糊集，并计算其解析中心作为 DM 效用增量向量的名义估计",
+        "通过对偶重构推导灵活加权方案，对增量向量偏离解析中心的行为施加非对称界与方向性权重以控制保守性",
+        "在效用函数为分段线性时，将偏好鲁棒模型重构为单一混合整数线性规划（MILP）",
+        "讨论将方法扩展到多变量非线性效用 elicitation 与动态定价问题的可能路径"
+      ],
+      "motivation": "期望效用理论要求已知效用函数，但实际中 DM 的非线性单变量效用函数形状、Lipschitz 模与拐点通常未知；当偏好信息有限时，估计效用函数存在较大不确定性，可能导致决策不佳。偏好鲁棒优化（PRO）通过模糊集上的最坏情况效用做决策，但模糊集过大时最优决策会过度保守。因此需要同时解决两个问题：无形状先验的高效 elicitation，以及在不牺牲鲁棒性的前提下削减 PRO 的保守性。",
+      "primary_topic": "偏好鲁棒优化中的非线性效用函数多面体 elicitation 与保守性削减",
+      "relation_to_research": "该论文属于不确定决策下的偏好 elicitation 与鲁棒优化，与智能优化、生产调度、神经网络辅助求解、强化学习或智能体优化的直接关联较弱。其多面体切割与解析中心加权机制在方法论上可能与鲁棒调度中的保守性调节有概念相通之处：推测若将 DM 效用替换为调度目标（如 makespan、能耗或延迟），并把成对偏好反馈替换为对候选调度方案的比较或仿真评估，该切割与加权框架或可迁移到偏好驱动的生产调度鲁棒决策。但这只是推测，迁移需要解决调度问题的高维混合整数结构、约束可行性判定以及偏好反馈获取成本等条件。当前论文未涉及生产调度、学习辅助搜索或强化学习，因此相关性有限。",
+      "relevance_score": 3,
+      "setting": "研究在决策者效用函数形状、Lipschitz 模与拐点均未知的情况下，如何通过成对彩票比较（pairwise lottery comparisons）逐步 elicit 非线性单变量效用函数，并据此构造效用函数模糊集，进而求解最坏情况期望效用最大化（maximin）的偏好鲁棒优化问题。决策对象为不确定结果下的方案选择，目标是既保证鲁棒性又控制 maximin 模型的过度保守性；关键约束是仅能通过 DM 的成对偏好反馈获取信息，且需保证效用函数模糊集与 elicitation 误差的一致性。环境为静态的一次性 elicitation 与决策框架，材料未说明动态或多阶段设定。",
+      "tags": [
+        "偏好 elicitation",
+        "多面体方法",
+        "分段线性效用",
+        "鲁棒优化",
+        "保守性削减",
+        "混合整数线性规划",
+        "不确定决策"
+      ],
+      "title_zh": "改进多面体方法：无形状约束效用函数 elicit 与鲁棒优化保守性削减",
+      "uncertainty": "全文节选仅包含摘要、引言、组织结构和少量结尾描述，缺少方法细节、实验表格与完整数值结果。因此对实验规模、基线选择、计算预算、消融分析以及方法具体实现的不确定性较高；对与生产调度迁移路径的判断为推测，材料未提供直接证据。",
+      "why_recommended": "若研究者关注鲁棒优化中的保守性控制、偏好信息建模与可处理 MILP 重构，该论文提供了一种将无形状效用 elicitation 与最坏情况优化结合的清晰范式，其中解析中心加权与对偶重构思想或可启发鲁棒调度中不确定参数模糊集的保守性调节。但需注意其主题是决策分析中的效用 elicitation，与生产调度和 AI4OR 的核心问题距离较远，不宜作为直接相关文献优先阅读。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-14T02:32:17.755054Z",
+      "input_hash": "5d6b6c7866c1419a5ab7adaceeb14fac361057d4a0940a6ae4ad3c4ca7a4e6f9",
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "full_text"
