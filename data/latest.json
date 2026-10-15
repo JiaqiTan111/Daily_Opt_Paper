@@ -1,565 +1,566 @@
 {
   "dry_run": false,
-  "generated_at": "2026-10-14T10:31:13.593120+08:00",
+  "generated_at": "2026-10-15T10:12:10.542404+08:00",
   "papers": [
     {
       "analysis": {
-        "analysis": "作者通过识别传统模型的两个理想化假设来建立问题缺口，将问题分解为电气侧与信息侧耦合的优化：电气侧沿用AC/DC最优潮流的线性近似或凸松弛以保持可解性，信息侧显式建模通信路径、链路容量和路由成本；随后把切换状态与通信可用性关联，并加入DCCB延迟开断能力约束，最终将问题转化为可由现成求解器高效求解的MISOCP模型。材料未说明作者是否分析了模型的下界或使用分解算法。",
+        "analysis": "作者将自动启发式设计视为一个覆盖问题：父代选择、算子分配和停滞恢复均以启发式集合对训练实例的联合覆盖质量为依据，从而在演化搜索中显式优化覆盖目标并返回互补启发式集成。对于生成器学习，作者将搜索过程中教师LLM的自然语言洞察与生成器产生的新启发式配对，构造偏好对用于直接偏好优化，并通过反思自蒸馏项强化独立生成改进的能力。",
         "challenges": [
-          "输电切换中网络拓扑与运行状态需同时确定，候选开关数量增加时MINLP求解代价极高",
-          "通信资源可用性、链路容量与时延需与电力潮流决策耦合建模",
-          "DCCB开断能力受故障后延迟影响，需将延迟开断电流限制在断路器能力内",
-          "通信路由成本与DCCB低时延需求之间可能存在冲突，需要在同一优化框架中权衡"
-        ],
-        "corresponding_authors": [
-          "Aleksandra Lekić"
-        ],
-        "evidence": [
-          {
-            "claim": "论文提出将信息传输显式纳入故障后输电切换优化的OIPF公式",
-            "location": "abstract",
-            "quote": "this paper develops an explicit optimal info–power flow (OIPF) formulation that incorporates information transmission into the post-fault transmission-switching optimization for AC/MTDC grids."
-          },
-          {
-            "claim": "切换状态由通信路径可用性和通信资源决定",
-            "location": "abstract",
-            "quote": "The switching status of each DC branch is determined by the availability of its communication path and associated communication resources."
-          },
-          {
-            "claim": "加入DCCB可行性约束限制延迟开断电流",
-            "location": "abstract",
-            "quote": "binary switching decisions are supplemented by a DCCB feasibility constraint that limits the estimated delayed-interruption current to the DCCB breaking capability."
-          },
-          {
-            "claim": "问题被建模为MISOCP并用现成求解器求解",
-            "location": "abstract",
-            "quote": "The resulting problem is formulated as a mixed-integer second-order cone programming (MISOCP) model that can be efficiently solved using off-the-shelf optimization solvers."
-          },
-          {
-            "claim": "案例结果显示通信容量与路由成本会改变切换决策，延迟约束可能偏好低时延高成本路由",
-            "location": "abstract",
-            "quote": "Numerical results reveal that limited communication capacity and additional routing costs may render electrically beneficial switching actions infeasible or uneconomical, while delay-aware DCCB interruption constraints may favor lower-delay communication routes despite their higher costs."
-          },
-          {
-            "claim": "DCCB相关参数为假设值，案例用于验证优化公式",
-            "location": "supplied_full_text",
-            "quote": "Since this study focuses on validating the optimization formulation, assumed parameter values are adopted in the case study to demonstrate the coupling between communication delay and DCCB interruption capability and its influence on DC transmission switching decisions."
-          }
-        ],
-        "experiments": [
-          "采用自定义AC/MTDC测试系统进行案例研究，相关参数在表VI–VIII中给出",
-          "首先将松弛模型与原始非线性潮流模型比较，验证所提AC/DC潮流公式的精度",
-          "随后与基于传统OPF的输电切换方法比较，展示所提OIPF公式的有效性",
-          "结果显示：有限的通信容量和额外路由成本可能使电气上有益的切换动作不可行或不经济",
-          "结果显示：延迟感知的DCCB开断约束可能倾向于选择低时延但成本更高的通信路由",
-          "通信路由结果显示不同链路的通信量大小与节点带宽需求分布",
-          "材料未说明具体实例规模、解质量数值、运行时间、训练开销或消融实验细节"
-        ],
-        "first_affiliation": "TU Delft, Faculty of Electrical Engineering, Mathematics and Computer Science",
-        "insight": "贡献的有效性来自将“信息可达性”提升为与电气可行性同等地位的决策约束：切换状态不再仅由电气效益决定，而由通信路径可用性和资源决定；同时把通信时延与DCCB延迟开断电流挂钩，用延迟感知的开断能力约束筛除虽电气可行但无法安全执行的切换。这样得到的最优解在物理可实施性上更强，并揭示了通信容量、路由成本与DCCB能力之间的耦合会改变最优切换方案（例如倾向于低时延但高成本的路由）。",
-        "limitations": [
-          "作者在案例说明中指出，DCCB开断相关参数（I_{jk,f}^{dc}、K_{jk,f}^{dc}、κ_{jk}^{dc}）可通过离线EMT仿真或特定系统的实验表征获得，但本研究聚焦于验证优化公式，案例中采用了假设参数值来展示通信时延与DCCB开断能力之间的耦合及其对直流输电切换决策的影响",
-          "结论指出所提OIPF模型是朝着更实际可实施的输电切换决策迈出的一步，整体上材料未提供其他明确局限陈述"
-        ],
-        "method": [
-          "建立显式的最优信息-功率潮流（OIPF）公式，将信息传输纳入故障后输电切换优化",
-          "各直流支路的切换状态由对应通信路径可用性及相关通信资源决定",
-          "在二进制切换决策之外补充DCCB可行性约束，将估计的延迟开断电流限制在DCCB开断能力内",
-          "将整体问题构造为混合整数二阶锥规划（MISOCP），用现成优化求解器求解",
-          "案例中使用Gurobi求解MISOCP/SOCP模型，用Ipopt求解NLP模型以验证AC/DC潮流公式精度",
-          "采用自定义AC/MTDC测试系统验证，包含海上可再生能源经MTDC送端到陆上AC电网的配置，每个VSC站假设配备一个通信代理"
-        ],
-        "motivation": "传统输电切换模型通常用二进制变量表示开关动作，隐含假设切换命令总能及时可靠送达且开关总能成功执行，忽略了通信资源可用性以及DCCB受时延影响能否开断故障电流这两个物理实现问题。这种理想化假设造成了“最优拓扑”与“可物理实现拓扑”之间的概念鸿沟：从电气角度可行的切换动作可能因通信受限或DCCB能力不足而无法执行或不安全。因此需要将信息传输显式纳入故障后输电切换优化。",
-        "primary_topic": "AC/MTDC电网故障后输电切换的信息-功率耦合优化建模",
-        "relation_to_research": "该论文研究的是电力系统输电切换的数学规划建模（MISOCP），属于智能优化与AI4OR中“约束优化建模+现成求解器”的研究范式，与生产调度、柔性作业车间、流水车间等主题没有直接问题关联；但其“将信息/通信可行性作为显式约束嵌入组合优化”的思路，对生产调度中考虑通信时延、控制器指令可达性或分布式制造中的信息-物理耦合约束具有方法论迁移价值（推测）。若迁移到生产调度，需要将DCCB延迟开断约束类比为设备响应时间/指令延迟约束，并将通信路由成本映射为调度中的信息传输代价，同时需要验证MISOCP在调度规模下的求解可扩展性。该论文未涉及神经网络、强化学习或多智能体学习求解，因此与学习辅助搜索、神经组合优化方向的关联较弱。",
-        "relevance_score": 6,
-        "setting": "研究AC/多端直流（MTDC）电网在直流侧故障后的输电切换问题：决策对象是各直流支路的开关状态（二进制变量）以及发电机有功/无功出力、直流拓扑相关变量和通信路由；目标是最小化系统运行成本，同时保证切换指令可通过通信网络送达且直流断路器（DCCB）能在延迟影响下可靠开断故障电流；关键约束包括网络物理运行约束、通信路径可用性与资源约束、通信时延与DCCB开断能力约束；信息假设为控制中心需通过通信网络向各VSC站配置的通信代理下发命令，通信路径的可用性和带宽、时延均为显式建模对象；环境为故障后的静态（准稳态）优化场景，未讨论时域动态过程。",
-        "tags": [
-          "输电切换",
-          "最优信息-功率潮流",
-          "AC/MTDC混合电网",
-          "直流断路器",
-          "MISOCP",
-          "通信约束",
-          "拓扑重构"
-        ],
-        "title_zh": "面向AC/MTDC电网输电切换的、考虑直流断路器能力的通信-功率最优潮流",
-        "uncertainty": "输入材料为全文节选，缺少方法部分的完整公式、案例参数表、具体数值结果和与基线的定量比较，因此无法确认所提MISOCP模型的具体约束形式、求解时间、解质量、实例规模以及消融实验；对DCCB参数假设值的敏感性分析也未见完整描述。相关性评分6是基于问题领域为电力系统优化而非生产调度、但方法论可迁移的判断，若读者仅关注生产调度本身则相关性可能更低。",
-        "why_recommended": "虽然该论文的应用领域是电力系统而非生产调度，但其核心贡献——把物理执行层面的信息传输约束与设备能力约束显式写入组合优化模型，并用MISOCP保持可解性——对研究“优化模型与信息/执行约束耦合”的博士生有参考价值；案例中揭示的“通信容量与路由成本改变最优切换决策”“低时延路由可能被优先选择”等现象，可启发在分布式制造或生产运输协同中考虑通信时延对调度可行性的影响。此外，论文展示了凸松弛与现成求解器在整数-连续耦合问题上的使用方式，对约束可行性建模与公平求解预算的讨论有间接借鉴意义。"
-      },
-      "figure_gallery": {
-        "checked_at": "2026-10-14T10:31:13.593120+08:00",
-        "figures": [],
-        "html_url": "https://arxiv.org/html/2610.16777v1",
-        "status": "not_found"
-      },
-      "final_score": 0.5737278538157431,
-      "provenance": {
-        "analyzed_at": "2026-10-14T02:32:19.103178Z",
-        "input_hash": "510aef93702da36139cc5aadbaf8d229fda7eb888346ebaf9b574f91f1e7c090",
-        "model": "deepseek-v4-flash",
-        "prompt_version": "optimization-analysis-v1",
-        "reading_scope": "full_text"
-      },
-      "ranked": {
-        "paper": {
-          "abstract": "Transmission switching is an effective approach for restoring operational flexibility and improving the economic performance of AC/multi-terminal DC (MTDC) grids following DC-side faults. Its practical implementation requires that the faulted branch be safely isolated and that the associated switching commands be successfully delivered through the communication network. However, conventional transmission switching models generally represent switching actions using binary variables, without considering the availability of communication resources or whether the corresponding DC circuit breakers (DCCBs) can interrupt the fault current affected by time delay. To address these issues, this paper develops an explicit optimal info--power flow (OIPF) formulation that incorporates information transmission into the post-fault transmission-switching optimization for AC/MTDC grids. The switching status of each DC branch is determined by the availability of its communication path and associated communication resources. In addition, binary switching decisions are supplemented by a DCCB feasibility constraint that limits the estimated delayed-interruption current to the DCCB breaking capability. The resulting problem is formulated as a mixed-integer second-order cone programming (MISOCP) model that can be efficiently solved using off-the-shelf optimization solvers. Numerical results reveal that limited communication capacity and additional routing costs may render electrically beneficial switching actions infeasible or uneconomical, while delay-aware DCCB interruption constraints may favor lower-delay communication routes despite their higher costs.",
-          "authors": [
-            "Haixiao Li",
-            "Aleksandra Leki\\'c"
-          ],
-          "canonical_id": "2610.16777",
-          "categories": [
-            "eess.SY",
-            "cs.SY"
-          ],
-          "comment": null,
-          "pdf_url": "https://arxiv.org/pdf/2610.16777",
-          "published_at": "2026-10-12T13:34:13Z",
-          "source": "arxiv",
-          "title": "DCCB-Capability-Aware Optimal Info-Power Flow for Transmission Switching in AC/MTDC Grids",
-          "updated_at": "2026-10-12T13:34:13Z",
-          "url": "https://arxiv.org/abs/2610.16777",
-          "version": 1
-        },
-        "rank": 4,
-        "score": {
-          "base_score": 0.5522324614831692,
-          "exploration": 0.6599404110687217,
-          "matched_terms": [
-            "mixed integer",
-            "mixed-integer"
-          ],
-          "negative_terms": [],
-          "personal": 0.0,
-          "recency": 0.6805203522584503,
-          "topic": 0.484805078522931
-        }
-      },
-      "tier": "deep_read"
-    },
-    {
-      "analysis": {
-        "analysis": "作者将自动运筹学流程分解为语义对齐、数学建模与代码生成等阶段，把语义不确定性定义为影响问题规范的前置风险；通过构建带用户画像、模糊语义线索和受控规范错误的三层分类基准，并用多轮对话扩展来考察澄清对对齐和下游解准确率的影响，从而分析对齐质量与后续求解结果之间的关联。",
-        "challenges": [
-          "识别模糊描述中的语义错误与遗漏，而非仅做语言润色",
-          "判断现有上下文是否足以唯一支持所需修正",
-          "在信息不足时决定是否以及如何向用户提问",
-          "在澄清收益与用户交互负担之间权衡",
-          "将语义对齐质量与下游数学模型和求解准确率关联评估"
-        ],
-        "corresponding_authors": [
-          "Caihua Chen"
-        ],
-        "evidence": [
-          {
-            "claim": "论文研究自动运筹学中的语义不确定性对齐问题",
-            "location": "abstract",
-            "quote": "We study semantic alignment to identify and correct errors or omissions in these descriptions before mathematical modeling."
-          },
-          {
-            "claim": "AMAO 是两阶段对齐的多智能体框架，集成 OR 引导的 MoE 微调和基于轨迹的 harness 演化",
-            "location": "abstract",
-            "quote": "Its two-stage alignment process first uses semantic cues and contextual information to identify and correct potential semantic errors, then obtains additional information via human--AI interaction for further revision when the available context is insufficient. Specifically, AMAO integrates OR-guided mixture-of-experts (MoE) tuning and trajectory-based harness evolution to enhance semantic alignment capabilities."
-          },
-          {
-            "claim": "论文提出了歧义感知基准及其多轮对话扩展",
-            "location": "abstract",
-            "quote": "In addition, an ambiguity-aware benchmark and its matched multi-turn dialogue extension are proposed."
-          },
-          {
-            "claim": "第一阶段对齐在 32B 骨干下达到 86.8% SR 和 60.4% 解 AC",
-            "location": "supplied_full_text",
-            "quote": "First-stage alignment achieved 86.8% SR and 60.4% solution AC with a 32B backbone."
-          },
-          {
-            "claim": "交互修复在 gold routing 与 verifier 派生问题槽位下达到 90.71% 描述级 Repair AC",
-            "location": "supplied_full_text",
-            "quote": "Interactive repair achieved 90.71% description-level Repair AC under gold routing with verifier-derived issue slots."
-          },
-          {
-            "claim": "作者指出评估使用了 unchanged-outcome 假设，并建议未来研究误报澄清的下游影响和交互负担",
-            "location": "supplied_full_text",
-            "quote": "Such studies can also examine the downstream effects and interaction burden of false-positive clarification, extending the unchanged-outcome assumption used in the present evaluation."
-          }
-        ],
-        "experiments": [
-          "提出歧义感知对齐基准及其匹配的多轮对话扩展基准",
-          "主结果在 NL4Opt-view、NLP4LP-view、MAMO-C-view 等视图上报告 SR 与 AC，结果为 3 次运行平均并给出标准差",
-          "Claude-sonnet-4.5 达到 71.6% 总体 SR 和 45.1% AC；DeepSeek-V4-Flash 的 AC 与之相当，SR 为 67.5%",
-          "第一阶段对齐在 32B 骨干下达到 86.8% SR 和 60.4% 解 AC；8B 模型在总体 AC 上超过最佳评估的 API 变体",
-          "交互修复在 gold routing 与 verifier 派生问题槽位下达到 90.71% 的描述级 Repair AC",
-          "记录分支分析表明澄清可带来下游收益"
-        ],
-        "first_affiliation": "南京大学工程管理学院",
-        "insight": "语义对齐之所以有效，是因为它把“问题理解”从建模求解中显式分离并作为独立决策阶段处理：先利用语义线索与上下文修复描述，再在信息不足时通过有针对性的提问获取缺失信息，从而避免在错误的问题定义上优化。OR 引导的专家结构和基于轨迹的 harness 演化则让对齐能力随任务反馈持续改进。",
-        "limitations": [
-          "评估使用了 unchanged-outcome 假设，可能未充分反映误报澄清的下游影响和交互负担",
-          "研究将设置扩展到与运营用户对话时，记录访问、响应延迟和利益相关者视角会变化，需进一步研究；作者在结论中提及这些扩展方向"
-        ],
-        "method": [
-          "AMAO 是一个面向语义不确定性的歧义感知多智能体框架",
-          "两阶段对齐：第一阶段用语义线索和上下文识别并修正潜在语义错误，第二阶段在上下文不足时通过人机交互获取补充信息进一步修正",
-          "集成 OR 引导的混合专家（MoE）微调，按句子级组件标签等 OR 监督信号组织专家",
-          "采用基于轨迹的 harness 演化增强语义对齐能力",
-          "设置 source-sufficiency verifier 判断描述是否唯一支持所需修正，未解决案例升级由人工处理",
-          "对齐完成后才进行数学建模与编码"
-        ],
-        "motivation": "已有 LLM4OR 工作主要面向结构良好、自包含的问题描述翻译为数学模型，但在真实运营请求中，用户描述可能不准确，模型数学上有效且求解正确却偏离用户真实意图，例如漏报加班产能导致错误外包建议。因此需要在数学建模之前进行语义对齐，识别并修正描述中的错误或遗漏。",
-        "primary_topic": "自动运筹学中自然语言问题描述与数学模型构建之间的语义对齐",
-        "relation_to_research": "该论文不直接求解柔性作业车间、流水车间或分布式生产调度问题，也不提出新的调度优化算法或强化学习求解机制，因此与当前研究的直接相关性有限。但其关于在优化建模前对齐问题描述的框架，可能为生产调度等场景中的自动建模提供前处理思路：**推测**，若将 AMAO 式语义对齐迁移到生产调度，需要用户描述中包含任务、机器、产能、运输等约束语义，并构建对应的调度领域模糊描述基准与下游调度模型接口；作者并未验证这类迁移。",
-        "relevance_score": 7,
-        "setting": "研究问题是在自动运筹学流水线中，用户以自然语言描述运营决策问题（如生产计划中的产能约束遗漏），但用户建模知识有限、表达模糊或不完整，导致描述与真实意图之间存在语义不确定性；决策对象是是否以及如何修正问题描述中的错误与遗漏；目标是恢复用户意图的优化问题并提升下游建模与求解准确率；关键约束包括可用语义线索与上下文是否足以唯一确定修正、以及何时需要向用户提问；信息假设强调描述本身可能不足以唯一确定修正；环境为静态的文本描述场景，并扩展到多轮对话的人机交互设定。",
-        "tags": [
-          "自动运筹学",
-          "语义对齐",
-          "多智能体系统",
-          "大语言模型",
-          "混合专家模型",
-          "问题建模",
-          "人机交互澄清"
-        ],
-        "title_zh": "决策的第一步：面向自动运筹学的语义不确定性下对齐",
-        "uncertainty": "全文为节选，实验表格中的大量数字被截断或排版混乱，无法核对全部基线对比；未提供 AMAO 各组件消融的完整细节、训练开销和公平计算预算信息；相关性评分基于摘要与节选判断，若完整论文包含调度或组合优化求解实验，评分可能改变。",
-        "why_recommended": "对 AI4OR 研究者而言，该文关注了优化求解之前的问题理解与规范对齐环节，提出了可复用的歧义感知基准和多轮对话评估思路，并给出了语义对齐对下游解准确率影响的实证结果。若研究方向涉及大模型辅助自动建模、人机交互式问题澄清或学习辅助搜索的前置问题定义，这些基准和评估协议可能具有参考价值；但它不提供新的调度求解算法，因此不建议作为调度优化方法的核心参考。"
-      },
-      "figure_gallery": {
-        "checked_at": "2026-10-14T10:31:13.593120+08:00",
-        "figures": [],
-        "html_url": "https://arxiv.org/html/2610.05169v2",
-        "status": "not_found"
-      },
-      "final_score": 0.5687581626156297,
-      "provenance": {
-        "analyzed_at": "2026-10-14T02:32:39.987476Z",
-        "input_hash": "881b7cb2d95241edaf9cf0e192ebe6ea6e563c0068868eaeb6435c15754d6218",
-        "model": "deepseek-v4-flash",
-        "prompt_version": "optimization-analysis-v1",
-        "reading_scope": "full_text"
-      },
-      "ranked": {
-        "paper": {
-          "abstract": "Problem definition: Automated operations research (OR) depends on correctly understanding the problem users intend to solve. In practice, limited user knowledge and vague expressions can obscure that problem, creating semantic uncertainty in the descriptions used for modeling. This uncertainty can lead to mathematical models that depart from users' intentions. We study semantic alignment to identify and correct errors or omissions in these descriptions before mathematical modeling. Methodology/results: We develop AMAO, an ambiguity-aware multi-agent framework for automated OR under semantic uncertainty. Its two-stage alignment process first uses semantic cues and contextual information to identify and correct potential semantic errors, then obtains additional information via human--AI interaction for further revision when the available context is insufficient. Specifically, AMAO integrates OR-guided mixture-of-experts (MoE) tuning and trajectory-based harness evolution to enhance semantic alignment capabilities. In addition, an ambiguity-aware benchmark and its matched multi-turn dialogue extension are proposed. Extensive experiments support that AMAO can recover the intended operational problem from ambiguous descriptions and recognize when available information is insufficient. Managerial implications: AMAO provides managers with an integrated workflow for translating ambiguous operational descriptions into mathematical models and optimization solutions. By combining semantic alignment with targeted user interaction, it supports recovery of the intended problem and improves downstream solution accuracy.",
-          "authors": [
-            "Chengxi She",
-            "Xingyu Lu",
-            "Yue Zhao",
-            "Qitao Shi",
-            "Caihua Chen"
-          ],
-          "canonical_id": "2610.05169",
-          "categories": [
-            "math.OC"
-          ],
-          "comment": null,
-          "pdf_url": "https://arxiv.org/pdf/2610.05169",
-          "published_at": "2026-10-04T12:28:06Z",
-          "source": "arxiv",
-          "title": "The First Step of Decision Making: Alignment under Semantic Uncertainty for Automated Operations Research",
-          "updated_at": "2026-10-12T09:13:45Z",
-          "url": "https://arxiv.org/abs/2610.05169",
-          "version": 2
-        },
-        "rank": 9,
-        "score": {
-          "base_score": 0.461378477482963,
-          "exploration": 0.4393064250298587,
-          "matched_terms": [
-            "operations research",
-            "multi-agent"
-          ],
-          "negative_terms": [],
-          "personal": 0.0,
-          "recency": 0.6504326923997966,
-          "topic": 0.4136692882076116
-        }
-      },
-      "tier": "deep_read"
-    },
-    {
-      "analysis": {
-        "analysis": "作者的分析思路是按决策层的性质进行分层解耦：识别出机组组合问题中的离散决策层，将其编码为 move-based MWIS 问题以匹配硬件可编程结构，同时把连续调度与可行性恢复归入经典计算层，从而在保留可行性的前提下利用硬件求解离散内核。摘要指出通过比较硬件解经经典精修后与精确 MWIS 得到的调度裕度来评估编码与硬件质量，并在扩展节点数时分析编码质量与阵列存活概率对规模化的影响；更细致的理论分析材料未说明。",
-        "challenges": [
-          "如何将真实运行模型映射为硬件兼容的实例表示",
-          "如何把含噪声的硬件输出转换回可行决策",
-          "连续调度与可行性恢复无法直接在量子硬件上表达",
-          "扩大问题规模时全原子阵列存活概率成为瓶颈"
+          "标量适应度信号掩盖实例覆盖信息，导致启发式同质化",
+          "自然语言反馈停留在提示层，无法内化到生成器权重",
+          "DPO仅教生成器排序改进，不保证其能独立生成改进",
+          "长视野演化搜索中增益累积与稳定性"
         ],
         "corresponding_authors": [
           "证据未提供"
         ],
         "evidence": [
           {
-            "claim": "论文将随机机组组合的离散决策层编译为基于移动的最大权独立集问题，连续调度与可行性恢复保留在经典层",
+            "claim": "现有AHD框架冻结生成器或仅用标量适应度微调，隐藏了每个启发式覆盖的实例信息",
             "location": "abstract",
-            "quote": "we introduce a backend-agnostic computational interface that compiles the discrete decision layer of stochastic unit commitment into a move-based maximum-weight independent set (MWIS) problem, while retaining continuous dispatch and feasibility recovery in the classical computational layer"
+            "quote": "Existing frameworks freeze the generator or fine-tune it on a scalar fitness signal hiding which instances each heuristic covers."
           },
           {
-            "claim": "论文在中性原子量子处理器 QuEra Aquila 上进行了绿色氢能调度场景的验证",
+            "claim": "基于反思的框架的自然语言反馈停留在提示中，未到达生成器权重",
             "location": "abstract",
-            "quote": "We validate the approach in a green hydrogen scheduling setting and deploy it on the QuEra Aquila neutral-atom quantum processor"
+            "quote": "Reflection-based frameworks improve heuristics with natural-language feedback, but it stays in the prompt and never reaches the generator's weights."
           },
           {
-            "claim": "50 节点 15 天硬件实验中，经典精修后的硬件解在每一天的调度裕度均达到或超过精确 MWIS",
+            "claim": "EPOCH将实例覆盖作为演化搜索目标，并微调生成器以内化反思",
             "location": "abstract",
-            "quote": "Across a 15-day hardware campaign on 50-node instances, hardware-generated solutions after classical refinement match or exceed the dispatch margins obtained from exact MWIS on every day"
+            "quote": "We propose EPOCH, which makes instance coverage the objective of the evolutionary search and fine-tunes the generator to internalize reflection."
           },
           {
-            "claim": "扩展到 144 节点时编码质量稳定，而全原子阵列存活概率成为主要规模化瓶颈",
+            "claim": "父代选择、算子分配和停滞恢复均优化启发式对训练实例的联合覆盖，返回互补启发式集成",
             "location": "abstract",
-            "quote": "When scaling to 144 nodes, encoding quality remains stable, while the probability that the full atom array survives, rather than graph embedding, emerges as the dominant bottleneck to further scaling"
+            "quote": "Parent selection, operator allocation, and stagnation recovery all optimize how well the heuristics jointly cover the training instances, so the search returns a complementary heuristic ensemble."
           },
           {
-            "claim": "作者将量子硬件实际应用的两大障碍表述为模型到硬件的映射与噪声输出到可行决策的转换",
+            "claim": "生成器通过经验偏好优化从自身搜索中学习，教师LLM返回自然语言洞察，改进加入偏好对用于DPO",
             "location": "abstract",
-            "quote": "two steps still block practical use: mapping real operational models onto hardware-compatible instances, and converting noisy hardware output back into feasible decisions"
+            "quote": "The generator learns from its own search by experiential preference optimization. A teacher LLM returns a natural-language insight on the generated heuristics, and the generator produces new heuristics with this insight. These improvements join the preference pairs for direct preference optimization (DPO)."
+          },
+          {
+            "claim": "反思自蒸馏项使生成器更可能独立生成改进，增益在长搜索视野中累积",
+            "location": "abstract",
+            "quote": "Since DPO only teaches the generator to rank these improvements, a reflective self-distillation (RSD) term makes it more likely to generate them on its own, and the gains accumulate over the long horizon of the search."
+          },
+          {
+            "claim": "EPOCH的启发式集成在不同COPs和开源LLM骨干上优于仅推理和微调基线，并跨问题规模泛化",
+            "location": "abstract",
+            "quote": "Across COPs and open-source LLM backbones, EPOCH's heuristic ensembles outperform inference-only and fine-tuned baselines and generalize across problem scales."
           }
         ],
         "experiments": [
-          "在绿色氢能调度设定下验证方法，并部署于 QuEra Aquila 中性原子量子处理器",
-          "开展为期 15 天的硬件实验活动，实例规模为 50 节点；硬件生成的解经经典精修后，每一天的调度裕度均达到或超过精确 MWIS 得到的调度裕度",
-          "扩展到 144 节点时编码质量保持稳定，但整个原子阵列的存活概率而非图嵌入成为进一步规模化的主要瓶颈",
-          "摘要未给出基线集合的完整列表、运行时间、训练开销、公平计算预算对比、消融实验与泛化性结果，材料未说明"
+          "在不同组合优化问题和开源LLM骨干上，EPOCH的启发式集成优于仅推理基线和微调基线",
+          "EPOCH能跨问题规模泛化"
         ],
         "first_affiliation": "证据未提供",
-        "insight": "其贡献有效的关键在于把问题按计算特性解耦：将难以在硬件上直接表达的连续调度与可行性判断留在经典层，而把本质离散的启停决策层编译为求解器无关的 MWIS 表示，使同一离散内核可以对接不同后端硬件；同时经典精修（classical refinement）承担了把噪声硬件解恢复为可行决策的角色，从而让硬件输出能够与经典精确 MWIS 的调度裕度相竞争。",
+        "insight": "将实例覆盖作为演化搜索的显式目标，使种群趋向互补的启发式集成，而非仅追求单一启发式的平均适应度；同时通过经验偏好优化让生成器从自身搜索经验中学习，并借助反思自蒸馏（RSD）项将DPO的排序能力转化为独立生成改进启发式的概率，从而在长搜索视野中累积增益。",
         "limitations": [
-          "扩展到更大规模时，全原子阵列存活概率成为主要瓶颈",
-          "作者指出该工作是为探索经典精确优化可能不再高效扩展的区间奠定基础，暗示当前规模仍可由经典方法处理"
+          "材料未说明"
         ],
         "method": [
-          "构建后端无关（backend-agnostic）的计算接口，将随机机组组合的离散决策层编译为基于移动的最大权独立集（MWIS）问题",
-          "连续调度与可行性恢复保留在经典计算层，硬件只负责离散决策内核",
-          "采用求解器无关的 MWIS 表示，使同一表示可对接不同后端",
-          "在中性原子量子处理器 QuEra Aquila 上部署该工作流，并在绿色氢能调度场景中进行验证",
-          "对硬件输出施加经典精修（classical refinement），恢复为可行决策后再评估调度裕度"
+          "将实例覆盖作为演化搜索的目标，父代选择、算子分配和停滞恢复均优化启发式集合对训练实例的联合覆盖",
+          "演化搜索返回一组互补的启发式集成",
+          "通过经验偏好优化（DPO）让生成器从自身搜索经验中学习：教师LLM对生成的启发式返回自然语言洞察，生成器据此产生新启发式，这些改进加入偏好对",
+          "引入反思自蒸馏（RSD）项，使生成器更可能独立生成这些改进，从而在长搜索视野中累积增益"
         ],
-        "motivation": "量子硬件已开始处理结构化组合优化问题，但实际应用仍受两个环节制约：一是如何把真实运行模型映射为硬件兼容的实例，二是如何把含噪声的硬件输出转换回可行的决策。作者希望打通从真实工业调度决策到可编程中性原子硬件的端到端流程。",
-        "primary_topic": "将随机机组组合的离散决策层编译为最大权独立集问题并映射到中性原子量子硬件求解",
-        "relation_to_research": "该论文的核心是随机机组组合的离散决策建模与硬件求解，属于电力系统调度而非柔性作业车间或流水车间调度，与当前研究画像的生产调度主题存在明显领域距离。其可迁移之处在于问题分解机制：把调度问题中的离散决策层剥离为图/独立集形式的组合内核，连续与可行性部分交由经典求解器处理，并保留可行性恢复与经典精修环节——这一模式对生产调度中的机台分配、序列决策等离散层与连续时间/资源约束的分层求解有借鉴价值（推测）。若要迁移到生产调度，需要具备可表示为 MWIS 或类似图结构的离散决策层、明确的可行性恢复流程，以及可用的量子或专用硬件后端（推测）。本文不涉及神经网络、图神经网络、强化学习或大模型智能体，因此对学习辅助搜索与智能体优化方向的直接贡献有限。",
-        "relevance_score": 6,
-        "setting": "论文研究随机机组组合（stochastic unit commitment）这一电力系统调度优化问题，决策对象包括机组启停等离散决策以及连续出力调度，目标是在不确定性下获得可行且具有调度裕度的运行方案，关键约束通过将离散决策层转化为基于移动（move-based）的最大权独立集（MWIS）问题来编码，连续调度与可行性恢复保留在经典计算层完成。信息假设为随机场景下的机组组合模型，环境为静态优化问题而非在线动态扰动场景；硬件为 QuEra Aquila 中性原子量子处理器，具体场景为绿色氢能调度（green hydrogen scheduling）。其他约束细节与问题规模假设材料未说明。",
+        "motivation": "现有AHD框架要么冻结生成器，要么仅依赖标量适应度信号微调生成器，而标量信号隐藏了每个启发式覆盖哪些实例的信息；基于反思的框架虽能用自然语言反馈改进启发式，但反馈停留在提示中，从未进入生成器权重，导致改进无法内化。",
+        "primary_topic": "基于大语言模型的自动启发式设计（LLM-based AHD）用于组合优化问题，通过覆盖感知演化搜索与经验偏好优化微调生成器",
+        "relation_to_research": "该论文直接涉及自动启发式设计（AHD）这一智能优化与AI4OR交叉方向，其覆盖感知演化与偏好优化机制可迁移到生产调度问题中的启发式生成。论文事实：EPOCH通过覆盖目标优化启发式集成并微调LLM生成器。迁移设想（推测）：若将覆盖感知目标替换为调度实例的约束满足度或解质量指标，并将偏好优化用于调度启发式生成，需解决调度问题中动态扰动与多目标约束的表示、以及公平计算预算下训练开销评估等条件。",
+        "relevance_score": 8,
+        "setting": "研究问题为组合优化问题（COPs）中的自动启发式设计，决策对象是由LLM生成器产生的启发式候选集合；目标是通过演化搜索返回一组在训练实例上具有互补覆盖的启发式集成，而非单一最优启发式；关键约束与信息假设材料未说明；环境为静态还是动态材料未说明。",
         "tags": [
-          "随机机组组合",
-          "最大权独立集",
-          "量子计算",
-          "中性原子硬件",
+          "自动启发式设计",
+          "大语言模型",
+          "演化搜索",
+          "直接偏好优化",
           "组合优化",
-          "可行性恢复",
-          "工业调度"
+          "启发式集成",
+          "覆盖感知"
         ],
-        "title_zh": "面向随机机组组合的后端无关最大权独立集内核及中性原子硬件验证",
-        "uncertainty": "仅有标题与摘要，无法核实方法细节（如 MWIS 编码的具体构造、经典精修机制、基线与测试集设置）、实验的公平计算预算与统计学显著性，作者机构与通讯作者信息也未提供；相关性评分基于领域距离判断，若全文显示其分解与可行性恢复机制可更直接地迁移到生产调度，评分可能上调。",
-        "why_recommended": "尽管领域不完全重合，本文提供了一个清晰的“离散决策层与连续可行性层解耦、以求解器无关图表示对接专用硬件”的架构范例，并明确报告了可行性恢复与经典精修在评估中的位置。对关注约束可行性、求解质量与规模化瓶颈（如硬件/资源存活率）的调度研究者而言，其在分层建模、规模化瓶颈分析和硬件-经典协同流程上的做法具有方法论参考价值。"
+        "title_zh": "EPOCH：面向基于大语言模型的自动启发式设计的覆盖感知演化与经验偏好优化",
+        "uncertainty": "仅基于标题与摘要，无法确认具体组合优化问题类型、实例规模、基线设置、计算预算、训练开销、消融实验细节以及作者声明的局限；第一单位和通讯作者信息未提供；覆盖与多目标约束、动态扰动结合的具体方式未知，因此相关性判断存在一定不确定性。",
+        "why_recommended": "对研究智能优化、学习辅助搜索和AI4OR的博士生而言，该论文提供了一种将演化搜索的覆盖目标与LLM生成器的偏好优化结合的新范式，其覆盖感知演化与反思自蒸馏机制对生产调度中的启发式自动设计、多目标约束优化及动态环境下的求解器增强具有直接参考价值；同时其跨问题规模和不同骨干的泛化评估设计也值得借鉴。"
       },
       "figure_gallery": {
-        "checked_at": "2026-10-14T10:31:13.593120+08:00",
+        "checked_at": "2026-10-15T10:12:10.542404+08:00",
         "figures": [
           {
-            "caption": "Move vocabulary—six move types populating the excitation active space, covering single-slot, block, cross-module, exchange, delete/insert, and clustered-integer perturbations.",
+            "caption": "Overview of EPOCH , illustrating one training iteration. (1) Heuristics are represented by per-instance gap vectors, whose minima define expert heuristics and the coverage gap ρ ⁡ ( 𝒫 ) \\rho(\\mathcal{P}) . (2) These drive parent selection, operator allocation, and coverage-aware population management. (3) The policy π θ \\pi_{\\theta} samples rollouts from the operator prompt q q , the teacher π T \\pi_{\\mathrm{T}} returns an insight z z on the best and worst valid ones, and π θ \\pi_{\\theta} regenerates from q ⊕ z q\\oplus z . (4) Responses form within-batch and cross-round preference pairs; periodic DPO bursts add an RSD term internalizing the hint-guided improvement into the unhinted policy.",
             "label": "Figure 1",
             "number": 1,
             "panels": [
               {
-                "cached_path": "figures/arxiv/2609.01248/v2/fig1-panel1.png",
-                "original_url": "https://arxiv.org/html/2609.01248v2/figures/gen_move_vocabulary.png"
+                "cached_path": "figures/arxiv/2610.17379/v1/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2610.17379v1/epoch_framework_final_cropped.png"
               }
             ],
             "source": "arxiv_html",
-            "source_url": "https://arxiv.org/html/2609.01248v2#S2.F1"
-          },
-          {
-            "caption": "Hybrid pipeline architecture—reference schedule, move generation, LP-dual scoring, diversity top- k k pruning, an exact-solver/neutral-atom-hardware branch point (exact MILP via HiGHS, or AHS hardware with 2-row FOV embedding and 4-phase post-processing, Section 2.3 ), converging into a common SA local refinement stage, dispatch application, and 100-scenario stochastic LP repair validation.",
-            "label": "Figure 2",
-            "number": 2,
-            "panels": [
-              {
-                "cached_path": "figures/arxiv/2609.01248/v2/fig2-panel1.png",
-                "original_url": "https://arxiv.org/html/2609.01248v2/figures/workflow_diagram.png"
-              }
-            ],
-            "source": "arxiv_html",
-            "source_url": "https://arxiv.org/html/2609.01248v2#S2.F2"
+            "source_url": "https://arxiv.org/html/2610.17379v1#S1.F1"
           }
         ],
-        "html_url": "https://arxiv.org/html/2609.01248v2",
+        "html_url": "https://arxiv.org/html/2610.17379v1",
         "status": "available"
       },
-      "final_score": 0.46830130559232197,
+      "final_score": 0.5708402959249427,
       "provenance": {
-        "analyzed_at": "2026-10-14T02:33:29.190089Z",
-        "input_hash": "8ba4fe818ae0585c2fb5862ce21e2b6ca854939133dfcf38a40936c5fba7dfec",
+        "analyzed_at": "2026-10-15T04:48:02.008781Z",
+        "input_hash": "f3cd8aba617f164142149b649472f59d4310667569a335d64e175c45df1a244c",
         "model": "deepseek-v4-flash",
         "prompt_version": "optimization-analysis-v1",
         "reading_scope": "abstract"
       },
       "ranked": {
         "paper": {
-          "abstract": "Quantum hardware is beginning to address structured combinatorial optimisation, but two steps still block practical use: mapping real operational models onto hardware-compatible instances, and converting noisy hardware output back into feasible decisions. Here we introduce a backend-agnostic computational interface that compiles the discrete decision layer of stochastic unit commitment into a move-based maximum-weight independent set (MWIS) problem, while retaining continuous dispatch and feasibility recovery in the classical computational layer. We validate the approach in a green hydrogen scheduling setting and deploy it on the QuEra Aquila neutral-atom quantum processor. This is the first end-to-end industrial scheduling workflow that connects real operational decisions to programmable neutral-atom hardware through a solver-agnostic MWIS representation. Across a 15-day hardware campaign on 50-node instances, hardware-generated solutions after classical refinement match or exceed the dispatch margins obtained from exact MWIS on every day. When scaling to 144 nodes, encoding quality remains stable, while the probability that the full atom array survives, rather than graph embedding, emerges as the dominant bottleneck to further scaling. Together, these results establish a hardware-compatible computational pathway toward larger problem scales, and lay the groundwork for exploring regimes in which exact classical optimisation may no longer scale efficiently.",
+          "abstract": "LLM-based automated heuristic design (AHD) discovers heuristics for combinatorial optimization problems (COPs), where an LLM generates candidates in an evolutionary search. Existing frameworks freeze the generator or fine-tune it on a scalar fitness signal hiding which instances each heuristic covers. Reflection-based frameworks improve heuristics with natural-language feedback, but it stays in the prompt and never reaches the generator's weights. We propose EPOCH, which makes instance coverage the objective of the evolutionary search and fine-tunes the generator to internalize reflection. Parent selection, operator allocation, and stagnation recovery all optimize how well the heuristics jointly cover the training instances, so the search returns a complementary heuristic ensemble. The generator learns from its own search by experiential preference optimization. A teacher LLM returns a natural-language insight on the generated heuristics, and the generator produces new heuristics with this insight. These improvements join the preference pairs for direct preference optimization (DPO). Since DPO only teaches the generator to rank these improvements, a reflective self-distillation (RSD) term makes it more likely to generate them on its own, and the gains accumulate over the long horizon of the search. Across COPs and open-source LLM backbones, EPOCH's heuristic ensembles outperform inference-only and fine-tuned baselines and generalize across problem scales.",
           "authors": [
-            "Jiying Chen",
-            "Min Lin",
-            "Jingwei Wen",
-            "Zhihong Zhang",
-            "Chuixiong Wu"
+            "Oguzhan Gungordu",
+            "Ayse Tursucular",
+            "Siheng Xiong",
+            "Faramarz Fekri"
           ],
-          "canonical_id": "2609.01248",
+          "canonical_id": "2610.17379",
           "categories": [
-            "quant-ph",
-            "cs.ET",
-            "math.OC"
+            "cs.AI",
+            "cs.CL"
           ],
-          "comment": "v2: added data availability statement; Supplementary Information now included as ancillary file (SI.pdf)",
-          "pdf_url": "https://arxiv.org/pdf/2609.01248",
-          "published_at": "2026-09-01T13:46:26Z",
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2610.17379",
+          "published_at": "2026-10-12T20:36:19Z",
           "source": "arxiv",
-          "title": "A Backend-Agnostic MWIS Kernel for Stochastic Unit Commitment with Neutral-Atom Hardware Validation",
-          "updated_at": "2026-10-12T03:15:29Z",
-          "url": "https://arxiv.org/abs/2609.01248",
-          "version": 2
+          "title": "EPOCH: Coverage-Aware Evolution with Experiential Preference Optimization for LLM-based Automated Heuristic Design",
+          "updated_at": "2026-10-12T20:36:19Z",
+          "url": "https://arxiv.org/abs/2610.17379",
+          "version": 1
         },
-        "rank": 19,
+        "rank": 47,
         "score": {
-          "base_score": 0.36054782834967625,
-          "exploration": 0.28427052237291295,
+          "base_score": 0.3833459925908047,
+          "exploration": 0.08360249985719101,
           "matched_terms": [
-            "combinatorial optimisation"
+            "combinatorial optimization"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.6112088686443736,
-          "topic": 0.3107239042588379
+          "recency": 0.5721758749792898,
+          "topic": 0.41503559554655567
         }
       },
       "tier": "browse"
     },
     {
       "analysis": {
-        "analysis": "作者将问题分解为已解决部分与未解决部分，把未解决部分归入冲突聚类，并设计协调层将通信限制在同一冲突区域内的智能体之间。在此基础上引入记忆引导重启，使智能体和聚类能够基于相邻冲突状态暂停、修正并适应修复策略。材料未说明是否使用了下界、图表示或形式化收敛分析。",
+        "analysis": "作者从 CASH 问题结构出发，指出其包含算法选择与算法专属超参数细化两个层面，因此需要跨算法和算法内部的协调搜索。作者分析现有方法使用扁平优化历史，混合了不同算法的观测，从而掩盖配置精炼轨迹，导致 LLM 优化器在高维结构化空间泛化不佳。基于此，作者提出以蒙特卡洛树搜索树作为共享状态，将算法选择、超参数精炼以及 BO 与 LLM 提议者协同统一到同一搜索轨迹中，从而利用路径结构保留并选择性利用历史信息。具体如何利用问题结构进行分解、下界估计或图表示，材料未说明。",
         "challenges": [
-          "如何在分布式环境下动态识别并划分冲突聚类，而不引入过多的协调开销",
-          "如何在冲突区域内部设计受限但有效的协调层结构",
-          "如何用轻量学习机制检测停滞并引导重启，避免过重的训练或通信负担",
-          "在未知或变化的问题结构上保持修复策略的鲁棒性"
+          "传统贝叶斯优化在 CASH 中面临冷启动问题",
+          "现有基于大语言模型的优化器对高维、结构化 CASH 空间泛化较差",
+          "需要在候选算法之间以及算法专属超参数空间内部同时进行协同的探索与利用",
+          "扁平优化历史混合跨算法观测，难以显现配置精炼轨迹",
+          "如何让 LLM 与 BO 在统一搜索过程中可靠地协同并动态切换提议来源"
         ],
         "corresponding_authors": [
           "证据未提供"
         ],
         "evidence": [
           {
-            "claim": "DCSP中的智能体为本地变量赋值并需满足共享约束，现有多数求解器依赖广泛重复的点对点通信且偏被动反应式",
+            "claim": "论文研究 AutoML 中的 CASH 问题，即联合自动化算法选择与超参数调优。",
             "location": "abstract",
-            "quote": "Distributed Constraint Satisfaction Problems (DCSPs) model distributed decision-making in multi-agent systems, where agents assign values to local variables while satisfying shared constraints. However, many DCSP solvers still rely on broad, repeated peer-to-peer communication and are largely reactive, with limited support for strategic coordination or learning."
+            "quote": "the AutoML community has focused on the CASH problem, which jointly automates algorithm selection and hyperparameter tuning."
           },
           {
-            "claim": "作者提出DCC-Incomplete，结合冲突中心分解、结构化协调、策略性修复与轻量学习进行停滞恢复",
+            "claim": "传统贝叶斯优化存在冷启动问题，大语言模型可通过语义先验缓解。",
             "location": "abstract",
-            "quote": "we propose Dynamic Conflict Clustering-Incomplete (DCC-Incomplete), a repair-based solver that combines conflict-centred decomposition, structured coordination, strategic repair, and lightweight learning for stagnation recovery"
+            "quote": "While traditional methods like Bayesian Optimization (BO) struggle with cold-start issues, Large Language Models (LLMs) can mitigate these through semantic priors."
           },
           {
-            "claim": "该方法将未解决部分分组为冲突聚类，并通过协调层将通信限制在同一冲突区域内的智能体之间",
+            "claim": "现有基于 LLM 的优化器对高维、结构化 CASH 空间泛化较差，且扁平优化历史掩盖配置精炼轨迹。",
             "location": "abstract",
-            "quote": "DCC-Incomplete groups the unsolved part of the problem into conflict clusters and restricts communication via a coordination layer to agents within the same conflict region."
+            "quote": "However, existing LLM-based optimizers generalize poorly to high-dimensional, structured CASH spaces."
           },
           {
-            "claim": "记忆引导重启使智能体和聚类能够基于相邻冲突状态暂停、修正和适应修复",
+            "claim": "论文提出 LB-MCTS，以蒙特卡洛树搜索树作为共享状态，统一算法选择、超参数细化和 BO-LLM 提议者协同。",
             "location": "abstract",
-            "quote": "It also introduces memory-guided restart, enabling agents and clusters to pause, revise, and adapt repairs based on neighbouring conflict states."
+            "quote": "we propose LB-MCTS, a trajectory-structured optimization framework that uses a Monte Carlo Tree Search tree as a shared state for algorithm selection, hyperparameter refinement, and BO-LLM proposer synergy."
           },
           {
-            "claim": "在分布式图着色基准上，记忆引导重启将成功率从37.50%提升至61.11%，中位运行时间从0.565秒降至0.367秒，每条约束的中位通信量从12.493降至6.503条消息",
+            "claim": "在共享状态内，BO 提供算法专属代理建模，LLM 利用路径感知选择性记忆生成语义提议与反思。",
             "location": "abstract",
-            "quote": "its memory-guided restart improves the success rate from 37.50% to 61.11%, reduces median runtime from 0.565s to 0.367s, and cuts median communication from 12.493 to 6.503 messages per constraint"
+            "quote": "Within this shared state, BO provides algorithm-specific surrogate modeling for quantitative search, while the LLM exploits path-aware selective memory to generate semantic proposals and reflections."
           },
           {
-            "claim": "作者认为动态冲突聚类结合轻量策略与学习引导的修复，能提高不完整DCSP求解的通信效率与鲁棒性",
+            "claim": "随着代理模型改善，可靠性感知的提议者策略在统一搜索轨迹中从 LLM 驱动自适应转向 BO 驱动。",
             "location": "abstract",
-            "quote": "These results suggest that dynamic conflict clustering, combined with lightweight strategic and learning-guided repair, improves both communication efficiency and robustness in incomplete DCSP solving."
+            "quote": "As the surrogate model improves, a reliability-aware proposer policy adaptively shifts from LLM-driven to BO-driven proposals within a unified search trajectory."
+          },
+          {
+            "claim": "在 104 个 AMLB 数据集上，LB-MCTS 持续优于基于 BO、基于 LLM 以及混合基线。",
+            "location": "abstract",
+            "quote": "Experiments on 104 AMLB datasets demonstrate that LB-MCTS consistently outperforms BO-based, LLM-based, and hybrid baselines."
           }
         ],
         "experiments": [
-          "在具有植入可满足赋值的分布式图着色基准上进行评估",
-          "记忆引导重启将成功率从37.50%提升至61.11%",
-          "记忆引导重启将中位运行时间从0.565秒降至0.367秒",
-          "记忆引导重启将每条约束的中位通信量从12.493条消息降至6.503条消息",
-          "材料未说明基线求解器名称、实例规模范围、训练开销、公平计算预算、泛化测试或消融实验的细节"
+          "在 104 个 AMLB 数据集上进行实验。",
+          "实验结果表明 LB-MCTS 持续优于基于贝叶斯优化、基于大语言模型以及混合基线方法。",
+          "具体基线设置、实例规模细节、约束可行性、解质量数值、运行时间、训练开销、公平计算预算、泛化实验和消融实验在摘要中未提供。"
         ],
         "first_affiliation": "证据未提供",
-        "insight": "该工作的核心洞察在于：DCSP中真正需要频繁协调的往往只是尚未解决且彼此冲突的局部变量集合，因此将通信与修复限制在动态划定的冲突聚类内部，可以同时减少无效消息和打破全局停滞。记忆引导重启之所以有效，是因为它让智能体和聚类能够根据相邻冲突状态暂停、修正并调整修复行为，从而在局部失败时转向新的搜索区域，而不是在全局范围内重复广播。",
+        "insight": "论文的核心洞察在于，CASH 的跨算法选择与算法内超参数精炼本质上是轨迹结构化的问题，若将算法选择、超参数细化和 BO 与 LLM 提议者协同统一到一个共享的蒙特卡洛树搜索树中，可以保留路径信息并有选择地记忆历史；共享树状态使贝叶斯优化能针对特定算法建立代理模型进行定量搜索，同时使大语言模型能利用路径感知的选择性记忆生成语义提议与反思，从而在高维结构化空间中获得更好的协同探索与利用。随着代理模型改善，可靠性感知的提议者策略可自适应地从大语言模型驱动转向贝叶斯优化驱动，在统一搜索轨迹内动态平衡语义先验与定量模型。",
         "limitations": [
           "材料未说明"
         ],
         "method": [
-          "冲突中心分解：将问题的未解决部分分组为冲突聚类，而非让所有智能体参与全局协调",
-          "受限通信的协调层：仅在属于同一冲突区域的智能体之间进行通信，以降低消息开销",
-          "策略性修复：以修复为基础的不完整求解框架，对未满足约束进行有针对性的调整",
-          "轻量学习与记忆引导重启：允许智能体和聚类根据相邻冲突状态暂停、修正并适应修复行为，用于停滞恢复"
+          "提出 LB-MCTS，一种轨迹结构化的优化框架。",
+          "使用蒙特卡洛树搜索树作为共享状态，统一算法选择、超参数细化和 BO-LLM 提议者协同。",
+          "在共享状态内，贝叶斯优化为算法专属代理建模提供定量搜索能力。",
+          "大语言模型利用路径感知的选择性记忆生成语义提议与反思。",
+          "随着代理模型改善，可靠性感知的提议者策略在统一搜索轨迹内自适应地从 LLM 驱动提议转向 BO 驱动提议。"
         ],
-        "motivation": "现有DCSP求解器仍依赖广泛且重复的点对点通信，且大多是被动反应式的，对策略性协调或学习的支持有限。这导致通信开销增加、搜索容易停滞，并使困难实例的求解成功率偏低。作者希望借助冲突驱动的分解与轻量学习机制来缓解这些缺陷。",
-        "primary_topic": "分布式约束满足问题的修复式求解与多智能体协调",
-        "relation_to_research": "该论文研究的是分布式约束满足问题中的多智能体协调与修复式求解，与智能优化和生产调度中的分布式决策、约束可行性维护、通信受限协同等方向有概念层面的关联。其动态冲突聚类和受限通信机制，推测可迁移到分布式制造或生产运输协同场景中，用于减少智能体间不必要的协调消息，但迁移到柔性作业车间或流水车间调度需要将变量赋值对应到工序排序或机器分配，并将约束图结构替换为调度问题的析取图或时间约束网络，且需验证冲突聚类在调度问题中的划分效果。该论文未涉及神经网络、图神经网络、强化学习或大模型智能体，其轻量学习具体形式在摘要中未明确说明。",
+        "motivation": "作者指出，为降低机器学习使用门槛，AutoML 社区聚焦 CASH 问题；传统贝叶斯优化存在冷启动问题，大语言模型可通过语义先验缓解冷启动，但现有基于大语言模型的优化器对高维、结构化 CASH 空间泛化较差。CASH 需要跨候选算法及其算法专属超参数空间进行协同的探索与利用，而现有方法常依赖扁平的优化历史，将不同算法的观测混合在一起，掩盖了配置精炼轨迹。",
+        "primary_topic": "AutoML 中组合算法选择与超参数优化（CASH）的 LLM 与贝叶斯优化协同框架",
+        "relation_to_research": "论文事实：该工作面向 AutoML 中的 CASH 问题，使用蒙特卡洛树搜索作为共享状态，协同贝叶斯优化与大语言模型进行算法选择和超参数调优，并采用可靠性感知策略动态切换提议者。迁移设想（推测）：其核心机制——以树结构保存搜索轨迹、对高维结构化空间进行路径感知记忆、以及基于代理模型可靠性动态切换 LLM 与定量优化器——在概念上与智能优化和生产调度中的学习辅助搜索有潜在相通之处，例如可用于柔性作业车间或分布式制造中的机器选择、规则选择与参数协同优化；但迁移到生产调度需要重新定义状态、动作、目标函数和约束可行性处理，并验证在调度问题上的公平计算预算与泛化能力。摘要并未讨论生产调度或约束优化，因此这种迁移属于推测而非作者结论。",
         "relevance_score": 6,
-        "setting": "研究问题为分布式约束满足问题（DCSP），其中多个智能体各自为本地变量赋值并需满足共享约束。决策对象是各智能体的变量赋值及其修复策略，目标是在不完整求解框架下提高硬实例的成功率、降低运行时间与通信开销。关键约束是智能体之间只能通过受限的协调层进行通信，信息假设为智能体仅能获取同一冲突区域内相邻冲突状态的信息。环境为静态基准测试下的分布式问题，未说明是否存在动态扰动；材料未说明变量域大小、约束图密度等具体参数。",
+        "setting": "论文研究 CASH（Combined Algorithm Selection and Hyperparameter optimization）问题，即联合自动化选择机器学习算法并调优其算法专属超参数。决策对象为候选算法与对应的超参数配置；目标是在高维、结构化搜索空间中高效找到高质量配置，缓解传统贝叶斯优化的冷启动问题。关键约束与信息假设材料未明确给出，环境是否可以视为静态同样材料未说明，仅从摘要可知搜索空间具有高维和结构化特征，且需要跨算法以及算法内部超参数空间进行协同探索与利用。",
         "tags": [
-          "分布式约束满足",
-          "多智能体系统",
-          "冲突聚类",
-          "策略性修复",
-          "轻量学习",
-          "通信效率"
+          "AutoML",
+          "CASH",
+          "贝叶斯优化",
+          "大语言模型",
+          "蒙特卡洛树搜索",
+          "算法选择",
+          "超参数调优",
+          "代理模型",
+          "语义先验"
         ],
-        "title_zh": "面向分布式约束满足的动态冲突聚类与轻量学习及策略性修复",
-        "uncertainty": "仅能依据标题与摘要进行判断，未提供全文，因此无法确认轻量学习的具体实现（是否为强化学习、监督学习或启发式规则）、冲突聚类的动态划分算法、实验的完整基线与统计显著性、问题规模及约束可行性验证细节。相关性评分基于该工作与分布式约束决策及多智能体协调的相邻关系，若需要判断其学习机制是否与神经网络辅助求解直接相关，需查阅全文。",
-        "why_recommended": "对于关注多智能体分布式决策、通信效率约束下的修复式搜索以及局部协调机制的研究者，该论文提供了一种冲突驱动的分解与重启思路，并给出了通信量、运行时间和成功率的具体对比数字。虽然其应用领域是图着色而非生产调度，但其聚类协调与记忆引导重启机制可能为分布式调度中的智能体通信治理和停滞恢复提供可借鉴的类比，属于具有明确迁移路径的相邻工作。"
+        "title_zh": "大语言模型与贝叶斯优化的树结构协同用于高效 CASH",
+        "uncertainty": "本次分析仅基于标题与摘要，未提供全文；第一单位、通讯作者、具体方法细节、基线配置、实验数字和作者明确陈述的局限均无法从摘要确认。相关性评分主要依据 CASH 与 AutoML 优化同智能优化、学习辅助搜索的间接邻接关系，而非直接面向生产调度或约束优化，因此可能存在判断偏差。",
+        "why_recommended": "对研究 AI4OR 与学习辅助搜索的读者，该论文提供了一个将 LLM 语义先验与贝叶斯优化定量代理模型通过树结构共享状态进行协同的机制，并引入了随代理模型可靠性自适应切换提议者的策略。虽然其直接对象是 AutoML 的 CASH 问题，但其中关于高维结构化搜索空间中的轨迹保持、跨子空间协同探索利用以及 LLM 与经典优化器结合的思路，可能为生产调度、算法配置和一般组合优化中的混合智能优化方法提供参考。建议关注其机制设计而非仅因出现 LLM 或 agent 术语而采纳。"
       },
       "figure_gallery": {
-        "checked_at": "2026-10-14T10:31:13.593120+08:00",
-        "figures": [],
-        "html_url": "https://arxiv.org/html/2610.15658v1",
-        "status": "html_unavailable"
+        "checked_at": "2026-10-15T10:12:10.542404+08:00",
+        "figures": [
+          {
+            "caption": "MCTS search of the LLM proposer.",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2601.12355/v3/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2601.12355v3/LLM_proposer.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2601.12355v3#S3.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2601.12355v3",
+        "status": "available"
       },
-      "final_score": 0.5723496523022575,
+      "final_score": 0.5398945367658494,
       "provenance": {
-        "analyzed_at": "2026-10-14T02:32:25.469238Z",
-        "input_hash": "1d0c6bc7e39a805ab2a864e9d8cf7e59885ee34e1660af72bcf292c70df39e57",
+        "analyzed_at": "2026-10-15T04:19:02.119041Z",
+        "input_hash": "f7b33bbacfc4e913d7d2cbda72f1731b61fd679813797824568eab3d6f6f58b7",
         "model": "deepseek-v4-flash",
         "prompt_version": "optimization-analysis-v1",
         "reading_scope": "abstract"
       },
       "ranked": {
         "paper": {
-          "abstract": "Distributed Constraint Satisfaction Problems (DCSPs) model distributed decision-making in multi-agent systems, where agents assign values to local variables while satisfying shared constraints. However, many DCSP solvers still rely on broad, repeated peer-to-peer communication and are largely reactive, with limited support for strategic coordination or learning. This increases communication overhead, can lead to stagnation, and reduces the success of hard instances. Hence, we propose Dynamic Conflict Clustering-Incomplete (DCC-Incomplete), a repair-based solver that combines conflict-centred decomposition, structured coordination, strategic repair, and lightweight learning for stagnation recovery. DCC-Incomplete groups the unsolved part of the problem into conflict clusters and restricts communication via a coordination layer to agents within the same conflict region. It also introduces memory-guided restart, enabling agents and clusters to pause, revise, and adapt repairs based on neighbouring conflict states. A thorough evaluation of DCC-Incomplete on distributed graph-colouring benchmarks with planted satisfying assignments shows that its memory-guided restart improves the success rate from 37.50% to 61.11%, reduces median runtime from 0.565s to 0.367s, and cuts median communication from 12.493 to 6.503 messages per constraint. These results suggest that dynamic conflict clustering, combined with lightweight strategic and learning-guided repair, improves both communication efficiency and robustness in incomplete DCSP solving.",
+          "abstract": "To lower the expertise barrier in machine learning, the AutoML community has focused on the CASH problem, which jointly automates algorithm selection and hyperparameter tuning. While traditional methods like Bayesian Optimization (BO) struggle with cold-start issues, Large Language Models (LLMs) can mitigate these through semantic priors. However, existing LLM-based optimizers generalize poorly to high-dimensional, structured CASH spaces. CASH requires coordinated exploration and exploitation both across candidate algorithms and within their algorithm-specific hyperparameter spaces. Yet existing approaches often rely on flat optimization histories that mix observations across algorithms and obscure configuration-refinement trajectories. In this paper, we propose LB-MCTS, a trajectory-structured optimization framework that uses a Monte Carlo Tree Search tree as a shared state for algorithm selection, hyperparameter refinement, and BO-LLM proposer synergy. Within this shared state, BO provides algorithm-specific surrogate modeling for quantitative search, while the LLM exploits path-aware selective memory to generate semantic proposals and reflections. As the surrogate model improves, a reliability-aware proposer policy adaptively shifts from LLM-driven to BO-driven proposals within a unified search trajectory. Experiments on 104 AMLB datasets demonstrate that LB-MCTS consistently outperforms BO-based, LLM-based, and hybrid baselines. Code: https://github.com/PKU-DAIR/open-box.",
           "authors": [
-            "Raziyeh Moghaddas",
-            "Fabio Caraffini"
+            "Beicheng Xu",
+            "Weitong Qian",
+            "Lingching Tung",
+            "Yupeng Lu",
+            "Bin Cui"
           ],
-          "canonical_id": "2610.15658",
+          "canonical_id": "2601.12355",
           "categories": [
-            "cs.MA",
-            "cs.AI",
-            "cs.DM"
+            "cs.LG"
           ],
-          "comment": null,
-          "pdf_url": "https://arxiv.org/pdf/2610.15658",
-          "published_at": "2026-10-11T14:35:35Z",
+          "comment": "Accepted at NeurIPS 2026. Extended version with full appendices",
+          "pdf_url": "https://arxiv.org/pdf/2601.12355",
+          "published_at": "2026-01-18T11:26:31Z",
           "source": "arxiv",
-          "title": "Dynamic Conflict Clustering with Lightweight Learning and Strategic Repair for Distributed Constraint Satisfaction",
-          "updated_at": "2026-10-11T14:35:35Z",
-          "url": "https://arxiv.org/abs/2610.15658",
-          "version": 1
+          "title": "Tree-Structured Synergy of Large Language Models and Bayesian Optimization for Efficient CASH",
+          "updated_at": "2026-10-14T16:07:08Z",
+          "url": "https://arxiv.org/abs/2601.12355",
+          "version": 3
         },
-        "rank": 2,
+        "rank": 19,
         "score": {
-          "base_score": 0.5497266405495592,
-          "exploration": 0.9021693172033407,
+          "base_score": 0.4907173395742716,
+          "exploration": 0.0049087287744172085,
           "matched_terms": [
-            "constraint satisfaction",
-            "multi-agent"
+            "algorithm selection"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.5356664457368249,
-          "topic": 0.4530459314521171
+          "recency": 0.9002866388840765,
+          "topic": 0.5125
+        }
+      },
+      "tier": "browse"
+    },
+    {
+      "analysis": {
+        "analysis": "作者通过设计两个层级的评估协议来区分实例级求解与类别级算法设计：第一级将单个问题实例交给模型求解释放其直接求解能力，第二级只给问题类别和参数范围要求模型返回通用算法，从而检验算法是否在见到评估实例前已经固定。作者选取库存控制、排队网络控制和选品优化三个已有近期基准的运筹学问题作为测试领域，并用一条未调优提示和固定计算预算的 Python 沙箱工具控制人类输入与计算资源，最后将最强模型 gpt-5.6-sol 的结果与各领域近期论文报告的最佳方法进行对比。材料未说明作者是否对问题结构、分解、下界或图表示进行进一步分析。",
+        "challenges": [
+          "如何让大语言模型仅凭问题类别描述和宽泛参数范围生成可泛化到未见实例的算法",
+          "如何在固定计算预算和 Python 沙箱限制下保证生成算法的可执行性与有效性",
+          "如何公平比较自动生成的算法与已有专门方法在基准实例上的表现",
+          "如何评估模型代际差异对算法设计能力的影响"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文研究大语言模型能否为定义良好的运筹学问题设计有效算法。",
+            "location": "abstract",
+            "quote": "We ask whether large language models (LLMs) can design effective algorithms for well-specified operations research (OR) problems."
+          },
+          {
+            "claim": "评估覆盖库存控制、排队网络控制和选品优化，并使用各领域近期论文的基准实例。",
+            "location": "abstract",
+            "quote": "We study inventory control, queueing network control, and assortment optimization, using benchmark instances from recent papers in each area."
+          },
+          {
+            "claim": "第二级设定下模型只接收问题类别描述和宽泛参数范围，返回一个从实例参数到解的算法。",
+            "location": "abstract",
+            "quote": "at level 2, it receives only the problem class description and broad parameter ranges, and returns an algorithm that maps instance parameters to solutions."
+          },
+          {
+            "claim": "人类输入极少，只给一条未调优提示，模型可使用固定计算预算的 Python 沙箱工具。",
+            "location": "abstract",
+            "quote": "Human input is minimal: we give one untuned prompt that describes the problem, and the model has access to a Python sandbox tool with a fixed compute budget."
+          },
+          {
+            "claim": "最强模型 gpt-5.6-sol 在几乎所有评估实例上匹配或超越这些论文报告的最佳方法。",
+            "location": "abstract",
+            "quote": "The strongest model we test, gpt-5.6-sol, matches or outperforms the best method reported in those papers on almost all evaluated instances."
+          },
+          {
+            "claim": "第二级设定下，返回的算法在见到评估实例之前已经固定。",
+            "location": "abstract",
+            "quote": "This holds even at level 2, where the returned algorithm is fixed before seeing the evaluation instances."
+          },
+          {
+            "claim": "相隔不到八个月发布的模型之间性能提升明显，表明该能力正在快速进步。",
+            "location": "abstract",
+            "quote": "Performance also improves sharply across models released less than eight months apart, suggesting that this capability is moving quickly."
+          }
+        ],
+        "experiments": [
+          "在库存控制、排队网络控制和选品优化三个问题上使用近期论文的基准实例进行评估。",
+          "最强测试模型 gpt-5.6-sol 在几乎所有评估实例上匹配或超越这些论文报告的最佳方法。",
+          "第二级设定下，即在看到评估实例之前固定算法，该结论依然成立。",
+          "相隔不到八个月发布的模型之间性能提升明显，表明该能力正在快速进步。",
+          "材料未说明具体实例规模、约束可行性指标、运行时间、训练开销、公平计算预算的具体数值、泛化实验细节或消融实验。"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "核心洞察在于，对于定义良好且参数范围清晰的运筹学问题，大语言模型无需针对具体实例调优，仅凭一条描述问题的未调优提示与固定计算预算的代码沙箱，就能生成在多数评估实例上匹配或超越已有专门方法的算法；第二级设定进一步说明这种能力不是对单个实例的过拟合，而是模型从问题类别描述中抽取可复用算法结构的结果，且不同代际模型之间的性能快速提升表明该能力正在迅速增强。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "采用两级评估框架：第一级输入单个问题实例，要求模型返回该实例的解；第二级仅输入问题类别描述与宽泛参数范围，要求模型返回从实例参数映射到解的算法。",
+          "人类输入最小化：只提供一条描述问题的未调优提示。",
+          "模型可使用 Python 沙箱工具，该工具具有固定计算预算。",
+          "在第二级中，算法在见到评估实例之前已经生成并固定，用于检验泛化能力。",
+          "在库存控制、排队网络控制和选品优化三个问题上使用近期论文中的基准实例进行评估。",
+          "将最强测试模型 gpt-5.6-sol 与各问题近期论文报告的最佳方法进行比较。"
+        ],
+        "motivation": "作者希望检验前沿大语言模型是否已具备为定义良好的运筹学问题设计有效算法的能力，并由此判断其能否成为算法设计中严肃的经验基线；这一动机源于大语言模型能力快速演进，可能改变运筹优化算法研发的流程。",
+        "primary_topic": "大语言模型自动算法设计在运筹优化问题中的应用",
+        "relation_to_research": "该论文直接研究大语言模型自动设计运筹学算法，与 AI4OR 和自动建模高度相关，但其测试领域是库存控制、排队网络和选品优化，并未涉及柔性作业车间、流水车间、分布式制造、生产运输协同或动态扰动等生产调度问题。论文事实表明两级评估协议和固定计算预算的沙箱机制可用于检验算法生成能力；推测而言，若要迁移到生产调度，需要将问题类别描述替换为调度问题定义、约束与目标，并设计能验证约束可行性和解质量的沙箱评估流程，且需要证明生成的调度算法在未见实例上的泛化性。",
+        "relevance_score": 6,
+        "setting": "论文研究大语言模型能否为定义良好的运筹学问题自动设计有效算法，决策对象是算法或单个实例的解，目标是在给定基准实例上达到或超越已有专门方法，关键约束是仅提供一条未调优的提示、模型只能使用具有固定计算预算的 Python 沙箱工具、人类输入极少；信息假设分为两级，第一级模型接收单个问题实例并返回该实例的解，第二级模型仅接收问题类别描述与宽泛参数范围并返回一个从实例参数到解的算法；环境在第二级中体现为算法在见到评估实例之前就已固定，静态或动态性质材料未说明。",
+        "tags": [
+          "大语言模型",
+          "自动算法设计",
+          "运筹优化",
+          "库存控制",
+          "排队网络",
+          "选品优化",
+          "代码生成",
+          "无调优提示"
+        ],
+        "title_zh": "大语言模型能够设计近优的运筹学算法",
+        "uncertainty": "仅依据标题与摘要进行判断，无法确认论文中具体实例规模、计算预算数值、消融实验、统计显著性检验以及作者对局限性的讨论；测试领域与生产调度存在明显差距，因此迁移到生产调度问题的可行性具有较大不确定性。",
+        "why_recommended": "对研究智能优化与 AI4OR 的读者而言，该论文提供了一个重要经验基线：大语言模型可以在定义良好的运筹学问题上自动生成接近最优的算法，且第二级设定强调算法在见评估实例前固定，这与学习辅助搜索和自动算法设计关注泛化性的思路一致；其两级评估协议、未调优提示和固定计算预算沙箱的设计，可为生产调度中的大模型自动建模与算法生成研究提供方法参考，但其结论是否可迁移至带复杂约束的动态调度问题仍需进一步验证。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-15T10:12:10.542404+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2608.27296v3",
+        "status": "not_found"
+      },
+      "final_score": 0.5234265363416392,
+      "provenance": {
+        "analyzed_at": "2026-10-15T04:25:13.840266Z",
+        "input_hash": "c75f7ffe99e60c8c2f2a454a6b0b836248afd982d0e7b02f105128cd6eeef40b",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "We ask whether large language models (LLMs) can design effective algorithms for well-specified operations research (OR) problems. We study inventory control, queueing network control, and assortment optimization, using benchmark instances from recent papers in each area. We evaluate two levels of LLM use: at level 1, the model receives one problem instance and returns a solution for that instance; at level 2, it receives only the problem class description and broad parameter ranges, and returns an algorithm that maps instance parameters to solutions. Human input is minimal: we give one untuned prompt that describes the problem, and the model has access to a Python sandbox tool with a fixed compute budget. The strongest model we test, gpt-5.6-sol, matches or outperforms the best method reported in those papers on almost all evaluated instances. This holds even at level 2, where the returned algorithm is fixed before seeing the evaluation instances. Performance also improves sharply across models released less than eight months apart, suggesting that this capability is moving quickly. Thus, for the well-specified operations problems we study, a single untuned LLM query can already produce algorithms competitive with specialized methods. These results suggest that frontier LLMs can be a serious empirical baseline for algorithm design in well-specified OR problems.",
+          "authors": [
+            "Jackie Baek"
+          ],
+          "canonical_id": "2608.27296",
+          "categories": [
+            "cs.AI",
+            "cs.LG"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2608.27296",
+          "published_at": "2026-08-27T16:01:11Z",
+          "source": "arxiv",
+          "title": "LLMs Can Design Near-Optimal OR Algorithms",
+          "updated_at": "2026-10-13T21:11:02Z",
+          "url": "https://arxiv.org/abs/2608.27296",
+          "version": 3
+        },
+        "rank": 32,
+        "score": {
+          "base_score": 0.460775520621162,
+          "exploration": 0.5724434609049854,
+          "matched_terms": [
+            "operations research"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.7391298507399474,
+          "topic": 0.34934058622041664
+        }
+      },
+      "tier": "browse"
+    },
+    {
+      "analysis": {
+        "analysis": "材料未说明作者如何具体分析问题结构；从摘要只能看出作者将问题分解为高层战略提议与低层实现两个角色，并把验证反馈用于更新前者。",
+        "challenges": [
+          "可靠执行需要大模型，导致测试时训练需维持梯度、优化器状态和策略统计，成本高昂",
+          "结果级验证反馈需同时评估高层策略和低层实现，信用分配困难",
+          "在固定计算预算下把测试时学习集中在有用的短决策上而不损失实现质量"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "现有基于大模型的发现系统用测试时训练更新解生成模型，但大模型训练代价高且信用分配困难。",
+            "location": "abstract",
+            "quote": "However, this becomes expensive when reliable execution requires a large model, since training must maintain gradients, optimizer states, and policy statistics while repeatedly generating long, structured outputs. It also complicates credit assignment: outcome-level verifier feedback must jointly evaluate the high-level strategy and its low-level implementation."
+          },
+          {
+            "claim": "Guidance-TTT将角色分离：紧凑指导模型在测试时训练提出高层战略变更，冻结执行模型实现完整可执行解。",
+            "location": "abstract",
+            "quote": "we introduce Guidance-TTT, which separates these roles. A compact guidance model is trained at test time to propose high-level strategic changes, while a frozen execution model implements them as complete executable solutions."
+          },
+          {
+            "claim": "每步选择先前发现的有希望解，提出变更、执行验证，并仅用自适应组相对强化学习目标更新指导模型。",
+            "location": "abstract",
+            "quote": "At each step, the system selects a promising previously discovered solution, proposes a change, executes and verifies it, and updates only the guidance model using an adaptive group-relative RL objective."
+          },
+          {
+            "claim": "在四个领域不使用网络访问产生强解，并优于先前工作最佳解、与公开在线排行榜最新结果具有竞争力。",
+            "location": "abstract",
+            "quote": "Without web access, Guidance-TTT produces strong solutions across four distinct domains: combinatorial optimization (Polyomino Packing), heuristic programming (AHC058), machine learning (Lasso), and GPU kernel optimization (TriMul). Across these tasks, it outperforms the best solutions reported in prior work while remaining competitive with state-of-the-art results on public online leaderboards."
+          }
+        ],
+        "experiments": [
+          "在四个领域（Polyomino Packing、AHC058、Lasso、TriMul）上不使用网络访问产生解，作者称其优于先前工作报告的最佳解，并与公开在线排行榜上的最新结果具有竞争力。",
+          "摘要未提供具体基线、实例规模、约束可行性、解质量指标、运行时间、训练开销、公平计算预算、泛化或消融的数值与细节，材料未说明。"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "将解生成过程显式拆分为高层战略决策与低层可执行实现两种角色，让测试时学习只集中在短小的高层战略变更上，而把实现交给一个冻结的强模型；这样既避免了为维持执行能力而训练大模型的开销，又通过将验证反馈归因于短战略决策而简化信用分配，使有限的学习信号能更集中地提升后续提议质量。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "引入Guidance-TTT，将角色分离：一个紧凑的指导模型在测试时接受训练，用于提出高层战略变更；一个冻结的执行模型负责将这些变更实现为完整可执行解。",
+          "每一步系统选择一个先前发现的有希望的候选解，提出变更，执行并验证，然后仅用自适应组相对强化学习目标更新指导模型。",
+          "测试时学习只作用于短战略决策，执行模型不进行适配，从而保留强模型的实现能力。",
+          "任务覆盖组合优化Polyomino Packing、启发式编程AHC058、机器学习Lasso和GPU内核优化TriMul，且不使用网络访问。"
+        ],
+        "motivation": "现有基于大模型的发现系统（如TTT-Discover）用测试时训练根据验证器反馈更新解生成模型，但当可靠执行依赖大模型时训练成本很高，并带来策略与实现之间的信用分配困难。作者希望降低测试时训练成本，同时保留强模型的实现能力，从而更有效地改进候选解。",
+        "primary_topic": "基于大模型智能体的开放式科学发现与测试时训练，用于组合优化等任务的解生成与改进",
+        "relation_to_research": "该工作本身面向开放式科学发现，并非直接研究柔性作业车间、流水车间、分布式制造或生产运输协同等具体生产调度问题；但其“紧凑指导模型提出高层战略变更、冻结强执行模型实现完整解、在验证反馈下用小模型做测试时学习”的机制，与学习辅助搜索、智能体优化和大模型智能体自动建模有直接关联。推测上，若迁移到生产调度，需要把验证器替换为调度可行性与目标评估（如约束违反、makespan、能耗或多目标），把高层战略变更映射为调度规则、邻域或分解策略，并解决调度中动态扰动和约束可行性验证的开销问题；这些均为迁移设想，非作者结论。",
+        "relevance_score": 6,
+        "setting": "研究面向开放式科学发现任务，其决策对象是候选可执行解（如组合优化方案、启发式程序、机器学习流程或GPU内核），目标是从验证器反馈中反复提出并改进候选解以获得更好结果。问题本质是求解器生成策略的在线自适应，关键约束在于可靠执行需要大模型，而直接对大模型做测试时训练会带来梯度、优化器状态与策略统计的高昂开销，且结果级验证反馈难以区分高层策略与低层实现的责任。信息假设是仅通过验证器反馈学习，不使用网络访问；未说明是否面向动态环境，整体可视为在给定目标任务上的迭代式静态问题求解。",
+        "tags": [
+          "测试时训练",
+          "大模型智能体",
+          "强化学习",
+          "组合优化",
+          "启发式编程",
+          "求解器辅助优化"
+        ],
+        "title_zh": "在思想空间中进化：在测试时训练小模型以解锁更好的发现",
+        "uncertainty": "仅依据标题与摘要分析，未提供全文，因此对方法细节（网络结构、状态动作奖励定义、组相对目标形式、训练开销、基线设置和消融）无法完整判断；摘要也未明确任何生产调度或NP-hard调度基准，因此相关性分数存在区间不确定性。",
+        "why_recommended": "对研究AI4OR与智能体优化的读者，该工作给出一种降低测试时训练成本的明确思路：只训练小型指导模型做短战略决策，把执行留给冻结的强模型，并用自适应组相对强化学习从结果级验证反馈中更新。这一角色分离与信用分配设计可能启发将大模型智能体用于组合优化或调度规则生成时的成本控制与搜索引导，尤其适合关注公平计算预算与学习辅助搜索机制的研究者参考。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-15T10:12:10.542404+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2610.06269v2",
+        "status": "not_found"
+      },
+      "final_score": 0.5432538320758674,
+      "provenance": {
+        "analyzed_at": "2026-10-15T04:16:41.454612Z",
+        "input_hash": "ec9e61dc421e530d941df523dce56e9c140d089ddf89a5763f481fdc788ec5e0",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Open-ended scientific discovery often requires repeatedly proposing and evaluating candidate solutions. LLM-based systems can support this process by generating and refining executable solutions from verifier feedback. Methods such as TTT-Discover use test-time training (TTT) to update the solution-generating LLM from verifier feedback, adapting its generation policy to improve subsequent proposals on the target problem. However, this becomes expensive when reliable execution requires a large model, since training must maintain gradients, optimizer states, and policy statistics while repeatedly generating long, structured outputs. It also complicates credit assignment: outcome-level verifier feedback must jointly evaluate the high-level strategy and its low-level implementation. In this work, we introduce Guidance-TTT, which separates these roles. A compact guidance model is trained at test time to propose high-level strategic changes, while a frozen execution model implements them as complete executable solutions. At each step, the system selects a promising previously discovered solution, proposes a change, executes and verifies it, and updates only the guidance model using an adaptive group-relative RL objective. This concentrates test-time learning on short strategic decisions while retaining the implementation capability of a substantially stronger model without adapting it. Without web access, Guidance-TTT produces strong solutions across four distinct domains: combinatorial optimization (Polyomino Packing), heuristic programming (AHC058), machine learning (Lasso), and GPU kernel optimization (TriMul). Across these tasks, it outperforms the best solutions reported in prior work while remaining competitive with state-of-the-art results on public online leaderboards. Code is available at https://github.com/Human-Agent-Society/reef/tree/guidance-ttt-support.",
+          "authors": [
+            "Chonghe Jiang",
+            "Ao Qu",
+            "Siyuan Liu",
+            "Ruoyun Ma",
+            "Zijian Zhou",
+            "Dingyi Zhuang",
+            "Bo Liu",
+            "Han Zheng",
+            "Hanfei Yu",
+            "Baichuan Mo",
+            "Jinhua Zhao",
+            "Paul Pu Liang"
+          ],
+          "canonical_id": "2610.06269",
+          "categories": [
+            "cs.AI",
+            "cs.LG"
+          ],
+          "comment": "35 pages, including references and appendice",
+          "pdf_url": "https://arxiv.org/pdf/2610.06269",
+          "published_at": "2026-10-05T13:04:05Z",
+          "source": "arxiv",
+          "title": "Evolving in Thought Space: Training a Small Model at Test Time Unlocks Better Discoveries",
+          "updated_at": "2026-10-12T22:19:47Z",
+          "url": "https://arxiv.org/abs/2610.06269",
+          "version": 2
+        },
+        "rank": 18,
+        "score": {
+          "base_score": 0.4968251492288498,
+          "exploration": 0.7591369837320162,
+          "matched_terms": [
+            "combinatorial optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.5825467156835068,
+          "topic": 0.39738703466947156
         }
       },
       "tier": "explore"
@@ -567,20 +568,20 @@
   ],
   "schema_version": 1,
   "stats": {
-    "cache_hits": 0,
-    "deduplicated": 1000,
-    "failed": 1,
-    "fetched": 1000,
-    "figure_available": 1,
+    "cache_hits": 1,
+    "deduplicated": 2500,
+    "failed": 12,
+    "fetched": 2500,
+    "figure_available": 2,
     "figure_cache_hits": 0,
     "figure_failed": 0,
     "figure_panel_failed": 0,
     "figure_requests": 6,
-    "full_text_reads": 8,
-    "input_tokens": 73175,
-    "model_calls": 21,
-    "output_tokens": 51626,
-    "preselected": 21,
+    "full_text_reads": 9,
+    "input_tokens": 61297,
+    "model_calls": 49,
+    "output_tokens": 69415,
+    "preselected": 50,
     "published": 4,
     "source_lookback_days": 3
   }

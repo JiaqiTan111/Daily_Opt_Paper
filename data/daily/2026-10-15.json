@@ -1,0 +1,588 @@
+{
+  "dry_run": false,
+  "generated_at": "2026-10-15T10:12:10.542404+08:00",
+  "papers": [
+    {
+      "analysis": {
+        "analysis": "作者将自动启发式设计视为一个覆盖问题：父代选择、算子分配和停滞恢复均以启发式集合对训练实例的联合覆盖质量为依据，从而在演化搜索中显式优化覆盖目标并返回互补启发式集成。对于生成器学习，作者将搜索过程中教师LLM的自然语言洞察与生成器产生的新启发式配对，构造偏好对用于直接偏好优化，并通过反思自蒸馏项强化独立生成改进的能力。",
+        "challenges": [
+          "标量适应度信号掩盖实例覆盖信息，导致启发式同质化",
+          "自然语言反馈停留在提示层，无法内化到生成器权重",
+          "DPO仅教生成器排序改进，不保证其能独立生成改进",
+          "长视野演化搜索中增益累积与稳定性"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "现有AHD框架冻结生成器或仅用标量适应度微调，隐藏了每个启发式覆盖的实例信息",
+            "location": "abstract",
+            "quote": "Existing frameworks freeze the generator or fine-tune it on a scalar fitness signal hiding which instances each heuristic covers."
+          },
+          {
+            "claim": "基于反思的框架的自然语言反馈停留在提示中，未到达生成器权重",
+            "location": "abstract",
+            "quote": "Reflection-based frameworks improve heuristics with natural-language feedback, but it stays in the prompt and never reaches the generator's weights."
+          },
+          {
+            "claim": "EPOCH将实例覆盖作为演化搜索目标，并微调生成器以内化反思",
+            "location": "abstract",
+            "quote": "We propose EPOCH, which makes instance coverage the objective of the evolutionary search and fine-tunes the generator to internalize reflection."
+          },
+          {
+            "claim": "父代选择、算子分配和停滞恢复均优化启发式对训练实例的联合覆盖，返回互补启发式集成",
+            "location": "abstract",
+            "quote": "Parent selection, operator allocation, and stagnation recovery all optimize how well the heuristics jointly cover the training instances, so the search returns a complementary heuristic ensemble."
+          },
+          {
+            "claim": "生成器通过经验偏好优化从自身搜索中学习，教师LLM返回自然语言洞察，改进加入偏好对用于DPO",
+            "location": "abstract",
+            "quote": "The generator learns from its own search by experiential preference optimization. A teacher LLM returns a natural-language insight on the generated heuristics, and the generator produces new heuristics with this insight. These improvements join the preference pairs for direct preference optimization (DPO)."
+          },
+          {
+            "claim": "反思自蒸馏项使生成器更可能独立生成改进，增益在长搜索视野中累积",
+            "location": "abstract",
+            "quote": "Since DPO only teaches the generator to rank these improvements, a reflective self-distillation (RSD) term makes it more likely to generate them on its own, and the gains accumulate over the long horizon of the search."
+          },
+          {
+            "claim": "EPOCH的启发式集成在不同COPs和开源LLM骨干上优于仅推理和微调基线，并跨问题规模泛化",
+            "location": "abstract",
+            "quote": "Across COPs and open-source LLM backbones, EPOCH's heuristic ensembles outperform inference-only and fine-tuned baselines and generalize across problem scales."
+          }
+        ],
+        "experiments": [
+          "在不同组合优化问题和开源LLM骨干上，EPOCH的启发式集成优于仅推理基线和微调基线",
+          "EPOCH能跨问题规模泛化"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "将实例覆盖作为演化搜索的显式目标，使种群趋向互补的启发式集成，而非仅追求单一启发式的平均适应度；同时通过经验偏好优化让生成器从自身搜索经验中学习，并借助反思自蒸馏（RSD）项将DPO的排序能力转化为独立生成改进启发式的概率，从而在长搜索视野中累积增益。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "将实例覆盖作为演化搜索的目标，父代选择、算子分配和停滞恢复均优化启发式集合对训练实例的联合覆盖",
+          "演化搜索返回一组互补的启发式集成",
+          "通过经验偏好优化（DPO）让生成器从自身搜索经验中学习：教师LLM对生成的启发式返回自然语言洞察，生成器据此产生新启发式，这些改进加入偏好对",
+          "引入反思自蒸馏（RSD）项，使生成器更可能独立生成这些改进，从而在长搜索视野中累积增益"
+        ],
+        "motivation": "现有AHD框架要么冻结生成器，要么仅依赖标量适应度信号微调生成器，而标量信号隐藏了每个启发式覆盖哪些实例的信息；基于反思的框架虽能用自然语言反馈改进启发式，但反馈停留在提示中，从未进入生成器权重，导致改进无法内化。",
+        "primary_topic": "基于大语言模型的自动启发式设计（LLM-based AHD）用于组合优化问题，通过覆盖感知演化搜索与经验偏好优化微调生成器",
+        "relation_to_research": "该论文直接涉及自动启发式设计（AHD）这一智能优化与AI4OR交叉方向，其覆盖感知演化与偏好优化机制可迁移到生产调度问题中的启发式生成。论文事实：EPOCH通过覆盖目标优化启发式集成并微调LLM生成器。迁移设想（推测）：若将覆盖感知目标替换为调度实例的约束满足度或解质量指标，并将偏好优化用于调度启发式生成，需解决调度问题中动态扰动与多目标约束的表示、以及公平计算预算下训练开销评估等条件。",
+        "relevance_score": 8,
+        "setting": "研究问题为组合优化问题（COPs）中的自动启发式设计，决策对象是由LLM生成器产生的启发式候选集合；目标是通过演化搜索返回一组在训练实例上具有互补覆盖的启发式集成，而非单一最优启发式；关键约束与信息假设材料未说明；环境为静态还是动态材料未说明。",
+        "tags": [
+          "自动启发式设计",
+          "大语言模型",
+          "演化搜索",
+          "直接偏好优化",
+          "组合优化",
+          "启发式集成",
+          "覆盖感知"
+        ],
+        "title_zh": "EPOCH：面向基于大语言模型的自动启发式设计的覆盖感知演化与经验偏好优化",
+        "uncertainty": "仅基于标题与摘要，无法确认具体组合优化问题类型、实例规模、基线设置、计算预算、训练开销、消融实验细节以及作者声明的局限；第一单位和通讯作者信息未提供；覆盖与多目标约束、动态扰动结合的具体方式未知，因此相关性判断存在一定不确定性。",
+        "why_recommended": "对研究智能优化、学习辅助搜索和AI4OR的博士生而言，该论文提供了一种将演化搜索的覆盖目标与LLM生成器的偏好优化结合的新范式，其覆盖感知演化与反思自蒸馏机制对生产调度中的启发式自动设计、多目标约束优化及动态环境下的求解器增强具有直接参考价值；同时其跨问题规模和不同骨干的泛化评估设计也值得借鉴。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-15T10:12:10.542404+08:00",
+        "figures": [
+          {
+            "caption": "Overview of EPOCH , illustrating one training iteration. (1) Heuristics are represented by per-instance gap vectors, whose minima define expert heuristics and the coverage gap ρ ⁡ ( 𝒫 ) \\rho(\\mathcal{P}) . (2) These drive parent selection, operator allocation, and coverage-aware population management. (3) The policy π θ \\pi_{\\theta} samples rollouts from the operator prompt q q , the teacher π T \\pi_{\\mathrm{T}} returns an insight z z on the best and worst valid ones, and π θ \\pi_{\\theta} regenerates from q ⊕ z q\\oplus z . (4) Responses form within-batch and cross-round preference pairs; periodic DPO bursts add an RSD term internalizing the hint-guided improvement into the unhinted policy.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2610.17379/v1/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2610.17379v1/epoch_framework_final_cropped.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2610.17379v1#S1.F1"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2610.17379v1",
+        "status": "available"
+      },
+      "final_score": 0.5708402959249427,
+      "provenance": {
+        "analyzed_at": "2026-10-15T04:48:02.008781Z",
+        "input_hash": "f3cd8aba617f164142149b649472f59d4310667569a335d64e175c45df1a244c",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "LLM-based automated heuristic design (AHD) discovers heuristics for combinatorial optimization problems (COPs), where an LLM generates candidates in an evolutionary search. Existing frameworks freeze the generator or fine-tune it on a scalar fitness signal hiding which instances each heuristic covers. Reflection-based frameworks improve heuristics with natural-language feedback, but it stays in the prompt and never reaches the generator's weights. We propose EPOCH, which makes instance coverage the objective of the evolutionary search and fine-tunes the generator to internalize reflection. Parent selection, operator allocation, and stagnation recovery all optimize how well the heuristics jointly cover the training instances, so the search returns a complementary heuristic ensemble. The generator learns from its own search by experiential preference optimization. A teacher LLM returns a natural-language insight on the generated heuristics, and the generator produces new heuristics with this insight. These improvements join the preference pairs for direct preference optimization (DPO). Since DPO only teaches the generator to rank these improvements, a reflective self-distillation (RSD) term makes it more likely to generate them on its own, and the gains accumulate over the long horizon of the search. Across COPs and open-source LLM backbones, EPOCH's heuristic ensembles outperform inference-only and fine-tuned baselines and generalize across problem scales.",
+          "authors": [
+            "Oguzhan Gungordu",
+            "Ayse Tursucular",
+            "Siheng Xiong",
+            "Faramarz Fekri"
+          ],
+          "canonical_id": "2610.17379",
+          "categories": [
+            "cs.AI",
+            "cs.CL"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2610.17379",
+          "published_at": "2026-10-12T20:36:19Z",
+          "source": "arxiv",
+          "title": "EPOCH: Coverage-Aware Evolution with Experiential Preference Optimization for LLM-based Automated Heuristic Design",
+          "updated_at": "2026-10-12T20:36:19Z",
+          "url": "https://arxiv.org/abs/2610.17379",
+          "version": 1
+        },
+        "rank": 47,
+        "score": {
+          "base_score": 0.3833459925908047,
+          "exploration": 0.08360249985719101,
+          "matched_terms": [
+            "combinatorial optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.5721758749792898,
+          "topic": 0.41503559554655567
+        }
+      },
+      "tier": "browse"
+    },
+    {
+      "analysis": {
+        "analysis": "作者从 CASH 问题结构出发，指出其包含算法选择与算法专属超参数细化两个层面，因此需要跨算法和算法内部的协调搜索。作者分析现有方法使用扁平优化历史，混合了不同算法的观测，从而掩盖配置精炼轨迹，导致 LLM 优化器在高维结构化空间泛化不佳。基于此，作者提出以蒙特卡洛树搜索树作为共享状态，将算法选择、超参数精炼以及 BO 与 LLM 提议者协同统一到同一搜索轨迹中，从而利用路径结构保留并选择性利用历史信息。具体如何利用问题结构进行分解、下界估计或图表示，材料未说明。",
+        "challenges": [
+          "传统贝叶斯优化在 CASH 中面临冷启动问题",
+          "现有基于大语言模型的优化器对高维、结构化 CASH 空间泛化较差",
+          "需要在候选算法之间以及算法专属超参数空间内部同时进行协同的探索与利用",
+          "扁平优化历史混合跨算法观测，难以显现配置精炼轨迹",
+          "如何让 LLM 与 BO 在统一搜索过程中可靠地协同并动态切换提议来源"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文研究 AutoML 中的 CASH 问题，即联合自动化算法选择与超参数调优。",
+            "location": "abstract",
+            "quote": "the AutoML community has focused on the CASH problem, which jointly automates algorithm selection and hyperparameter tuning."
+          },
+          {
+            "claim": "传统贝叶斯优化存在冷启动问题，大语言模型可通过语义先验缓解。",
+            "location": "abstract",
+            "quote": "While traditional methods like Bayesian Optimization (BO) struggle with cold-start issues, Large Language Models (LLMs) can mitigate these through semantic priors."
+          },
+          {
+            "claim": "现有基于 LLM 的优化器对高维、结构化 CASH 空间泛化较差，且扁平优化历史掩盖配置精炼轨迹。",
+            "location": "abstract",
+            "quote": "However, existing LLM-based optimizers generalize poorly to high-dimensional, structured CASH spaces."
+          },
+          {
+            "claim": "论文提出 LB-MCTS，以蒙特卡洛树搜索树作为共享状态，统一算法选择、超参数细化和 BO-LLM 提议者协同。",
+            "location": "abstract",
+            "quote": "we propose LB-MCTS, a trajectory-structured optimization framework that uses a Monte Carlo Tree Search tree as a shared state for algorithm selection, hyperparameter refinement, and BO-LLM proposer synergy."
+          },
+          {
+            "claim": "在共享状态内，BO 提供算法专属代理建模，LLM 利用路径感知选择性记忆生成语义提议与反思。",
+            "location": "abstract",
+            "quote": "Within this shared state, BO provides algorithm-specific surrogate modeling for quantitative search, while the LLM exploits path-aware selective memory to generate semantic proposals and reflections."
+          },
+          {
+            "claim": "随着代理模型改善，可靠性感知的提议者策略在统一搜索轨迹中从 LLM 驱动自适应转向 BO 驱动。",
+            "location": "abstract",
+            "quote": "As the surrogate model improves, a reliability-aware proposer policy adaptively shifts from LLM-driven to BO-driven proposals within a unified search trajectory."
+          },
+          {
+            "claim": "在 104 个 AMLB 数据集上，LB-MCTS 持续优于基于 BO、基于 LLM 以及混合基线。",
+            "location": "abstract",
+            "quote": "Experiments on 104 AMLB datasets demonstrate that LB-MCTS consistently outperforms BO-based, LLM-based, and hybrid baselines."
+          }
+        ],
+        "experiments": [
+          "在 104 个 AMLB 数据集上进行实验。",
+          "实验结果表明 LB-MCTS 持续优于基于贝叶斯优化、基于大语言模型以及混合基线方法。",
+          "具体基线设置、实例规模细节、约束可行性、解质量数值、运行时间、训练开销、公平计算预算、泛化实验和消融实验在摘要中未提供。"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "论文的核心洞察在于，CASH 的跨算法选择与算法内超参数精炼本质上是轨迹结构化的问题，若将算法选择、超参数细化和 BO 与 LLM 提议者协同统一到一个共享的蒙特卡洛树搜索树中，可以保留路径信息并有选择地记忆历史；共享树状态使贝叶斯优化能针对特定算法建立代理模型进行定量搜索，同时使大语言模型能利用路径感知的选择性记忆生成语义提议与反思，从而在高维结构化空间中获得更好的协同探索与利用。随着代理模型改善，可靠性感知的提议者策略可自适应地从大语言模型驱动转向贝叶斯优化驱动，在统一搜索轨迹内动态平衡语义先验与定量模型。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "提出 LB-MCTS，一种轨迹结构化的优化框架。",
+          "使用蒙特卡洛树搜索树作为共享状态，统一算法选择、超参数细化和 BO-LLM 提议者协同。",
+          "在共享状态内，贝叶斯优化为算法专属代理建模提供定量搜索能力。",
+          "大语言模型利用路径感知的选择性记忆生成语义提议与反思。",
+          "随着代理模型改善，可靠性感知的提议者策略在统一搜索轨迹内自适应地从 LLM 驱动提议转向 BO 驱动提议。"
+        ],
+        "motivation": "作者指出，为降低机器学习使用门槛，AutoML 社区聚焦 CASH 问题；传统贝叶斯优化存在冷启动问题，大语言模型可通过语义先验缓解冷启动，但现有基于大语言模型的优化器对高维、结构化 CASH 空间泛化较差。CASH 需要跨候选算法及其算法专属超参数空间进行协同的探索与利用，而现有方法常依赖扁平的优化历史，将不同算法的观测混合在一起，掩盖了配置精炼轨迹。",
+        "primary_topic": "AutoML 中组合算法选择与超参数优化（CASH）的 LLM 与贝叶斯优化协同框架",
+        "relation_to_research": "论文事实：该工作面向 AutoML 中的 CASH 问题，使用蒙特卡洛树搜索作为共享状态，协同贝叶斯优化与大语言模型进行算法选择和超参数调优，并采用可靠性感知策略动态切换提议者。迁移设想（推测）：其核心机制——以树结构保存搜索轨迹、对高维结构化空间进行路径感知记忆、以及基于代理模型可靠性动态切换 LLM 与定量优化器——在概念上与智能优化和生产调度中的学习辅助搜索有潜在相通之处，例如可用于柔性作业车间或分布式制造中的机器选择、规则选择与参数协同优化；但迁移到生产调度需要重新定义状态、动作、目标函数和约束可行性处理，并验证在调度问题上的公平计算预算与泛化能力。摘要并未讨论生产调度或约束优化，因此这种迁移属于推测而非作者结论。",
+        "relevance_score": 6,
+        "setting": "论文研究 CASH（Combined Algorithm Selection and Hyperparameter optimization）问题，即联合自动化选择机器学习算法并调优其算法专属超参数。决策对象为候选算法与对应的超参数配置；目标是在高维、结构化搜索空间中高效找到高质量配置，缓解传统贝叶斯优化的冷启动问题。关键约束与信息假设材料未明确给出，环境是否可以视为静态同样材料未说明，仅从摘要可知搜索空间具有高维和结构化特征，且需要跨算法以及算法内部超参数空间进行协同探索与利用。",
+        "tags": [
+          "AutoML",
+          "CASH",
+          "贝叶斯优化",
+          "大语言模型",
+          "蒙特卡洛树搜索",
+          "算法选择",
+          "超参数调优",
+          "代理模型",
+          "语义先验"
+        ],
+        "title_zh": "大语言模型与贝叶斯优化的树结构协同用于高效 CASH",
+        "uncertainty": "本次分析仅基于标题与摘要，未提供全文；第一单位、通讯作者、具体方法细节、基线配置、实验数字和作者明确陈述的局限均无法从摘要确认。相关性评分主要依据 CASH 与 AutoML 优化同智能优化、学习辅助搜索的间接邻接关系，而非直接面向生产调度或约束优化，因此可能存在判断偏差。",
+        "why_recommended": "对研究 AI4OR 与学习辅助搜索的读者，该论文提供了一个将 LLM 语义先验与贝叶斯优化定量代理模型通过树结构共享状态进行协同的机制，并引入了随代理模型可靠性自适应切换提议者的策略。虽然其直接对象是 AutoML 的 CASH 问题，但其中关于高维结构化搜索空间中的轨迹保持、跨子空间协同探索利用以及 LLM 与经典优化器结合的思路，可能为生产调度、算法配置和一般组合优化中的混合智能优化方法提供参考。建议关注其机制设计而非仅因出现 LLM 或 agent 术语而采纳。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-15T10:12:10.542404+08:00",
+        "figures": [
+          {
+            "caption": "MCTS search of the LLM proposer.",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2601.12355/v3/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2601.12355v3/LLM_proposer.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2601.12355v3#S3.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2601.12355v3",
+        "status": "available"
+      },
+      "final_score": 0.5398945367658494,
+      "provenance": {
+        "analyzed_at": "2026-10-15T04:19:02.119041Z",
+        "input_hash": "f7b33bbacfc4e913d7d2cbda72f1731b61fd679813797824568eab3d6f6f58b7",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "To lower the expertise barrier in machine learning, the AutoML community has focused on the CASH problem, which jointly automates algorithm selection and hyperparameter tuning. While traditional methods like Bayesian Optimization (BO) struggle with cold-start issues, Large Language Models (LLMs) can mitigate these through semantic priors. However, existing LLM-based optimizers generalize poorly to high-dimensional, structured CASH spaces. CASH requires coordinated exploration and exploitation both across candidate algorithms and within their algorithm-specific hyperparameter spaces. Yet existing approaches often rely on flat optimization histories that mix observations across algorithms and obscure configuration-refinement trajectories. In this paper, we propose LB-MCTS, a trajectory-structured optimization framework that uses a Monte Carlo Tree Search tree as a shared state for algorithm selection, hyperparameter refinement, and BO-LLM proposer synergy. Within this shared state, BO provides algorithm-specific surrogate modeling for quantitative search, while the LLM exploits path-aware selective memory to generate semantic proposals and reflections. As the surrogate model improves, a reliability-aware proposer policy adaptively shifts from LLM-driven to BO-driven proposals within a unified search trajectory. Experiments on 104 AMLB datasets demonstrate that LB-MCTS consistently outperforms BO-based, LLM-based, and hybrid baselines. Code: https://github.com/PKU-DAIR/open-box.",
+          "authors": [
+            "Beicheng Xu",
+            "Weitong Qian",
+            "Lingching Tung",
+            "Yupeng Lu",
+            "Bin Cui"
+          ],
+          "canonical_id": "2601.12355",
+          "categories": [
+            "cs.LG"
+          ],
+          "comment": "Accepted at NeurIPS 2026. Extended version with full appendices",
+          "pdf_url": "https://arxiv.org/pdf/2601.12355",
+          "published_at": "2026-01-18T11:26:31Z",
+          "source": "arxiv",
+          "title": "Tree-Structured Synergy of Large Language Models and Bayesian Optimization for Efficient CASH",
+          "updated_at": "2026-10-14T16:07:08Z",
+          "url": "https://arxiv.org/abs/2601.12355",
+          "version": 3
+        },
+        "rank": 19,
+        "score": {
+          "base_score": 0.4907173395742716,
+          "exploration": 0.0049087287744172085,
+          "matched_terms": [
+            "algorithm selection"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.9002866388840765,
+          "topic": 0.5125
+        }
+      },
+      "tier": "browse"
+    },
+    {
+      "analysis": {
+        "analysis": "作者通过设计两个层级的评估协议来区分实例级求解与类别级算法设计：第一级将单个问题实例交给模型求解释放其直接求解能力，第二级只给问题类别和参数范围要求模型返回通用算法，从而检验算法是否在见到评估实例前已经固定。作者选取库存控制、排队网络控制和选品优化三个已有近期基准的运筹学问题作为测试领域，并用一条未调优提示和固定计算预算的 Python 沙箱工具控制人类输入与计算资源，最后将最强模型 gpt-5.6-sol 的结果与各领域近期论文报告的最佳方法进行对比。材料未说明作者是否对问题结构、分解、下界或图表示进行进一步分析。",
+        "challenges": [
+          "如何让大语言模型仅凭问题类别描述和宽泛参数范围生成可泛化到未见实例的算法",
+          "如何在固定计算预算和 Python 沙箱限制下保证生成算法的可执行性与有效性",
+          "如何公平比较自动生成的算法与已有专门方法在基准实例上的表现",
+          "如何评估模型代际差异对算法设计能力的影响"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文研究大语言模型能否为定义良好的运筹学问题设计有效算法。",
+            "location": "abstract",
+            "quote": "We ask whether large language models (LLMs) can design effective algorithms for well-specified operations research (OR) problems."
+          },
+          {
+            "claim": "评估覆盖库存控制、排队网络控制和选品优化，并使用各领域近期论文的基准实例。",
+            "location": "abstract",
+            "quote": "We study inventory control, queueing network control, and assortment optimization, using benchmark instances from recent papers in each area."
+          },
+          {
+            "claim": "第二级设定下模型只接收问题类别描述和宽泛参数范围，返回一个从实例参数到解的算法。",
+            "location": "abstract",
+            "quote": "at level 2, it receives only the problem class description and broad parameter ranges, and returns an algorithm that maps instance parameters to solutions."
+          },
+          {
+            "claim": "人类输入极少，只给一条未调优提示，模型可使用固定计算预算的 Python 沙箱工具。",
+            "location": "abstract",
+            "quote": "Human input is minimal: we give one untuned prompt that describes the problem, and the model has access to a Python sandbox tool with a fixed compute budget."
+          },
+          {
+            "claim": "最强模型 gpt-5.6-sol 在几乎所有评估实例上匹配或超越这些论文报告的最佳方法。",
+            "location": "abstract",
+            "quote": "The strongest model we test, gpt-5.6-sol, matches or outperforms the best method reported in those papers on almost all evaluated instances."
+          },
+          {
+            "claim": "第二级设定下，返回的算法在见到评估实例之前已经固定。",
+            "location": "abstract",
+            "quote": "This holds even at level 2, where the returned algorithm is fixed before seeing the evaluation instances."
+          },
+          {
+            "claim": "相隔不到八个月发布的模型之间性能提升明显，表明该能力正在快速进步。",
+            "location": "abstract",
+            "quote": "Performance also improves sharply across models released less than eight months apart, suggesting that this capability is moving quickly."
+          }
+        ],
+        "experiments": [
+          "在库存控制、排队网络控制和选品优化三个问题上使用近期论文的基准实例进行评估。",
+          "最强测试模型 gpt-5.6-sol 在几乎所有评估实例上匹配或超越这些论文报告的最佳方法。",
+          "第二级设定下，即在看到评估实例之前固定算法，该结论依然成立。",
+          "相隔不到八个月发布的模型之间性能提升明显，表明该能力正在快速进步。",
+          "材料未说明具体实例规模、约束可行性指标、运行时间、训练开销、公平计算预算的具体数值、泛化实验细节或消融实验。"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "核心洞察在于，对于定义良好且参数范围清晰的运筹学问题，大语言模型无需针对具体实例调优，仅凭一条描述问题的未调优提示与固定计算预算的代码沙箱，就能生成在多数评估实例上匹配或超越已有专门方法的算法；第二级设定进一步说明这种能力不是对单个实例的过拟合，而是模型从问题类别描述中抽取可复用算法结构的结果，且不同代际模型之间的性能快速提升表明该能力正在迅速增强。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "采用两级评估框架：第一级输入单个问题实例，要求模型返回该实例的解；第二级仅输入问题类别描述与宽泛参数范围，要求模型返回从实例参数映射到解的算法。",
+          "人类输入最小化：只提供一条描述问题的未调优提示。",
+          "模型可使用 Python 沙箱工具，该工具具有固定计算预算。",
+          "在第二级中，算法在见到评估实例之前已经生成并固定，用于检验泛化能力。",
+          "在库存控制、排队网络控制和选品优化三个问题上使用近期论文中的基准实例进行评估。",
+          "将最强测试模型 gpt-5.6-sol 与各问题近期论文报告的最佳方法进行比较。"
+        ],
+        "motivation": "作者希望检验前沿大语言模型是否已具备为定义良好的运筹学问题设计有效算法的能力，并由此判断其能否成为算法设计中严肃的经验基线；这一动机源于大语言模型能力快速演进，可能改变运筹优化算法研发的流程。",
+        "primary_topic": "大语言模型自动算法设计在运筹优化问题中的应用",
+        "relation_to_research": "该论文直接研究大语言模型自动设计运筹学算法，与 AI4OR 和自动建模高度相关，但其测试领域是库存控制、排队网络和选品优化，并未涉及柔性作业车间、流水车间、分布式制造、生产运输协同或动态扰动等生产调度问题。论文事实表明两级评估协议和固定计算预算的沙箱机制可用于检验算法生成能力；推测而言，若要迁移到生产调度，需要将问题类别描述替换为调度问题定义、约束与目标，并设计能验证约束可行性和解质量的沙箱评估流程，且需要证明生成的调度算法在未见实例上的泛化性。",
+        "relevance_score": 6,
+        "setting": "论文研究大语言模型能否为定义良好的运筹学问题自动设计有效算法，决策对象是算法或单个实例的解，目标是在给定基准实例上达到或超越已有专门方法，关键约束是仅提供一条未调优的提示、模型只能使用具有固定计算预算的 Python 沙箱工具、人类输入极少；信息假设分为两级，第一级模型接收单个问题实例并返回该实例的解，第二级模型仅接收问题类别描述与宽泛参数范围并返回一个从实例参数到解的算法；环境在第二级中体现为算法在见到评估实例之前就已固定，静态或动态性质材料未说明。",
+        "tags": [
+          "大语言模型",
+          "自动算法设计",
+          "运筹优化",
+          "库存控制",
+          "排队网络",
+          "选品优化",
+          "代码生成",
+          "无调优提示"
+        ],
+        "title_zh": "大语言模型能够设计近优的运筹学算法",
+        "uncertainty": "仅依据标题与摘要进行判断，无法确认论文中具体实例规模、计算预算数值、消融实验、统计显著性检验以及作者对局限性的讨论；测试领域与生产调度存在明显差距，因此迁移到生产调度问题的可行性具有较大不确定性。",
+        "why_recommended": "对研究智能优化与 AI4OR 的读者而言，该论文提供了一个重要经验基线：大语言模型可以在定义良好的运筹学问题上自动生成接近最优的算法，且第二级设定强调算法在见评估实例前固定，这与学习辅助搜索和自动算法设计关注泛化性的思路一致；其两级评估协议、未调优提示和固定计算预算沙箱的设计，可为生产调度中的大模型自动建模与算法生成研究提供方法参考，但其结论是否可迁移至带复杂约束的动态调度问题仍需进一步验证。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-15T10:12:10.542404+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2608.27296v3",
+        "status": "not_found"
+      },
+      "final_score": 0.5234265363416392,
+      "provenance": {
+        "analyzed_at": "2026-10-15T04:25:13.840266Z",
+        "input_hash": "c75f7ffe99e60c8c2f2a454a6b0b836248afd982d0e7b02f105128cd6eeef40b",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "We ask whether large language models (LLMs) can design effective algorithms for well-specified operations research (OR) problems. We study inventory control, queueing network control, and assortment optimization, using benchmark instances from recent papers in each area. We evaluate two levels of LLM use: at level 1, the model receives one problem instance and returns a solution for that instance; at level 2, it receives only the problem class description and broad parameter ranges, and returns an algorithm that maps instance parameters to solutions. Human input is minimal: we give one untuned prompt that describes the problem, and the model has access to a Python sandbox tool with a fixed compute budget. The strongest model we test, gpt-5.6-sol, matches or outperforms the best method reported in those papers on almost all evaluated instances. This holds even at level 2, where the returned algorithm is fixed before seeing the evaluation instances. Performance also improves sharply across models released less than eight months apart, suggesting that this capability is moving quickly. Thus, for the well-specified operations problems we study, a single untuned LLM query can already produce algorithms competitive with specialized methods. These results suggest that frontier LLMs can be a serious empirical baseline for algorithm design in well-specified OR problems.",
+          "authors": [
+            "Jackie Baek"
+          ],
+          "canonical_id": "2608.27296",
+          "categories": [
+            "cs.AI",
+            "cs.LG"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2608.27296",
+          "published_at": "2026-08-27T16:01:11Z",
+          "source": "arxiv",
+          "title": "LLMs Can Design Near-Optimal OR Algorithms",
+          "updated_at": "2026-10-13T21:11:02Z",
+          "url": "https://arxiv.org/abs/2608.27296",
+          "version": 3
+        },
+        "rank": 32,
+        "score": {
+          "base_score": 0.460775520621162,
+          "exploration": 0.5724434609049854,
+          "matched_terms": [
+            "operations research"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.7391298507399474,
+          "topic": 0.34934058622041664
+        }
+      },
+      "tier": "browse"
+    },
+    {
+      "analysis": {
+        "analysis": "材料未说明作者如何具体分析问题结构；从摘要只能看出作者将问题分解为高层战略提议与低层实现两个角色，并把验证反馈用于更新前者。",
+        "challenges": [
+          "可靠执行需要大模型，导致测试时训练需维持梯度、优化器状态和策略统计，成本高昂",
+          "结果级验证反馈需同时评估高层策略和低层实现，信用分配困难",
+          "在固定计算预算下把测试时学习集中在有用的短决策上而不损失实现质量"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "现有基于大模型的发现系统用测试时训练更新解生成模型，但大模型训练代价高且信用分配困难。",
+            "location": "abstract",
+            "quote": "However, this becomes expensive when reliable execution requires a large model, since training must maintain gradients, optimizer states, and policy statistics while repeatedly generating long, structured outputs. It also complicates credit assignment: outcome-level verifier feedback must jointly evaluate the high-level strategy and its low-level implementation."
+          },
+          {
+            "claim": "Guidance-TTT将角色分离：紧凑指导模型在测试时训练提出高层战略变更，冻结执行模型实现完整可执行解。",
+            "location": "abstract",
+            "quote": "we introduce Guidance-TTT, which separates these roles. A compact guidance model is trained at test time to propose high-level strategic changes, while a frozen execution model implements them as complete executable solutions."
+          },
+          {
+            "claim": "每步选择先前发现的有希望解，提出变更、执行验证，并仅用自适应组相对强化学习目标更新指导模型。",
+            "location": "abstract",
+            "quote": "At each step, the system selects a promising previously discovered solution, proposes a change, executes and verifies it, and updates only the guidance model using an adaptive group-relative RL objective."
+          },
+          {
+            "claim": "在四个领域不使用网络访问产生强解，并优于先前工作最佳解、与公开在线排行榜最新结果具有竞争力。",
+            "location": "abstract",
+            "quote": "Without web access, Guidance-TTT produces strong solutions across four distinct domains: combinatorial optimization (Polyomino Packing), heuristic programming (AHC058), machine learning (Lasso), and GPU kernel optimization (TriMul). Across these tasks, it outperforms the best solutions reported in prior work while remaining competitive with state-of-the-art results on public online leaderboards."
+          }
+        ],
+        "experiments": [
+          "在四个领域（Polyomino Packing、AHC058、Lasso、TriMul）上不使用网络访问产生解，作者称其优于先前工作报告的最佳解，并与公开在线排行榜上的最新结果具有竞争力。",
+          "摘要未提供具体基线、实例规模、约束可行性、解质量指标、运行时间、训练开销、公平计算预算、泛化或消融的数值与细节，材料未说明。"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "将解生成过程显式拆分为高层战略决策与低层可执行实现两种角色，让测试时学习只集中在短小的高层战略变更上，而把实现交给一个冻结的强模型；这样既避免了为维持执行能力而训练大模型的开销，又通过将验证反馈归因于短战略决策而简化信用分配，使有限的学习信号能更集中地提升后续提议质量。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "引入Guidance-TTT，将角色分离：一个紧凑的指导模型在测试时接受训练，用于提出高层战略变更；一个冻结的执行模型负责将这些变更实现为完整可执行解。",
+          "每一步系统选择一个先前发现的有希望的候选解，提出变更，执行并验证，然后仅用自适应组相对强化学习目标更新指导模型。",
+          "测试时学习只作用于短战略决策，执行模型不进行适配，从而保留强模型的实现能力。",
+          "任务覆盖组合优化Polyomino Packing、启发式编程AHC058、机器学习Lasso和GPU内核优化TriMul，且不使用网络访问。"
+        ],
+        "motivation": "现有基于大模型的发现系统（如TTT-Discover）用测试时训练根据验证器反馈更新解生成模型，但当可靠执行依赖大模型时训练成本很高，并带来策略与实现之间的信用分配困难。作者希望降低测试时训练成本，同时保留强模型的实现能力，从而更有效地改进候选解。",
+        "primary_topic": "基于大模型智能体的开放式科学发现与测试时训练，用于组合优化等任务的解生成与改进",
+        "relation_to_research": "该工作本身面向开放式科学发现，并非直接研究柔性作业车间、流水车间、分布式制造或生产运输协同等具体生产调度问题；但其“紧凑指导模型提出高层战略变更、冻结强执行模型实现完整解、在验证反馈下用小模型做测试时学习”的机制，与学习辅助搜索、智能体优化和大模型智能体自动建模有直接关联。推测上，若迁移到生产调度，需要把验证器替换为调度可行性与目标评估（如约束违反、makespan、能耗或多目标），把高层战略变更映射为调度规则、邻域或分解策略，并解决调度中动态扰动和约束可行性验证的开销问题；这些均为迁移设想，非作者结论。",
+        "relevance_score": 6,
+        "setting": "研究面向开放式科学发现任务，其决策对象是候选可执行解（如组合优化方案、启发式程序、机器学习流程或GPU内核），目标是从验证器反馈中反复提出并改进候选解以获得更好结果。问题本质是求解器生成策略的在线自适应，关键约束在于可靠执行需要大模型，而直接对大模型做测试时训练会带来梯度、优化器状态与策略统计的高昂开销，且结果级验证反馈难以区分高层策略与低层实现的责任。信息假设是仅通过验证器反馈学习，不使用网络访问；未说明是否面向动态环境，整体可视为在给定目标任务上的迭代式静态问题求解。",
+        "tags": [
+          "测试时训练",
+          "大模型智能体",
+          "强化学习",
+          "组合优化",
+          "启发式编程",
+          "求解器辅助优化"
+        ],
+        "title_zh": "在思想空间中进化：在测试时训练小模型以解锁更好的发现",
+        "uncertainty": "仅依据标题与摘要分析，未提供全文，因此对方法细节（网络结构、状态动作奖励定义、组相对目标形式、训练开销、基线设置和消融）无法完整判断；摘要也未明确任何生产调度或NP-hard调度基准，因此相关性分数存在区间不确定性。",
+        "why_recommended": "对研究AI4OR与智能体优化的读者，该工作给出一种降低测试时训练成本的明确思路：只训练小型指导模型做短战略决策，把执行留给冻结的强模型，并用自适应组相对强化学习从结果级验证反馈中更新。这一角色分离与信用分配设计可能启发将大模型智能体用于组合优化或调度规则生成时的成本控制与搜索引导，尤其适合关注公平计算预算与学习辅助搜索机制的研究者参考。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-15T10:12:10.542404+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2610.06269v2",
+        "status": "not_found"
+      },
+      "final_score": 0.5432538320758674,
+      "provenance": {
+        "analyzed_at": "2026-10-15T04:16:41.454612Z",
+        "input_hash": "ec9e61dc421e530d941df523dce56e9c140d089ddf89a5763f481fdc788ec5e0",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Open-ended scientific discovery often requires repeatedly proposing and evaluating candidate solutions. LLM-based systems can support this process by generating and refining executable solutions from verifier feedback. Methods such as TTT-Discover use test-time training (TTT) to update the solution-generating LLM from verifier feedback, adapting its generation policy to improve subsequent proposals on the target problem. However, this becomes expensive when reliable execution requires a large model, since training must maintain gradients, optimizer states, and policy statistics while repeatedly generating long, structured outputs. It also complicates credit assignment: outcome-level verifier feedback must jointly evaluate the high-level strategy and its low-level implementation. In this work, we introduce Guidance-TTT, which separates these roles. A compact guidance model is trained at test time to propose high-level strategic changes, while a frozen execution model implements them as complete executable solutions. At each step, the system selects a promising previously discovered solution, proposes a change, executes and verifies it, and updates only the guidance model using an adaptive group-relative RL objective. This concentrates test-time learning on short strategic decisions while retaining the implementation capability of a substantially stronger model without adapting it. Without web access, Guidance-TTT produces strong solutions across four distinct domains: combinatorial optimization (Polyomino Packing), heuristic programming (AHC058), machine learning (Lasso), and GPU kernel optimization (TriMul). Across these tasks, it outperforms the best solutions reported in prior work while remaining competitive with state-of-the-art results on public online leaderboards. Code is available at https://github.com/Human-Agent-Society/reef/tree/guidance-ttt-support.",
+          "authors": [
+            "Chonghe Jiang",
+            "Ao Qu",
+            "Siyuan Liu",
+            "Ruoyun Ma",
+            "Zijian Zhou",
+            "Dingyi Zhuang",
+            "Bo Liu",
+            "Han Zheng",
+            "Hanfei Yu",
+            "Baichuan Mo",
+            "Jinhua Zhao",
+            "Paul Pu Liang"
+          ],
+          "canonical_id": "2610.06269",
+          "categories": [
+            "cs.AI",
+            "cs.LG"
+          ],
+          "comment": "35 pages, including references and appendice",
+          "pdf_url": "https://arxiv.org/pdf/2610.06269",
+          "published_at": "2026-10-05T13:04:05Z",
+          "source": "arxiv",
+          "title": "Evolving in Thought Space: Training a Small Model at Test Time Unlocks Better Discoveries",
+          "updated_at": "2026-10-12T22:19:47Z",
+          "url": "https://arxiv.org/abs/2610.06269",
+          "version": 2
+        },
+        "rank": 18,
+        "score": {
+          "base_score": 0.4968251492288498,
+          "exploration": 0.7591369837320162,
+          "matched_terms": [
+            "combinatorial optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.5825467156835068,
+          "topic": 0.39738703466947156
+        }
+      },
+      "tier": "explore"
+    }
+  ],
+  "schema_version": 1,
+  "stats": {
+    "cache_hits": 1,
+    "deduplicated": 2500,
+    "failed": 12,
+    "fetched": 2500,
+    "figure_available": 2,
+    "figure_cache_hits": 0,
+    "figure_failed": 0,
+    "figure_panel_failed": 0,
+    "figure_requests": 6,
+    "full_text_reads": 9,
+    "input_tokens": 61297,
+    "model_calls": 49,
+    "output_tokens": 69415,
+    "preselected": 50,
+    "published": 4,
+    "source_lookback_days": 3
+  }
+}
