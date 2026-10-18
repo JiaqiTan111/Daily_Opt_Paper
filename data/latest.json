@@ -1,6 +1,6 @@
 {
   "dry_run": false,
-  "generated_at": "2026-10-17T09:57:25.528971+08:00",
+  "generated_at": "2026-10-18T09:56:23.437252+08:00",
   "papers": [
     {
       "analysis": {
@@ -94,7 +94,7 @@
         "html_url": "https://arxiv.org/html/2609.04161v2",
         "status": "not_found"
       },
-      "final_score": 0.7072149587340958,
+      "final_score": 0.6610244213482418,
       "provenance": {
         "analyzed_at": "2026-10-17T01:58:49.169596Z",
         "input_hash": "fb3a1db2b4b51393e24ae676fee176e25b1bb701a31a78117b488d5b53400a7a",
@@ -123,10 +123,10 @@
           "url": "https://arxiv.org/abs/2609.04161",
           "version": 2
         },
-        "rank": 2,
+        "rank": 1,
         "score": {
-          "base_score": 0.7949362886074468,
-          "exploration": 0.5239050585562712,
+          "base_score": 0.7109534933604396,
+          "exploration": 0.21615009279729447,
           "matched_terms": [
             "job shop",
             "job-shop",
@@ -136,437 +136,8 @@
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.6973261042377149,
+          "recency": 0.5431756961381525,
           "topic": 0.9002624070134202
-        }
-      },
-      "tier": "deep_read"
-    },
-    {
-      "analysis": {
-        "analysis": "作者把参数整定形式化为有界无导数优化问题，以公共目标评估预算衡量各方法；利用群体分布几何构造正则化代理，并在进展停滞时进入缩减子空间信赖域步，通过持久基与子空间刷新控制局部模型的维度与代价；机器人侧则把优化器嵌入完整的控制器选择与部署流水线，在开发与保留压力条件下评估完成率和应力违规率。材料未说明更具体的收敛性分析。",
-        "challenges": [
-          "控制器参数强耦合，单目标改善可能损害另一目标",
-          "目标信息仅来自昂贵闭环轨迹，评估预算有限",
-          "无梯度信息，且接触任务存在不确定性与应力约束",
-          "需要在保结构前提下联合整定运动、反馈与恢复参数",
-          "全局与局部搜索的切换与子空间维护需要机制设计"
-        ],
-        "corresponding_authors": [
-          "证据未提供"
-        ],
-        "evidence": [
-          {
-            "claim": "PSO+TR 将粒子群全局探索与停滞时的信赖域局部精修结合",
-            "location": "abstract",
-            "quote": "combines the exploratory search of particle swarm optimization (PSO) with a trust-region (TR) procedure for local refinement to improve the search process when progress stagnates"
-          },
-          {
-            "claim": "在 279 个匹配实例上目标达成率 81.72% 为五种方法最高",
-            "location": "abstract",
-            "quote": "PSO+TR reaches the prescribed target on 228 of these instances (81.72%), the highest observed target-attainment rate among the five compared methods"
-          },
-          {
-            "claim": "机器人流水线开发与压力条件完成率分别为 97.78% 与 58.00%，应力违规率由 20.69% 降至 2.19%",
-            "location": "abstract",
-            "quote": "achieves 97.78% completion under development conditions and 58.00% under withheld stress conditions, compared with 91.22% and 31.12%, respectively, for the fixed staged controller. The stress violation rate is reduced from 20.69% to 2.19%"
-          },
-          {
-            "claim": "作者指出合成平面结果需在物理机器人上验证",
-            "location": "supplied_full_text",
-            "quote": "The robotic results are limited to a synthetic planar simulator, and further experiments are required to establish performance on physical robots."
-          },
-          {
-            "claim": "比较实现差异使整体增益不能单独归因于信赖域组件，且需受控消融",
-            "location": "supplied_full_text",
-            "quote": "differences between the compared implementations prevent attributing the overall performance gain solely to the TR component"
-          },
-          {
-            "claim": "PSO 在首次命中评估数与归一化遗憾上更优，说明无方法全面占优",
-            "location": "supplied_full_text",
-            "quote": "PSO has a lower median first-hit evaluation count among successful instances and a lower mean normalized regret, indicating that no method dominates across all performance measures"
-          }
-        ],
-        "experiments": [
-          "在 BCP 集合的 93 个合格基准问题上，每问题 3 个随机种子共 279 个匹配问题-种子实例；PSO+TR 目标达成率 81.72%（228/279），为五种方法最高；PSO 为 75.27%，VRBBO 为 81.00%，对比方法还包括 MAES 与 DE",
-          "PSO 在成功实例中的首次命中评估次数中位数更低、平均归一化遗憾更低，说明没有方法在所有指标上占优",
-          "信赖域保护被调用 1,409 次、接受 1,687 步，消耗 32,988 次目标评估",
-          "机器人部署流水线在八个优化器种子下，开发条件完成率 97.78%、保留压力条件 58.00%，固定分级控制器分别为 91.22% 与 31.12%",
-          "应力违规率由 20.69% 降至 2.19%",
-          "训练网格敏感性实验按初始信赖域半径与子空间刷新间隔进行，部分参数在归档网格中仅有一个取值，不能作为敏感性证据",
-          "缺少受控消融以隔离信赖域保护、子空间更新与曲率构造的贡献；机器人结果仅来自合成平面仿真器"
-        ],
-        "first_affiliation": "维也纳大学数学系",
-        "insight": "将群体式全局探索与仅进展停滞时触发的信赖域局部精修结合，并让信赖域步在持续更新的低维缩减子空间内计算，从而在不构造全维曲率矩阵、不改变控制器结构的前提下获得连续局部改进能力；群体几何还被用于构造正则化代理模型来支撑局部步。",
-        "limitations": [
-          "合成平面仿真结果需要在物理机器人上验证",
-          "比较实现之间的差异使整体性能提升不能单独归因于信赖域组件",
-          "仍需受控消融来隔离信赖域保护、子空间更新与曲率构造的贡献"
-        ],
-        "method": [
-          "PSO 负责全局探索与维持群体多样性",
-          "当进展停滞时触发信赖域过程进行局部精修，并记录调用次数与被接受步数",
-          "信赖域步在缩减子空间内计算，使用持久基与子空间刷新间隔",
-          "利用正则化群体几何代理支撑局部模型，避免构造全维曲率矩阵",
-          "所有尝试评估计入统一目标评估预算",
-          "将 PSO+TR 用于可解释插入控制器的无导数策略优化，联合整定运动、反馈与恢复参数并保持预定义控制结构",
-          "通过八次优化器随机种子的控制器选择流水线进行部署评估"
-        ],
-        "motivation": "接触丰富插入中运动幅值、控制增益与时序决策强耦合，一个指标改善可能恶化另一指标；调参所需信息来自整条闭环轨迹且试验次数受计算资源限制，梯度不可用，因此需要样本高效、能跳出停滞的无导数优化方法。",
-        "primary_topic": "无导数优化（PSO+信赖域）用于控制器参数整定",
-        "relation_to_research": "论文事实层面，这是一项无导数黑箱优化方法研究，在基准问题上以统一评估预算比较目标达成率与评估效率，与学习辅助搜索和智能优化中的全局-局部混合机制直接相关。推测层面，其“群体探索+停滞触发低维信赖域精修+统一评估预算核算”的框架可迁移到生产调度中的参数化优先规则或调度策略超参数整定，但需要目标函数可被仿真评估、决策变量维数可控且约束可被罚函数或可行性筛选处理；论文未涉及调度问题、约束规划或强化学习。",
-        "relevance_score": 6,
-        "setting": "研究问题是在对齐、摩擦与接触条件不确定的接触丰富机器人插入任务中，为具有预定义可解释结构的插入控制器联合整定运动、反馈与恢复参数；目标是在保持控制结构不变的前提下兼顾插入完成率、鲁棒性与接触应力约束（应力违规率），决策变量为控制器数值参数，约束为有界参数域与任务执行中的应力/卡阻约束；信息假设是仅能通过闭环仿真或试验获得完成、耗时与接触载荷等黑箱结果，评估次数受限；环境包含开发条件与保留的压力条件，属于静态参数优化但优化目标在不确定运行条件下评估。",
-        "tags": [
-          "粒子群优化",
-          "信赖域",
-          "无导数优化",
-          "缩减子空间",
-          "控制器调参",
-          "接触丰富装配",
-          "黑箱优化"
-        ],
-        "title_zh": "一种带缩减子空间信赖域保护的粒子群优化方法用于接触丰富型控制器调参",
-        "uncertainty": "全文仅为节选，子空间构造细节、收敛性质与部分实验设置未完整呈现；通讯作者与资助信息未提供；机器人实验仅基于合成平面仿真器，实际迁移效果未知。",
-        "why_recommended": "对关注智能优化算法机制的研究者，本文提供了全局群体搜索与局部信赖域在统一评估预算下的结合方式，以及目标达成率、首次命中评估数、归一化遗憾等多指标对照视角，并诚实报告无方法全面占优与消融缺失，有助于审视混合优化器的公平比较与归因问题；但其应用域为机器人控制器调参，与生产调度仅有方法层面的迁移价值。"
-      },
-      "figure_gallery": {
-        "checked_at": "2026-10-17T09:57:25.528971+08:00",
-        "figures": [],
-        "html_url": "https://arxiv.org/html/2610.20032v1",
-        "status": "not_found"
-      },
-      "final_score": 0.6612556550015776,
-      "provenance": {
-        "analyzed_at": "2026-10-17T01:58:45.105959Z",
-        "input_hash": "94261647bd44cc9d0992f80b020d15a85c0ba789dd997e371591c26541eeb8d4",
-        "model": "deepseek-v4-flash",
-        "prompt_version": "optimization-analysis-v1",
-        "reading_scope": "full_text"
-      },
-      "ranked": {
-        "paper": {
-          "abstract": "Contact-rich robotic insertion is challenging because uncertainty in alignment, friction, and contact conditions can lead to unsuccessful assembly, excessive contact forces, and jamming. Designing a reliable controller therefore requires balancing insertion performance, robustness, and recovery from unexpected contact. In this paper, we propose PSO+TR, a derivative-free optimization (DFO) method that combines the exploratory search of particle swarm optimization (PSO) with a trust-region (TR) procedure for local refinement to improve the search process when progress stagnates. We apply the method to derivative-free policy optimization of an interpretable robotic insertion controller, jointly tuning its motion, feedback, and recovery parameters while preserving its predefined control structure. The proposed approach is evaluated on 93 eligible benchmark problems from the bound-constrained programs (BCP) collection and a synthetic contact-rich planar insertion task under uncertain operating conditions. Three random seeds per benchmark problem yield 279 matched problem--seed instances per method. PSO+TR reaches the prescribed target on 228 of these instances (81.72\\%), the highest observed target-attainment rate among the five compared methods, which also include PSO, randomized black-box optimization (VRBBO), matrix adaptation evolution strategy (MAES), and differential evolution (DE). Across eight robotic optimizer seeds, the deployed controller-selection pipeline achieves 97.78\\% completion under development conditions and 58.00\\% under withheld stress conditions, compared with 91.22\\% and 31.12\\%, respectively, for the fixed staged controller. The stress violation rate is reduced from 20.69\\% to 2.19\\%. These findings support combining global and local search for DFO and structured contact-rich controller tuning. The synthetic planar results require validation on physical robots.",
-          "authors": [
-            "Morteza Kimiaei",
-            "Roya Khalili-Amirabadi",
-            "Mohsen Jalaeian-Farimani"
-          ],
-          "canonical_id": "2610.20032",
-          "categories": [
-            "math.OC"
-          ],
-          "comment": null,
-          "pdf_url": "https://arxiv.org/pdf/2610.20032",
-          "published_at": "2026-10-14T11:41:53Z",
-          "source": "arxiv",
-          "title": "A particle swarm optimization with a reduced-subspace trust-region safeguard for contact-rich controller tuning",
-          "updated_at": "2026-10-14T11:41:53Z",
-          "url": "https://arxiv.org/abs/2610.20032",
-          "version": 1
-        },
-        "rank": 4,
-        "score": {
-          "base_score": 0.7113739181846865,
-          "exploration": 0.8657302646107575,
-          "matched_terms": [
-            "differential evolution",
-            "black-box optimization",
-            "policy optimization",
-            "local search"
-          ],
-          "negative_terms": [],
-          "personal": 0.0,
-          "recency": 0.5228128997535784,
-          "topic": 0.7211466816146969
-        }
-      },
-      "tier": "deep_read"
-    },
-    {
-      "analysis": {
-        "analysis": "作者分析了现有方法的不足：BO 将配置视为抽象数值向量，缺少先验知识，在高维条件搜索空间中需要大量评估且存在冷启动；纯 LLM 优化器不拟合代理模型、不量化不确定性，且受限于上下文窗口无法充分利用完整优化历史；现有 LLM-BO 混合方法仍局限于非结构化和低维问题，未探索高维结构化 CASH 空间。基于此，作者提出将优化轨迹结构化为 MCTS 树，利用树结构隔离算法特定历史，通过路径感知选择性记忆机制为 LLM 提供结构化上下文，并设计可靠性感知的提议器策略根据代理模型质量自适应选择 LLM 或 BO 提议。",
-        "challenges": [
-          "高效上下文利用：CASH 具有层次化结构，现有 LLM 优化器使用平坦历史混合跨算法观测，难以在有限上下文窗口内有效利用结构化优化历史",
-          "算法间与算法内的协调探索与利用：需要在候选算法选择和算法特定超参数空间内部同时平衡探索与利用",
-          "高维结构化条件搜索空间：CASH 空间高维且条件化，纯 BO 缺乏先验知识导致冷启动和大量评估需求，纯 LLM 无法拟合代理模型且难以量化不确定性"
-        ],
-        "corresponding_authors": [
-          "Bin Cui"
-        ],
-        "evidence": [
-          {
-            "claim": "论文提出 LB-MCTS 框架，使用蒙特卡洛树搜索树作为共享状态来协同算法选择、超参数细化和 BO-LLM 提议器",
-            "location": "abstract",
-            "quote": "we propose LB-MCTS, a trajectory-structured optimization framework that uses a Monte Carlo Tree Search tree as a shared state for algorithm selection, hyperparameter refinement, and BO-LLM proposer synergy."
-          },
-          {
-            "claim": "BO 提供算法特定代理模型，LLM 利用路径感知选择性记忆生成语义提议和反思",
-            "location": "abstract",
-            "quote": "Within this shared state, BO provides algorithm-specific surrogate modeling for quantitative search, while the LLM exploits path-aware selective memory to generate semantic proposals and reflections."
-          },
-          {
-            "claim": "可靠性感知提议器策略随代理模型改善而自适应地从 LLM 驱动转向 BO 驱动",
-            "location": "abstract",
-            "quote": "As the surrogate model improves, a reliability-aware proposer policy adaptively shifts from LLM-driven to BO-driven proposals within a unified search trajectory."
-          },
-          {
-            "claim": "在 104 个 AMLB 数据集上 LB-MCTS 一致优于 BO、LLM 及混合基线",
-            "location": "abstract",
-            "quote": "Experiments on 104 AMLB datasets demonstrate that LB-MCTS consistently outperforms BO-based, LLM-based, and hybrid baselines."
-          },
-          {
-            "claim": "CASH 要求跨候选算法和算法特定超参数空间协调探索与利用",
-            "location": "abstract",
-            "quote": "CASH requires coordinated exploration and exploitation both across candidate algorithms and within their algorithm-specific hyperparameter spaces."
-          },
-          {
-            "claim": "现有 LLM 优化器依赖平坦优化历史，混合跨算法观测并掩盖配置细化轨迹",
-            "location": "abstract",
-            "quote": "Yet existing approaches often rely on flat optimization histories that mix observations across algorithms and obscure configuration-refinement trajectories."
-          },
-          {
-            "claim": "LB-MCTS 最终平均排名 2.16，第二优基线 RB 排名 3.49",
-            "location": "supplied_full_text",
-            "quote": "While the second-best baseline (RB) ranks 3.49 finally, the rank of LB-MCTS is 2.16"
-          },
-          {
-            "claim": "作者指出在敏感领域应用时需进行数据治理、公平性检查和领域特定验证，模型可能继承偏差、隐私风险或可靠性问题",
-            "location": "supplied_full_text",
-            "quote": "However, as with other AutoML systems, the selected models may still inherit biases, privacy risks, or reliability issues from the underlying data and downstream application context. Therefore, when applying LB-MCTS to sensitive domains, users should conduct appropriate data governance, fairness checks, and domain-specific validation."
-          }
-        ],
-        "experiments": [
-          "在 104 个 AMLB 数据集上进行实验，LB-MCTS 一致优于基于 BO、基于 LLM 及混合基线",
-          "最终平均排名为 2.16，第二优基线 RB 的排名为 3.49",
-          "在测试集上评估验证集最优配置，LB-MCTS 取得领先平均排名 3.05，并在统计上显著优于所有基线",
-          "附录 C.5 报告了包含深度学习模型和特征工程的更广搜索空间的补充实验，LB-MCTS 仍取得最佳平均排名",
-          "消融研究支持搜索结构、记忆机制和 BO-LLM 协作的贡献（附录 C.11、C.12）",
-          "附录 C.7 分析 API 成本和墙钟开销，显示 LB-MCTS 以约 0.127 美元的经济成本取得这些增益"
-        ],
-        "first_affiliation": "北京大学计算机学院与高可信软件技术教育部重点实验室（School of CS & Key Lab of High Confidence Software Technologies (MOE), Peking University）",
-        "insight": "将蒙特卡洛树搜索（MCTS）树作为算法选择、超参数细化和 BO-LLM 提议器协同的共享状态，可以显式地隔离算法特定历史并保留配置细化轨迹，使跨算法的层次化探索与算法内的局部利用在同一轨迹中自然协调；同时，随着代理模型可靠性提升，提议策略从 LLM 驱动逐步过渡到 BO 驱动，能够在不同优化阶段动态利用语义先验或定量代理模型的各自优势。",
-        "limitations": [
-          "作者在风险声明中指出：与其他 AutoML 系统类似，所选模型可能继承底层数据和下游应用场景中的偏差、隐私风险或可靠性问题；在敏感领域应用时需要适当的数据治理、公平性检查和领域特定验证"
-        ],
-        "method": [
-          "提出 LB-MCTS 框架，使用蒙特卡洛树搜索（MCTS）树作为算法选择、超参数细化和 BO-LLM 提议器协同的共享状态，统一优化轨迹",
-          "BO 提供算法特定的代理模型，用于定量搜索和算法内超参数细化",
-          "LLM 利用路径感知的选择性记忆（Selective Tuning Memory, STM）生成语义提议和反思，STM 机制隔离算法特定历史并组合全局与局部记忆以增强推理",
-          "反思机制将数值反馈转化为可复用的语言指导，进一步强化 STM",
-          "可靠性感知的提议器策略：随着代理模型改善，自适应地从 LLM 驱动提议转向 BO 驱动提议，在统一搜索轨迹内实现协同",
-          "MCTS 实现跨算法和算法内子树的探索-利用权衡"
-        ],
-        "motivation": "降低机器学习应用的专业知识门槛需要自动化算法选择与超参数调优。纯 BO 方法将配置视为抽象数值向量，无法引入先验知识，导致高维条件搜索空间需要大量评估且存在冷启动问题。LLM 通过语义先验可缓解冷启动，但现有基于 LLM 的优化器难以泛化到高维结构化 CASH 空间。CASH 要求同时在候选算法之间和算法特定超参数空间内部协调探索与利用，而现有方法依赖平坦优化历史，混合了跨算法的观测并掩盖了配置细化轨迹。因此需要一种能结构化组织优化轨迹、协同 BO 与 LLM 优势的框架。",
-        "primary_topic": "AutoML 中联合算法选择与超参数优化的 CASH 问题，LLM 与贝叶斯优化的协同优化框架",
-        "relation_to_research": "该论文针对 AutoML 中的 CASH 问题，将 LLM 与贝叶斯优化通过 MCTS 树结构进行协同，属于 AI4OR 中学习辅助搜索与自动建模的交叉方向。其核心机制——用树结构组织优化轨迹、用可靠性感知策略在语义提议与定量代理模型之间自适应切换、用选择性记忆隔离子问题历史——对智能优化和生产调度具有明确的迁移价值。推测而言，若将 CASH 中的算法选择与超参数细化类比为生产调度中的机器选择与工艺参数优化，或将子问题历史隔离机制用于柔性作业车间的工序-机器分配，则可探索将 LB-MCTS 的树结构协同框架迁移到生产调度问题。但迁移需要满足条件：调度问题需具备层次化决策结构（如工艺路线选择与设备分配），需定义合适的代理模型与语义先验表示，需设计适配调度约束的可靠性评估方式。以上迁移设想仅为推测，并非作者结论，需进一步实验验证。",
-        "relevance_score": 7,
-        "setting": "研究问题为 AutoML 中的 CASH 问题，即联合进行算法选择与算法特定超参数调优；决策对象是在候选算法及其各自的条件超参数空间中进行配置选择，目标是在有限评估预算下高效搜索高维、结构化、条件化的配置空间以找到高性能配置；关键约束包括冷启动困难、CASH 空间高维且结构化、算法间与算法内需协调探索与利用、现有方法使用平坦优化历史导致跨算法观测混合并掩盖配置细化轨迹；信息假设方面，BO 将配置视为抽象数值向量缺乏先验知识，LLM 可提供语义先验和领域知识；环境为静态的黑盒优化设定，通过迭代评估配置的性能反馈进行搜索，未涉及动态扰动或在线环境变化。",
-        "tags": [
-          "CASH",
-          "贝叶斯优化",
-          "大语言模型",
-          "蒙特卡洛树搜索",
-          "AutoML",
-          "代理模型",
-          "LLM-BO 协同",
-          "上下文优化",
-          "路径感知记忆",
-          "可靠性感知提议策略"
-        ],
-        "title_zh": "面向高效 CASH 的大语言模型与贝叶斯优化树结构协同框架",
-        "uncertainty": "全文节选不完整，缺少方法部分详细描述、实验设置细节和部分附录内容，导致对网络输入输出、状态动作定义、具体消融结果等信息的判断存在不确定性。此外，论文分类为 cs.LG，与生产调度和智能优化的直接关联需通过迁移设想建立，迁移可行性未经实验验证。",
-        "why_recommended": "该论文展示了如何将 LLM 的语义先验与 BO 的定量代理模型通过树结构搜索进行有机协同，其可靠性感知提议策略、路径感知选择性记忆和层次化探索-利用机制，对研究学习辅助搜索、多智能体优化和自动建模的博士生具有方法层面参考价值。特别是其用结构化搜索树隔离子问题历史并动态切换提议源的思想，可启发生产调度中多阶段决策与学习策略融合的算法设计。同时，论文在 104 个数据集上的系统评估和消融实验为公平计算预算下的性能比较提供了参考范式。"
-      },
-      "figure_gallery": {
-        "checked_at": "2026-10-17T09:57:25.528971+08:00",
-        "figures": [
-          {
-            "caption": "MCTS search of the LLM proposer.",
-            "label": "Figure 2",
-            "number": 2,
-            "panels": [
-              {
-                "cached_path": "figures/arxiv/2601.12355/v3/fig2-panel1.png",
-                "original_url": "https://arxiv.org/html/2601.12355v3/LLM_proposer.png"
-              }
-            ],
-            "source": "arxiv_html",
-            "source_url": "https://arxiv.org/html/2601.12355v3#S3.F2"
-          }
-        ],
-        "html_url": "https://arxiv.org/html/2601.12355v3",
-        "status": "available"
-      },
-      "final_score": 0.6459852888974817,
-      "provenance": {
-        "analyzed_at": "2026-10-16T02:05:52.986052Z",
-        "input_hash": "06ac4cfe5773a0535cff07437e2addd14c126ce60aeb419f0d31f5f0f8a59008",
-        "model": "deepseek-v4-flash",
-        "prompt_version": "optimization-analysis-v1",
-        "reading_scope": "full_text"
-      },
-      "ranked": {
-        "paper": {
-          "abstract": "To lower the expertise barrier in machine learning, the AutoML community has focused on the CASH problem, which jointly automates algorithm selection and hyperparameter tuning. While traditional methods like Bayesian Optimization (BO) struggle with cold-start issues, Large Language Models (LLMs) can mitigate these through semantic priors. However, existing LLM-based optimizers generalize poorly to high-dimensional, structured CASH spaces. CASH requires coordinated exploration and exploitation both across candidate algorithms and within their algorithm-specific hyperparameter spaces. Yet existing approaches often rely on flat optimization histories that mix observations across algorithms and obscure configuration-refinement trajectories. In this paper, we propose LB-MCTS, a trajectory-structured optimization framework that uses a Monte Carlo Tree Search tree as a shared state for algorithm selection, hyperparameter refinement, and BO-LLM proposer synergy. Within this shared state, BO provides algorithm-specific surrogate modeling for quantitative search, while the LLM exploits path-aware selective memory to generate semantic proposals and reflections. As the surrogate model improves, a reliability-aware proposer policy adaptively shifts from LLM-driven to BO-driven proposals within a unified search trajectory. Experiments on 104 AMLB datasets demonstrate that LB-MCTS consistently outperforms BO-based, LLM-based, and hybrid baselines. Code: https://github.com/PKU-DAIR/open-box.",
-          "authors": [
-            "Beicheng Xu",
-            "Weitong Qian",
-            "Lingching Tung",
-            "Yupeng Lu",
-            "Bin Cui"
-          ],
-          "canonical_id": "2601.12355",
-          "categories": [
-            "cs.LG"
-          ],
-          "comment": "Accepted at NeurIPS 2026. Extended version with full appendices",
-          "pdf_url": "https://arxiv.org/pdf/2601.12355",
-          "published_at": "2026-01-18T11:26:31Z",
-          "source": "arxiv",
-          "title": "Tree-Structured Synergy of Large Language Models and Bayesian Optimization for Efficient CASH",
-          "updated_at": "2026-10-14T16:07:08Z",
-          "url": "https://arxiv.org/abs/2601.12355",
-          "version": 3
-        },
-        "rank": 6,
-        "score": {
-          "base_score": 0.6017914343590577,
-          "exploration": 0.9686513179525886,
-          "matched_terms": [
-            "algorithm selection"
-          ],
-          "negative_terms": [],
-          "personal": 0.0,
-          "recency": 0.5474515710222283,
-          "topic": 0.5125
-        }
-      },
-      "tier": "deep_read"
-    },
-    {
-      "analysis": {
-        "analysis": "作者以 MO-MFEA 为分析对象，在双目标任务组合上分别进行渐近运行时间分析。他们先证明在种群规模 N=Ω(n) 时，MO-MFEA 覆盖两任务 Pareto 前沿的期望函数评估次数为 O(nN log n)，再取 N=Θ(n) 得到具体阶数，并与单独使用多种主流多目标进化算法求解相应任务的已知运行时间进行比较，从而得出加速比。作者利用非支配排序和拥挤距离定义的全序结构以及两个基准函数的可分解性来构造分析，但对具体证明步骤的细节，材料未提供。",
-        "challenges": [
-          "多目标选择采用非支配排序与拥挤距离，使运行时间分析需要考虑种群中多个非支配个体同时演化，因此难以沿用单目标漂移分析",
-          "两个任务的 Pareto 集重叠程度及其对被支配改进路径的影响难以刻画",
-          "需要证明多任务演化不恶化简单任务的运行时间，同时量化对复杂多模态任务的加速比",
-          "多模态基准（OJZJ、DLTB）存在局部最优陷阱，需要分析跨任务迁移如何帮助跳出这些陷阱"
-        ],
-        "corresponding_authors": [
-          "Weijie Zheng"
-        ],
-        "evidence": [
-          {
-            "claim": "本文首次对多目标领域的进化多任务优化进行数学运行时间分析，填补经验成功与理论基础之间的空白",
-            "location": "supplied_full_text",
-            "quote": "This work presents the first mathematical runtime analysis of evolutionary multitask optimization in the multi-objective domain, thereby bridging a critical gap between its empirical success and theoretical foundations."
-          },
-          {
-            "claim": "对 (OMM, OJZJ) 任务对，MO-MFEA 取得 Θ(n^{k-1}/log n) 的加速比，且运行时间与单独优化 OMM 相同",
-            "location": "abstract",
-            "quote": "For the two-task problem of maximizing the classic bi-objective OMM and the multimodal OJZJ benchmarks, the MO-MFEA requires only an expected runtime of $O(n^2 \\log n)$---the same as optimizing the simple OMM alone---yet achieves a speedup by a factor of $\\Theta(n^{k-1}/\\log n)$ compared to optimizing OJZJ alone (with gap size $k$)."
-          },
-          {
-            "claim": "对 (LOTZ, DLTB) 任务对，相对单独优化 DLTB 获得 Θ(n) 加速比，运行时间与单独优化 LOTZ 相同",
-            "location": "abstract",
-            "quote": "Similarly, for the task pair comprising the classic LOTZ and the multimodal DLTB benchmarks, a speedup of $\\Theta(n)$ is attained over optimizing DLTB alone, while the runtime matches that of optimizing LOTZ alone."
-          },
-          {
-            "claim": "作者明确说明本文不开展额外实验，聚焦理论基础的建立",
-            "location": "supplied_full_text",
-            "quote": "this work focuses on establishing theoretical foundations; additional experiments are therefore not conducted."
-          },
-          {
-            "claim": "作者将扩展到其他进化多任务算法以及超过两个目标或任务的问题列为未来方向，说明当前结论仅覆盖 MO-MFEA 与双目标任务对",
-            "location": "supplied_full_text",
-            "quote": "Extending this analysis to other popular evolutionary multitask algorithms, as well as to problems with more than two objectives or tasks, constitutes a compelling direction for future research."
-          }
-        ],
-        "experiments": [
-          "材料明确说明本文聚焦理论基础的建立，未额外开展实验",
-          "理论结果：对 (OMM, OJZJ)，MO-MFEA 在 N=Ω(n) 时期望函数评估次数为 O(nN log n)，取 N=Θ(n) 时为 O(n^2 log n)，与单独优化 OMM 的运行时间相同，相对单独优化 OJZJ 的加速比为 Θ(n^{k-1}/log n)（k 为间隙大小）",
-          "理论结果：对 (LOTZ, DLTB)，MO-MFEA 在 N=Θ(n) 时覆盖两任务 Pareto 前沿的运行时间为 O(n^3)，相对单独优化 DLTB 获得 Θ(n) 加速比，与单独优化 LOTZ 的运行时间相同",
-          "对比基线为单独使用 GSEMO、NSGA-II、NSGA-III、SMS-EMOA、SPEA-II 等求解同一任务的已知运行时间；未报告实际数值实验、约束可行性、训练开销或消融结果"
-        ],
-        "first_affiliation": "哈尔滨工业大学（深圳）计算机科学与技术学院、智慧农场技术与系统全国重点实验室、国际人工智能研究院",
-        "insight": "当复杂多模态任务与结构相似但更简单的任务配对时，MO-MFEA 能够把复杂任务的有效求解时间降至求解简单任务所需的时间量级，这得益于在非支配排序与拥挤距离所诱导的选择压力下产生的跨任务知识迁移；关键并不在于算法本身，而在于两个任务的 Pareto 集在搜索空间中的重叠程度，以及多任务种群选择对“较难任务”个体的保留机制。",
-        "limitations": [
-          "作者在结论中明确指出，将分析扩展到其他流行的进化多任务算法，以及扩展到目标数或任务数超过两个的问题，是未来研究方向；这说明当前结论仅覆盖 MO-MFEA 与双目标任务对",
-          "本文未开展额外实验，结论为渐近理论结果，未提供有限规模下的数值验证"
-        ],
-        "method": [
-          "以代表性多目标多因子进化算法 MO-MFEA 为对象，在包含多个任务的多目标任务框架下进行分析",
-          "每个任务是由多个目标函数定义在 {0,1}^n 上的多目标优化问题，采用弱支配、支配、Pareto 最优解集与 Pareto 前沿等标准定义",
-          "利用非支配排序与拥挤距离（来自 NSGA-II）在种群中建立全序，从而支持跨任务的知识迁移与个体选择",
-          "对 (OMM, OJZJ) 与 (LOTZ, DLTB) 两组双目标任务对，推导覆盖两任务 Pareto 前沿的期望函数评估次数上界，并取 N=Θ(n) 得到具体阶数",
-          "与单独使用 (G)SEMO、NSGA-II、NSGA-III、SMS-EMOA、SPEA-II 等算法求解同一任务的已知运行时间进行对比，得出加速比"
-        ],
-        "motivation": "进化多任务优化在经验上已被证明能借助跨任务知识迁移提升复杂问题的求解效率，但多目标优化领域此前缺少严格的数学运行时间支撑，作者希望填补从经验证据到理论基础之间的空白。",
-        "primary_topic": "进化多任务多目标优化的理论运行时间分析",
-        "relation_to_research": "本文属于进化计算的理论运行时间分析，与智能优化和进化算法研究直接相关。它为“跨任务知识迁移是否有理论收益”提供了严格证据，其分析范式（以非支配排序与拥挤距离构造选择压力、在双目标任务对上推导覆盖 Pareto 前沿的期望时间）可迁移到生产调度中的多目标优化理论分析。迁移设想（推测）：若要把这种分析思路用于柔性作业车间或分布式制造的多目标任务对，需要先构造具有可分析结构的调度基准、定义任务间解的编码对应与相似性度量，并处理调度问题中约束可行性与排列或图结构带来的额外分析难度；这种迁移并非作者结论。",
-        "relevance_score": 6,
-        "setting": "研究在二元空间 {0,1}^n 上同时最大化两个双目标任务（如 OMM 与 OJZJ、LOTZ 与 DLTB）的多任务多目标优化问题，目标是分析 MO-MFEA 覆盖各任务 Pareto 前沿所需的期望函数评估次数；问题规模 n、间隙大小 k 和种群规模 N 是关键参数，环境为静态，信息假设为黑盒目标函数，材料未说明动态性或噪声。",
-        "tags": [
-          "进化多任务优化",
-          "多目标优化",
-          "MO-MFEA",
-          "运行时间分析",
-          "知识迁移",
-          "基准函数",
-          "理论保证"
-        ],
-        "title_zh": "进化多任务多目标优化的首次数学运行时间分析",
-        "uncertainty": "输入材料为全文节选，部分证明细节与章节内容被截断，方法中的具体证明步骤、完整假设条件与常数项未能核实；文中 k、N 等符号的具体取值范围与完整定理表述可能存在于未提供的正文中，因此对分析细节的判断存在不确定性。",
-        "why_recommended": "对从事智能优化与生产调度多目标求解的研究者而言，本文提供了关于“多任务知识迁移何时能带来渐近加速、何时不会拖慢简单任务”的严格理论刻画，有助于在设计多任务或多场景协同调度算法时判断迁移机制的价值边界；其运行时间分析框架也可作为评估学习辅助搜索公平计算预算的理论参照。"
-      },
-      "figure_gallery": {
-        "checked_at": "2026-10-17T09:57:25.528971+08:00",
-        "figures": [],
-        "html_url": "https://arxiv.org/html/2610.21311v1",
-        "status": "not_found"
-      },
-      "final_score": 0.6117637251863757,
-      "provenance": {
-        "analyzed_at": "2026-10-17T01:59:10.557449Z",
-        "input_hash": "813295673b8da3a45a431d0724a4d8c46600e13d65922027f8935743dc63bd15",
-        "model": "deepseek-v4-flash",
-        "prompt_version": "optimization-analysis-v1",
-        "reading_scope": "full_text"
-      },
-      "ranked": {
-        "paper": {
-          "abstract": "To facilitate the solving of complex problems, evolutionary multitask optimization is regarded as a promising technique due to its capacity for cross-task knowledge transfer. In contrast to empirical evidences, no mathematical runtime support exists for this technique within the domain of multi-objective optimization. In this work, we aim to fill this important gap. We analyze how the representative multiobjective multifactorial evolutionary algorithm (MO-MFEA) covers the Pareto fronts of two bi-objective problems simultaneously. For the two-task problem of maximizing the classic bi-objective OMM and the multimodal OJZJ benchmarks, the MO-MFEA requires only an expected runtime of $O(n^2 \\log n)$---the same as optimizing the simple OMM alone---yet achieves a speedup by a factor of $\\Theta(n^{k-1}/\\log n)$ compared to optimizing OJZJ alone (with gap size $k$). Similarly, for the task pair comprising the classic LOTZ and the multimodal DLTB benchmarks, a speedup of $\\Theta(n)$ is attained over optimizing DLTB alone, while the runtime matches that of optimizing LOTZ alone.",
-          "authors": [
-            "Danyang Zhang",
-            "Weijie Zheng"
-          ],
-          "canonical_id": "2610.21311",
-          "categories": [
-            "cs.NE"
-          ],
-          "comment": null,
-          "pdf_url": "https://arxiv.org/pdf/2610.21311",
-          "published_at": "2026-10-15T06:00:18Z",
-          "source": "arxiv",
-          "title": "First Mathematical Runtime Analyses of Evolutionary Multitask Multi-Objective Optimization",
-          "updated_at": "2026-10-15T06:00:18Z",
-          "url": "https://arxiv.org/abs/2610.21311",
-          "version": 1
-        },
-        "rank": 8,
-        "score": {
-          "base_score": 0.6213885912479558,
-          "exploration": 0.757729819185942,
-          "matched_terms": [
-            "evolutionary algorithm",
-            "multi-objective optimization",
-            "knowledge transfer"
-          ],
-          "negative_terms": [],
-          "personal": 0.0,
-          "recency": 0.6326523073609075,
-          "topic": 0.5792157500905446
         }
       },
       "tier": "deep_read"
@@ -672,7 +243,7 @@
         "why_recommended": "虽然论文不直接研究生产调度，但其对“信息展示作为内生决策变量”的建模方式、递归定义策略相关真实概率的框架、以及在透明度约束下用强化学习近似加采样MIP优化的求解思路，对AI4OR中涉及动态需求管理、客户选择行为或信息不对称的调度问题具有方法论参考价值。研究者可借鉴其将概率展示与分配决策分解、证明唯一性以简化约束、以及用采样近似客户选择行为的技术路线，迁移到如带交期承诺的订单接受、动态定价与调度协同等问题。"
       },
       "figure_gallery": {
-        "checked_at": "2026-10-17T09:57:25.528971+08:00",
+        "checked_at": "2026-10-18T09:56:23.437252+08:00",
         "figures": [
           {
             "caption": "Customer segmentation.",
@@ -691,7 +262,7 @@
         "html_url": "https://arxiv.org/html/2610.21351v1",
         "status": "available"
       },
-      "final_score": 0.6060052168602501,
+      "final_score": 0.5869450412545321,
       "provenance": {
         "analyzed_at": "2026-10-16T02:06:01.845597Z",
         "input_hash": "d1f5d53b3917198559da1b6d3377d216fa404e0b2133873e19851154051dcb63",
@@ -721,10 +292,10 @@
           "url": "https://arxiv.org/abs/2610.21351",
           "version": 1
         },
-        "rank": 10,
+        "rank": 8,
         "score": {
-          "base_score": 0.6109185761095456,
-          "exploration": 0.875938655076013,
+          "base_score": 0.5762637113718765,
+          "exploration": 0.8259428366509912,
           "matched_terms": [
             "mixed integer",
             "mixed-integer",
@@ -732,7 +303,7 @@
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.6360553431580739,
+          "recency": 0.4954494055259152,
           "topic": 0.5280166201052611
         }
       },
@@ -740,756 +311,130 @@
     },
     {
       "analysis": {
-        "analysis": "作者将DNF分类器视为输入层（原特征与否定特征）、ℓ个合取隐藏节点和一个析取输出节点组成的小网络，固定ℓ后把样本分类条件编码为关于权重w_ij、隐节点h_kj和误分类指示e_k的线性约束；通过按样本标签和特征取值只写必要约束，利用结构把h_kj和e_k松弛为连续变量而由约束保证其取二值，并用聚合约束替代逐特征约束；还讨论聚合带来的LP松弛变弱与模型更紧凑之间的权衡，并借助Gurobi的分支、割平面和原始启发式保持竞争力。",
+        "analysis": "作者以 MO-MFEA 为分析对象，在双目标任务组合上分别进行渐近运行时间分析。他们先证明在种群规模 N=Ω(n) 时，MO-MFEA 覆盖两任务 Pareto 前沿的期望函数评估次数为 O(nN log n)，再取 N=Θ(n) 得到具体阶数，并与单独使用多种主流多目标进化算法求解相应任务的已知运行时间进行比较，从而得出加速比。作者利用非支配排序和拥挤距离定义的全序结构以及两个基准函数的可分解性来构造分析，但对具体证明步骤的细节，材料未提供。",
         "challenges": [
-          "DNF电路配置空间随特征数和规则数指数增长，精确学习困难",
-          "基本MILP含m×ℓ+n×(ℓ+2)个二值变量，分支定界树大、求解昂贵",
-          "在减少整数变量和约束、使用聚合约束时仍须保证所有可行解的精确布尔语义",
-          "不同规则之间权重可交换导致对称性与冗余规则，影响稳定性与求解效率",
-          "规模扩展仍是主要瓶颈，大特征数据集上难以保证在时限内求得最优"
+          "多目标选择采用非支配排序与拥挤距离，使运行时间分析需要考虑种群中多个非支配个体同时演化，因此难以沿用单目标漂移分析",
+          "两个任务的 Pareto 集重叠程度及其对被支配改进路径的影响难以刻画",
+          "需要证明多任务演化不恶化简单任务的运行时间，同时量化对复杂多模态任务的加速比",
+          "多模态基准（OJZJ、DLTB）存在局部最优陷阱，需要分析跨任务迁移如何帮助跳出这些陷阱"
         ],
         "corresponding_authors": [
-          "证据未提供"
+          "Weijie Zheng"
         ],
         "evidence": [
           {
-            "claim": "论文提出用MILP训练稀疏DNF网络，固定结构后求最优权重，并以正则项权衡误分类与稀疏性",
-            "location": "abstract",
-            "quote": "We propose mixed integer linear programming (MILP) formulations for training sparse disjunctive normal form (DNF) networks"
-          },
-          {
-            "claim": "高级公式减少整数变量并删除冗余约束，同时对所有可行解保持精确布尔语义",
-            "location": "abstract",
-            "quote": "Our main technical contribution is an enhanced formulation that substantially reduces the number of integer decision variables and eliminates redundant constraints, while preserving exact Boolean semantics for all feasible solutions."
-          },
-          {
-            "claim": "用初始化与dropout打破规则间权重对称性，减少冗余并促进多样稳定规则",
-            "location": "abstract",
-            "quote": "we develop a combined approach based on initialization and dropout to break symmetries in the weights between rules"
-          },
-          {
-            "claim": "实验表明高级公式提升计算效率，并在合成基准和UCI数据集上取得有竞争力或更优的准确率",
-            "location": "abstract",
-            "quote": "Experiments on synthetic benchmarks and UCI datasets show that the advanced formulation improves computational efficiency and achieves competitive or superior accuracy"
-          },
-          {
-            "claim": "基本公式需要优化m×ℓ+n×(ℓ+2)个二值变量，导致求解昂贵",
+            "claim": "本文首次对多目标领域的进化多任务优化进行数学运行时间分析，填补经验成功与理论基础之间的空白",
             "location": "supplied_full_text",
-            "quote": "using this formulation we need to optimize over\nm\n×\nℓ\n+\nn\n×\n(\nℓ\n+\n2\n)\nm\\times\\ell+n\\times(\\ell+2)\nbinary decision variables"
+            "quote": "This work presents the first mathematical runtime analysis of evolutionary multitask optimization in the multi-objective domain, thereby bridging a critical gap between its empirical success and theoretical foundations."
           },
           {
-            "claim": "聚合约束会削弱LP松弛，因此需显式将隐节点变量限制为二值",
-            "location": "supplied_full_text",
-            "quote": "When using constraints (\n4\n), the hidden-node decision variables must be explicitly restricted to binary values in order to ensure model correctness"
+            "claim": "对 (OMM, OJZJ) 任务对，MO-MFEA 取得 Θ(n^{k-1}/log n) 的加速比，且运行时间与单独优化 OMM 相同",
+            "location": "abstract",
+            "quote": "For the two-task problem of maximizing the classic bi-objective OMM and the multimodal OJZJ benchmarks, the MO-MFEA requires only an expected runtime of $O(n^2 \\log n)$---the same as optimizing the simple OMM alone---yet achieves a speedup by a factor of $\\Theta(n^{k-1}/\\log n)$ compared to optimizing OJZJ alone (with gap size $k$)."
           },
           {
-            "claim": "作者明确承认可扩展性仍是主要限制，并提出Benders分解作为未来方向",
+            "claim": "对 (LOTZ, DLTB) 任务对，相对单独优化 DLTB 获得 Θ(n) 加速比，运行时间与单独优化 LOTZ 相同",
+            "location": "abstract",
+            "quote": "Similarly, for the task pair comprising the classic LOTZ and the multimodal DLTB benchmarks, a speedup of $\\Theta(n)$ is attained over optimizing DLTB alone, while the runtime matches that of optimizing LOTZ alone."
+          },
+          {
+            "claim": "作者明确说明本文不开展额外实验，聚焦理论基础的建立",
             "location": "supplied_full_text",
-            "quote": "scalability is still the main limitation of our current approach"
+            "quote": "this work focuses on establishing theoretical foundations; additional experiments are therefore not conducted."
+          },
+          {
+            "claim": "作者将扩展到其他进化多任务算法以及超过两个目标或任务的问题列为未来方向，说明当前结论仅覆盖 MO-MFEA 与双目标任务对",
+            "location": "supplied_full_text",
+            "quote": "Extending this analysis to other popular evolutionary multitask algorithms, as well as to problems with more than two objectives or tasks, constitutes a compelling direction for future research."
           }
         ],
         "experiments": [
-          "在人工合成数据集上比较基本与高级MILP的计算效率和解质量，并测试不同求解时间上限",
-          "在真实UCI数据集（如adult）上以10折交叉验证比较高级MILP与SAT-based DNF学习、Lord、Ripper、Cart的准确率",
-          "报告高级公式提升计算效率，准确率达到有竞争力或更优；聚合约束可进一步提升效率",
-          "图3报告adult数据集上不同时间上限与dropout率对应的准确率",
-          "在紧时间上限和较大数据集上，贪心初始解加变量约减可提升效率；材料未给出具体准确率、运行时间或训练开销数字"
+          "材料明确说明本文聚焦理论基础的建立，未额外开展实验",
+          "理论结果：对 (OMM, OJZJ)，MO-MFEA 在 N=Ω(n) 时期望函数评估次数为 O(nN log n)，取 N=Θ(n) 时为 O(n^2 log n)，与单独优化 OMM 的运行时间相同，相对单独优化 OJZJ 的加速比为 Θ(n^{k-1}/log n)（k 为间隙大小）",
+          "理论结果：对 (LOTZ, DLTB)，MO-MFEA 在 N=Θ(n) 时覆盖两任务 Pareto 前沿的运行时间为 O(n^3)，相对单独优化 DLTB 获得 Θ(n) 加速比，与单独优化 LOTZ 的运行时间相同",
+          "对比基线为单独使用 GSEMO、NSGA-II、NSGA-III、SMS-EMOA、SPEA-II 等求解同一任务的已知运行时间；未报告实际数值实验、约束可行性、训练开销或消融结果"
         ],
-        "first_affiliation": "Institute for Application-Oriented Knowledge Processing (FAW), Johannes Kepler University Linz, Austria",
-        "insight": "固定DNF网络结构后，分类正确性可写成关于连接权重和隐节点激活的线性逻辑约束，于是“准确且稀疏的规则集”变成带L1型稀疏正则的MILP；进一步利用标签和特征取值，只对必要样本与约束建模，可大量删除整数变量并用连续变量隐式保持二值语义，从而在保持精确布尔语义的同时缩小分支定界规模；规则间权重对称性则通过初始化与dropout/变量约减减轻冗余。",
+        "first_affiliation": "哈尔滨工业大学（深圳）计算机科学与技术学院、智慧农场技术与系统全国重点实验室、国际人工智能研究院",
+        "insight": "当复杂多模态任务与结构相似但更简单的任务配对时，MO-MFEA 能够把复杂任务的有效求解时间降至求解简单任务所需的时间量级，这得益于在非支配排序与拥挤距离所诱导的选择压力下产生的跨任务知识迁移；关键并不在于算法本身，而在于两个任务的 Pareto 集在搜索空间中的重叠程度，以及多任务种群选择对“较难任务”个体的保留机制。",
         "limitations": [
-          "可扩展性仍是当前方法的主要限制",
-          "聚合约束削弱LP松弛，可能影响求解性能",
-          "未来方向包括Benders分解（主问题加每样本子问题）以及扩展到更深的布尔规则网络结构"
+          "作者在结论中明确指出，将分析扩展到其他流行的进化多任务算法，以及扩展到目标数或任务数超过两个的问题，是未来研究方向；这说明当前结论仅覆盖 MO-MFEA 与双目标任务对",
+          "本文未开展额外实验，结论为渐近理论结果，未提供有限规模下的数值验证"
         ],
         "method": [
-          "基本MILP公式：以误分类e_k与稀疏正则（α·√n/√m乘权重和）为目标，对m×ℓ连接权重和n×(ℓ+2)个隐节点/预测变量建立二值约束",
-          "高级公式：删除负样本的预测类和隐节点变量，仅对必要样本与特征写约束，将剩余h_kj和e_k设为连续变量并由约束保证可行解中取二值",
-          "聚合重述：以按负特征数n_k^⊖归一化的聚合约束(4)替代逐特征约束(3b)，此时需显式把h_kj限制为二值",
-          "对称性打破：用贪心解做warm start初始化，并结合dropout式变量约减/剪枝未使用连接，减少规则间权重对称与冗余",
-          "训练后处理：若最优解使用少于ℓ个隐藏节点，则复制激活权重最少的规则，事后删除重复规则并保持稀疏网络",
-          "求解器：采用Gurobi求解MILP，比较基本与高级公式及聚合变体，并设置不同时间上限"
+          "以代表性多目标多因子进化算法 MO-MFEA 为对象，在包含多个任务的多目标任务框架下进行分析",
+          "每个任务是由多个目标函数定义在 {0,1}^n 上的多目标优化问题，采用弱支配、支配、Pareto 最优解集与 Pareto 前沿等标准定义",
+          "利用非支配排序与拥挤距离（来自 NSGA-II）在种群中建立全序，从而支持跨任务的知识迁移与个体选择",
+          "对 (OMM, OJZJ) 与 (LOTZ, DLTB) 两组双目标任务对，推导覆盖两任务 Pareto 前沿的期望函数评估次数上界，并取 N=Θ(n) 得到具体阶数",
+          "与单独使用 (G)SEMO、NSGA-II、NSGA-III、SMS-EMOA、SPEA-II 等算法求解同一任务的已知运行时间进行对比，得出加速比"
         ],
-        "motivation": "神经网络预测性能强但黑箱，而规则、树、归纳逻辑编程等可解释方法多依赖贪心或序贯覆盖，缺少对稀疏性与误分类的全局控制；已有将MILP用于归纳规则学习的工作不固定网络结构，因此作者希望以固定结构直接求最优权重，并解决基本MILP公式变量多、约束冗余、求解代价高的问题。",
-        "primary_topic": "基于混合整数线性规划的可解释布尔规则（DNF）分类器学习",
-        "relation_to_research": "该论文本身不是生产调度或智能优化问题，而是用MILP精确学习可解释布尔规则分类器；与AI4OR的关系在于其“固定结构+稀疏正则+变量约减+聚合约束+warm start”的建模与求解思路。推测：若把调度规则（如分派规则、排序规则）表示为稀疏布尔/合取规则网络，并用MILP在仿真或历史调度数据上学得规则参数，则可迁移到生产调度中的规则生成；但这需要将调度决策与约束可行性、动态扰动和计算预算显式纳入模型，且论文并未验证该迁移。",
+        "motivation": "进化多任务优化在经验上已被证明能借助跨任务知识迁移提升复杂问题的求解效率，但多目标优化领域此前缺少严格的数学运行时间支撑，作者希望填补从经验证据到理论基础之间的空白。",
+        "primary_topic": "进化多任务多目标优化的理论运行时间分析",
+        "relation_to_research": "本文属于进化计算的理论运行时间分析，与智能优化和进化算法研究直接相关。它为“跨任务知识迁移是否有理论收益”提供了严格证据，其分析范式（以非支配排序与拥挤距离构造选择压力、在双目标任务对上推导覆盖 Pareto 前沿的期望时间）可迁移到生产调度中的多目标优化理论分析。迁移设想（推测）：若要把这种分析思路用于柔性作业车间或分布式制造的多目标任务对，需要先构造具有可分析结构的调度基准、定义任务间解的编码对应与相似性度量，并处理调度问题中约束可行性与排列或图结构带来的额外分析难度；这种迁移并非作者结论。",
         "relevance_score": 6,
-        "setting": "研究给定n×m二值特征矩阵X和n维二值标签y，在预定义含ℓ个合取隐藏节点、以析取连接输出的固定DNF网络结构下学习二值连接权重；目标是在误分类代价与规则稀疏性（激活权重数）之间显式权衡，得到全局优化且可直接解释为布尔规则的分类器；网络结构规模固定，正则化系数α控制准确率—稀疏性权衡；其余信息假设与静态/动态环境材料未说明。",
+        "setting": "研究在二元空间 {0,1}^n 上同时最大化两个双目标任务（如 OMM 与 OJZJ、LOTZ 与 DLTB）的多任务多目标优化问题，目标是分析 MO-MFEA 覆盖各任务 Pareto 前沿所需的期望函数评估次数；问题规模 n、间隙大小 k 和种群规模 N 是关键参数，环境为静态，信息假设为黑盒目标函数，材料未说明动态性或噪声。",
         "tags": [
-          "混合整数线性规划",
-          "可解释分类",
-          "DNF规则网络",
-          "稀疏性正则",
-          "精确优化",
-          "对称性打破",
-          "变量约减"
+          "进化多任务优化",
+          "多目标优化",
+          "MO-MFEA",
+          "运行时间分析",
+          "知识迁移",
+          "基准函数",
+          "理论保证"
         ],
-        "title_zh": "混合整数线性规划优化稀疏布尔规则网络",
-        "uncertainty": "论文与生产调度、柔性作业车间、强化学习等目标主题只有方法论层面的间接联系，迁移路径属于推测；全文为节选，缺少完整的实验数字、数据规模和求解时间细节，因此对实际加速幅度和泛化能力判断不确定；通讯作者信息未提供。",
-        "why_recommended": "对关注数学规划与学习结合、约束可行性、稀疏可解释模型和公平计算预算的研究者，本文展示了如何在固定网络结构下用MILP精确优化规则集，并通过删除整数变量、连续化隐变量、聚合约束和对称性打破提升求解效率；这些建模技巧与“学习辅助搜索/自动建模”方向相通，可为调度规则学习或约束模型压缩提供参考。"
+        "title_zh": "进化多任务多目标优化的首次数学运行时间分析",
+        "uncertainty": "输入材料为全文节选，部分证明细节与章节内容被截断，方法中的具体证明步骤、完整假设条件与常数项未能核实；文中 k、N 等符号的具体取值范围与完整定理表述可能存在于未提供的正文中，因此对分析细节的判断存在不确定性。",
+        "why_recommended": "对从事智能优化与生产调度多目标求解的研究者而言，本文提供了关于“多任务知识迁移何时能带来渐近加速、何时不会拖慢简单任务”的严格理论刻画，有助于在设计多任务或多场景协同调度算法时判断迁移机制的价值边界；其运行时间分析框架也可作为评估学习辅助搜索公平计算预算的理论参照。"
       },
       "figure_gallery": {
         "checked_at": "2026-10-17T09:57:25.528971+08:00",
         "figures": [],
-        "html_url": "https://arxiv.org/html/2610.20170v1",
+        "html_url": "https://arxiv.org/html/2610.21311v1",
         "status": "not_found"
       },
-      "final_score": 0.6051360837818934,
+      "final_score": 0.5781684842101502,
       "provenance": {
-        "analyzed_at": "2026-10-17T01:59:23.257952Z",
-        "input_hash": "1f623e4eeed4ff5e9bfe8e24dddf151ddd39e0c287382cfb16f60f9afacc0076",
+        "analyzed_at": "2026-10-17T01:59:10.557449Z",
+        "input_hash": "813295673b8da3a45a431d0724a4d8c46600e13d65922027f8935743dc63bd15",
         "model": "deepseek-v4-flash",
         "prompt_version": "optimization-analysis-v1",
         "reading_scope": "full_text"
       },
       "ranked": {
         "paper": {
-          "abstract": "We study the problem of learning accurate and cognitively simple binary classifiers that are directly interpretable as Boolean rules. We propose mixed integer linear programming (MILP) formulations for training sparse disjunctive normal form (DNF) networks, viewed as small networks with a conjunctive hidden layer and a disjunctive output layer. Contrary to previous work that uses MILP for inductive rule learning, we start with a fixed network structure, for which we then find optimal weights. A regularized objective explicitly trades off misclassification costs against sparsity, yielding globally optimized rule sets. Our main technical contribution is an enhanced formulation that substantially reduces the number of integer decision variables and eliminates redundant constraints, while preserving exact Boolean semantics for all feasible solutions. Furthermore, we develop a combined approach based on initialization and dropout to break symmetries in the weights between rules, mitigating redundancy, and encouraging more diverse and stable rule representations. Experiments on synthetic benchmarks and UCI datasets show that the advanced formulation improves computational efficiency and achieves competitive or superior accuracy compared to established interpretable baselines, including SAT-based DNF learning and well-known rule- and tree-based learners. Overall, our approach provides a principled optimization framework for learning compact Boolean rule sets with explicit control over accuracy and sparsity trade-offs.",
+          "abstract": "To facilitate the solving of complex problems, evolutionary multitask optimization is regarded as a promising technique due to its capacity for cross-task knowledge transfer. In contrast to empirical evidences, no mathematical runtime support exists for this technique within the domain of multi-objective optimization. In this work, we aim to fill this important gap. We analyze how the representative multiobjective multifactorial evolutionary algorithm (MO-MFEA) covers the Pareto fronts of two bi-objective problems simultaneously. For the two-task problem of maximizing the classic bi-objective OMM and the multimodal OJZJ benchmarks, the MO-MFEA requires only an expected runtime of $O(n^2 \\log n)$---the same as optimizing the simple OMM alone---yet achieves a speedup by a factor of $\\Theta(n^{k-1}/\\log n)$ compared to optimizing OJZJ alone (with gap size $k$). Similarly, for the task pair comprising the classic LOTZ and the multimodal DLTB benchmarks, a speedup of $\\Theta(n)$ is attained over optimizing DLTB alone, while the runtime matches that of optimizing LOTZ alone.",
           "authors": [
-            "Thomas Pammer",
-            "Johannes F\\\"urnkranz",
-            "Markus Sinnl"
+            "Danyang Zhang",
+            "Weijie Zheng"
           ],
-          "canonical_id": "2610.20170",
+          "canonical_id": "2610.21311",
           "categories": [
-            "cs.LG",
-            "stat.ML"
+            "cs.NE"
           ],
-          "comment": "Preprint (submitted version, prior to peer review) of a paper accepted at RuleML+RR 2026, to appear in LNCS",
-          "pdf_url": "https://arxiv.org/pdf/2610.20170",
-          "published_at": "2026-10-14T13:19:59Z",
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2610.21311",
+          "published_at": "2026-10-15T06:00:18Z",
           "source": "arxiv",
-          "title": "Optimizing Sparse Boolean Rule Networks using Mixed Integer Linear Programming",
-          "updated_at": "2026-10-14T13:19:59Z",
-          "url": "https://arxiv.org/abs/2610.20170",
-          "version": 1
-        },
-        "rank": 7,
-        "score": {
-          "base_score": 0.609338334148897,
-          "exploration": 0.6816625905107067,
-          "matched_terms": [
-            "mixed integer",
-            "mixed-integer"
-          ],
-          "negative_terms": [],
-          "personal": 0.0,
-          "recency": 0.5317933137170389,
-          "topic": 0.6108299810260538
-        }
-      },
-      "tier": "deep_read"
-    },
-    {
-      "analysis": {
-        "analysis": "作者将问题建模为覆盖路径规划图与可移动障碍物的联合决策：CPP生成覆盖路点并识别被遮挡节点；随后用MILP对擦拭与物体移除/放置动作原语进行排序与时序优化，并以逻辑型Benders分解（LBBD）把MILP作为主问题、几何子问题作为可行性校验与割生成环节，迭代注入逻辑割以剪除几何不可行的调度，直到得到无碰撞的任务骨架；最后将离散调度交给KOMO做轨迹优化生成连续可执行轨迹。",
-        "challenges": [
-          "双臂之间的紧耦合时空约束：擦拭与物体移除的并发需要同时满足逻辑顺序与几何无碰撞。",
-          "几何冲突难以在纯符号层完全预判，需在调度与运动规划之间迭代消解。",
-          "在临时移走物体后仍保证可达工作空间的完整覆盖。",
-          "在杂乱环境中生成平滑、无碰撞且可实际执行的双臂轨迹。"
-        ],
-        "corresponding_authors": [
-          "Hangxin Liu"
-        ],
-        "evidence": [
-          {
-            "claim": "论文构建双臂协作框架，一臂重排物体、另一臂执行覆盖擦拭，以到达原本被遮挡区域。",
-            "location": "abstract",
-            "quote": "our framework explicitly assigns one arm to rearrange objects while the other performs coverage wiping, thereby enabling access to previously obstructed regions"
-          },
-          {
-            "claim": "任务规划层采用几何感知的MILP（Geo-MILP）建模，并结合逻辑型Benders分解迭代优化动作排序与时序。",
-            "location": "abstract",
-            "quote": "we introduce Geo-MILP, a geometry-aware task planner formulated as Mixed-Integer Linear Programming (MILP). By integrating Logic-Based Benders Decomposition (LBBD), Geo-MILP iteratively optimizes action sequencingand timing to resolve geometric conflicts"
-          },
-          {
-            "claim": "使用KOMO生成平滑无碰撞运动以保证可执行。",
-            "location": "abstract",
-            "quote": "We then employ K-Order Markov Optimization (KOMO) to generate smooth, collision-free motions to ensure feasible execution."
-          },
-          {
-            "claim": "实验表明相比TAMP基线，规划时间最多减少9倍，执行makespan约减少40%，并提升可达覆盖率。",
-            "location": "abstract",
-            "quote": "reducing planning time by up to 9 times and execution makespan by approximately 40%"
-          },
-          {
-            "claim": "LBBD中MILP作为主问题提出调度，几何子问题验证可行性并注入逻辑割，迭代直到找到无碰撞任务骨架。",
-            "location": "supplied_full_text",
-            "quote": "the MILP acts as the Master Problem proposing a feasible schedule, while a geometric sub-problem iteratively verifies feasibility and injects logic-based cuts to prune invalid solutions"
-          },
-          {
-            "claim": "作者明确说明当前框架仅通过固定原语下的时间先后约束解决几何冲突，未探索调整抓取位姿、擦拭方向或物体放置。",
-            "location": "supplied_full_text",
-            "quote": "it resolves geometric conflicts solely through temporal precedence constraints under fixed primitive definitions. The possibility of adapting grasp poses, wiping directions, or object placements when conflicts arise is not explored"
-          }
-        ],
-        "experiments": [
-          "在仿真与物理实验中验证框架：仿真环境包含物体随机空间变化的10种随机初始化（图中仅展示代表性子集）。",
-          "物理平台包括双Franka Research机器人系统与Kuavo人形机器人平台。",
-          "Franka平台上系统成功执行pick-remove-wipe-place-release协调序列，场景最多包含三个障碍物。",
-          "与顺序基线（如PDDLStream）相比，方法展现出可见的并发性，擦拭臂在支撑臂恢复物体时即移动到下一区域，减少空闲。",
-          "摘要报告：相比Task and Motion Planning（TAMP）基线，规划时间最多减少9倍，执行makespan约减少40%，并提升可达覆盖率。",
-          "材料未说明训练开销（方法不涉及学习训练）与消融实验的定量结果。"
-        ],
-        "first_affiliation": "Beihang University, School of Automation Science and Electrical Engineering",
-        "insight": "贡献有效性来自把“擦拭覆盖”与“物体临时移除/复位”统一到一个可优化的时序决策模型里：通过MILP显式建模双臂并发与动作先后关系，使一只臂在另一只臂恢复物体的同时即可进入下一区域，从而压缩空闲时间；再通过几何子问题的反馈对调度进行可行性修正，使逻辑计划在几何上可执行。",
-        "limitations": [
-          "作者指出现有框架仅通过固定原语定义下的时间先后约束来解决几何冲突，未探索在冲突出现时调整抓取位姿、擦拭方向或物体放置位置的可能性。",
-          "未来工作将引入采样的抓取与放置候选以实现多操作替代方案的联合空间推理。",
-          "作者指出集成实时视觉反馈以实现动态不可预测家庭环境中的自适应清洁尚未完成。",
-          "提升更大物体集、更密杂乱与更细覆盖网格的计算效率仍是未来方向。"
-        ],
-        "method": [
-          "构建擦拭与物体搬运的动作原语集合，作为任务规划的基本单元。",
-          "以Geo-MILP（几何感知的混合整数线性规划）优化动作序列与时序，目标是全局makespan最小化并促进双臂并发。",
-          "引入Logic-Based Benders Decomposition：主问题MILP提出调度，几何子问题验证可行性并注入逻辑割，迭代修正调度。",
-          "将MILP输出的时间索引双臂动作序列传给KOMO，把离散原语转化为连续约束并联合优化轨迹，处理运动学与碰撞约束。",
-          "输出兼顾排序与并发、且无碰撞可执行的双臂动作序列。"
-        ],
-        "motivation": "经典覆盖路径规划（CPP）把障碍物视为不可移动的静态占用，机器人只能绕行，导致被遮挡区域无法擦拭，并增加碰撞风险与轨迹低效；作者希望利用双臂协作主动、可逆地移走遮挡物，以到达原本不可达区域，同时避免顺序执行带来的效率损失。",
-        "primary_topic": "双臂协作任务与运动规划：擦拭覆盖与物体临时移位的调度",
-        "relation_to_research": "该论文属于机器人任务与运动规划（TAMP）方向，核心是MILP+LBBD的任务调度与KOMO轨迹优化的结合，而非生产调度或神经网络/强化学习/大模型智能体求解。其与智能优化、生产调度和AI4OR的关系主要是方法层面：MILP建模、逻辑型Benders分解、主问题-子问题迭代割生成、以及离散调度与连续可行性校验的耦合机制，可迁移到含空间几何约束的调度问题（如带碰撞或布局约束的生产运输协同）。若迁移到生产调度，需要把“物体移除/复位”重新解释为资源占用与释放、把几何子问题替换为具体调度可行性判定，并处理学习/求解器耦合——这些属于推测，不是作者结论。",
-        "relevance_score": 6,
-        "setting": "研究问题为散落物体遮挡的桌面擦拭任务：决策对象为双臂机器人（一臂执行覆盖擦拭，另一臂临时移走并复位障碍物）的动作序列与时序；目标是在可达区域内实现尽可能完整的覆盖并最小化完成时间（makespan）；关键约束包括逻辑先后与同步约束、几何冲突（碰撞、可达性）以及运动学可行性；信息假设为已知场景几何与物体位置（离线规划），静态环境；材料未说明动态扰动、在线视觉反馈与随机性的处理方式。",
-        "tags": [
-          "任务与运动规划",
-          "双臂协作",
-          "混合整数线性规划",
-          "逻辑型Benders分解",
-          "覆盖路径规划",
-          "轨迹优化"
-        ],
-        "title_zh": "双臂协作的桌面擦拭与临时物体移除",
-        "uncertainty": "证据仅来自摘要和全文节选，实验细节（如具体基线配置、覆盖指标的定量定义、规划时间的绝对值、成功率统计、消融结果）在材料中不完整；相关性评分6是基于其优化建模与分解方法可迁移性，而非直接研究生产调度或AI4OR主题。",
-        "why_recommended": "对关注学习辅助搜索、数学规划与调度结合的研究者，该论文展示了如何用MILP主问题+几何子问题割生成的方式处理离散-连续耦合，以及如何显式优化makespan与并发性；其“可逆资源操作+时序调度”的建模思路可启发生产运输协同、动态扰动下资源重调度等问题。但需注意其不含神经网络或强化学习成分，与AI4OR中的学习型求解关系较间接。"
-      },
-      "figure_gallery": {
-        "checked_at": "2026-10-17T09:57:25.528971+08:00",
-        "figures": [
-          {
-            "caption": "The proposed hierarchical framework. (a) CPP generates surface coverage waypoints and identifies obstructed nodes. (b) The task planner uses lbbd to jointly schedule concurrent bimanual actions. (c) The KOMO-based motion planner translates the discrete schedule into continuous, collision-free joint trajectories.",
-            "label": "Figure 2",
-            "number": 2,
-            "panels": [
-              {
-                "cached_path": "figures/arxiv/2610.19527/v1/fig2-panel1.png",
-                "original_url": "https://arxiv.org/html/2610.19527v1/figures/Pipeline.png"
-              }
-            ],
-            "source": "arxiv_html",
-            "source_url": "https://arxiv.org/html/2610.19527v1#S1.F2"
-          }
-        ],
-        "html_url": "https://arxiv.org/html/2610.19527v1",
-        "status": "available"
-      },
-      "final_score": 0.5806541260372775,
-      "provenance": {
-        "analyzed_at": "2026-10-16T02:06:25.572031Z",
-        "input_hash": "948a561f9f82d4aa0c59b56f0468501aec8f84aeec484717bd5003ad53d9007c",
-        "model": "deepseek-v4-flash",
-        "prompt_version": "optimization-analysis-v1",
-        "reading_scope": "full_text"
-      },
-      "ranked": {
-        "paper": {
-          "abstract": "We devise a dual-arm cooperative planning framework for wiping table surface in the presence of scattered objects. Unlike conventional surface-cleaning strategies that only cover free areas and detour around obstacles, our framework explicitly assigns one arm to rearrange objects while the other performs coverage wiping, thereby enabling access to previously obstructed regions. Specifically, we first construct a set of wiping and object-rearrangement action primitives. Based on these primitives, we introduce Geo-MILP, a geometry-aware task planner formulated as Mixed-Integer Linear Programming (MILP). By integrating Logic-Based Benders Decomposition (LBBD), Geo-MILP iteratively optimizes action sequencingand timing to resolve geometric conflicts, promoting efficient cooperation between wiping and object rearrangement. We then employ K-Order Markov Optimization (KOMO) to generate smooth, collision-free motions to ensure feasible execution. Simulation and physical experiments demonstrate that the proposed framework not only increases reachable coverage by enabling access to obstructed areas, but also significantly improves time efficiency compared to Task and Motion Planning (TAMP) baselines, reducing planning time by up to 9 times and execution makespan by approximately 40%.",
-          "authors": [
-            "Pengqi Zhang",
-            "Longchang Yu",
-            "Daohan Li",
-            "Liang Yan",
-            "Hangxin Liu"
-          ],
-          "canonical_id": "2610.19527",
-          "categories": [
-            "cs.RO"
-          ],
-          "comment": "8 pages, 6 figures",
-          "pdf_url": "https://arxiv.org/pdf/2610.19527",
-          "published_at": "2026-10-14T03:45:19Z",
-          "source": "arxiv",
-          "title": "Dual-arm Cooperation for Tabletop Wiping with Temporal Object Removal",
-          "updated_at": "2026-10-14T03:45:19Z",
-          "url": "https://arxiv.org/abs/2610.19527",
+          "title": "First Mathematical Runtime Analyses of Evolutionary Multitask Multi-Objective Optimization",
+          "updated_at": "2026-10-15T06:00:18Z",
+          "url": "https://arxiv.org/abs/2610.21311",
           "version": 1
         },
         "rank": 9,
         "score": {
-          "base_score": 0.564825683704141,
-          "exploration": 0.8095173206011723,
+          "base_score": 0.5603063349275459,
+          "exploration": 0.5616310744050417,
           "matched_terms": [
-            "mixed integer",
-            "mixed-integer"
+            "evolutionary algorithm",
+            "multi-objective optimization",
+            "knowledge transfer"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.48129788756670017,
-          "topic": 0.5187788720585436
+          "recency": 0.4927986423795542,
+          "topic": 0.5792157500905446
         }
       },
       "tier": "deep_read"
-    },
-    {
-      "analysis": {
-        "analysis": "作者将问题分析为结构性局限：多数系统把每次尝试视为近乎自包含，导致日志、记忆和搜索树缺乏对设计元素与改进之间因果联系的建立；据此提出以谱系为中心的分代系统，把可复现产物和评估器结果组织为带类型的证据图谱、泳道式前沿与议程，并将局部产物构造与队列级证据合成分离。材料未说明更具体的理论分析或下界推导。",
-        "challenges": [
-          "如何从实验产物与评估结果中建立可归因、可验证的证据关系",
-          "如何在长周期研发中避免重复学习相同教训并复用已验证机制",
-          "如何将局部构造与队列级证据合成解耦并保持谱系可检查",
-          "如何在显著降低模型开销的同时维持或提升产物质量"
-        ],
-        "corresponding_authors": [
-          "证据未提供"
-        ],
-        "evidence": [
-          {
-            "claim": "现有系统把每次尝试视为近乎自包含，难以建立设计元素与改进之间的归因",
-            "location": "abstract",
-            "quote": "Most systems treat each attempt as nearly self-contained, so logs, memories, and search trees record what happened without establishing which design element produced an improvement"
-          },
-          {
-            "claim": "Praxist 将可复现产物与评估器结果转化为带类型的证据图谱、泳道式前沿和议程",
-            "location": "abstract",
-            "quote": "converts reproducible artifacts and evaluator outcomes into a typed evidence graph of findings, lane-structured frontiers, and agendas"
-          },
-          {
-            "claim": "分离局部产物构造与队列级证据合成，使后续尝试继承已验证机制、未决主张和有用约束",
-            "location": "abstract",
-            "quote": "Separating local artifact construction from cohort-level evidence synthesis lets later attempts inherit validated mechanisms, unresolved claims, and useful constraints"
-          },
-          {
-            "claim": "在 75 任务 MLE-bench 上取得 60 枚奖牌、49 金，花费 3054 美元，对比基线 55 枚奖牌、34 金、38370 美元",
-            "location": "abstract",
-            "quote": "Praxist 60 medals (80.0%), 49 of them gold, against 55 medals (73.3%) and 34 gold for a Claude Code baseline on Claude Opus 4.8-at a recorded model spend of $3054 versus $38370"
-          },
-          {
-            "claim": "作业车间重调度是五个案例研究之一，并在任务原生基线上取得改进",
-            "location": "abstract",
-            "quote": "Five case studies-quantitative trading, LiDAR-inertial-visual SLAM, tokamak magnetic control, rocket landing, and job-shop rescheduling-carry the same process into open-ended engineering problems, improving on each task-native baseline"
-          }
-        ],
-        "experiments": [
-          "在标准化 75 任务 MLE-bench 套件上，官方评分器最终结果给出 Praxist 60 枚奖牌（80.0%），其中 49 枚金牌；Claude Code 基线在 Claude Opus 4.8 上为 55 枚奖牌（73.3%）、34 枚金牌；记录模型花费为 3054 美元对 38370 美元，约为十二分之一",
-          "五个案例研究——量化交易、LiDAR-惯性-视觉 SLAM、托卡马克磁控制、火箭着陆和作业车间重调度——将同一过程带入开放式工程问题，在每个任务原生基线上于头条精度、存活率或资源成本方面取得改进，并记录发现路径",
-          "材料未说明训练开销、公平计算预算的详细控制、消融实验或泛化性系统评估"
-        ],
-        "first_affiliation": "证据未提供",
-        "insight": "将可复现产物与评估器结果转化为带类型的证据图谱、泳道式前沿和议程，并把局部产物构造与队列级证据合成分离，使后续尝试能够继承已验证机制、未决主张和有用约束，同时让结果附着在可检查的谱系上；其有效性来自把“改进归因与验证存活”显式结构化，而不仅是增加搜索或记忆模块。",
-        "limitations": [
-          "材料未说明"
-        ],
-        "method": [
-          "构建以谱系为中心的分代系统 Praxist",
-          "将可复现产物与评估器结果转换为带类型的证据图谱",
-          "维护泳道式前沿与议程",
-          "分离局部产物构造与队列级证据合成",
-          "使后续尝试继承已验证机制、未决主张和有用约束，并将结果附着于可检查谱系"
-        ],
-        "motivation": "现有自主研发智能体多在精选基准上展示增益，但增益难以归因、成本远高于持续工程实践所能承受；多数系统把每次尝试视为近乎自包含，日志、记忆和搜索树只记录发生了什么，未建立哪个设计元素带来改进、证据是否通过验证以及如何与其他元素重组，导致长周期研发反复学习相同教训。",
-        "primary_topic": "面向自主研发的谱系化智能体系统，用于可执行产物的生成、评估与证据合成",
-        "relation_to_research": "论文事实：摘要中作业车间重调度作为五个案例研究之一，被用于展示同一谱系化过程在开放式工程问题上的改进。迁移设想（推测）：该证据图谱与谱系继承机制可能为生产调度中的学习辅助搜索或智能体优化提供可追溯的机制复用与约束继承框架；迁移到柔性作业车间、流水车间或分布式制造需要明确调度问题的评估器、可复现产物表示和验证协议，且论文未给出该案例的调度规模、约束可行性或与调度专用算法的对比细节。",
-        "relevance_score": 7,
-        "setting": "论文研究自主研发智能体在自动评估下反复生成、运行与改进可执行产物的过程管理问题；决策对象是每次尝试的产物构造、验证与后续继承策略，目标是在可控成本下获得更强且可追溯的产物，关键约束包括评估验证、证据留存与成本可吸收性，信息假设与静态或动态环境材料未说明。",
-        "tags": [
-          "自主研发智能体",
-          "证据图谱",
-          "解法谱系",
-          "MLE-bench",
-          "作业车间重调度",
-          "大模型智能体"
-        ],
-        "title_zh": "Praxist：从实验产物到解法谱系",
-        "uncertainty": "仅依据标题与摘要，未提供全文；无法核实作业车间重调度案例的具体设定、基线、约束可行性与数字，也无法判断证据图谱机制与调度求解器的结合深度；因此相关性评为 7 而非更高。",
-        "why_recommended": "对关注大模型智能体驱动优化与生产调度的研究者，本文提供了把实验产物、评估证据与机制继承结构化的系统视角，并包含作业车间重调度案例；其成本效率与谱系可审计性对公平计算预算和可复现性讨论有参考价值，但需注意证据仅来自摘要，调度相关结论的细节不足。"
-      },
-      "figure_gallery": {
-        "checked_at": "2026-10-17T09:57:25.528971+08:00",
-        "figures": [
-          {
-            "caption": "One generation of the Praxist loop. Agents inherit the accumulated evidence and run deliberately different experiments, each producing a reproducible artifact scored by an external evaluator (top). Outcomes become typed claims, pooled into updated evidence and the next generation’s plan: continue, stop, validate, or explore (middle). A lineage records every step (bottom).",
-            "label": "Figure 1",
-            "number": 1,
-            "panels": [
-              {
-                "cached_path": "figures/arxiv/2608.25955/v2/fig1-panel1.png",
-                "original_url": "https://arxiv.org/html/2608.25955v2/002.png"
-              }
-            ],
-            "source": "arxiv_html",
-            "source_url": "https://arxiv.org/html/2608.25955v2#S1.F1"
-          },
-          {
-            "caption": "Rocket task overview. Initial states are drawn from three fixed banks—a nominal area-uniform disk, a row-paired slower near-OOD bank, and a faster hard-OOD outer annulus—and are flown by a deterministic hybrid controller: rolling ZEM/ZEV guidance in phase P0, fuel-commit and phase guards, and a P1/P2 terminal-descent corridor. Geometric attitude control feeds a closed-form pitch/yaw box QP that splits each torque demand between gimbal and grid fins, with the RCS restricted to roll. The frozen C05 6DoF plant advances under RK4 at 0.1 0.1 -s steps, and every trajectory is scored once, at the interpolated first landing-leg contact, by a single joint success predicate. The evidence strip records results on the shared task and objective—the 4.03 % 4.03\\% starting artifact, Weco’s reported 17.12 % 17.12\\% , and the selected controller at 12,288 / 12,288 12{,}288/12{,}288 —and, separately, its full-bank audit ( 40,959 40{,}959 , 40,959 40{,}959 , and 40,960 40{,}960 successes per 40,960 40{,}960 -row bank).",
-            "label": "Figure 2",
-            "number": 2,
-            "panels": [
-              {
-                "cached_path": "figures/arxiv/2608.25955/v2/fig2-panel1.png",
-                "original_url": "https://arxiv.org/html/2608.25955v2/003.png"
-              }
-            ],
-            "source": "arxiv_html",
-            "source_url": "https://arxiv.org/html/2608.25955v2#S3.F2"
-          }
-        ],
-        "html_url": "https://arxiv.org/html/2608.25955v2",
-        "status": "available"
-      },
-      "final_score": 0.6019084817776108,
-      "provenance": {
-        "analyzed_at": "2026-10-17T01:59:05.121766Z",
-        "input_hash": "a330e9391f5f60f2cb52af66d645f1155a7d13345ff4ae0a97a0c9d960887177",
-        "model": "deepseek-v4-flash",
-        "prompt_version": "optimization-analysis-v1",
-        "reading_scope": "abstract"
-      },
-      "ranked": {
-        "paper": {
-          "abstract": "Autonomous R&D agents now write, run, and improve executable artifacts under automated evaluation-but largely as laboratory instruments: shown on curated benchmarks, with gains that are hard to trace to a cause and costs well above what sustained engineering practice absorbs. The limitation is structural. Most systems treat each attempt as nearly self-contained, so logs, memories, and search trees record what happened without establishing which design element produced an improvement, whether its evidence survived validation, or how it recombines with others. Long campaigns therefore keep re-learning the same lessons. We introduce Praxist, a lineage-centered generational system that converts reproducible artifacts and evaluator outcomes into a typed evidence graph of findings, lane-structured frontiers, and agendas. Separating local artifact construction from cohort-level evidence synthesis lets later attempts inherit validated mechanisms, unresolved claims, and useful constraints, and leaves results attached to an inspectable lineage. On the standardized 75-task MLE-bench suite, the finalized official-grader results give Praxist 60 medals (80.0%), 49 of them gold, against 55 medals (73.3%) and 34 gold for a Claude Code baseline on Claude Opus 4.8-at a recorded model spend of $3054 versus $38370, roughly a twelfth of the cost. Five case studies-quantitative trading, LiDAR-inertial-visual SLAM, tokamak magnetic control, rocket landing, and job-shop rescheduling-carry the same process into open-ended engineering problems, improving on each task-native baseline in headline accuracy, survival, or resource cost, with the discovery path on record. Stronger artifacts at an order of magnitude less spend, each backed by an auditable lineage, are, to our knowledge, first brought together here: the operating profile production research requires, not the one a benchmark demonstration establishes.",
-          "authors": [
-            "Jin Li",
-            "Ahmed Murtadha",
-            "Zhiyu Wang",
-            "Qiwen Chen",
-            "William Chen",
-            "Yifei Wu",
-            "Guan Wang",
-            "Cheng Gong",
-            "Andy L. Siy",
-            "Jiayi Yang",
-            "Mengsha Huang",
-            "Wenhao Li",
-            "Yixuan Liu",
-            "Shuailin Pan",
-            "Mingli Yuan",
-            "Sen Song",
-            "Yuhao Sun"
-          ],
-          "canonical_id": "2608.25955",
-          "categories": [
-            "cs.MA",
-            "cs.SE"
-          ],
-          "comment": null,
-          "pdf_url": "https://arxiv.org/pdf/2608.25955",
-          "published_at": "2026-08-26T16:13:05Z",
-          "source": "arxiv",
-          "title": "Praxist: From Experimental Artifacts to Solution Lineages",
-          "updated_at": "2026-10-15T09:30:31Z",
-          "url": "https://arxiv.org/abs/2608.25955",
-          "version": 2
-        },
-        "rank": 20,
-        "score": {
-          "base_score": 0.5216517850502013,
-          "exploration": 0.44344347773351306,
-          "matched_terms": [
-            "job shop",
-            "job-shop"
-          ],
-          "negative_terms": [],
-          "personal": 0.0,
-          "recency": 0.6561680584786891,
-          "topic": 0.505563794732544
-        }
-      },
-      "tier": "browse"
-    },
-    {
-      "analysis": {
-        "analysis": "作者将工程智能体的动作与反馈层抽象为一个与外壳无关的契约，区分权威观测、语义动作、基于工具的实现、独立验证和修复证据等层次，从而把问题结构显式化为‘关系选择由智能体负责、精确后果由工具推导’的分工；材料未说明是否使用分解、下界或图表示等具体优化分析手段。",
-        "challenges": [
-          "约束相互耦合且要求精确，智能体既要语义决策又要推导精确几何或时序后果容易失败",
-          "如何在不削弱语义控制的前提下把可机械推导的输出安全地交给工具",
-          "如何实现独立验证并提供修复证据以保证约束可行性",
-          "契约需要与不同智能体外壳（harness）解耦，保持通用性"
-        ],
-        "corresponding_authors": [
-          "证据未提供"
-        ],
-        "evidence": [
-          {
-            "claim": "论文指出智能体同时做语义决策并推导精确几何或时序后果会导致约束治理工程任务失败，这是其动机",
-            "location": "abstract",
-            "quote": "Existing solutions often require agents to make semantic decisions and also derive consequences such as precise geometry or timing from those decisions, leading to failures in constraint-governed engineering tasks."
-          },
-          {
-            "claim": "RAC 是一种与 harness 无关的契约，作用于工程智能体的动作与反馈层，并规定权威观测、语义动作、工具实现、独立验证与修复证据",
-            "location": "abstract",
-            "quote": "we introduce RAC, a harness-agnostic contract for the action and feedback layer of engineering agents. It specifies authoritative observations, semantic actions, tool-based realization, independent verification, and repair evidence."
-          },
-          {
-            "claim": "分工方式是智能体决定工件应满足哪些关系，专用工具推导具体后果",
-            "location": "abstract",
-            "quote": "The agent decides which relations an artifact should satisfy; specialized tools derive their concrete consequences."
-          },
-          {
-            "claim": "在 PCB 布局、布线和修复任务上，RAC 在全部九个被评估模型上取得最高的干净通过率，平均 90.9%，最强基线为 74.0%",
-            "location": "abstract",
-            "quote": "On PCB placement, routing, and repair tasks, RAC achieves the highest clean-pass rate for all nine evaluated models, averaging 90.9%, compared with 74.0% for the strongest baseline, requirements-only delegation."
-          },
-          {
-            "claim": "在作业车间调度中，直接关系型动作的质量通过率为 96.3%，代码中介交付为 59.6%，且使用同一调度后端",
-            "location": "abstract",
-            "quote": "In job-shop scheduling, direct relational actions achieve 96.3% quality pass versus 59.6% for code-mediated delivery with access to the same scheduling backend."
-          },
-          {
-            "claim": "在四个微控制器上的 141 个嵌入式代码任务中，动作契约被视为智能体能力的一个来源",
-            "location": "abstract",
-            "quote": "Our evaluations on 141 embedded-code tasks across four microcontroller identify the action contract as a source of agent capability: preserving semantic control while delegating mechanically derivable outputs improves the reliability of constrained artifacts."
-          }
-        ],
-        "experiments": [
-          "在 PCB 布局、布线和修复三类任务上，RAC 在全部九个被评估模型上取得最高的干净通过率，平均为 90.9%，最强基线 requirements-only delegation 为 74.0%",
-          "在作业车间调度中，直接关系型动作的质量通过率为 96.3%，而通过代码中介交付、且可访问同一调度后端的方案为 59.6%",
-          "在四个微控制器上的 141 个嵌入式代码任务上进行评估，识别出动作契约是智能体能力的一个来源",
-          "摘要未说明基线数量、实例规模、运行时间、训练开销、公平计算预算与泛化和消融的具体设置"
-        ],
-        "first_affiliation": "证据未提供",
-        "insight": "贡献的有效性来自将“决定满足哪些关系”的语义控制与“从关系推导出精确具体数值”的机械推导在职责上解耦：智能体只负责关系层面的选择，专用工具负责派生具体后果并由独立验证提供修复证据，从而避免让模型承担不擅长的精确推导，使约束满足更可靠。",
-        "limitations": [
-          "材料未说明"
-        ],
-        "method": [
-          "提出 RAC，一种与 harness 无关的契约，作用于工程智能体的动作与反馈层",
-          "契约规定五类要素：权威观测、语义动作、基于工具的实现、独立验证、修复证据",
-          "智能体决定工件应满足哪些关系（relations），专用工具负责推导这些关系带来的具体后果",
-          "在 PCB 布局、布线、修复任务以及作业车间调度、嵌入式代码任务上实例化并评估该契约"
-        ],
-        "motivation": "现有方案常要求智能体既做语义决策、又自行推导精确几何或时序后果，这种双重负担导致在约束治理的工程任务中频繁失败，因此需要一个能明确划分动作与反馈职责的契约层来提升约束工件可靠性。",
-        "primary_topic": "面向约束治理工程任务的智能体动作与反馈契约设计，并在作业车间调度上验证",
-        "relation_to_research": "论文事实：RAC 在作业车间调度上验证了关系型动作与工具推导相结合的契约，报告了相对代码中介交付更高的质量通过率；其核心思想是把语义决策与精确约束推导解耦，并以独立验证保证约束可行性。迁移设想（推测）：该契约或可迁移到柔性作业车间、流水车间、分布式制造与生产运输协同等约束密集调度问题，用以约束大模型或智能体只做机器/工序/路径选择等语义决策，而把时序、产能、能耗与运输耦合等精确后果交由专用求解器或数学规划工具推导；迁移的必要条件包括：存在可被工具精确实现的约束求解后端、能够为所选关系提供独立验证与修复证据、且关系的选择空间能够覆盖原问题的可行域。这与本方向关注的学习辅助搜索、数学规划与智能体优化结合、约束可行性、求解质量与公平计算预算的议题直接相关。",
-        "relevance_score": 8,
-        "setting": "论文研究工程类智能体在必须产出满足精确且相互耦合约束的工件（artifact）时的可靠性问题，决策对象是智能体如何选择动作、如何从语义决策中派生出几何或时序等具体后果，目标是在保持语义控制权的同时提高约束满足的干净通过率（clean-pass rate），关键约束是约束之间存在耦合且必须精确满足，信息假设为智能体可获得权威观测并借助专用工具实现与独立验证，环境为静态任务设定，材料未说明是否涉及动态扰动。",
-        "tags": [
-          "大模型智能体",
-          "约束满足",
-          "作业车间调度",
-          "工具调用",
-          "动作契约",
-          "约束可行性"
-        ],
-        "title_zh": "RAC：面向约束治理工程任务的关系型智能体契约",
-        "uncertainty": "仅依据标题与摘要，无法获知契约的具体实现细节、九个被评估模型与基线构成、作业车间调度的实例规模与约束类型、质量通过率与干净通过率的判定标准、是否在同一计算预算下比较、以及独立验证与修复证据的具体机制；同时无法确认全文是否包含更多基线、消融或泛化实验，因此相关性判断存在中等不确定性。",
-        "why_recommended": "该工作直接触及 AI4OR 与大模型智能体结合中的关键痛点——如何让智能体在保持语义决策能力的同时不承担精确约束推导，从而提升约束可行性；其在作业车间调度上的对照组设计（直接关系型动作 vs 代码中介、同一调度后端）为约束可行性、求解质量与工具耦合方式提供了可借鉴的实验范式，对研究智能体优化、学习辅助搜索与数学规划结合的研究者具有迁移价值。"
-      },
-      "figure_gallery": {
-        "checked_at": "2026-10-16T10:03:08.977461+08:00",
-        "figures": [],
-        "html_url": "https://arxiv.org/html/2610.20935v1",
-        "status": "not_found"
-      },
-      "final_score": 0.5930714749497152,
-      "provenance": {
-        "analyzed_at": "2026-10-16T02:06:47.055036Z",
-        "input_hash": "3e0c8fd646938e2bb9f099f405808418822c370a00f4d2bd18de1aca8766dfae",
-        "model": "deepseek-v4-flash",
-        "prompt_version": "optimization-analysis-v1",
-        "reading_scope": "abstract"
-      },
-      "ranked": {
-        "paper": {
-          "abstract": "Engineering agents must produce artifacts that satisfy exact, coupled constraints. Existing solutions often require agents to make semantic decisions and also derive consequences such as precise geometry or timing from those decisions, leading to failures in constraint-governed engineering tasks. In this paper, we introduce RAC, a harness-agnostic contract for the action and feedback layer of engineering agents. It specifies authoritative observations, semantic actions, tool-based realization, independent verification, and repair evidence. The agent decides which relations an artifact should satisfy; specialized tools derive their concrete consequences. On PCB placement, routing, and repair tasks, RAC achieves the highest clean-pass rate for all nine evaluated models, averaging 90.9%, compared with 74.0% for the strongest baseline, requirements-only delegation. In job-shop scheduling, direct relational actions achieve 96.3% quality pass versus 59.6% for code-mediated delivery with access to the same scheduling backend. Our evaluations on 141 embedded-code tasks across four microcontroller identify the action contract as a source of agent capability: preserving semantic control while delegating mechanically derivable outputs improves the reliability of constrained artifacts.",
-          "authors": [
-            "Kaiyuan Zheng",
-            "Fengqing Jiang",
-            "Yichen Feng",
-            "Zubin Aaron Assadian",
-            "Yuetai Li",
-            "Bhaskar Ramasubramanian",
-            "Basel Alomair",
-            "Luyao Niu",
-            "Radha Poovendran"
-          ],
-          "canonical_id": "2610.20935",
-          "categories": [
-            "cs.AI"
-          ],
-          "comment": null,
-          "pdf_url": "https://arxiv.org/pdf/2610.20935",
-          "published_at": "2026-10-14T21:02:57Z",
-          "source": "arxiv",
-          "title": "RAC: A Relational Agent Contract for Constraint-Governed Engineering Tasks",
-          "updated_at": "2026-10-14T21:02:57Z",
-          "url": "https://arxiv.org/abs/2610.20935",
-          "version": 1
-        },
-        "rank": 31,
-        "score": {
-          "base_score": 0.4237663180903913,
-          "exploration": 0.03238572445911158,
-          "matched_terms": [
-            "job shop",
-            "job-shop"
-          ],
-          "negative_terms": [],
-          "personal": 0.0,
-          "recency": 0.5763015587592996,
-          "topic": 0.4920078475082116
-        }
-      },
-      "tier": "browse"
-    },
-    {
-      "analysis": {
-        "analysis": "材料未说明作者对问题结构的具体理论分析（如分解、下界或收敛性）。从摘要可见，作者将批量选择视为从历史条件的连续提议分布中采样的问题，通过条件流匹配学习该分布，并利用 Thompson 采样的 argmax 作为训练信号，借助随优化进程变化的 Langevin 推前映射把样本推向高价值区域，以此实现对探索-利用权衡的建模。",
-        "challenges": [
-          "批量选择需同时发现多个有前景区域并避免冗余评估",
-          "传统贝叶斯优化的批量选择难度随批量规模增长",
-          "在测试时保持低计算开销同时生成变规模批量",
-          "随优化进程动态调整探索-利用权衡",
-          "离线训练分布与在线优化历史的分布匹配"
-        ],
-        "corresponding_authors": [
-          "证据未提供"
-        ],
-        "evidence": [
-          {
-            "claim": "论文研究批量黑盒优化，强调并行评估多候选但轮数有限",
-            "location": "abstract",
-            "quote": "Batch black-box optimization is important for expensive systems where many candidates can be evaluated in parallel, yet only a few rounds of evaluation are affordable."
-          },
-          {
-            "claim": "传统贝叶斯优化的批量选择难度随批量规模增长",
-            "location": "abstract",
-            "quote": "conventional Bayesian optimization can require increasingly difficult batch-selection procedures as the batch size grows."
-          },
-          {
-            "claim": "FMTR 离线学习以历史为条件的连续提议分布，可采样变规模批量",
-            "location": "abstract",
-            "quote": "We introduce Flow Matching for Thompson-Sampling Refinement (FMTR), an amortized approach that learns offline a continuous, history-conditioned proposal distribution from which variable-size batches can be sampled."
-          },
-          {
-            "claim": "训练使用条件流匹配，并以随优化视野变化的 Langevin 推前映射将 Thompson 采样 argmax 精炼到高价值区域",
-            "location": "abstract",
-            "quote": "FMTR is trained offline by conditional flow matching on Thompson-sampling argmaxes refined toward high-value regions via a horizon-dependent Langevin pushforward map, adapting the exploration-exploitation tradeoff over the optimization horizon."
-          },
-          {
-            "claim": "测试时参数固定，批量生成无需替代模型重拟合或数值采集优化",
-            "location": "abstract",
-            "quote": "At test time, the model parameters remain fixed and batch generation requires neither task-specific surrogate refitting nor numerical acquisition optimization."
-          },
-          {
-            "claim": "在合成与真实基准上优于批量贝叶斯优化和上下文学习基线，并显著降低批量选择计算成本",
-            "location": "abstract",
-            "quote": "FMTR achieves strong performance against batch BO and in-context baselines on synthetic and real-world benchmarks, while substantially reducing the computational cost of batch selection."
-          }
-        ],
-        "experiments": [
-          "摘要称在合成基准和真实世界基准上，FMTR 相对批量贝叶斯优化和上下文学习基线取得强性能",
-          "摘要称方法显著降低了批量选择的计算成本",
-          "具体基线名称、实例规模、解质量指标、运行时间、训练开销、公平计算预算、泛化与消融等细节材料未说明"
-        ],
-        "first_affiliation": "证据未提供",
-        "insight": "核心洞察在于：与其在每轮在线求解复杂的批量采集最大化问题，不如离线学习一个以历史为条件的连续提议分布，把批量选择过程摊销到训练阶段。通过对 Thompson 采样 argmax 进行条件流匹配，并用随优化阶段变化的 Langevin 推前映射将其精炼到高价值区域，模型能够隐式编码对探索-利用随轮次变化的权衡，从而在测试时无需替代模型重拟合或数值采集优化即可采样得到有效批量。",
-        "limitations": [
-          "材料未说明"
-        ],
-        "method": [
-          "FMTR 学习一个以历史为条件的连续提议分布，可从中采样变规模批量",
-          "离线训练采用条件流匹配（conditional flow matching）拟合该提议分布",
-          "训练目标基于 Thompson 采样的 argmax，并通过随优化进程变化的 Langevin 推前映射精炼至高价值区域",
-          "精炼机制随优化视野 horizon 自适应调整探索-利用权衡",
-          "测试时模型参数固定，批量生成无需任务特定的替代模型重拟合，也无需数值采集函数优化"
-        ],
-        "motivation": "许多昂贵系统允许并行评估多个候选，但总评估轮数极少，因此批量构造质量直接决定优化效率。传统贝叶斯优化在批量增大时，批量选择流程（如采集函数联合优化或近似）变得越来越困难且计算昂贵，促使作者寻求一种离线摊销、可在测试时快速生成变规模批量的方法。",
-        "primary_topic": "批量黑盒优化中的摊销式上下文学习与流匹配生成",
-        "relation_to_research": "该论文属于黑盒优化的学习辅助求解方向，其摊销式上下文条件生成、离线训练后测试时固定参数、以及以历史为条件的批量候选生成机制，与智能优化中‘学习辅助搜索、进化算法与学习结合、减少在线优化开销’的思路有明确的迁移路径。推测：若要迁移到柔性作业车间、流水车间或分布式生产调度，需要将调度问题编码为可查询的黑盒或半黑盒目标，将历史调度解与评价作为条件输入，并验证生成的批量候选在满足工序、机器与运输约束下可解码为可行调度；这需要额外的可行性修复或约束处理机制，论文本身未涉及生产调度约束。",
-        "relevance_score": 6,
-        "setting": "研究问题是在昂贵的黑盒目标函数评估场景下进行批量黑盒优化：多候选点可并行评估，但可承受的评估轮数很少，因此每批需同时覆盖多个有前景区域并避免冗余评估。决策对象是每一轮生成的候选批量及其规模；优化目标是最大化有限轮次内的优化性能，关键约束是评估预算昂贵且轮数有限。信息假设为仅能观测黑盒函数的历史查询与评估结果，并以历史为条件进行决策。静态或动态环境材料未说明，但方法强调随优化进程（horizon）自适应调整探索-利用权衡，属于跨轮次的序列决策设定。",
-        "tags": [
-          "黑盒优化",
-          "批量优化",
-          "流匹配",
-          "Thompson采样",
-          "上下文学习",
-          "摊销优化",
-          "贝叶斯优化替代"
-        ],
-        "title_zh": "基于流匹配的上下文批量黑盒优化",
-        "uncertainty": "证据范围仅为标题与摘要，未提供全文；因此方法内部网络结构、训练细节、实验基线、计算预算与消融结果均无法核实，也无法确认其在约束可行性、动态扰动和多目标能效等生产调度关键维度上的表现。",
-        "why_recommended": "对关注 AI4OR 与学习辅助优化求解的研究者，本文提供了一个不同于强化学习智能体和贝叶斯优化的摊销式批量候选生成范式：离线学习历史条件提议分布、测试时无需在线采集优化，这一机制若能与约束处理和解码策略结合，可能用于昂贵评估下的生产调度与协同优化问题，因此具有中等程度的迁移参考价值。"
-      },
-      "figure_gallery": {
-        "checked_at": "2026-10-17T09:57:25.528971+08:00",
-        "figures": [
-          {
-            "caption": "Overview of FMTR and its positioning relative to related methods. FMTR directly models a query distribution for end-to-end batch selection. (Top) Pretraining and deployment with closed-loop rollouts for data generation.",
-            "label": "Figure 1",
-            "number": 1,
-            "panels": [
-              {
-                "cached_path": "figures/arxiv/2610.20138/v2/fig1-panel1.png",
-                "original_url": "https://arxiv.org/html/2610.20138v2/only_pre_inference_gist.png"
-              }
-            ],
-            "source": "arxiv_html",
-            "source_url": "https://arxiv.org/html/2610.20138v2#S1.F1"
-          },
-          {
-            "caption": "Experiments on synthetic functions. Log simple regret over 15 runs, shown as mean with 95% CI. The last column reports the average rank across dimensions for each function.",
-            "label": "Figure 2",
-            "number": 2,
-            "panels": [
-              {
-                "cached_path": "figures/arxiv/2610.20138/v2/fig2-panel1.png",
-                "original_url": "https://arxiv.org/html/2610.20138v2/figures/synthetics.png"
-              }
-            ],
-            "source": "arxiv_html",
-            "source_url": "https://arxiv.org/html/2610.20138v2#S5.F2"
-          }
-        ],
-        "html_url": "https://arxiv.org/html/2610.20138v2",
-        "status": "available"
-      },
-      "final_score": 0.5470992022193989,
-      "provenance": {
-        "analyzed_at": "2026-10-16T02:06:56.225626Z",
-        "input_hash": "92f6cc0349dc5ac0e6dc31a5cebe3fa3a66fd38e194e99336d00a7ca2c25f195",
-        "model": "deepseek-v4-flash",
-        "prompt_version": "optimization-analysis-v1",
-        "reading_scope": "abstract"
-      },
-      "ranked": {
-        "paper": {
-          "abstract": "Batch black-box optimization is important for expensive systems where many candidates can be evaluated in parallel, yet only a few rounds of evaluation are affordable. In this regime, effective batch construction must identify multiple promising regions while avoiding redundant evaluations, and conventional Bayesian optimization can require increasingly difficult batch-selection procedures as the batch size grows. We introduce Flow Matching for Thompson-Sampling Refinement (FMTR), an amortized approach that learns offline a continuous, history-conditioned proposal distribution from which variable-size batches can be sampled. FMTR is trained offline by conditional flow matching on Thompson-sampling argmaxes refined toward high-value regions via a horizon-dependent Langevin pushforward map, adapting the exploration-exploitation tradeoff over the optimization horizon. At test time, the model parameters remain fixed and batch generation requires neither task-specific surrogate refitting nor numerical acquisition optimization. FMTR achieves strong performance against batch BO and in-context baselines on synthetic and real-world benchmarks, while substantially reducing the computational cost of batch selection.",
-          "authors": [
-            "Quoc-Anh Hoang Nguyen",
-            "Xinyu Zhang",
-            "Daolang Huang",
-            "Julien Martinelli",
-            "Samuel Kaski"
-          ],
-          "canonical_id": "2610.20138",
-          "categories": [
-            "cs.LG"
-          ],
-          "comment": null,
-          "pdf_url": "https://arxiv.org/pdf/2610.20138",
-          "published_at": "2026-10-14T12:55:43Z",
-          "source": "arxiv",
-          "title": "In-Context Batch Black-box Optimization via Flow Matching",
-          "updated_at": "2026-10-15T07:32:52Z",
-          "url": "https://arxiv.org/abs/2610.20138",
-          "version": 2
-        },
-        "rank": 17,
-        "score": {
-          "base_score": 0.5038167313079979,
-          "exploration": 0.6913411119316436,
-          "matched_terms": [
-            "black-box optimization"
-          ],
-          "negative_terms": [],
-          "personal": 0.0,
-          "recency": 0.6429015458351933,
-          "topic": 0.4104998184077576
-        }
-      },
-      "tier": "browse"
     },
     {
       "analysis": {
@@ -1578,7 +523,7 @@
         "why_recommended": "对关注学习辅助搜索、多目标权衡、离线优化与公平计算预算的研究者有参考价值：其摊销偏好搜索与问题建模的思路或可启发将大模型/超网络先验用于生产调度中的偏好条件解生成，减少逐实例求解开销。但需注意该文未处理调度约束与动态扰动，属于可迁移的相邻工作而非直接同题工作。"
       },
       "figure_gallery": {
-        "checked_at": "2026-10-17T09:57:25.528971+08:00",
+        "checked_at": "2026-10-18T09:56:23.437252+08:00",
         "figures": [
           {
             "caption": "Comparison of offline preference-conditioned Pareto set learning paradigms. (a) The implicit approach performs preference-wise search over a problem-specific instance model. (b) The explicit approach trains a problem-specific MLP as the Pareto solution model through objective- or regression-based learning. (c) ICPSL uses a frozen foundation-style hypernetwork to generate an problem-specific MLP from offline observations in a single forward pass, which maps arbitrary preferences to solutions without problem-specific training or preference-wise search.",
@@ -1610,7 +555,7 @@
         "html_url": "https://arxiv.org/html/2610.21736v1",
         "status": "available"
       },
-      "final_score": 0.5331130598711511,
+      "final_score": 0.4871780720718193,
       "provenance": {
         "analyzed_at": "2026-10-16T02:06:17.828540Z",
         "input_hash": "d0c2353b879de2fc2b91a179e3cdaee7f334ff6b23c9fc6a9de08d2f0f4f209f",
@@ -1639,16 +584,16 @@
           "url": "https://arxiv.org/abs/2610.21736",
           "version": 1
         },
-        "rank": 19,
+        "rank": 16,
         "score": {
-          "base_score": 0.47838738158391103,
-          "exploration": 0.4929951778777115,
+          "base_score": 0.3948692219487623,
+          "exploration": 0.1823745139247224,
           "matched_terms": [
             "multi-objective optimization"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.6728023927519786,
+          "recency": 0.5240731787116502,
           "topic": 0.41866657945194863
         }
       },
@@ -1732,7 +677,7 @@
         "why_recommended": "对关注约束多目标优化、数学规划与学习辅助搜索结合的研究者，该工作提供了区别于进化算法和标量化的确定性KKT点计算方法，其延拓路径思想、自适应步长与分支重启机制或可启发混合求解器设计，且作者明确讨论了初始化敏感与Pareto前沿覆盖局限，有助于评估其在生产调度等约束优化中的潜在适用边界。"
       },
       "figure_gallery": {
-        "checked_at": "2026-10-17T09:57:25.528971+08:00",
+        "checked_at": "2026-10-18T09:56:23.437252+08:00",
         "figures": [
           {
             "caption": "Example 1 : Approximation of the feasible objective-space region. Blue points in the left panel represent 200,000 200{,}000 uniformly sampled diagnostic points from the hypercube [ − 5 , 5 ] 5 [-5,5]^{5} ; while golden points denote 20,000 20{,}000 feasible candidate solutions obtained by projecting onto the constraint set. The right panel shows only the projected feasible candidates Pareto-critical solutions obtained by the different MOO methods are compared separately in Fig. 2 .",
@@ -1764,7 +709,7 @@
         "html_url": "https://arxiv.org/html/2605.00003v2",
         "status": "available"
       },
-      "final_score": 0.4971368904190826,
+      "final_score": 0.4755562517672384,
       "provenance": {
         "analyzed_at": "2026-10-16T02:07:34.669641Z",
         "input_hash": "cb8edf1dcfb4cbfeabcfb88182500249ec67a9a530bf19cc30e0f0cdff2a7100",
@@ -1796,16 +741,16 @@
           "url": "https://arxiv.org/abs/2605.00003",
           "version": 2
         },
-        "rank": 37,
+        "rank": 23,
         "score": {
-          "base_score": 0.4129761643983319,
-          "exploration": 0.5087408687539775,
+          "base_score": 0.3737386395767971,
+          "exploration": 0.4278018249775292,
           "matched_terms": [
             "multiobjective optimization"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.6100958139690696,
+          "recency": 0.47522847122707645,
           "topic": 0.3292949204193652
         }
       },
@@ -1877,12 +822,12 @@
         "why_recommended": "该工作关注真实数据中的错误诊断，而非理想化输入，补充了AI4OR中常被忽略的鲁棒性维度。其自引导代码生成思路为学习辅助搜索和自动建模提供了一种可借鉴的机制，尤其对处理柔性作业车间、分布式制造等场景中的实例异常和约束校验有潜在启发。"
       },
       "figure_gallery": {
-        "checked_at": "2026-10-16T10:03:08.977461+08:00",
+        "checked_at": "2026-10-18T09:56:23.437252+08:00",
         "figures": [],
         "html_url": "https://arxiv.org/html/2610.21393v1",
         "status": "not_found"
       },
-      "final_score": 0.45931474132691963,
+      "final_score": 0.4500323386146179,
       "provenance": {
         "analyzed_at": "2026-10-16T02:07:14.238197Z",
         "input_hash": "bfb658fd5f408ed5564fa5293b3acaf8c58651c2777d522a9a56f9a128738522",
@@ -1913,312 +858,39 @@
           "url": "https://arxiv.org/abs/2610.21393",
           "version": 1
         },
-        "rank": 39,
+        "rank": 21,
         "score": {
-          "base_score": 0.34420862059439933,
-          "exploration": 0.335340307967515,
+          "base_score": 0.3273315247538506,
+          "exploration": 0.3840442935992253,
           "matched_terms": [
             "vehicle routing"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.6402265098838921,
+          "recency": 0.49869849712916353,
           "topic": 0.26216588440508265
         }
       },
       "tier": "browse"
-    },
-    {
-      "analysis": {
-        "analysis": "作者通过比较“预加载最优根LP支撑列”与“预填充普通路径池”两种策略在根节点上的完成情况，识别出初始列对偶偏置并非决定性的障碍。作者将初始列池的设计目标从逼近最优解重新定义为提供有效定价支撑，从而把问题结构转化为可由神经网络学习的构造任务；平滑中心则被视为可从实例文件直接回归的量，从而在不干预求解器更新规则的前提下影响平滑定价查询方向。为应对精确定价成为根节点瓶颈的新局面，作者围绕主导性测试重构桶图标签算法以利用GPU，同时保留CPU认证。",
-        "challenges": [
-          "经典观点认为初始列会偏置对偶并拖慢根节点，需要重新审视并给出反例条件下的机制解释",
-          "预加载真正最优根LP支撑列在大量最难实例上反而失败，说明构造有效列池与构造最优列池不是同一目标",
-          "列池须置于主问题之外并按当前平滑对偶定价，需要与既有定价流程正确对接",
-          "Wentges平滑初始中心的选取影响平滑定价查询方向，如何从实例文件直接预测而不改变求解器更新是难点",
-          "在原分支定价割框架下重写GPU桶图标签算法并保证CPU认证一致性，涉及精确性与工程可行性",
-          "在非相关并行机调度这一完全不同问题上验证迁移能力"
-        ],
-        "corresponding_authors": [
-          "证据未提供"
-        ],
-        "evidence": [
-          {
-            "claim": "预加载最优根LP支撑列在一半最难实例上失败，而普通路径池能加速根节点",
-            "location": "abstract",
-            "quote": "Preloading the support of the optimal root LP, the best columns one could know in advance, fails to finish on half of our hardest instances; a pool of ordinary routes that need not belong to any optimal solution, held outside the master and priced at the current smoothed dual, speeds the root up."
-          },
-          {
-            "claim": "第二个网络从实例文件预测Wentges平滑的初始中心，决定平滑定价查询方向，且不改变求解器自身更新",
-            "location": "abstract",
-            "quote": "A second network predicts the initial center of Wentges smoothing from the instance file, and with it the direction of the smoothed pricing queries; the solver's own updates run unchanged."
-          },
-          {
-            "claim": "围绕主导性测试重构桶图标签算法以适配GPU并在CPU上认证",
-            "location": "abstract",
-            "quote": "With prefill and center in place, exact pricing dominates root pricing time, so we rebuild bucket-graph labeling around its dominance test for the GPU and certify on the CPU."
-          },
-          {
-            "claim": "在RouteOpt中，流水线达到相同认证根界所需根定价时间为原始RouteOpt的13.2%，仅预填充为26.1%，最佳加速17.5倍",
-            "location": "abstract",
-            "quote": "Inside RouteOpt, the state-of-the-art exact solver for capacitated vehicle routing, the pipeline reaches the same certified root bound in 13.2% of vanilla RouteOpt's root pricing time over 95 instances with 300 to 1000 customers, prefill alone in 26.1%, and 17.5 times faster in the best case."
-          },
-          {
-            "claim": "在非相关并行机调度求解器中，方法认证全部25个基准实例，比求解器自身列生成快12倍，后者仅认证20个",
-            "location": "abstract",
-            "quote": "In an exact branch-price-and-cut solver for unrelated parallel machine scheduling, prefill with smoothing and the learned center certifies all 25 benchmark instances, 12 times faster than the solver's own column generation, which certifies 20 of them."
-          },
-          {
-            "claim": "列池构造因不要求最优而成为学习任务，由神经边评分器引导构造式生成器在数秒内完成",
-            "location": "abstract",
-            "quote": "Because the columns need not be optimal, producing them becomes a learning task: a neural edge scorer guides a constructive generator that builds the pool in seconds."
-          }
-        ],
-        "experiments": [
-          "在95个客户规模从300到1000的实例上，流水线在RouteOpt中达到相同认证根界所需根定价时间为原始RouteOpt的13.2%",
-          "仅预填充即可达到原始RouteOpt根定价时间的26.1%",
-          "最佳情况下加速达17.5倍",
-          "预填充最优根LP支撑列的策略在一半最难实例上无法完成",
-          "在非相关并行机调度的精确分支定价割求解器中，结合预填充、平滑和学习中心的方法认证了全部25个基准实例，比求解器自身列生成快12倍，而后者仅认证了20个实例",
-          "公平计算预算、训练开销、消融实验和泛化性细节在摘要中未提供"
-        ],
-        "first_affiliation": "证据未提供",
-        "insight": "贡献的有效性不在于堆叠模块，而在于把“初始列必须接近最优”的先验放松为“初始列只需为定价查询提供有用支撑”。预加载最优根LP的支撑列（即理论上最好的列）反而在多数最难实例上无法完成，而一个不一定属于任何最优解的普通路径池，在被放置在主问题之外、按当前平滑对偶定价时，能加速根节点。这使得列池构造从需要最优信息的难题转变为可由神经边评分器在数秒内完成的学习任务；同时平滑中心的选取被转化为可从实例文件直接回归的问题，且不改变求解器自身对偶更新，从而维持了精确认证性质。",
-        "limitations": [
-          "材料未说明"
-        ],
-        "method": [
-          "预填充策略：将普通路径组成的列池置于主问题之外，定价时使用当前平滑对偶价格，而非要求列属于最优解",
-          "神经边评分器：作为学习组件引导构造式生成器在数秒内构建列池",
-          "第二网络：从实例文件预测Wentges平滑的初始中心，从而确定平滑定价查询的方向，求解器自身更新保持不变",
-          "精确定价重构：在预填充和中心就位后，精确定价主导根定价时间，围绕其主导性测试重构桶图标签算法以适配GPU，并在CPU上完成认证",
-          "集成到RouteOpt（容量约束车辆路径问题的先进精确求解器）中的流水线"
-        ],
-        "motivation": "列生成的经典经验认为热启动（初始列）会偏置对偶并拖慢分支定价割的根节点。作者试图挑战这一民间经验，探索在列以“正确的不完美方式”预先加载时是否反而能加速根节点求解，并把“构造合适初始列池”从依赖最优解的难题转化为可学习任务。",
-        "primary_topic": "分支定价割列生成中的学习辅助初始列池构建与Wentges平滑中心预测",
-        "relation_to_research": "论文直接研究精确分支定价割求解器中的列生成加速，属于人工智能驱动运筹优化（AI4OR）中的学习辅助搜索方向。其核心机制——用神经网络从实例文件预测平滑中心、用神经边评分器构造初始列池、并与精确定价和认证流程耦合——可迁移到生产调度问题（如柔性作业车间、流水车间、分布式制造）的精确求解器中，用以构造初始列或割池、预测对偶平滑参数。迁移设想：若要迁移到FJSP或流水车间的分支定价割，需要将边评分器的图表示从车辆路径的边结构替换为调度问题的析取图或时间-机器网络表示，并验证预填充列池在该结构下同样不要求最优且能按平滑对偶定价；这属于推测，尚需实验验证。论文本身在非相关并行机调度上给出了初步迁移证据，但未涉及柔性作业车间或流水车间。",
-        "relevance_score": 8,
-        "setting": "论文研究精确分支定价割（branch-price-and-cut, BPC）求解器中根节点列生成过程的加速问题。决策对象是初始列池的构造以及Wentges对偶平滑的初始中心选取；目标是在保持认证根界（certified root bound）不变的前提下压缩根定价时间。关键约束包括：预填充列不要求属于任何最优解、列在定价时按当前平滑对偶价格定价、求解器自身的对偶更新保持不变并在CPU上完成认证。信息假设为仅从实例文件读取信息，由网络预测初始中心。环境为静态确定性优化环境，动态扰动未涉及。",
-        "tags": [
-          "分支定价割",
-          "列生成",
-          "列预填充",
-          "神经边评分器",
-          "Wentges平滑",
-          "GPU标签算法",
-          "车辆路径问题",
-          "非相关并行机调度"
-        ],
-        "title_zh": "不完美即完美：面向分支定价割的学习式列预填充",
-        "uncertainty": "证据范围仅为标题和摘要，未提供全文，因此无法核实网络架构细节、训练数据来源、训练开销、消融实验结果、公平计算预算的具体设定以及方法在更多问题类型上的泛化性。作者单位、通讯作者和代码地址均未提供。相关性评分为8，基于其方法机制与学习辅助精确求解和调度问题迁移路径的明确性，但缺乏全文细节可能影响对其技术深度和可复现性的判断。",
-        "why_recommended": "该论文对关注学习辅助精确求解、列生成加速和AI4OR的研究者有直接价值。它提出了一个反直觉但机制清晰的洞察：初始列只需按平滑对偶定价提供支撑，而不必接近最优；这为设计学习式初始列池提供了理论动机。方法上与精确定价、GPU标签算法和CPU认证的结合方式，对研究公平计算预算下的求解质量与可认证性具有参考意义。作者在容量车辆路径问题和无关并行机调度两个不同问题上的验证，为跨问题迁移提供了可借鉴的实验范式。"
-      },
-      "figure_gallery": {
-        "checked_at": "2026-10-16T10:03:08.977461+08:00",
-        "figures": [],
-        "html_url": "https://arxiv.org/html/2610.21001v1",
-        "status": "not_found"
-      },
-      "final_score": 0.6062954448098198,
-      "provenance": {
-        "analyzed_at": "2026-10-16T02:07:40.836069Z",
-        "input_hash": "b7117547d038104249f7960557c129e39decded7192dad72b8f5726748d1ad95",
-        "model": "deepseek-v4-flash",
-        "prompt_version": "optimization-analysis-v1",
-        "reading_scope": "abstract"
-      },
-      "ranked": {
-        "paper": {
-          "abstract": "Column generation folklore warns that initial columns hurt: a warm start may bias the dual and slow the root of branch-price-and-cut. We show the opposite once the columns are imperfect in the right way. Preloading the support of the optimal root LP, the best columns one could know in advance, fails to finish on half of our hardest instances; a pool of ordinary routes that need not belong to any optimal solution, held outside the master and priced at the current smoothed dual, speeds the root up. Because the columns need not be optimal, producing them becomes a learning task: a neural edge scorer guides a constructive generator that builds the pool in seconds. A second network predicts the initial center of Wentges smoothing from the instance file, and with it the direction of the smoothed pricing queries; the solver's own updates run unchanged. With prefill and center in place, exact pricing dominates root pricing time, so we rebuild bucket-graph labeling around its dominance test for the GPU and certify on the CPU. Inside RouteOpt, the state-of-the-art exact solver for capacitated vehicle routing, the pipeline reaches the same certified root bound in 13.2% of vanilla RouteOpt's root pricing time over 95 instances with 300 to 1000 customers, prefill alone in 26.1%, and 17.5 times faster in the best case. In an exact branch-price-and-cut solver for unrelated parallel machine scheduling, prefill with smoothing and the learned center certifies all 25 benchmark instances, 12 times faster than the solver's own column generation, which certifies 20 of them.",
-          "authors": [
-            "Haoran Liu",
-            "Yu Yang"
-          ],
-          "canonical_id": "2610.21001",
-          "categories": [
-            "cs.LG"
-          ],
-          "comment": "27 pages, 3 figures",
-          "pdf_url": "https://arxiv.org/pdf/2610.21001",
-          "published_at": "2026-10-14T22:38:41Z",
-          "source": "arxiv",
-          "title": "Imperfect Is Perfect: Learned Column Prefilling for Branch-Price-and-Cut",
-          "updated_at": "2026-10-14T22:38:41Z",
-          "url": "https://arxiv.org/abs/2610.21001",
-          "version": 1
-        },
-        "rank": 36,
-        "score": {
-          "base_score": 0.44780989965421764,
-          "exploration": 0.8794499438904021,
-          "matched_terms": [
-            "vehicle routing"
-          ],
-          "negative_terms": [],
-          "personal": 0.0,
-          "recency": 0.585959944754738,
-          "topic": 0.2850127312723018
-        }
-      },
-      "tier": "explore"
-    },
-    {
-      "analysis": {
-        "analysis": "材料未说明作者如何具体分析问题结构，但摘要表明其核心思路是利用问题的两阶段分解：先通过学习协调在少量消息交换下产生局部可行调度，再基于已接收消息推断承诺偏差估计并在本地将调度向可行灵活性极值调整，从而将可行性与承诺跟踪分别交由两个阶段处理。",
-        "challenges": [
-          "在完全去中心化且通信轮次有限的条件下协调多智能体同时满足聚合承诺",
-          "保证每个智能体的局部可行性，避免学习型方法常见的不可行解",
-          "在少量通信轮次内高效缩小聚合承诺偏差并改善最优性",
-          "在无额外通信的前提下进行本地调整以进一步改善承诺跟踪"
-        ],
-        "corresponding_authors": [
-          "证据未提供"
-        ],
-        "evidence": [
-          {
-            "claim": "论文提出一个完全去中心化的学习框架，在构造上保证局部可行性并降低聚合承诺偏差。",
-            "location": "abstract",
-            "quote": "This paper proposes LOOP-MAC (Learning to Optimize the Optimization Process for Multi-Agent Coordination), a fully decentralized learning-based framework that ensures local feasibility by construction while efficiently reducing the aggregate commitment gap."
-          },
-          {
-            "claim": "论文采用两阶段决策过程，第一阶段使用配备gauge layer的神经优化器通过少量消息交换产生局部可行调度，第二阶段利用承诺偏差估计进行本地调整。",
-            "location": "abstract",
-            "quote": "LOOP-MAC employs a two-stage decision process. Learned coordination uses neural optimizers equipped with a gauge layer to produce locally feasible schedules through a few rounds of message exchange. Local adjustment then rebalances each schedule toward feasible flexibility extremes using a commitment-gap estimate inferred from messages already received."
-          },
-          {
-            "claim": "本地调整后的调度作为可行调度的凸组合保持局部可行性，且不需要额外通信轮次。",
-            "location": "abstract",
-            "quote": "The adjusted schedule remains locally feasible as a convex combination of feasible schedules, and the adjustment requires no additional communication round."
-          },
-          {
-            "claim": "在100智能体VPP上，五轮通信加本地调整将平均承诺偏差从5.1%降至0.75%，最优性差距从3.93%降至3.07%。",
-            "location": "abstract",
-            "quote": "On a 100-agent VPP, five communication rounds followed by local adjustment reduce the mean commitment gap from 5.1% to 0.75% of the agents' aggregate absolute power and the optimality gap from 3.93% to 3.07% relative to learned coordination alone."
-          },
-          {
-            "claim": "每个智能体的在线计算时间约为1.1毫秒，包含调整步骤。",
-            "location": "abstract",
-            "quote": "Per-agent online computation takes approximately 1.1 ms, including the adjustment."
-          }
-        ],
-        "experiments": [
-          "在100个智能体的VPP上评估：五轮通信加本地调整将平均承诺偏差从5.1%降至智能体聚合绝对功率的0.75%，将最优性差距从3.93%降至3.07%（相对于仅使用学习协调）。",
-          "每个智能体的在线计算时间约为1.1毫秒，包含调整步骤。"
-        ],
-        "first_affiliation": "证据未提供",
-        "insight": "贡献的有效性源于将可行性保证内嵌到决策过程的结构中，而非依赖事后修复或惩罚项。两阶段设计使第一阶段学习协调在少量消息交换后即可输出局部可行的调度，第二阶段利用已接收消息推断承诺偏差估计，将调度向可行的灵活性极值重新平衡；由于调整后的调度是可行调度的凸组合，局部可行性在构造上得以保持，且该调整无需额外通信轮次，从而在有限通信预算下同时兼顾可行性与承诺跟踪精度。",
-        "limitations": [
-          "材料未说明"
-        ],
-        "method": [
-          "提出LOOP-MAC（Learning to Optimize the Optimization Process for Multi-Agent Coordination）完全去中心化学习框架，保证构造上的局部可行性并高效降低聚合承诺偏差。",
-          "采用两阶段决策过程：第一阶段为学习协调，使用配备gauge layer的神经优化器，通过少量轮次的消息交换产生局部可行的调度方案。",
-          "第二阶段为本地调整，利用从已接收消息推断出的承诺偏差估计，将各调度向可行的灵活性极值重新平衡。",
-          "调整后的调度作为可行调度的凸组合保持局部可行性，且调整过程不需要额外的通信轮次。"
-        ],
-        "motivation": "聚合DER到单一可调度资源的VPP需要多智能体协同调度，但经典分布式优化计算密集，需要迭代本地优化与反复通信才能达成共识；基于学习的方法虽可加速协同，却往往缺乏局部可行性保证和准确的承诺跟踪。因此需要一种既保证局部可行性、又能高效缩小聚合承诺偏差的完全去中心化学习框架。",
-        "primary_topic": "虚拟电厂中基于学习的多智能体分布式协同调度",
-        "relation_to_research": "该论文面向虚拟电厂中多智能体协同调度，与智能优化、生产调度和AI4OR在方法上有明确相邻性：其两阶段设计——学习协调产生可行解、再利用本地信息进行无需通信的调整——与柔性作业车间、流水车间等生产调度中学习辅助搜索与可行性修复的思路可类比。论文事实是：作者在VPP场景中验证了有限通信轮次下的承诺跟踪与局部可行性保证。迁移设想（推测）：将其神经优化器与gauge layer、本地凸组合调整机制迁移到生产调度问题，需要满足条件包括定义一个可凸组合的可行调度表示、存在可从已有信息中估计的全局偏差或目标差距信号，以及问题允许将全局协同分解为本地调整；通信轮次与动态扰动下的表现是否同样有效，材料未提供证据。",
-        "relevance_score": 6,
-        "setting": "研究问题为将大量分布式能源资源（DERs）聚合为单一可调度资源的虚拟电厂（VPP）中，多个智能体各自管理本地DER模型与运行约束，需要在有限通信轮次内协同满足一个聚合功率承诺（commitment）。决策对象为各智能体的本地调度方案，目标是在保证局部可行性（local feasibility）的同时最小化聚合承诺偏差（commitment gap）并提升最优性。关键约束包括各智能体本地运行约束以及有限的通信轮次预算。信息假设为完全去中心化（fully decentralized），智能体仅通过有限的消息交换获取信息。环境为静态调度场景，摘要未提及动态扰动。",
-        "tags": [
-          "虚拟电厂",
-          "多智能体协同",
-          "分布式优化",
-          "学习优化",
-          "局部可行性保证",
-          "神经优化器",
-          "通信受限"
-        ],
-        "title_zh": "LOOP-MAC：虚拟电厂中具有局部可行性保证的基于学习多智能体协同",
-        "uncertainty": "证据仅来自标题与摘要，未提供全文，因此无法确认网络结构细节、训练方式、基线设置、消融实验、公平计算预算比较、泛化验证与作者明确陈述的局限；方法对生产调度问题的迁移可行性属于推测，未经作者验证。",
-        "why_recommended": "该论文展示了一种在有限通信轮次下兼顾局部可行性与全局目标跟踪的两阶段学习框架，其“学习协调+本地凸组合调整”的机制对生产调度中的学习辅助搜索、约束可行性与通信受限协同具有方法迁移价值；同时其在100智能体规模上的承诺偏差与最优性差距评估、明确的在线计算时间报告，符合对算法机制、约束可行性与计算预算的关注。"
-      },
-      "figure_gallery": {
-        "checked_at": "2026-10-17T09:57:25.528971+08:00",
-        "figures": [
-          {
-            "caption": "LOOP-MAC: a fully decentralized learning-based framework for VPP commitment delivery. Agents coordinate through a few rounds of message exchange and then decide locally, so every schedule is locally feasible by construction and the aggregate commitment gap stays small.",
-            "label": "Figure 1",
-            "number": 1,
-            "panels": [
-              {
-                "cached_path": "figures/arxiv/2310.17882/v3/fig1-panel1.png",
-                "original_url": "https://arxiv.org/html/2310.17882v3/Picture1.png"
-              }
-            ],
-            "source": "arxiv_html",
-            "source_url": "https://arxiv.org/html/2310.17882v3#S1.F1"
-          }
-        ],
-        "html_url": "https://arxiv.org/html/2310.17882v3",
-        "status": "available"
-      },
-      "final_score": 0.5685627761663354,
-      "provenance": {
-        "analyzed_at": "2026-10-16T02:07:25.736885Z",
-        "input_hash": "df779de0b6076601dd6b425c1c6b78c8da176085d80827dc8938ede4c4ff7bcb",
-        "model": "deepseek-v4-flash",
-        "prompt_version": "optimization-analysis-v1",
-        "reading_scope": "abstract"
-      },
-      "ranked": {
-        "paper": {
-          "abstract": "By aggregating distributed energy resources (DERs) into a single dispatchable resource, virtual power plants (VPPs) enable the grid to use the flexibility of numerous small-scale DERs. Delivering an aggregate VPP commitment requires multi-agent coordination, where agents manage local DER models and operating constraints while jointly meeting a power commitment within limited communication rounds. Classical distributed optimization is computationally intensive, requiring iterative local optimization and repeated communication to reach consensus. Learning-based methods can accelerate coordination but often lack guarantees of local feasibility and accurate commitment tracking. This paper proposes LOOP-MAC (Learning to Optimize the Optimization Process for Multi-Agent Coordination), a fully decentralized learning-based framework that ensures local feasibility by construction while efficiently reducing the aggregate commitment gap. LOOP-MAC employs a two-stage decision process. Learned coordination uses neural optimizers equipped with a gauge layer to produce locally feasible schedules through a few rounds of message exchange. Local adjustment then rebalances each schedule toward feasible flexibility extremes using a commitment-gap estimate inferred from messages already received. The adjusted schedule remains locally feasible as a convex combination of feasible schedules, and the adjustment requires no additional communication round. On a 100-agent VPP, five communication rounds followed by local adjustment reduce the mean commitment gap from 5.1% to 0.75% of the agents' aggregate absolute power and the optimality gap from 3.93% to 3.07% relative to learned coordination alone. Per-agent online computation takes approximately 1.1 ms, including the adjustment.",
-          "authors": [
-            "Meiyi Li",
-            "Lucas Ruda",
-            "Javad Mohammadi"
-          ],
-          "canonical_id": "2310.17882",
-          "categories": [
-            "cs.LG",
-            "cs.SY",
-            "eess.SY"
-          ],
-          "comment": null,
-          "pdf_url": "https://arxiv.org/pdf/2310.17882",
-          "published_at": "2023-10-27T04:11:13Z",
-          "source": "arxiv",
-          "title": "LOOP-MAC: Learning-Based Multi-Agent Coordination with Guaranteed Local Feasibility in a Virtual Power Plant",
-          "updated_at": "2026-10-14T04:39:31Z",
-          "url": "https://arxiv.org/abs/2310.17882",
-          "version": 3
-        },
-        "rank": 16,
-        "score": {
-          "base_score": 0.542841411211519,
-          "exploration": 0.7764975883213849,
-          "matched_terms": [
-            "learning to optimize",
-            "multi-agent"
-          ],
-          "negative_terms": [],
-          "personal": 0.0,
-          "recency": 0.4858481417343928,
-          "topic": 0.49236629474502186
-        }
-      },
-      "tier": "explore"
     }
   ],
   "schema_version": 1,
   "stats": {
-    "cache_hits": 38,
-    "deduplicated": 1903,
-    "failed": 0,
-    "fetched": 1903,
-    "figure_available": 8,
-    "figure_cache_hits": 10,
+    "cache_hits": 20,
+    "deduplicated": 789,
+    "failed": 2,
+    "fetched": 789,
+    "figure_available": 3,
+    "figure_cache_hits": 5,
     "figure_failed": 0,
     "figure_panel_failed": 0,
-    "figure_requests": 17,
+    "figure_requests": 6,
     "full_text_reads": 10,
-    "input_tokens": 56531,
-    "model_calls": 9,
-    "output_tokens": 23991,
-    "preselected": 47,
-    "published": 15,
+    "input_tokens": 45538,
+    "model_calls": 5,
+    "output_tokens": 22928,
+    "preselected": 25,
+    "published": 6,
     "source_lookback_days": 3
   }
 }
