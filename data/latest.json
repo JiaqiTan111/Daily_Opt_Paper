@@ -1,874 +1,1022 @@
 {
   "dry_run": false,
-  "generated_at": "2026-10-18T09:56:23.437252+08:00",
+  "generated_at": "2026-10-19T10:13:31.534659+08:00",
   "papers": [
     {
       "analysis": {
-        "analysis": "作者先通过多项式等价把冲突图约束映射为资源受限作业车间问题，据此刻画复杂性边界：两机单元时间仍强NP难；在两机两单元工序且冲突图为任意图时给出多项式4/3近似算法；在冲突图为簇图且给定团划分时给出最优makespan公式与线性时间算法。对一般问题，作者构建四个MILP公式与下界以提供精确基准和解质量参照，并设计带主动、非延迟与混合解码的遗传算法，用相对百分比偏差RPD与统计检验比较启发式表现。",
+        "analysis": "作者将B&B的两个关键决策统一表示为一个可执行策略，用SCIP端到端求解反馈作为适应度信号，从而把策略设计转化为程序演化问题；针对联合搜索中的行为冗余，作者提出在一组固定的B&B决策状态上测量策略的分支行为与节点选择行为相似度，并以此指导多岛种群的多样性保持与跨岛信息交换，配合选择性参数优化降低搜索成本。材料未说明更细的理论分析（如下界或收敛性分析）。",
         "challenges": [
-          "即使两台机器且工序时间为1，问题仍强NP难，精确求解困难",
-          "一般冲突图下缺乏多项式可解性，需要近似算法与下界",
-          "在有限计算预算下，构造性启发式对实例结构敏感、解质量不稳定",
-          "遗传算法染色体需满足每个作业出现m_j次的可行性约束，交叉易产生不可行后代",
-          "非延迟调度解码可能排除最优调度，需在解空间覆盖与计算效率间权衡"
+          "分支与节点选择紧密耦合，分开学习再组合难以刻画交互",
+          "联合策略搜索空间大，端到端求解评估开销高",
+          "演化过程中大量策略行为相似，造成冗余评估与种群同质化",
+          "需在多个基准与不同实例规模上保持求解性能与向更大规模实例的泛化",
+          "LLM生成的策略必须是可执行且能在求解器中实际运行的代码"
         ],
         "corresponding_authors": [
-          "证据未提供"
+          "Jialong Shi"
         ],
         "evidence": [
           {
-            "claim": "论文研究带冲突图约束的作业车间调度并最小化makespan",
+            "claim": "论文联合演化分支与节点选择策略，并用SCIP端到端求解反馈驱动",
             "location": "abstract",
-            "quote": "We study the job shop scheduling problem with a conflict graph, in which adjacent jobs cannot be processed simultaneously on different machines, with the objective of minimizing the makespan."
+            "quote": "We propose Evo-B&B, an LLM-guided evolutionary framework that jointly evolves executable branching and node selection policies using end-to-end SCIP solving feedback."
           },
           {
-            "claim": "问题在两机单元时间下仍强NP难",
+            "claim": "通过固定B&B决策状态上的行为相似度维护种群多样性以减少冗余评估",
             "location": "abstract",
-            "quote": "The problem is strongly NP-hard even on two machines with unit-time operations."
+            "quote": "It measures policy similarity from branching and node-selection behaviors on a fixed set of B&B decision states and uses this similarity to preserve population diversity."
           },
           {
-            "claim": "冲突图约束被等价为容量1、二值需求的资源受限作业车间问题",
-            "location": "abstract",
-            "quote": "We establish a polynomial equivalence with a resource-constrained job shop problem having unit-capacity resources and binary resource requirements"
-          },
-          {
-            "claim": "一般问题提出四个MILP公式、下界与带主动/非延迟/混合解码的遗传算法",
-            "location": "abstract",
-            "quote": "we propose four mixed-integer linear formulations, lower bounds, and a genetic algorithm with active, non-delay, and hybrid decoding procedures"
-          },
-          {
-            "claim": "遗传算法总体优于构造性启发式",
-            "location": "abstract",
-            "quote": "show that the genetic algorithm generally improves on constructive heuristics"
-          },
-          {
-            "claim": "染色体以作业索引序列表示且每个作业出现相应次数",
+            "claim": "分开优化再组合不如联合演化，说明两决策耦合重要",
             "location": "supplied_full_text",
-            "quote": "the number of occurrences of a job index\nk\nk\nin a chromosome differs from the required value\nm\nk\nm_{k}"
+            "quote": "Independent Node+Branch underperforms joint evolution in all settings, indicating that optimizing branching and node-selection policies separately and then combining them cannot fully exploit the coupling between the two decisions in B&B search."
+          },
+          {
+            "claim": "作者明确未来需降低演化搜索成本并提升泛化",
+            "location": "supplied_full_text",
+            "quote": "Future work will extend the framework to additional solver components and explore more efficient policy evaluation and migration mechanisms to reduce evolutionary search cost and improve generalization."
           }
         ],
         "experiments": [
-          "以Lawrence、Taillard派生实例和随机广义作业车间实例评估MILP、下界与遗传算法；摘要称遗传算法总体上优于构造性启发式",
-          "表9报告混合解码参数p_active在0.0至1.0下的平均makespan：如在p=0.5、Taillard派生实例上，p_active=0.5取得8353.5，优于p_active=0.0的8368.9和p_active=1.0的8745.7；p_active=0.5附近总体表现较好",
-          "表17显示GA与GA_h在多个基准与密度组合上相对构造性启发式H的RPD差异显著（如All benchmarks、p=0.5时Friedman p=1.7e-55），GA与GA_h之间多数比较不显著（如Lawrence p=0.2时p=0.4540、Taillard p=0.5时p=0.5617）",
-          "箱线图显示H在低密度p=0.2时中位数更高、四分位距更宽；高密度p=0.8时各方法RPD集中在接近零的窄带",
-          "未提供MILP规模可解性、与CPLEX最优值的系统性差距、训练或运行时间对比的完整数据；材料未说明"
+          "在四个标准MILP基准、多个实例规模上评估，报告平均求解时间与Wins等指标",
+          "结果显示Evo-B&B在全部四种实验设置下取得最低平均求解时间与最高Wins",
+          "与Node only、Branch only、Independent Node+Branch对比，独立优化再组合在所有设置下均劣于联合演化，说明分开优化无法充分利用两决策的耦合",
+          "消融实验验证行为感知多样性管理与联合演化的有效性",
+          "摘要称对更大规模实例具有较好泛化；材料未给出具体数值、训练开销与公平计算预算的细节"
         ],
-        "first_affiliation": "University of Fribourg（Decision Support & Operations Research Group, Department of Informatics）；证据来自全文节选作者地址",
-        "insight": "核心洞察在于把冲突图约束等价转化为容量为1、需求为二值资源的资源受限作业车间问题：冲突图上相邻作业占用的“同时在制”名额被建模为单位容量资源，从而使冲突结构可以用资源约束语言统一处理，并据此识别出能精确求解或获得常数近似比的图结构特例（簇图、两机两工序单元时间）。这一等价使复杂性刻画、最优makespan公式与MILP建模共享同一结构基础。",
+        "first_affiliation": "西安交通大学数学与统计学院",
+        "insight": "贡献的有效性来自两点结构性认识：其一，分支与节点选择应在同一可执行策略中联合演化，使端到端求解反馈能够同时塑造两者并利用其耦合；其二，策略的“相似”不应只看程序文本或参数，而应看其在固定B&B决策状态集上表现出的分支与节点选择行为，用行为相似度维护多种群多样性可以避免对行为等价策略的重复评估，把有限评估预算投向真正不同的搜索行为。",
         "limitations": [
-          "材料未说明（节选未给出作者明确陈述的局限）"
+          "作者在结论中明确未来需把框架扩展到更多求解器组件",
+          "作者明确指出现有策略评估与迁移机制仍需更高效，以降低演化搜索成本并提升泛化"
         ],
         "method": [
-          "多项式等价：将JSC归约为容量为1、需求为二值的资源受限作业车间问题",
-          "特例精确算法：簇图（给定团划分）下推导最优makespan公式与线性时间算法",
-          "近似算法：两机、每作业两个单元时间工序、任意冲突图下的4/3近似算法",
-          "建立四个混合整数线性规划公式并推导下界",
-          "遗传算法：染色体为作业索引序列，每个作业索引出现m_k次；采用基于掩码的交叉、插入式变异与修复过程，将多余作业索引替换为缺失索引以恢复可行性",
-          "解码：主动解码、非延迟解码及以概率p_active混合两种评估的混合解码策略，影响调度集合与计算开销",
-          "实验设计：Lawrence与Taillard基准派生的实例及随机广义作业车间实例；CPLEX 22.1.1求解MILP，单实例1小时时限；GA种群100、交叉概率0.8、变异概率0.2、最多1000代；用RPD、Friedman检验与Bonferroni校正的Wilcoxon符号秩检验比较"
+          "将分支策略与节点选择策略统一为一个可执行策略程序，由LLM在演化循环中生成与改进",
+          "以端到端SCIP求解反馈（求解表现）作为策略评估与选择信号",
+          "行为感知多岛进化机制：在固定B&B决策状态集上采集策略的分支与节点选择行为，计算策略间相似度",
+          "利用行为相似度维护各种群多样性，减少对行为相似策略的冗余评估",
+          "跨岛信息交换（迁移）以共享优质策略信息",
+          "选择性参数优化以进一步调整策略参数",
+          "消融对比联合演化与仅分支、仅节点、独立节点+分支等变体"
         ],
-        "motivation": "冲突约束（如作业共享资源而不能并行）在半导体、汽车、冶金等制造场景中自然出现，但经典作业车间模型未刻画此类作业间的互斥关系，需要从复杂性、可解特例、数学规划与启发式角度系统研究该变体。",
-        "primary_topic": "带冲突图约束的作业车间调度：复杂性、近似算法、MILP建模与遗传算法",
-        "relation_to_research": "该文直接研究作业车间调度的一个约束变体（源于开放车间调度OSC文献的冲突图约束），属于生产调度与组合优化范畴，但未涉及神经网络、强化学习或学习辅助搜索。对当前研究的相关性在于：（1）主动、非延迟与混合解码及带修复的可行性保持遗传算子，可迁移至柔性作业车间、分布式制造等调度求解器设计；（2）MILP公式与下界可作为学习辅助搜索或智能体优化的公平评估基准与奖励/剪枝信号；（3）冲突图约束与生产运输协同、资源共享等场景存在结构相似性，推测可将“相邻作业不可并行”映射为资源/运输能力占用约束，但需重新定义资源容量、需求向量并验证等价性与复杂性，材料未给出这类迁移验证。",
-        "relevance_score": 6,
-        "setting": "研究JSC问题：将n个作业分配到m台专用机器上，每个作业含若干按固定顺序执行的工序，工序有指定机器与整数加工时间；机器与作业均至多同时处理一个操作；额外约束由简单无向冲突图G=(V,E)给出，相邻作业不能同时在不同机器上加工（工序间冲突定义为分属相邻作业）。目标为最小化最大完工时间makespan。静态确定性环境，无释放时间与截止期信息，动态扰动、能效与多目标均材料未说明。",
+        "motivation": "现有基于学习的B&B方法大多分别优化分支与节点选择，但作者指出这两个决策在搜索过程中持续交互并共同决定搜索树结构与整体效率，分开优化后简单组合无法充分利用其耦合关系；同时直接在联合策略空间中演化会带来大量行为相似策略的冗余评估，降低搜索效率。",
+        "primary_topic": "LLM引导的程序演化自动设计MILP分支定界搜索策略",
+        "relation_to_research": "该论文直接研究AI4OR中的学习/LLM驱动求解器决策设计，与“学习辅助搜索”“大模型智能体自动建模与算法设计”方向高度契合：其把B&B搜索策略写成可执行程序、用求解器反馈做演化选择、用行为相似度控制评估预算，这些机制可迁移到生产调度问题的精确或启发式求解器设计。推测：迁移到柔性作业车间、流水车间或分布式制造调度时，需要把调度问题表述为MILP或分支定界可处理的模型，定义相应的分支/节点选择决策状态集，并设计与调度质量（如makespan、能耗、多目标）对应的端到端评估信号；材料并未涉及调度问题，迁移需额外验证。",
+        "relevance_score": 8,
+        "setting": "研究混合整数线性规划（MILP）分支定界（B&B）求解中的搜索决策自动设计问题：决策对象是分支策略（如何切分当前搜索空间）与节点选择策略（下一步探索哪个开放节点）这两个紧密耦合的决策；目标是在端到端SCIP求解反馈下提升整体求解效率（如平均求解时间与胜率）；约束与信息假设方面，策略须以可执行程序形式表示并可在B&B的固定决策状态集上评估其行为；静态或动态环境：求解过程本身是动态搜索树演化，材料未说明实例分布是否随时间变化。",
         "tags": [
-          "作业车间调度",
-          "冲突图",
-          "最大完工时间",
-          "复杂性分析",
-          "近似算法",
-          "混合整数线性规划",
-          "下界",
-          "遗传算法",
-          "解码策略"
+          "MILP",
+          "分支定界",
+          "分支策略",
+          "节点选择",
+          "大语言模型引导演化",
+          "行为感知多样性",
+          "多岛进化",
+          "SCIP"
         ],
-        "title_zh": "冲突图约束下作业车间调度最小化最大完工时间",
-        "uncertainty": "仅见摘要与全文节选，缺少完整的MILP结果、运行时间、GA与构造性启发式的全部RPD数值及作者自述局限，因此对精确方法可扩展性和GA综合优势的判断受限；通讯作者信息在节选中未明确标注，第一单位依据作者地址推断。",
-        "why_recommended": "对关注生产调度算法机制的研究者有参考价值：它提供了约束可行性修复的显式设计、三类解码策略对解质量与效率的权衡证据，以及MILP下界与统计检验驱动的公平比较范式。这些可作为学习辅助搜索或智能体调度的基线组件与评测规范，尽管论文本身不使用学习方法。"
+        "title_zh": "Evo-B&B：行为感知的LLM引导分支与节点选择策略联合演化方法用于MILP",
+        "uncertainty": "仅提供摘要与部分全文节选，缺少具体实验数值、基准名称、实例规模、时间预算与训练/演化开销，也无法确认行为状态集的构造细节与相似度阈值设置；因此对性能优势幅度和计算公平性的判断存在不确定性。",
+        "why_recommended": "对关注学习辅助搜索与LLM驱动算法设计的研究者，本文提供了“联合演化耦合决策+行为感知多样性控制评估冗余”的具体机制，并强调端到端求解反馈与消融验证，与当前对约束可行性、求解质量和公平计算预算的关注一致；其行为相似度度量思路也可用于调度算法种群的多样性管理。"
       },
       "figure_gallery": {
-        "checked_at": "2026-10-17T09:57:25.528971+08:00",
-        "figures": [],
-        "html_url": "https://arxiv.org/html/2609.04161v2",
-        "status": "not_found"
+        "checked_at": "2026-10-19T10:13:31.534659+08:00",
+        "figures": [
+          {
+            "caption": "Overview of the Evo-B&B framework. Evo-B&B jointly evolves branching and node-selection policies through LLM-guided multi-island evolution, behavior-aware population management, and selective parameter optimization.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2610.22861/v1/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2610.22861v1/framework.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2610.22861v1#S3.F1"
+          },
+          {
+            "caption": "Evolution of the joint policy discovered by Evo-B&B on Indset. The curve tracks the global-best score and highlights representative policy updates.",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2610.22861/v1/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2610.22861v1/generation_change.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2610.22861v1#A7.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2610.22861v1",
+        "status": "available"
       },
-      "final_score": 0.6610244213482418,
+      "final_score": 0.7174610287145158,
       "provenance": {
-        "analyzed_at": "2026-10-17T01:58:49.169596Z",
-        "input_hash": "fb3a1db2b4b51393e24ae676fee176e25b1bb701a31a78117b488d5b53400a7a",
+        "analyzed_at": "2026-10-19T02:14:20.393192Z",
+        "input_hash": "8af0a7e0a901b340a8c1ff61fc67741973a9cdabfda05f6dddc025f73981305d",
         "model": "deepseek-v4-flash",
         "prompt_version": "optimization-analysis-v1",
         "reading_scope": "full_text"
       },
       "ranked": {
         "paper": {
-          "abstract": "We study the job shop scheduling problem with a conflict graph, in which adjacent jobs cannot be processed simultaneously on different machines, with the objective of minimizing the makespan. We establish a polynomial equivalence with a resource-constrained job shop problem having unit-capacity resources and binary resource requirements The problem is strongly NP-hard even on two machines with unit-time operations. For this setting, we derive an optimal-makespan formula and a linear-time algorithm when the conflict graph is a cluster graph, given the clique partition. We also develop a polynomial-time $4/3$-approximation algorithm for arbitrary conflict graphs on two machines when each job has exactly two unit-time operations. For the general problem, we propose four mixed-integer linear formulations, lower bounds, and a genetic algorithm with active, non-delay, and hybrid decoding procedures. Computational experiments on instances derived from the Lawrence and Taillard benchmarks and on randomly generated generalized job shop instances evaluate the proposed methods and show that the genetic algorithm generally improves on constructive heuristics.",
+          "abstract": "In branch-and-bound for Mixed-Integer Linear Programming (MILP), branching and node selection are two critical and tightly coupled decisions, yet most existing learning-based approaches focus on optimizing them separately. We propose Evo-B&B, an LLM-guided evolutionary framework that jointly evolves executable branching and node selection policies using end-to-end SCIP solving feedback. To improve search efficiency and reduce redundant evaluations of behaviorally similar policies, Evo-B&B introduces a behavior-aware multi-island evolutionary mechanism. It measures policy similarity from branching and node-selection behaviors on a fixed set of B&B decision states and uses this similarity to preserve population diversity. We evaluate Evo-B&B on four standard MILP benchmarks across multiple instance scales. Experimental results show that Evo-B&B achieves competitive solving performance and generalizes well to larger-scale instances, while ablation studies further demonstrate the effectiveness of joint evolution and behavior-aware diversity management.",
           "authors": [
-            "Nour Elhouda Tellache",
-            "Abdenour Azerine"
+            "Jiayu Chen",
+            "Chentong Chen",
+            "Yuhan Liu",
+            "Ye Fan",
+            "Jianyong Sun",
+            "Jialong Shi"
           ],
-          "canonical_id": "2609.04161",
+          "canonical_id": "2610.22861",
           "categories": [
-            "cs.DM",
-            "math.OC"
+            "cs.AI"
           ],
           "comment": null,
-          "pdf_url": "https://arxiv.org/pdf/2609.04161",
-          "published_at": "2026-09-03T17:49:23Z",
+          "pdf_url": "https://arxiv.org/pdf/2610.22861",
+          "published_at": "2026-10-16T03:07:04Z",
           "source": "arxiv",
-          "title": "Minimizing the makespan in job shop scheduling under conflict graph constraints",
-          "updated_at": "2026-10-15T15:20:56Z",
-          "url": "https://arxiv.org/abs/2609.04161",
-          "version": 2
+          "title": "Evo-B&B: Behavior-Aware LLM-Guided Joint Evolution of Branching and Node Selection Policies for MILP",
+          "updated_at": "2026-10-16T03:07:04Z",
+          "url": "https://arxiv.org/abs/2610.22861",
+          "version": 1
         },
         "rank": 1,
         "score": {
-          "base_score": 0.7109534933604396,
-          "exploration": 0.21615009279729447,
+          "base_score": 0.6499291431173014,
+          "exploration": 0.8151664271567919,
           "matched_terms": [
-            "job shop",
-            "job-shop",
-            "resource-constrained",
+            "mixed integer",
+            "mixed-integer",
+            "branch and bound",
+            "branch-and-bound"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.4767778251128091,
+          "topic": 0.6521902956787304
+        }
+      },
+      "tier": "deep_read"
+    },
+    {
+      "analysis": {
+        "analysis": "作者按约束的作用范围界定可处理类别（状态-动作级），并指出仅在完整路径完成后才能评估的约束不在范围内，从而将问题限定在解码时可判定的规则上。方法上利用问题结构做三层分解：语义层由LLM生成受schema约束的守卫式目标/效应规则；执行层把规则编译为作用在当前部分解与环境状态上的非扩张硬掩码，保证局部合法；搜索层从规则中确定性抽取主体节点集、条件节点集与关键节点集，并结合当前可行动作集动态得到活跃关键集，用其指导rollout预算再分配。作者还区分了两类失败来源：搜索引导不足（属性目标无法展开）与语义规则生成错误（返回截止规则误写），并采用受控解码实验将求解器适配与开放语言鲁棒性分离。",
+        "challenges": [
+          "局部动作掩码不保证存在可完成的可行续解，容易在后续步骤陷入死锁",
+          "自然语言规则可能生成结构合法但语义错误的DSL（如只限制客户到达而漏掉仓库返回截止）",
+          "属性定义的目标节点难以静态展开为固定节点集合，削弱关键节点抽取与搜索引导",
+          "多约束组合（成对约束）下分别生成的规则需保持一致的可行性",
+          "在固定rollout预算内加入偏置搜索会挤占原有多样性预算，需权衡可行性与解质量",
+          "受控的任务专用语言简化了语言鲁棒性问题，开放、改写、噪声化表述尚未验证"
+        ],
+        "corresponding_authors": [
+          "Hironori Ohigashi"
+        ],
+        "evidence": [
+          {
+            "claim": "论文研究在推理时将实例特定自然语言需求编译为对冻结NCO求解器的结构化干预，不改架构、输入表示与参数",
+            "location": "abstract",
+            "quote": "We propose LangNCO, a framework that compiles instance-specific requirements into structured inference-time interventions for a frozen NCO solver, without changing the pretrained policy's architecture, learned input representation, or parameters."
+          },
+          {
+            "claim": "LLM作为可替换语义前端，将需求翻译为经schema校验的DSL规则集，由确定性Rule Executor作为硬掩码施加",
+            "location": "abstract",
+            "quote": "A pretrained LLM serves as a replaceable semantic front end, translating each requirement into a schema-validated domain-specific language (DSL) rule set. A deterministic Rule Executor applies the rules as nonexpansive hard action masks."
+          },
+          {
+            "claim": "作者识别出局部掩码不能保证完整可行续解可达，因此提出关键节点抽取与固定预算下的偏置rollout",
+            "location": "abstract",
+            "quote": "Because local masking prevents immediate violations but does not ensure that a complete feasible continuation remains reachable, Critical-Offset Decoding extracts rule-referenced critical nodes and reallocates part of a fixed rollout budget to multi-strength biased rollouts."
+          },
+          {
+            "claim": "主实验在四个主约束上100%可行，平均参考gap 1.63–3.26%，成对组合97.33–100%，十二类附加约束98.67%",
+            "location": "abstract",
+            "quote": "LangNCO achieves 100% feasibility on the four primary datasets with mean reference gaps of 1.63--3.26%, 97.33--100% feasibility when separately generated rules are composed for pairwise constraints, and 98.67% feasibility across the additional constraints."
+          },
+          {
+            "claim": "论文限定处理状态-动作级约束，仅在完整路径完成后评估的约束不在范围内",
+            "location": "supplied_full_text",
+            "quote": "This class covers restrictions involving transitions, time, vehicle identity, visit history, capacity, depot access, and other state-dependent conditions. Constraints requiring evaluation only after all routes are complete are outside this scope."
+          },
+          {
+            "claim": "附加约束实验中LangNCO-Gemma4为600中592可行（98.67%），无干预基线为600中94（15.67%）",
+            "location": "supplied_full_text",
+            "quote": "Without changing the pipeline, LangNCO-Gemma4 obtains 592 feasible solutions out of 600 (98.67%), compared with 94 out of 600 (15.67%) for NCO without intervention."
+          },
+          {
+            "claim": "两类低可行性分别源于关键节点抽取器不展开属性目标，以及LLM生成结构合法但语义错误的规则",
+            "location": "supplied_full_text",
+            "quote": "For small-delivery assignment, the generated DSL is correct, but the critical-node extractor does not expand an attribute-defined target into a fixed node set. For return deadline, the LLM sometimes produces a structurally valid but semantically incorrect rule that restricts customer arrivals without constraining depot return."
+          },
+          {
+            "claim": "未来工作包括对改写与更嘈杂语言的鲁棒性以及语义规则验证",
+            "location": "supplied_full_text",
+            "quote": "Future work will study robustness to paraphrased and noisier language, semantic rule verifica"
+          }
+        ],
+        "experiments": [
+          "四个主约束数据集上LangNCO达到100%可行性，平均参考gap为1.63–3.26%",
+          "成对约束下，分别独立生成的规则组合后可行性为97.33–100%",
+          "十二类附加约束上（LangNCO-Gemma4）600个实例中592个可行（98.67%），无干预的NCO基线为600中94个（15.67%）；其中十类达100%可行性，small-delivery assignment为96%，return deadline为88%",
+          "受控解码评价中，在与标准采样相同的每POMO起点与增强100次rollout预算下，LangNCO在四个主约束上均为100%可行性，而标准采样为87.67–100%；在三个非局部约束上平均参考gap更低",
+          "作者报告的两类低可行性原因：small-delivery assignment的DSL正确但关键节点抽取器未将属性定义目标展开为固定节点集；return deadline中LLM生成了结构合法但语义错误的规则（只限制客户到达而未约束仓库返回）",
+          "材料未说明训练开销、更大规模实例、与多任务/统一NCO系统的对比，以及语言改写的鲁棒性实验"
+        ],
+        "first_affiliation": "Panasonic Connect Co., Ltd.",
+        "insight": "把“语义理解”和“组合搜索”在推理时明确分工：LLM只负责把自然语言需求压缩成可检查的DSL规则，规则由确定性执行器转换为不扩张可行域的硬动作掩码，继续复用冻结策略作为解的构造与搜索主体。其有效性来自两点：一是规则与策略解耦，使约束可检查、可组合、无需重训；二是作者识别出局部硬掩码只能防止即时违规，却可能切断完整可行解的继续可达性，于是把DSL中引用的主体节点与条件节点抽取为关键节点集合，用同一份结构化表示在固定rollout预算内做偏置重搜索，从而把“资源分配”问题交给规则结构而非额外学习。",
+        "limitations": [
+          "仅支持状态-动作级约束，需在完整路径完成后评估的约束不在范围内",
+          "当前关键节点抽取器不支持属性定义的目标展开，导致small-delivery assignment类约束可行性偏低",
+          "LLM可能生成结构合法但语义错误的规则（return deadline），语义规则验证尚未完成",
+          "评估使用受控的任务专用语言，对改写与更嘈杂语言的鲁棒性留作未来工作",
+          "作者指出仅对仓库以外的节点做优先，且当前抽取器只支持静态可解析节点引用"
+        ],
+        "method": [
+          "预训练LLM作为可替换的语义前端，将每条自然语言需求翻译为经schema校验的领域特定语言（DSL）规则集；DSL限制为带守卫的目标/效应规则，并通过解析、schema校验、编译与校验反馈重试来修正张量操作与形状错误",
+          "确定性Rule Executor将规则作为非扩张硬动作掩码施加到冻结的构造式NCO策略上，不改变策略架构、学习到的输入表示或参数，基础CVRP形式保持不变，仅修改受影响动作的可采纳性或优先级",
+          "Critical-Offset Decoding：由规则抽取主体节点集、条件节点集并去掉仓库得到关键节点集；rollout中仅对当前合法（在基础掩码与规则掩码之后）的关键节点施加偏移，按多重强度做偏置rollout，并从每步固定的rollout预算中划出部分预算给这些偏置采样",
+          "当前实现用轻量语法导向抽取器解析静态可解析的节点引用；作者说明扩展类型化节点访问器或解析属性定义目标只需扩展该抽取步骤，Rule Executor与Critical-Offset Decoding无需改动",
+          "评测协议：在CVRP策略（POMO式起点与增强、每条100次rollout的固定预算）上，以受控任务专用语言评估四类主约束、其全部成对组合以及另外十二类约束，并用独立实现的参考规则掩码做对照解码评价"
+        ],
+        "motivation": "NCO在训练时的问题结构上能快速给出高质量解，但部署后道路封闭、时间要求变化、临时车辆指派与访问顺序规则等运营约束频繁变化，且常以自然语言传达。标准预训练求解器无法解释训练时问题定义中不存在的约束；为每个临时需求重新训练策略、增加约束专用输入或重设计解码器都不现实。已有LLM4OR工作要么让LLM承担大量组合搜索，要么另建一条独立优化流水线，成本高且与预训练构造策略脱节。",
+        "primary_topic": "冻结神经组合优化求解器的推理时约束适配（自然语言→DSL→动作掩码与搜索引导）",
+        "relation_to_research": "论文事实：该工作直接研究冻结NCO策略的推理时约束适配，用LLM+DSL+确定性掩码+关键节点偏置rollout实现无需重训的部署后约束满足，属于AI4OR中“学习辅助搜索/推理时干预”的路线，与生产调度中频繁出现的临时工艺路线、时间窗、设备指派、访问顺序等状态相关约束高度同构。迁移设想（推测）：要用于柔性作业车间或分布式生产运输协同，需要把DSL的动作语义从“选择下一个客户”推广到“选择下一道工序/机器/车辆-任务配对”，把掩码与关键节点抽取建立在工序-机器析取图或运输资源状态上，并在固定求解预算下重新校准偏置强度；论文未给出该类迁移的任何实验证据，约束是否可归约为状态-动作级、以及关键节点（如关键工序/瓶颈机器）能否由规则静态抽取，是迁移成立的前提条件。另外，LLM语义错误的失败模式提示生产场景需要规则语义校验或人工确认环节。",
+        "relevance_score": 8,
+        "setting": "研究部署后运营需求发生变化的组合优化场景：基础策略仅在标准CVRP上训练，部署后需以自然语言给出实例特定的状态-动作级约束（道路封闭、时间窗、车辆指派、访问顺序、容量、仓库可达性等），目标是在不改动预训练策略的架构、输入表示与参数、也不重新训练的前提下，使构造式NCO求解器在该实例上产出的解满足这些约束并保持解质量。约束限定为可在解码过程中依据当前部分解、候选属性和环境状态判定的类型；仅在完整路径生成后才能评估的约束不在范围内。环境被假设为静态的语言需求与确定性的规则执行，未涉及动态扰动过程。",
+        "tags": [
+          "神经组合优化",
+          "推理时适配",
+          "大语言模型",
+          "动作掩码",
+          "约束满足",
+          "CVRP",
+          "搜索引导",
+          "领域特定语言"
+        ],
+        "title_zh": "LangNCO：将自然语言约束编译为神经组合优化推理时的干预规则",
+        "uncertainty": "仅依据摘要与部分全文节选，未能核对完整实验表格、消融细节与参考gap的归一化方式；关键节点抽取器与偏置强度的具体实现细节在节选中不完整；迁移到车间调度或生产运输协同的可行性属于我的推测，作者未涉及。",
+        "why_recommended": "它给出了一种低成本、可检查的约束适配范式：不改策略、不重训，只把自然语言需求编译为规则化掩码与搜索先验，契合AI4OR中对部署后需求变化快速响应的关注。更重要的是，作者明确区分了“局部掩码保证即时合法”与“全局可行续解可达”这两个层次，并用固定rollout预算下的关键节点偏置搜索处理后者，这对生产调度中硬约束与求解预算的权衡、以及约束可行性评估协议的设计具有直接借鉴意义。其失败分析也提醒研究者在LLM驱动的建模管线中单独评估语义规则正确性与搜索引导能力。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-19T10:13:31.534659+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2610.23190v1",
+        "status": "not_found"
+      },
+      "final_score": 0.6798429250362438,
+      "provenance": {
+        "analyzed_at": "2026-10-19T02:14:27.292652Z",
+        "input_hash": "a6dab85cae15134247b41e72f243bb01702e75b2d5eb27e2470a9180262a699d",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Neural combinatorial optimization (NCO) rapidly produces high-quality solutions for problem structures encountered during training, but operational requirements may change after deployment and be communicated in natural language. We propose LangNCO, a framework that compiles instance-specific requirements into structured inference-time interventions for a frozen NCO solver, without changing the pretrained policy's architecture, learned input representation, or parameters. A pretrained LLM serves as a replaceable semantic front end, translating each requirement into a schema-validated domain-specific language (DSL) rule set. A deterministic Rule Executor applies the rules as nonexpansive hard action masks. Because local masking prevents immediate violations but does not ensure that a complete feasible continuation remains reachable, Critical-Offset Decoding extracts rule-referenced critical nodes and reallocates part of a fixed rollout budget to multi-strength biased rollouts. Using controlled task-specific language to isolate solver adaptation from open-ended language robustness, we evaluate a CVRP policy on road closures, time windows, vehicle assignments, visit-order requirements, all pairwise combinations, and twelve additional constraint types. LangNCO achieves 100% feasibility on the four primary datasets with mean reference gaps of 1.63--3.26%, 97.33--100% feasibility when separately generated rules are composed for pairwise constraints, and 98.67% feasibility across the additional constraints. These results demonstrate modular post-training adaptation of a frozen NCO solver through inspectable language-derived rules, without retraining.",
+          "authors": [
+            "Hironori Ohigashi"
+          ],
+          "canonical_id": "2610.23190",
+          "categories": [
+            "cs.LG",
+            "cs.AI"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2610.23190",
+          "published_at": "2026-10-16T09:26:02Z",
+          "source": "arxiv",
+          "title": "LangNCO: Compiling Natural-Language Constraints into Inference-Time Interventions for Neural Combinatorial Optimization",
+          "updated_at": "2026-10-16T09:26:02Z",
+          "url": "https://arxiv.org/abs/2610.23190",
+          "version": 1
+        },
+        "rank": 2,
+        "score": {
+          "base_score": 0.5815325909749886,
+          "exploration": 0.8552521705760087,
+          "matched_terms": [
+            "combinatorial optimization",
+            "neural combinatorial"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.5092013057571059,
+          "topic": 0.523993078294092
+        }
+      },
+      "tier": "deep_read"
+    },
+    {
+      "analysis": {
+        "analysis": "作者从实际运营中多目标决策的“可用性缺口”出发，将问题形式化为在交互式多目标优化中由 DM 通过自然语言提供偏好和反馈，系统维护并更新标量化参数、调用优化器、呈现候选解。分析上，作者用隐藏价值函数作为人工 DM 的一致评价基准，构建基于 LLM 的 DM 智能体按各方法用户指南进行交互，从而在不同交互格式之间比较解质量和交互成本；同时通过历史快递订单分配案例展示目标极端与中间权衡的语言探索，并据此指出偏好翻译错误需要透明化标量化参数。问题结构、分解或下界等具体数学分析材料未说明。",
+        "challenges": [
+          "自然语言定性偏好到标量化参数的翻译存在歧义和误差，作者在案例研究中明确暴露了偏好翻译错误。",
+          "交互轮数、解评估次数与解质量之间存在权衡：对话式探索需要更少解评估，但解质量一致性较弱。",
+          "在目标数更多或价值函数非线性的情况下，解质量不够稳定。",
+          "系统假设配置的目标已覆盖决策相关关切，不能系统检测隐藏准则。",
+          "未提供群体决策机制。",
+          "LLM 智能体作为交互层，需要与现有交互式多目标优化方法在相同评估预算下公平比较，而对话交互格式与经典结构化交互格式不同。"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文提出基于 LLM 的专家-智能体界面，将自然语言输入翻译为结构化标量化参数并迭代调用优化系统。",
+            "location": "abstract",
+            "quote": "The agent translates natural-language user input into structured scalarization parameters, invokes an optimization system, presents candidate solutions, and iteratively elicits feedback."
+          },
+          {
+            "claim": "论文采用多智能体架构，分离输入处理、MCDM 专家、解展示和反馈处理。",
+            "location": "abstract",
+            "quote": "We describe a multi-agent architecture that separates input processing, multi-criteria decision-making (MCDM) expertise, solution presentation, and feedback processing."
+          },
+          {
+            "claim": "实验在多目标二值背包和集合划分实例上进行，并与 DESDEO 中的参考点和 NIMBUS 方法比较。",
+            "location": "abstract",
+            "quote": "The computational experiments on multi-objective binary knapsack and set-partitioning instances show that ParetoChat can guide the search efficiently toward solutions that match the DM’s preferences."
+          },
+          {
+            "claim": "论文在历史快递订单分配实例上展示自然语言探索目标极端与中间权衡。",
+            "location": "abstract",
+            "quote": "An application to historical courier-order assignment instances illustrates how users can explore objective extremes and intermediate trade-offs through natural-language requests."
+          },
+          {
+            "claim": "系统被定位为现有优化软件之上的副驾驶交互层，而不是替代数学优化方法。",
+            "location": "supplied_full_text",
+            "quote": "ParetoChat should therefore be understood as a co-pilot interaction layer around existing optimization software rather than as a replacement for mathematical optimization methods."
+          },
+          {
+            "claim": "作者明确承认系统假设配置目标已覆盖决策关切、不检测隐藏准则且无群体决策机制。",
+            "location": "supplied_full_text",
+            "quote": "The current system assumes that the configured objectives capture the decision-relevant concerns, does not systematically detect hidden criteria, and does not yet provide mechanisms for group decision making."
+          }
+        ],
+        "experiments": [
+          "在多目标二值背包和集合划分实例上进行计算实验，表明 ParetoChat 能高效引导搜索走向匹配 DM 偏好的解。",
+          "与 DESDEO 中的参考点方法和 NIMBUS 方法比较；在线性价值函数下的若干实验中解质量有竞争力，尤其在二目标背包问题上；在更大问题和非线性偏好下解质量一致性较弱。",
+          "在交互努力方面，ParetoChat 使人工 DM 评述的解数量显著少于参考点方法和 NIMBUS 实现（摘要与结论只给出定性表述“大幅减少”，未提供具体数字）。",
+          "允许更多迭代可显著改善三目标和四目标背包问题上的归一化排名得分、价值差距和达到价值最大化结果的次数，但需要更多解评估和明显更多运行时间；摘要和节选未给出具体数值。",
+          "历史快递订单分配案例说明用户可通过自然语言请求探索目标极端与中间权衡，同时暴露偏好翻译错误。",
+          "材料未说明训练开销、公平计算预算的精确度量、消融实验细节和完整泛化验证。"
+        ],
+        "first_affiliation": "Just Eat Takeaway.com",
+        "insight": "该工作的核心洞察是：把“偏好理解与翻译”和“数学优化与可行性计算”解耦，由多智能体分工完成自然语言意图识别、MCDM 专家推理、解展示与反馈处理，而目标值与可行性仍交给显式优化器计算。这样既能保留优化方法的数学保证，又能让 DM 用自然语言逐步引导搜索；同时通过展示标量化参数保持翻译过程透明，使偏好翻译错误可被用户发现和纠正。",
+        "limitations": [
+          "当前系统假设配置的目标已捕获决策相关关切，不系统检测隐藏准则。",
+          "未提供群体决策机制。",
+          "对话式偏好 elicitation 存在更少解评估与解质量不一致之间的权衡。",
+          "在更大问题和非线性价值函数下解质量不够稳定。",
+          "偏好翻译错误被案例研究暴露，需要透明标量化参数和用户纠正机会。"
+        ],
+        "method": [
+          "ParetoChat 是一个基于 LLM 的专家-智能体界面，将自然语言用户输入翻译为结构化标量化参数，调用优化系统，呈现候选解，并迭代 elicits 反馈。",
+          "多智能体架构分离输入处理、多准则决策（MCDM）专家、解展示和反馈处理；结论部分进一步列出意图检测、命令路由、MCDM 专家、解展示、反馈处理和会话摘要，并将可行性与目标值计算委托给显式优化工具。",
+          "系统被定位为现有优化软件之上的“副驾驶”交互层，而不是替代数学优化方法。",
+          "评估框架使用基于 LLM 的人工 DM 智能体和隐藏价值函数：DM 智能体按每种方法提供的用户指南进行交互并生成自适应请求，价值函数提供衡量解质量的一致基准。",
+          "在实验中与 DESDEO 中实现的交互式方法（包括参考点方法和 NIMBUS 方法）进行基准比较。",
+          "在 JET 历史快递订单分配实例上演示通过自然语言请求探索目标极端和中间权衡。"
+        ],
+        "motivation": "实际运营决策（如配送平台容量管理、快递订单分配、动态定价）需要权衡成本、服务质量、可靠性等冲突目标。传统先验标量化方法要求 DM 把定性偏好翻译成数值权重或参考点，这既难以指定也难以解释；经典交互式方法虽然把 DM 纳入搜索，但仍要求结构化偏好输入（如期望水平、目标分类或成对权衡信息），对非专家不友好。因此作者希望用 LLM 智能体作为业务利益相关者与优化工具之间的自然语言交互层。",
+        "primary_topic": "LLM 智能体作为交互式多目标优化的偏好接口",
+        "relation_to_research": "论文事实：该工作直接研究多目标优化中的人机交互与偏好引导，使用 LLM 多智能体作为自然语言接口，调用外部优化器求解多目标背包、集合划分和快递订单分配实例，属于 AI4OR 中“大模型智能体 + 优化求解器”的交互层研究。与生产调度的关系需要推测：其“自然语言偏好→标量化参数→调用调度/多目标优化器→反馈迭代”的机制原则上可迁移到柔性作业车间、分布式制造或生产运输协同等多目标调度场景，但迁移需要满足若干条件：目标函数与约束能被现有调度求解器显式评估；标量化参数能稳定映射到调度模型；LLM 翻译错误需通过透明参数和用户纠正机制控制；并且要在相同评估预算下验证解质量与约束可行性。论文本身未在作业车间或流水车间调度基准上验证，因此不能视为已证明的调度方法。",
+        "relevance_score": 7,
+        "setting": "研究设定为：决策者（DM）需要在多个冲突目标之间权衡的多目标优化问题中，通过自然语言表达定性偏好与反馈，系统将其转化为求解器可接受的标量化参数（权重、优先级或参考点），反复调用外部优化器生成候选解并呈现给 DM，再根据反馈迭代调整搜索。决策对象包括多目标二值背包、集合划分基准实例，以及 JET 历史快递订单分配实例中的多目标分配方案；目标、具体约束形式与信息假设在摘要和节选中未完整给出，材料未说明。环境为交互式、迭代式的人机回路优化，而非单次离线求解。",
+        "tags": [
+          "多目标优化",
+          "大语言模型智能体",
+          "交互式优化",
+          "偏好引导",
+          "标量化参数",
+          "多准则决策",
+          "多智能体架构",
+          "调度应用"
+        ],
+        "title_zh": "ParetoChat：面向交互式多目标优化的基于大语言模型的界面",
+        "uncertainty": "全文仅为节选，缺少完整的方法细节、实验数字、基线设置和统计检验；摘要与结论只给出定性结果，未提供具体解质量、运行时间和评估次数数值。因此对方法有效性的强度、与 DESDEO 基线比较的公平计算预算以及调度场景迁移的可行性判断存在不确定性。相关性评分给 7 而非更高，是因为论文核心是通用交互式多目标优化界面，未直接研究生产调度问题。",
+        "why_recommended": "对关注 AI4OR 与大模型智能体的研究者而言，该文提供了一个清晰的多智能体交互架构和可比较的评估框架：分离语言理解与数学优化、用隐藏价值函数的人工 DM 做跨方法比较、并明确报告交互成本与解质量的权衡。这些机制和评估思路可直接启发“大模型智能体作为生产调度多目标决策接口”的研究设计，同时其暴露的偏好翻译错误和稳定性局限也提示了需要重点控制的约束可行性与可复现性问题。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-19T10:13:31.534659+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2610.23062v1",
+        "status": "not_found"
+      },
+      "final_score": 0.5936807033265687,
+      "provenance": {
+        "analyzed_at": "2026-10-19T02:14:34.649785Z",
+        "input_hash": "823fa05ce5172cc167767861a2cd03a9e6aecb2f4a26a0860f053f80f754de2b",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Multi-objective optimization models are often deployed in settings where decision makers (DMs) must balance some conflicting criteria. In practice, however, stakeholders must translate their qualitative preferences between different criteria into numerical weights, priorities, or reference points required by optimization methods, which can be difficult to specify and interpret. This paper proposes \\emph{ParetoChat}, an LLM (large language model)-based expert-agent interface for interactive multi-objective optimization. The agent translates natural-language user input into structured scalarization parameters, invokes an optimization system, presents candidate solutions, and iteratively elicits feedback. We describe a multi-agent architecture that separates input processing, multi-criteria decision-making (MCDM) expertise, solution presentation, and feedback processing. We then present a simulation study using an LLM-based DM agent and benchmark ParetoChat against interactive methods implemented in DESDEO, including reference-point and NIMBUS methods. The computational experiments on multi-objective binary knapsack and set-partitioning instances show that ParetoChat can guide the search efficiently toward solutions that match the DM's preferences. An application to historical courier-order assignment instances illustrates how users can explore objective extremes and intermediate trade-offs through natural-language requests. The results indicate that LLM agents may provide a practical interaction layer between business stakeholders and optimization tools.",
+          "authors": [
+            "Gokhan Ceyhan"
+          ],
+          "canonical_id": "2610.23062",
+          "categories": [
+            "cs.CL",
+            "math.OC"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2610.23062",
+          "published_at": "2026-10-16T07:39:39Z",
+          "source": "arxiv",
+          "title": "ParetoChat: An LLM-Based Interface for Interactive Multi-Objective Optimization",
+          "updated_at": "2026-10-16T07:39:39Z",
+          "url": "https://arxiv.org/abs/2610.23062",
+          "version": 1
+        },
+        "rank": 6,
+        "score": {
+          "base_score": 0.5066921878664885,
+          "exploration": 0.1291740176359097,
+          "matched_terms": [
+            "multi-objective optimization",
+            "multi-agent",
+            "large language model"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.4998830156297769,
+          "topic": 0.6165
+        }
+      },
+      "tier": "deep_read"
+    },
+    {
+      "analysis": {
+        "analysis": "作者先区分计算灵活性的来源：训练任务保留为任务级混合整数线性约束，以保持同步训练配置与完成要求；推理任务则通过对单元级模型的 Minkowski 和聚合与 Shapley–Folkman 凸化，得到不含单元级二元变量的线性推理池表示，并给出条件相对松弛间隙界。随后用一个四节点电气模型，通过提升电压变量与二阶锥松弛，把计算需求、站内注入和电网交换同变流器及网络限值联系起来。最后把上述计算表示与电力表示组合成一个混合整数模型，统一协调负载、光伏、储能和购电。作者还采用事后交流校验检验调度命令在原始交流模型下的可行性。",
+        "challenges": [
+          "计算侧的可调度性不等于电力侧的可行性：离散负载决策与非线性网络约束耦合",
+          "同步训练配置与推理资源池的异构服务需求需在同一模型中保留",
+          "推理池若逐单元建模会产生大量二元变量，规模不可控",
+          "交流潮流与变流器限值带来的非凸性需要可验证的松弛",
+          "需同时协调光伏、储能、购电与计算负载，并处理不可倒送等运行条件"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文指出计算灵活性并不自动等于电气上可实现的功率灵活性，忽略变流器与网络限值会导致过载与中断。",
+            "location": "abstract",
+            "quote": "However, computing flexibility in behind-the-meter facilities does not automatically translate into electrically realizable power flexibility. Ignoring converter and network operating limits may cause converter overloads, protection trips, and interruptions to power supply and computing services."
+          },
+          {
+            "claim": "论文用任务级混合整数线性模型保留同步训练配置，并用 Minkowski 和聚合与 Shapley–Folkman 凸化得到无单元级二元变量的线性推理池表示。",
+            "location": "abstract",
+            "quote": "First, a task-level mixed-integer linear formulation preserves synchronous training configurations and completion requirements, while Minkowski-sum aggregation and Shapley--Folkman convexification yield a linear inference-pool representation without unit-level binary variables."
+          },
+          {
+            "claim": "推理聚合具有随池规模增大而减小的条件相对松弛间隙界。",
+            "location": "abstract",
+            "quote": "The latter admits a conditional relative relaxation-gap bound that decreases inversely with pool size."
+          },
+          {
+            "claim": "论文通过提升电压变量与二阶锥松弛，将计算需求、站内注入和电网交换同变流器及网络限值联系起来。",
+            "location": "abstract",
+            "quote": "Second, a four-node electrical model links computing demand, on-site injections, and grid exchange to converter and network limits through lifted voltage variables and second-order cone relaxation."
+          },
+          {
+            "claim": "混合整数模型统一协调工作负载、光伏、储能和电网购电。",
+            "location": "abstract",
+            "quote": "Finally, a mixed-integer model coordinates workloads, photovoltaic generation, energy storage, and grid purchases."
+          },
+          {
+            "claim": "在研究条件下，固定训练无法在电压限值内支撑全部推理服务，而协同调度可实现可忽略的推理短缺并通过交流校验。",
+            "location": "abstract",
+            "quote": "Under the studied conditions, fixed training cannot support full inference service within voltage limits, whereas coordinated scheduling achieves negligible inference shortage and passes verification against the original alternating-current model."
+          }
+        ],
+        "experiments": [
+          "算例表明电气限值会改变调度方案与新能源消纳，站内资源可降低电网依赖",
+          "在研究条件下，固定训练无法在满足电压限值的同时支撑全部推理服务，而协同调度可实现可忽略的推理短缺",
+          "调度结果通过针对原始交流模型的事后校验，全部 96 个基线时段通过，最大等式残差为 9.36×10^-8 p.u.，未报告不等式越限",
+          "推理聚合相对整数节点计数模型的最大相对功率间隙从 N=10 时的约 4.9% 降到 N=10^2 的 0.451%、N=10^3 的 0.0448%、N=10^4 的 0.00541%，并在 10^5 时趋近于零",
+          "电压乘积的最大绝对残差与归一化残差分别为 6.056×10^-2 与 6.08%，均出现在支路 (1,b)",
+          "在下界完成约束下，基线训练总超完成量为 0.0674%；另一个单独构造的调度方案在满足每个任务精确工作量的同时保留了基线推理服务与购电，且 96 个时段均通过原始交流校验",
+          "材料未说明与启发式或强化学习基线的对比、求解时间、训练开销与泛化实验"
+        ],
+        "first_affiliation": "香港大学电气与电子工程系",
+        "insight": "论文的核心洞察在于：不同类型的计算负载应当用不同的数学表示来刻画——训练任务具有强时序可调度性，需保留任务级的离散决策与同步训练配置；推理任务实时性强，但可通过资源池中不同运行配置的比例来调节功率—吞吐关系，因而可以用聚合表示替代逐单元二元变量；当任务规模较小时，非线性聚合也可以用 Minkowski 和与 Shapley–Folkman 凸化近似，而且该近似的相对松弛间隙会随池规模增大而下降。只有将这种分层表示嵌入到包含变流器与网络约束的电力模型后，计算灵活性才真正转化为可在电气上执行的功率轨迹。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "任务级混合整数线性建模：保留训练任务的同步训练配置与完成要求",
+          "用 Minkowski 和聚合与 Shapley–Folkman 凸化，将推理池表示为线性形式，消除单元级二元变量",
+          "给出条件相对松弛间隙界，并说明其随池规模增大而减小",
+          "构建四节点电气模型，通过提升电压变量与二阶锥松弛，把计算需求、站内注入和电网交换与变流器及网络限值关联",
+          "建立混合整数模型，统一协调工作负载、光伏、储能和电网购电",
+          "通过事后检查恢复原始交流电压乘积等式与运行限值，验证调度命令的电气可行性"
+        ],
+        "motivation": "作者指出，数据中心通过负载调度获得的“计算灵活性”并不自动等价于“电气上可实现”的功率灵活性；若忽略变流器和网络运行限值，可能导致变流器过载、保护跳闸以及供电与计算服务中断，因此需要把计算侧的可调度性与电力侧的可行性统一建模。",
+        "primary_topic": "表后数据中心计算负载与电力系统的协同日内调度",
+        "relation_to_research": "本文研究的是数据中心计算负载与电力系统的协同优化调度，属于生产调度与能源协同的交叉方向；其任务级混合整数建模、聚合凸化以及松弛加事后校验的思路，可为制造系统中的可中断或可转移负载与能源约束协同建模提供参考。论文未使用神经网络、强化学习或智能体方法，因此与 AI4OR 的学习辅助求解仅有间接关联。若要迁移到柔性作业车间或分布式生产运输协同，仍需补充工序级离散决策与聚合近似的对应关系、动态扰动下的重调度机制，以及与原问题可行性校验的接口，这些都属于推测，并非作者结论。",
+        "relevance_score": 6,
+        "setting": "研究对象是表后（behind-the-meter）数据中心在日内多时段上的调度问题：决策对象包括同步训练任务的启动与执行配置、推理资源池的配置比例、光伏出力使用、储能充放电以及与电网的购电交换；目标是在满足训练完成要求与推理服务需求的同时，使运行成本最小，并保证电力侧可行；关键约束包括变流器与四节点配电网的运行限值（电压上下限、支路限值）、功率平衡、不可倒送以及储能的时序约束；信息假设为给定服务请求、光伏出力和电价等输入，属于日内滚动调度的静态优化问题；材料未说明具体的预测误差或在线滚动机制。",
+        "tags": [
+          "数据中心",
+          "计算灵活性",
+          "变流器约束",
+          "混合整数线性规划",
+          "二阶锥松弛",
+          "Minkowski和聚合",
+          "Shapley-Folkman凸化",
+          "光伏与储能协同"
+        ],
+        "title_zh": "表后数据中心计算灵活性的变流器感知协调调度",
+        "uncertainty": "论文属于电力系统与计算负载协同调度方向，与柔性作业车间、强化学习或神经网络辅助求解没有直接方法对应，相关性判断依赖建模思路的可迁移性；文中未提供全文所有细节，部分实验设置（如求解器、求解时间、对比基线）无法确认，因此无法评估公平计算预算与可复现性。",
+        "why_recommended": "对关注“调度模型的可执行性”而非仅关注抽象可调度性的研究者有参考价值：论文展示了如何为异构负载分别设计精确与聚合表示，如何在松弛后保留可验证的可行性校验，以及如何量化聚合误差随规模的变化。这些机制可迁移到生产调度中离散任务与连续资源耦合问题的建模与验证，但它本身不是学习型或智能体优化工作。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-19T10:13:31.534659+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2610.22972v1",
+        "status": "not_found"
+      },
+      "final_score": 0.5616837904273242,
+      "provenance": {
+        "analyzed_at": "2026-10-19T02:14:44.699839Z",
+        "input_hash": "2b1ac9035f9d2c5df3f24412df4d0123787ec640f62f618696394cf9d95ce50e",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Data centers are emerging as large electricity consumers whose demand can be reshaped through workload scheduling. However, computing flexibility in behind-the-meter facilities does not automatically translate into electrically realizable power flexibility. Ignoring converter and network operating limits may cause converter overloads, protection trips, and interruptions to power supply and computing services. This paper proposes a converter-aware intraday scheduling methodology. First, a task-level mixed-integer linear formulation preserves synchronous training configurations and completion requirements, while Minkowski-sum aggregation and Shapley--Folkman convexification yield a linear inference-pool representation without unit-level binary variables. The latter admits a conditional relative relaxation-gap bound that decreases inversely with pool size. Second, a four-node electrical model links computing demand, on-site injections, and grid exchange to converter and network limits through lifted voltage variables and second-order cone relaxation. Finally, a mixed-integer model coordinates workloads, photovoltaic generation, energy storage, and grid purchases. Case studies show that electrical limits reshape scheduling and renewable utilization, while on-site resources reduce grid dependence. Under the studied conditions, fixed training cannot support full inference service within voltage limits, whereas coordinated scheduling achieves negligible inference shortage and passes verification against the original alternating-current model. These findings demonstrate the role of computing--electrical coordination in realizing the operational value of workload flexibility.",
+          "authors": [
+            "Ruolan Cui",
+            "Ruizhang Yang",
+            "Chenxi Hu",
+            "Franxis Yunhe Hou"
+          ],
+          "canonical_id": "2610.22972",
+          "categories": [
+            "eess.SY",
+            "cs.SY"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2610.22972",
+          "published_at": "2026-10-16T05:44:50Z",
+          "source": "arxiv",
+          "title": "Converter-Aware Coordination of Computing Flexibility in Behind-the-Meter Data Centers",
+          "updated_at": "2026-10-16T05:44:50Z",
+          "url": "https://arxiv.org/abs/2610.22972",
+          "version": 1
+        },
+        "rank": 5,
+        "score": {
+          "base_score": 0.5303341644133165,
+          "exploration": 0.4904480782853392,
+          "matched_terms": [
             "mixed integer",
             "mixed-integer"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.5431756961381525,
-          "topic": 0.9002624070134202
+          "recency": 0.4900172787473822,
+          "topic": 0.553249299211577
         }
       },
       "tier": "deep_read"
     },
     {
       "analysis": {
-        "analysis": "作者将问题形式化为无限时域序列决策过程，引入递归方程计算给定策略下的真实内生概率，并定义透明度约束限制显示概率与真实概率的偏离。由于精确计算真实概率不可行，作者利用问题结构将策略分解为两个组件：分配组件与概率显示组件。对于分配组件，作者限制为非预期型分配方案，并证明在该方案下完全透明对应的显示概率存在唯一可行解（Property 2）。基于此理论洞察，作者用神经网络离线近似真实概率（输入为状态与订单特征，输出为概率值），并构建基于采样的混合整数规划，在给定客户选择行为的采样场景下优化每个状态的显示概率，从而在透明度约束内最大化目标。分析还指出，显示与分配决策相互关联，需同时指定以保证对透明度约束的可行性。",
+        "analysis": "作者把问题拆成偏好获取与优化决策两段：在门诊调度中让扮演患者、提供者和运营人员的智能体对准则重要性打分，并比较两种LLM审议协议与机械平均对分数的影响；在急诊配置中让智能体对成对配置做选择以推断隐式权衡权重，并用 Bradley–Terry 类统计模型检验上下文信息与呈现顺序的预测能力；随后根据引出或推断的偏好构造权重不确定集，沿用 Hu 与 Mehrotra 的多专家多准则鲁棒加权和（McRow）思路建立鲁棒加权和模型，比较其与平均权重模型所选调度或配置是否不同。",
         "challenges": [
-          "真实概率的精确计算在现实规模下不可行：需要递归枚举所有状态转移直到订单被分配，计算树规模随问题规模组合爆炸。",
-          "显示概率与分配决策相互耦合：显示概率影响客户选择进而影响未来订单构成，分配决策影响可用容量，两者共同决定真实概率，需联合优化以满足透明度约束。",
-          "概率展示决策空间连续且需嵌入客户选择行为：需要有效搜索连续概率空间并准确刻画客户对概率信息的反应。",
-          "透明度约束下可能存在多组显示概率产生相同客户选择与目标值，需惩罚不必要的偏离以确保提供者仅做必要扭曲。",
-          "真实概率依赖于策略与状态，需在训练中近似策略相关的未来事件概率，并评估近似质量。"
-        ],
-        "corresponding_authors": [
-          "Daniela Sailer",
-          "Robert Klein",
-          "Claudius Steinhardt"
-        ],
-        "evidence": [
-          {
-            "claim": "论文将问题建模为序列决策过程，定义真实概率并引入透明度约束。",
-            "location": "abstract",
-            "quote": "In this work, we model the resulting problem as a sequential decision process, define truthful probabilities recursively, and introduce transparency constraints that limit their distortion."
-          },
-          {
-            "claim": "真实概率的精确计算在现实场景中不可行，因此开发了适配的强化学习算法进行近似。",
-            "location": "abstract",
-            "quote": "Because the exact computation of truthful probabilities is intractable for realistic settings, we develop an adapted reinforcement learning algorithm to approximate them."
-          },
-          {
-            "claim": "提出基于采样的混合整数规划来优化提供者在每个状态下传达的信息。",
-            "location": "abstract",
-            "quote": "Furthermore, we propose a sampling-based mixed-integer program to optimize the information communicated by the provider in each state."
-          },
-          {
-            "claim": "计算研究以户外配送为动机，并揭示了透明度与聚合客户效用之间的权衡。",
-            "location": "abstract",
-            "quote": "Our computational study is motivated by out-of-home delivery, i.e., the delivery to parcel lockers or shops, and reveals a trade-off between individual-level transparency and aggregate customer utilities."
-          },
-          {
-            "claim": "在非预期型分配方案下，完全透明对应的显示概率存在唯一可行解。",
-            "location": "abstract",
-            "quote": "As a theoretical insight, we establish that, for certain allocation schemes, there exists exactly one feasible respective solution for the displayed probabilities under full transparency."
-          },
-          {
-            "claim": "移除透明度约束后客户满意度的提升幅度。",
-            "location": "supplied_full_text",
-            "quote": "Relative to full transparency, removing the constraints improves CS under FF by\n5.4\n%\n5.4\\%\n,\n6.3\n%\n6.3\\%\n, and\n9.3\n%\n9.3\\%\nfor\nI\n∈\n{\n15\n,\n20\n,\n25\n}\nI\\in\\{15,20,25\\}\n, respectively, with the corresponding gains ranging from\n6.3\n%\n6.3\\%\nto\n9.4\n%\n9.4\\%\nand\n14.4\n%\n14.4\\%\nunder MY."
-          },
-          {
-            "claim": "作者将分配组件限制为非预期型分配方案，并证明唯一性。",
-            "location": "supplied_full_text",
-            "quote": "For the allocation component, we restrict our attention to\nnon-anticipatory\nallocation schemes."
-          },
-          {
-            "claim": "神经网络输入为状态与订单的特征向量，输出层为单个神经元，激活函数范围限制在[0,1]以解释为概率。",
-            "location": "supplied_full_text",
-            "quote": "The output layer consists of a single neuron with an activation function whose range is bounded by\n[\n0\n,\n1\n]\n[0,1]\n, ensuring that the network output can be interpreted as a probability."
-          }
-        ],
-        "experiments": [
-          "计算研究以户外配送（OOHD）为动机，将包裹店作为基础结果（容量视为充足），快递柜作为高级结果（容量严格受限且可用性不确定），每个概率型服务选项将快递柜与最近的包裹店配对。",
-          "评估指标涉及提供者与客户双方，研究显示概率作为信息型需求管理工具的效果以及（不）透明度对利益相关者的影响。",
-          "结果显示：真实概率披露已显著提升聚合客户满意度；需求管理通过针对性调整显示概率带来进一步收益。",
-          "报告了移除透明度约束相对于完全透明的客户满意度提升：在FF策略下，对于I∈{15,20,25}，客户满意度分别提升5.4%、6.3%和9.3%；在MY策略下，相应提升范围为6.3%至9.4%以及14.4%。",
-          "揭示了个体层面透明度与聚合客户效用之间的权衡。",
-          "材料未说明训练开销、公平计算预算、消融实验或泛化验证的具体数字。"
-        ],
-        "first_affiliation": "奥格斯堡大学分析与优化讲席（Chair of Analytics & Optimization, University of Augsburg）",
-        "insight": "论文的核心洞察在于：在概率型服务选项中，真实的服务概率并非静态产品属性，而是内生于系统状态、未来需求、客户选择与分配策略的递归结果。因此，提供者可以通过策略性地偏离真实概率来主动塑造需求分布，从而提升聚合系统性能；但这一信息杠杆的可行性取决于客户无法验证概率准确性这一信息不对称。作者进一步证明，在非预期型分配方案下，完全透明对应的显示概率存在唯一可行解，从而为透明度约束提供了理论锚点。该洞察之所以有效，是因为它将“信息展示”从被动的信息传递转变为内生的决策变量，并通过递归方程与透明度约束将提供者的操纵动机与客户效用之间的权衡显式建模。",
-        "limitations": [
-          "对于现实规模问题，真实概率的精确计算不可行，需依赖近似方法。",
-          "实验仅基于户外配送这一特定应用场景，泛化到其他服务场景需进一步验证。",
-          "透明度约束下的唯一性结果仅针对非预期型分配方案，其他分配方案未涵盖。",
-          "材料未明确陈述更多局限性。"
-        ],
-        "method": [
-          "建模框架：将问题形式化为无限时域序列决策过程，状态包含系统容量、待分配订单等信息；决策分为显示概率与分配两类；目标为聚合客户效用/满意度；引入透明度约束限制显示概率与真实概率的偏离。",
-          "真实概率递归定义：提出递归方程计算给定策略下订单获得高级结果的真实概率，该概率内生于系统状态、未来需求、客户选择与分配策略。",
-          "唯一性理论结果：证明在非预期型分配方案下，完全透明对应的显示概率存在唯一可行解。",
-          "强化学习近似：训练神经网络离线近似真实概率；网络输入为编码状态与订单信息的特征向量（如剩余时间、数量等），输出层为单个神经元，激活函数范围限制在[0,1]以解释为概率；对每个概率型服务选项进行一次前向传播。",
-          "采样混合整数规划：构建基于采样的MIP，将客户选择行为通过采样场景纳入，优化每个状态下向客户展示的概率信息。",
-          "目标惩罚项：对偏离近似真实概率的显示概率施加小的正惩罚，确保提供者仅做必要扭曲。",
-          "实验设计：以户外配送（OOHD）为动机场景，将包裹店建模为基础结果、快递柜建模为容量受限的高级结果，概率型服务选项将快递柜与其最近的包裹店配对。"
-        ],
-        "motivation": "服务提供者面临客户参与带来的容量不确定性：若为每笔预订保证服务，需保守定义可行性，导致收益损失与容量利用不足。为在事后处理容量不足，提供者可将客户重定向至后备选项或降级服务，但这将风险与不便转移给客户。在预订时披露预测服务水平的概率，既可支持客户做出符合自身偏好的知情选择，又可作为需求塑造工具，引导客户在服务选项间重新分布，减少需求集中。然而，由于真实概率内生于系统状态而非提供者控制的静态属性，且客户无法验证信息准确性，提供者可能操纵显示概率以引导客户选择，形成一种新的需求管理杠杆，因此需要研究透明度约束及其对各方的影响。",
-        "primary_topic": "概率型服务选项下的动态信息展示与需求管理：序列决策建模、强化学习近似真实概率与采样混合整数规划优化信息展示",
-        "relation_to_research": "该论文核心研究动态信息展示作为需求管理杠杆的序列决策与强化学习近似方法，与智能优化和生产调度的直接关联较弱，属于收益管理与需求管理方向。其方法层面存在可迁移要素：用强化学习近似策略相关的内生概率，以及用采样混合整数规划在约束下优化连续决策空间，这些思路可推测迁移到生产调度中需要动态披露信息或管理需求到达的场景（如动态订单选择、交期承诺），但需满足特定条件：调度问题中存在可向客户展示的概率型服务选项、客户选择受信息影响、容量受限且分配方案为非预期型。论文未涉及生产调度、流水车间、柔性作业车间或分布式制造，因此关联主要是方法论层面的启发，而非问题层面的直接覆盖。",
-        "relevance_score": 6,
-        "setting": "研究在服务提供者于预订时向客户展示“获得有限容量高级服务结果（如快递柜）的概率”这一场景下的需求管理问题。决策对象包括两类：一是每个到达订单的状态下向客户展示的概率信息（显示概率），二是订单的服务结果分配（分配到基础结果如包裹店，或容量受限的高级结果如快递柜）。目标是优化聚合客户效用/满意度，同时受限于透明度约束（显示概率与真实概率的偏离程度）。关键约束包括：高级结果容量有限、基础结果容量视为充足、概率必须真实或受透明度约束限制、分配方案为非预期型（non-anticipatory）。信息假设为：客户依赖展示概率做选择但无法验证其准确性；真实概率内生于系统状态、客户选择、未来需求与分配策略，而非静态属性。环境为无限时域序列决策过程，需求随机到达，容量不确定（快递柜可用性取决于客户取件行为）。",
-        "tags": [
-          "需求管理",
-          "序列决策过程",
-          "强化学习",
-          "混合整数规划",
-          "概率型产品",
-          "透明度约束",
-          "末端配送"
-        ],
-        "title_zh": "诚实是最佳策略……还是吗？面向概率型服务选项的需求管理",
-        "uncertainty": "本次判断基于提供的摘要与全文节选，未提供完整实验表格、网络架构细节、特征工程细节、训练超参数与近似质量评估的具体结果，因此对方法有效性与实验充分性的评估存在不确定性。论文的核心应用场景为户外配送而非生产调度，其与生产调度的关联主要为方法论层面的推测迁移，具体适用性需进一步验证。",
-        "why_recommended": "虽然论文不直接研究生产调度，但其对“信息展示作为内生决策变量”的建模方式、递归定义策略相关真实概率的框架、以及在透明度约束下用强化学习近似加采样MIP优化的求解思路，对AI4OR中涉及动态需求管理、客户选择行为或信息不对称的调度问题具有方法论参考价值。研究者可借鉴其将概率展示与分配决策分解、证明唯一性以简化约束、以及用采样近似客户选择行为的技术路线，迁移到如带交期承诺的订单接受、动态定价与调度协同等问题。"
-      },
-      "figure_gallery": {
-        "checked_at": "2026-10-18T09:56:23.437252+08:00",
-        "figures": [
-          {
-            "caption": "Customer segmentation.",
-            "label": "Figure 2",
-            "number": 2,
-            "panels": [
-              {
-                "cached_path": "figures/arxiv/2610.21351/v1/fig2-panel1.png",
-                "original_url": "https://arxiv.org/html/2610.21351v1/utility_vs_outcome.png"
-              }
-            ],
-            "source": "arxiv_html",
-            "source_url": "https://arxiv.org/html/2610.21351v1#S4.F2"
-          }
-        ],
-        "html_url": "https://arxiv.org/html/2610.21351v1",
-        "status": "available"
-      },
-      "final_score": 0.5869450412545321,
-      "provenance": {
-        "analyzed_at": "2026-10-16T02:06:01.845597Z",
-        "input_hash": "d1f5d53b3917198559da1b6d3377d216fa404e0b2133873e19851154051dcb63",
-        "model": "deepseek-v4-flash",
-        "prompt_version": "optimization-analysis-v1",
-        "reading_scope": "full_text"
-      },
-      "ranked": {
-        "paper": {
-          "abstract": "To enable well-informed customer choices and redistribute demand across service options, providers can display probabilities regarding predicted service levels at the time of booking, effectively offering probabilistic service options. In many service settings, the underlying truthful probabilities endogenously depend on the system state, rather than being static product attributes controlled by the provider. While customers rely on this information when making decisions, they cannot readily verify its accuracy. Consequently, providers may be tempted to manipulate the displayed probabilities to guide customers' choices in their favor, creating a novel lever for demand management. In this work, we model the resulting problem as a sequential decision process, define truthful probabilities recursively, and introduce transparency constraints that limit their distortion. Because the exact computation of truthful probabilities is intractable for realistic settings, we develop an adapted reinforcement learning algorithm to approximate them. Furthermore, we propose a sampling-based mixed-integer program to optimize the information communicated by the provider in each state. Our framework enables providers to gauge the benefits of dynamically disclosing probabilistic information at the time of booking and sheds light on incentives for manipulation. Our computational study is motivated by out-of-home delivery, i.e., the delivery to parcel lockers or shops, and reveals a trade-off between individual-level transparency and aggregate customer utilities.",
-          "authors": [
-            "Daniela Sailer",
-            "Robert Klein",
-            "Claudius Steinhardt"
-          ],
-          "canonical_id": "2610.21351",
-          "categories": [
-            "cs.LG",
-            "math.OC"
-          ],
-          "comment": null,
-          "pdf_url": "https://arxiv.org/pdf/2610.21351",
-          "published_at": "2026-10-15T06:31:12Z",
-          "source": "arxiv",
-          "title": "Honesty is the Best Policy ... or is it? Demand Management for Probabilistic Service Options",
-          "updated_at": "2026-10-15T06:31:12Z",
-          "url": "https://arxiv.org/abs/2610.21351",
-          "version": 1
-        },
-        "rank": 8,
-        "score": {
-          "base_score": 0.5762637113718765,
-          "exploration": 0.8259428366509912,
-          "matched_terms": [
-            "mixed integer",
-            "mixed-integer",
-            "reinforcement learning"
-          ],
-          "negative_terms": [],
-          "personal": 0.0,
-          "recency": 0.4954494055259152,
-          "topic": 0.5280166201052611
-        }
-      },
-      "tier": "deep_read"
-    },
-    {
-      "analysis": {
-        "analysis": "作者以 MO-MFEA 为分析对象，在双目标任务组合上分别进行渐近运行时间分析。他们先证明在种群规模 N=Ω(n) 时，MO-MFEA 覆盖两任务 Pareto 前沿的期望函数评估次数为 O(nN log n)，再取 N=Θ(n) 得到具体阶数，并与单独使用多种主流多目标进化算法求解相应任务的已知运行时间进行比较，从而得出加速比。作者利用非支配排序和拥挤距离定义的全序结构以及两个基准函数的可分解性来构造分析，但对具体证明步骤的细节，材料未提供。",
-        "challenges": [
-          "多目标选择采用非支配排序与拥挤距离，使运行时间分析需要考虑种群中多个非支配个体同时演化，因此难以沿用单目标漂移分析",
-          "两个任务的 Pareto 集重叠程度及其对被支配改进路径的影响难以刻画",
-          "需要证明多任务演化不恶化简单任务的运行时间，同时量化对复杂多模态任务的加速比",
-          "多模态基准（OJZJ、DLTB）存在局部最优陷阱，需要分析跨任务迁移如何帮助跳出这些陷阱"
-        ],
-        "corresponding_authors": [
-          "Weijie Zheng"
-        ],
-        "evidence": [
-          {
-            "claim": "本文首次对多目标领域的进化多任务优化进行数学运行时间分析，填补经验成功与理论基础之间的空白",
-            "location": "supplied_full_text",
-            "quote": "This work presents the first mathematical runtime analysis of evolutionary multitask optimization in the multi-objective domain, thereby bridging a critical gap between its empirical success and theoretical foundations."
-          },
-          {
-            "claim": "对 (OMM, OJZJ) 任务对，MO-MFEA 取得 Θ(n^{k-1}/log n) 的加速比，且运行时间与单独优化 OMM 相同",
-            "location": "abstract",
-            "quote": "For the two-task problem of maximizing the classic bi-objective OMM and the multimodal OJZJ benchmarks, the MO-MFEA requires only an expected runtime of $O(n^2 \\log n)$---the same as optimizing the simple OMM alone---yet achieves a speedup by a factor of $\\Theta(n^{k-1}/\\log n)$ compared to optimizing OJZJ alone (with gap size $k$)."
-          },
-          {
-            "claim": "对 (LOTZ, DLTB) 任务对，相对单独优化 DLTB 获得 Θ(n) 加速比，运行时间与单独优化 LOTZ 相同",
-            "location": "abstract",
-            "quote": "Similarly, for the task pair comprising the classic LOTZ and the multimodal DLTB benchmarks, a speedup of $\\Theta(n)$ is attained over optimizing DLTB alone, while the runtime matches that of optimizing LOTZ alone."
-          },
-          {
-            "claim": "作者明确说明本文不开展额外实验，聚焦理论基础的建立",
-            "location": "supplied_full_text",
-            "quote": "this work focuses on establishing theoretical foundations; additional experiments are therefore not conducted."
-          },
-          {
-            "claim": "作者将扩展到其他进化多任务算法以及超过两个目标或任务的问题列为未来方向，说明当前结论仅覆盖 MO-MFEA 与双目标任务对",
-            "location": "supplied_full_text",
-            "quote": "Extending this analysis to other popular evolutionary multitask algorithms, as well as to problems with more than two objectives or tasks, constitutes a compelling direction for future research."
-          }
-        ],
-        "experiments": [
-          "材料明确说明本文聚焦理论基础的建立，未额外开展实验",
-          "理论结果：对 (OMM, OJZJ)，MO-MFEA 在 N=Ω(n) 时期望函数评估次数为 O(nN log n)，取 N=Θ(n) 时为 O(n^2 log n)，与单独优化 OMM 的运行时间相同，相对单独优化 OJZJ 的加速比为 Θ(n^{k-1}/log n)（k 为间隙大小）",
-          "理论结果：对 (LOTZ, DLTB)，MO-MFEA 在 N=Θ(n) 时覆盖两任务 Pareto 前沿的运行时间为 O(n^3)，相对单独优化 DLTB 获得 Θ(n) 加速比，与单独优化 LOTZ 的运行时间相同",
-          "对比基线为单独使用 GSEMO、NSGA-II、NSGA-III、SMS-EMOA、SPEA-II 等求解同一任务的已知运行时间；未报告实际数值实验、约束可行性、训练开销或消融结果"
-        ],
-        "first_affiliation": "哈尔滨工业大学（深圳）计算机科学与技术学院、智慧农场技术与系统全国重点实验室、国际人工智能研究院",
-        "insight": "当复杂多模态任务与结构相似但更简单的任务配对时，MO-MFEA 能够把复杂任务的有效求解时间降至求解简单任务所需的时间量级，这得益于在非支配排序与拥挤距离所诱导的选择压力下产生的跨任务知识迁移；关键并不在于算法本身，而在于两个任务的 Pareto 集在搜索空间中的重叠程度，以及多任务种群选择对“较难任务”个体的保留机制。",
-        "limitations": [
-          "作者在结论中明确指出，将分析扩展到其他流行的进化多任务算法，以及扩展到目标数或任务数超过两个的问题，是未来研究方向；这说明当前结论仅覆盖 MO-MFEA 与双目标任务对",
-          "本文未开展额外实验，结论为渐近理论结果，未提供有限规模下的数值验证"
-        ],
-        "method": [
-          "以代表性多目标多因子进化算法 MO-MFEA 为对象，在包含多个任务的多目标任务框架下进行分析",
-          "每个任务是由多个目标函数定义在 {0,1}^n 上的多目标优化问题，采用弱支配、支配、Pareto 最优解集与 Pareto 前沿等标准定义",
-          "利用非支配排序与拥挤距离（来自 NSGA-II）在种群中建立全序，从而支持跨任务的知识迁移与个体选择",
-          "对 (OMM, OJZJ) 与 (LOTZ, DLTB) 两组双目标任务对，推导覆盖两任务 Pareto 前沿的期望函数评估次数上界，并取 N=Θ(n) 得到具体阶数",
-          "与单独使用 (G)SEMO、NSGA-II、NSGA-III、SMS-EMOA、SPEA-II 等算法求解同一任务的已知运行时间进行对比，得出加速比"
-        ],
-        "motivation": "进化多任务优化在经验上已被证明能借助跨任务知识迁移提升复杂问题的求解效率，但多目标优化领域此前缺少严格的数学运行时间支撑，作者希望填补从经验证据到理论基础之间的空白。",
-        "primary_topic": "进化多任务多目标优化的理论运行时间分析",
-        "relation_to_research": "本文属于进化计算的理论运行时间分析，与智能优化和进化算法研究直接相关。它为“跨任务知识迁移是否有理论收益”提供了严格证据，其分析范式（以非支配排序与拥挤距离构造选择压力、在双目标任务对上推导覆盖 Pareto 前沿的期望时间）可迁移到生产调度中的多目标优化理论分析。迁移设想（推测）：若要把这种分析思路用于柔性作业车间或分布式制造的多目标任务对，需要先构造具有可分析结构的调度基准、定义任务间解的编码对应与相似性度量，并处理调度问题中约束可行性与排列或图结构带来的额外分析难度；这种迁移并非作者结论。",
-        "relevance_score": 6,
-        "setting": "研究在二元空间 {0,1}^n 上同时最大化两个双目标任务（如 OMM 与 OJZJ、LOTZ 与 DLTB）的多任务多目标优化问题，目标是分析 MO-MFEA 覆盖各任务 Pareto 前沿所需的期望函数评估次数；问题规模 n、间隙大小 k 和种群规模 N 是关键参数，环境为静态，信息假设为黑盒目标函数，材料未说明动态性或噪声。",
-        "tags": [
-          "进化多任务优化",
-          "多目标优化",
-          "MO-MFEA",
-          "运行时间分析",
-          "知识迁移",
-          "基准函数",
-          "理论保证"
-        ],
-        "title_zh": "进化多任务多目标优化的首次数学运行时间分析",
-        "uncertainty": "输入材料为全文节选，部分证明细节与章节内容被截断，方法中的具体证明步骤、完整假设条件与常数项未能核实；文中 k、N 等符号的具体取值范围与完整定理表述可能存在于未提供的正文中，因此对分析细节的判断存在不确定性。",
-        "why_recommended": "对从事智能优化与生产调度多目标求解的研究者而言，本文提供了关于“多任务知识迁移何时能带来渐近加速、何时不会拖慢简单任务”的严格理论刻画，有助于在设计多任务或多场景协同调度算法时判断迁移机制的价值边界；其运行时间分析框架也可作为评估学习辅助搜索公平计算预算的理论参照。"
-      },
-      "figure_gallery": {
-        "checked_at": "2026-10-17T09:57:25.528971+08:00",
-        "figures": [],
-        "html_url": "https://arxiv.org/html/2610.21311v1",
-        "status": "not_found"
-      },
-      "final_score": 0.5781684842101502,
-      "provenance": {
-        "analyzed_at": "2026-10-17T01:59:10.557449Z",
-        "input_hash": "813295673b8da3a45a431d0724a4d8c46600e13d65922027f8935743dc63bd15",
-        "model": "deepseek-v4-flash",
-        "prompt_version": "optimization-analysis-v1",
-        "reading_scope": "full_text"
-      },
-      "ranked": {
-        "paper": {
-          "abstract": "To facilitate the solving of complex problems, evolutionary multitask optimization is regarded as a promising technique due to its capacity for cross-task knowledge transfer. In contrast to empirical evidences, no mathematical runtime support exists for this technique within the domain of multi-objective optimization. In this work, we aim to fill this important gap. We analyze how the representative multiobjective multifactorial evolutionary algorithm (MO-MFEA) covers the Pareto fronts of two bi-objective problems simultaneously. For the two-task problem of maximizing the classic bi-objective OMM and the multimodal OJZJ benchmarks, the MO-MFEA requires only an expected runtime of $O(n^2 \\log n)$---the same as optimizing the simple OMM alone---yet achieves a speedup by a factor of $\\Theta(n^{k-1}/\\log n)$ compared to optimizing OJZJ alone (with gap size $k$). Similarly, for the task pair comprising the classic LOTZ and the multimodal DLTB benchmarks, a speedup of $\\Theta(n)$ is attained over optimizing DLTB alone, while the runtime matches that of optimizing LOTZ alone.",
-          "authors": [
-            "Danyang Zhang",
-            "Weijie Zheng"
-          ],
-          "canonical_id": "2610.21311",
-          "categories": [
-            "cs.NE"
-          ],
-          "comment": null,
-          "pdf_url": "https://arxiv.org/pdf/2610.21311",
-          "published_at": "2026-10-15T06:00:18Z",
-          "source": "arxiv",
-          "title": "First Mathematical Runtime Analyses of Evolutionary Multitask Multi-Objective Optimization",
-          "updated_at": "2026-10-15T06:00:18Z",
-          "url": "https://arxiv.org/abs/2610.21311",
-          "version": 1
-        },
-        "rank": 9,
-        "score": {
-          "base_score": 0.5603063349275459,
-          "exploration": 0.5616310744050417,
-          "matched_terms": [
-            "evolutionary algorithm",
-            "multi-objective optimization",
-            "knowledge transfer"
-          ],
-          "negative_terms": [],
-          "personal": 0.0,
-          "recency": 0.4927986423795542,
-          "topic": 0.5792157500905446
-        }
-      },
-      "tier": "deep_read"
-    },
-    {
-      "analysis": {
-        "analysis": "材料未说明作者对问题结构的具体数学分析方式；从摘要可推断其思路是将偏好维度的求解与问题维度的建模统一为对解模型的生成问题，借由先验数据预训练超网络实现摊销。",
-        "challenges": [
-          "离线场景下无法进一步评估目标函数，仅有稀疏覆盖决策与目标空间的有限静态数据",
-          "偏好条件 Pareto 集学习需要覆盖偏好空间中任意偏好，而非仅有限折中解",
-          "现有方法逐偏好搜索或逐问题训练，搜索与训练成本随偏好数和问题数放大",
-          "如何从大量合成先验数据预训练出能泛化到未见真实问题的超网络",
-          "如何保证生成的偏好条件模型在稀疏离线观测下仍能产生高质量 Pareto 解"
+          "大语言模型生成的准则权重缺少可供对照的求解器、仿真器或人类评估参考，无法直接验证其正确性",
+          "多智能体审议可能削弱对不同运营条件和不同角色的响应，导致偏好差异被抹平甚至反转",
+          "成对比较中的呈现顺序效应与抽样随机性混合在一起，仅凭顺序一致性难以区分两者",
+          "从成对选择反推隐式偏好权重需要统计模型，但加入上下文信息后预测新比较对的能力有限",
+          "将偏好不确定性转化为不确定集并嵌入鲁棒加权和优化后，需要评估决策是否发生实质改变"
         ],
         "corresponding_authors": [
           "证据未提供"
         ],
         "evidence": [
           {
-            "claim": "研究目标是偏好条件 Pareto 集学习，将偏好直接映射到 Pareto 最优解",
+            "claim": "论文研究大语言模型多智能体生成的偏好作为多目标优化输入的可靠性及其不确定性对决策的影响",
             "location": "abstract",
-            "quote": "Rather than returning a finite set of trade-off solutions, preference-conditioned Pareto set learning seeks to map a specified preference directly to a corresponding Pareto optimal solution."
+            "quote": "We propose a framework for assessing the reliability of LLM-generated preferences as inputs to multi-objective optimization and quantifying how their uncertainty affects decisions."
           },
           {
-            "claim": "场景为离线且无进一步目标评估，仅有稀疏覆盖的有限静态数据",
+            "claim": "显式偏好会响应诊所运营条件并因角色不同而不同，但智能体审议会抹除这些差异，而简单平均保留差异",
             "location": "abstract",
-            "quote": "Yet in many real-world scenarios, optimization must proceed offline without further objective evaluations, leaving only a limited static dataset that sparsely covers the decision and objective spaces."
+            "quote": "the explicit preferences respond to the clinic’s operating conditions and differ across roles, but deliberation among the agents can erase these differences, whereas simple averaging preserves them."
           },
           {
-            "claim": "现有方法逐偏好优化或训练问题特定模型，导致重复搜索或重复训练",
+            "claim": "隐式偏好来自智能体对急诊配置的成对选择，且选择在很大程度上取决于哪个选项先呈现",
             "location": "abstract",
-            "quote": "Existing methods either optimize separately for each preference or train a problem-specific Pareto solution model, requiring repeated search across preferences or repeated training across problems."
+            "quote": "The pairwise choices used to reveal the agents’ implicit preferences depend largely on which option is presented first,"
           },
           {
-            "claim": "ICPSL 同时摊销偏好层解搜索与问题层模型构建",
+            "claim": "加入上下文信息的统计模型相比仅用呈现顺序的模型，在预测新比较对时没有更多优势的证据",
             "location": "abstract",
-            "quote": "We introduce in-context preference-conditioned Pareto set learning (ICPSL), a framework that amortizes both preference-wise solution search and problem-specific model construction."
+            "quote": "we find limited evidence that a statistical model using contextual information alongside presentation order predicts the agents’ choices on new comparison pairs better than a model using presentation order alone."
           },
           {
-            "claim": "在大规模多样合成先验数据上预训练基础式超网络",
+            "claim": "鲁棒加权和优化模型在多数情况下选择了与平均权重模型不同的调度或配置",
             "location": "abstract",
-            "quote": "ICPSL pretrains a foundation-style hypernetwork on a large and diverse set of synthetic prior data."
+            "quote": "In most cases, these models select different schedules or configurations from those obtained using average preference weights."
           },
           {
-            "claim": "单次前向传播生成问题特定的偏好条件解模型",
-            "location": "abstract",
-            "quote": "Given the offline observations of an unseen problem, the pretrained hypernetwork learns to generate a problem-specific, preference-conditioned Pareto solution model in a single forward pass."
+            "claim": "论文明确说明其所称可靠性是内部检查而非与人类利益相关者偏好一致",
+            "location": "supplied_full_text",
+            "quote": "Here, reliability refers to internal checks (context sensitivity, role differentiation, and stability under changes in procedure and presentation order), not to agreement with human stakeholder preferences."
           },
           {
-            "claim": "生成的模型可复用，对任意偏好预测解且无需问题特定训练或逐偏好搜索",
-            "location": "abstract",
-            "quote": "The generated model can then be reused to predict solutions for arbitrary preferences without problem-specific training or preference-wise search."
-          },
-          {
-            "claim": "实验显示能产生高质量 Pareto 解并显著加速问题特定解模型构建",
-            "location": "abstract",
-            "quote": "Experiments on synthetic and real-world problems show that ICPSL produces high-quality Pareto solutions while providing substantial speedups in problem-specific solution-model construction."
+            "claim": "论文沿用 Hu 与 Mehrotra 的多专家多准则鲁棒加权和（McRow）方法建立鲁棒加权和优化模型",
+            "location": "supplied_full_text",
+            "quote": "following the multiexpert multicriteria robust weighted-sum (McRow) approach of Hu and Mehrotra"
           }
         ],
         "experiments": [
-          "在合成问题和真实世界问题上进行实验；摘要声称 ICPSL 能产生高质量 Pareto 解，并在问题特定解模型构建上带来显著加速；摘要未给出具体数值、基线名称、实例规模、运行时间或消融结果，材料未说明。"
+          "门诊调度显式偏好实验显示：智能体报告的偏好会随诊所运营条件变化，且不同角色之间存在差异；但智能体间审议会削弱对运营条件的响应并抹除或反转角色差异，而机械平均保留角色区分",
+          "急诊成对选择实验显示：智能体的成对选择在很大程度上取决于哪个选项先呈现，存在选择第一个选项的倾向",
+          "统计模型比较显示：加入上下文信息与呈现顺序的模型，相比仅用呈现顺序的模型，在预测新比较对时没有一致的预测优势；原文报告了顺序一致率和重复回答一致率等诊断量",
+          "鲁棒加权和模型与平均权重模型的比较：在十六个门诊比较中的十个、六个急诊比较中的五个，两种模型选择了不同的调度或配置",
+          "实验使用 Qwen3.5 系列本地模型，具体参数规模和训练/推理开销材料未说明"
         ],
-        "first_affiliation": "证据未提供",
-        "insight": "核心洞察在于把偏好条件的 Pareto 解模型本身视为可由先验知识快速生成的产物：通过在大规模多样合成先验数据上预训练一个基础式超网络，使其具备上下文学习能力，从而能在单次前向传播中为未见离线问题生成问题特定、偏好条件的 Pareto 解模型。该生成的模型可复用，对任意偏好直接预测，无需问题特定训练或逐偏好搜索，使跨偏好与跨问题的摊销成为可能。",
+        "first_affiliation": "Department of Mechanical, Materials, and Industrial Engineering, University of Cincinnati, Cincinnati, OH",
+        "insight": "大语言模型智能体生成的偏好不能因为能给出数值权重就被直接当作优化目标系数：显式评分虽然会响应诊所运营条件并因角色不同而产生差异，但智能体间的审议会抹平这些差异，而简单平均反而保留角色区分；隐式成对选择则强烈受呈现顺序影响，且加入上下文信息的统计模型相比仅用呈现顺序的模型没有稳定预测优势；因此需要先审计偏好的上下文敏感性、角色区分度和程序/顺序稳定性，再把偏好不确定性写成不确定集进入鲁棒加权和优化，才能判断带不确定性的决策是否与平均权重决策不同。",
         "limitations": [
-          "材料未说明"
+          "作者明确说明可靠性指内部检查（上下文敏感性、角色区分度、程序与呈现顺序变化下的稳定性），而不是与人类利益相关者偏好的一致性",
+          "计算实验仅覆盖两个医疗场景并使用本地执行的模型，但作者称框架是通用的，也可用于其他医疗运营问题和专有大语言模型"
         ],
         "method": [
-          "提出 ICPSL（in-context preference-conditioned Pareto set learning）框架，同时摊销偏好层面的解搜索和问题层面的模型构建",
-          "在大规模多样的合成先验数据集上预训练一个基础式超网络（foundation-style hypernetwork）",
-          "给定未见问题的离线观测后，预训练超网络在单次前向传播中学习生成一个针对该问题、偏好条件的 Pareto 解模型",
-          "生成的模型可被复用，对任意偏好直接预测解，无需问题特定训练或逐偏好搜索"
+          "提出 LLM-PADA 框架：先评估大语言模型生成偏好的可靠性，再量化偏好不确定性对决策的影响",
+          "显式偏好获取：给不同利益相关者角色的智能体提示，令其对门诊调度准则报告数值重要性分数",
+          "比较三种分数修订方式：两种LLM审议协议（智能体只交换分数，或交换分数并给出理由）与机械平均",
+          "隐式偏好推断：让智能体在成对的急诊科配置之间做选择，从选择中估计权衡权重",
+          "使用统计模型预测智能体在新比较对上的选择，并比较仅用呈现顺序与加入上下文信息的模型",
+          "根据偏好构造权重不确定集，建立鲁棒加权和优化模型，与平均权重模型选择的决策进行比较",
+          "实验使用本地执行的 Qwen3.5 系列模型，覆盖门诊调度与急诊规划两个场景"
         ],
-        "motivation": "实际多目标优化常需在离线、无额外目标评估的条件下进行，且只有覆盖稀疏的有限静态数据。现有方法要么对每个偏好单独优化，要么训练问题特定的 Pareto 解模型，导致跨偏好重复搜索或跨问题重复训练，效率低。作者希望摊销偏好维度的求解搜索和问题维度的模型构建两类成本。",
-        "primary_topic": "偏好条件 Pareto 集学习与离线多目标优化",
-        "relation_to_research": "该工作属于学习辅助多目标优化，与智能优化与 AI4OR 的关系在于用神经超网络与上下文学习替代逐偏好搜索或逐问题重训练，可能迁移到生产调度中的多目标权衡场景（如完工时间、能耗、运输成本的偏好条件解生成）。但论文本身不涉及车间调度、约束满足或动态扰动；迁移需满足的条件（推测）：能够构造覆盖调度结构与目标空间的合成先验数据、能定义可参数化的偏好条件解模型，并在离线或评估受限场景下验证约束可行性与解质量。摘要未涉及离散调度约束处理、强化学习或多智能体机制。",
+        "motivation": "医疗运营的多准则模型需要表达患者等待时间、提供者工作负荷和运营成本之间权衡的权重，但这些权重难以量化且常被非正式设定后固定使用；已有工作用大语言模型智能体代表不同利益相关者来提供权重，然而这些生成偏好作为多目标优化输入是否可靠、其不确定性如何影响最终决策尚缺乏系统评估。",
+        "primary_topic": "LLM多智能体生成偏好权重用于多目标优化及其不确定性审计",
+        "relation_to_research": "论文直接研究如何用大语言模型多智能体生成多目标优化中的准则权重，并把这些权重的不确定性接入鲁棒加权和优化，这与AI4OR中“偏好获取—优化求解—决策评估”的链条相邻；但论文不涉及生产调度中的机器、工序、运输或动态扰动约束，也不涉及神经网络辅助搜索或强化学习。若迁移到柔性作业车间、流水车间或生产运输协同调度，需要把准则从等待时间、工作负荷和成本替换为调度目标，并验证智能体偏好能否响应车间运营条件、其顺序效应是否同样存在，以及鲁棒加权和模型在调度可行域上的计算可行性；这些均为推测，需要进一步实验。",
         "relevance_score": 6,
-        "setting": "研究面向多目标优化中偏好条件 Pareto 集学习问题：给定用户指定的偏好，直接映射到对应的 Pareto 最优解，而非返回有限个折中解。关键约束是必须在离线条件下进行，不能进一步调用目标函数评估，仅有覆盖决策空间和目标空间较为稀疏的有限静态数据集。信息假设为可访问大量多样的合成先验数据用于预训练，并给定未见问题的离线观测。环境是静态离线场景，动态扰动未说明。",
-        "tags": [
-          "多目标优化",
-          "Pareto 集学习",
-          "离线优化",
-          "超网络",
-          "上下文学习",
-          "元学习"
-        ],
-        "title_zh": "基于有限离线数据的上下文内偏好条件 Pareto 集学习",
-        "uncertainty": "证据仅来自标题与摘要，未提供全文，无法确认具体问题形式（离散或连续）、约束处理方式、基线设置、计算预算公平性、合成先验数据构造细节及泛化验证范围；相关性判定为 6 是基于其学习辅助多目标优化机制明确但未直接涉及生产调度。",
-        "why_recommended": "对关注学习辅助搜索、多目标权衡、离线优化与公平计算预算的研究者有参考价值：其摊销偏好搜索与问题建模的思路或可启发将大模型/超网络先验用于生产调度中的偏好条件解生成，减少逐实例求解开销。但需注意该文未处理调度约束与动态扰动，属于可迁移的相邻工作而非直接同题工作。"
-      },
-      "figure_gallery": {
-        "checked_at": "2026-10-18T09:56:23.437252+08:00",
-        "figures": [
-          {
-            "caption": "Comparison of offline preference-conditioned Pareto set learning paradigms. (a) The implicit approach performs preference-wise search over a problem-specific instance model. (b) The explicit approach trains a problem-specific MLP as the Pareto solution model through objective- or regression-based learning. (c) ICPSL uses a frozen foundation-style hypernetwork to generate an problem-specific MLP from offline observations in a single forward pass, which maps arbitrary preferences to solutions without problem-specific training or preference-wise search.",
-            "label": "Figure 1",
-            "number": 1,
-            "panels": [
-              {
-                "cached_path": "figures/arxiv/2610.21736/v1/fig1-panel1.png",
-                "original_url": "https://arxiv.org/html/2610.21736v1/framework.png"
-              }
-            ],
-            "source": "arxiv_html",
-            "source_url": "https://arxiv.org/html/2610.21736v1#S3.F1"
-          },
-          {
-            "caption": "Runtime speedups of ICPSL over the baselines for problem-specific Pareto solution-model construction and preference-conditioned solution generation.",
-            "label": "Figure 2",
-            "number": 2,
-            "panels": [
-              {
-                "cached_path": "figures/arxiv/2610.21736/v1/fig2-panel1.png",
-                "original_url": "https://arxiv.org/html/2610.21736v1/runtime_speedup.png"
-              }
-            ],
-            "source": "arxiv_html",
-            "source_url": "https://arxiv.org/html/2610.21736v1#S4.F2"
-          }
-        ],
-        "html_url": "https://arxiv.org/html/2610.21736v1",
-        "status": "available"
-      },
-      "final_score": 0.4871780720718193,
-      "provenance": {
-        "analyzed_at": "2026-10-16T02:06:17.828540Z",
-        "input_hash": "d0c2353b879de2fc2b91a179e3cdaee7f334ff6b23c9fc6a9de08d2f0f4f209f",
-        "model": "deepseek-v4-flash",
-        "prompt_version": "optimization-analysis-v1",
-        "reading_scope": "abstract"
-      },
-      "ranked": {
-        "paper": {
-          "abstract": "Multi-objective optimization involves diverse preferences over conflicting objectives. Rather than returning a finite set of trade-off solutions, preference-conditioned Pareto set learning seeks to map a specified preference directly to a corresponding Pareto optimal solution. Yet in many real-world scenarios, optimization must proceed offline without further objective evaluations, leaving only a limited static dataset that sparsely covers the decision and objective spaces. Existing methods either optimize separately for each preference or train a problem-specific Pareto solution model, requiring repeated search across preferences or repeated training across problems. We introduce in-context preference-conditioned Pareto set learning (ICPSL), a framework that amortizes both preference-wise solution search and problem-specific model construction. ICPSL pretrains a foundation-style hypernetwork on a large and diverse set of synthetic prior data. Given the offline observations of an unseen problem, the pretrained hypernetwork learns to generate a problem-specific, preference-conditioned Pareto solution model in a single forward pass. The generated model can then be reused to predict solutions for arbitrary preferences without problem-specific training or preference-wise search. Experiments on synthetic and real-world problems show that ICPSL produces high-quality Pareto solutions while providing substantial speedups in problem-specific solution-model construction.",
-          "authors": [
-            "Yiming Yao",
-            "Liang Zhao",
-            "Qingfu Zhang"
-          ],
-          "canonical_id": "2610.21736",
-          "categories": [
-            "cs.AI"
-          ],
-          "comment": null,
-          "pdf_url": "https://arxiv.org/pdf/2610.21736",
-          "published_at": "2026-10-15T11:54:43Z",
-          "source": "arxiv",
-          "title": "In-Context Preference-Conditioned Pareto Set Learning from Limited Offline Data",
-          "updated_at": "2026-10-15T11:54:43Z",
-          "url": "https://arxiv.org/abs/2610.21736",
-          "version": 1
-        },
-        "rank": 16,
-        "score": {
-          "base_score": 0.3948692219487623,
-          "exploration": 0.1823745139247224,
-          "matched_terms": [
-            "multi-objective optimization"
-          ],
-          "negative_terms": [],
-          "personal": 0.0,
-          "recency": 0.5240731787116502,
-          "topic": 0.41866657945194863
-        }
-      },
-      "tier": "browse"
-    },
-    {
-      "analysis": {
-        "analysis": "作者通过构造同伦映射并分析其正则性与参考点锥回避条件，从理论上建立光滑有界延拓路径的存在性，并证明当同伦参数趋于零时累积点集合非空且由KKT点组成；数值上则设计预测-校正延拓算法处理非凸与退化问题。",
-        "challenges": [
-          "非凸与退化问题中延拓路径的鲁棒追踪",
-          "从不可行初始点出发的初始化敏感性",
-          "完整Pareto前沿覆盖的困难",
-          "理论保证所依赖的正则性与参考点锥回避假设在实际问题中可能不满足"
-        ],
-        "corresponding_authors": [
-          "证据未提供"
-        ],
-        "evidence": [
-          {
-            "claim": "论文提出一种求解约束多目标优化KKT点的同伦延拓框架",
-            "location": "abstract",
-            "quote": "We develop a homotopy continuation framework for computing Karush--Kuhn--Tucker (KKT) points of constrained multiobjective optimization problems."
-          },
-          {
-            "claim": "在正则性与参考点锥回避假设下，作者建立了光滑有界延拓路径的存在性，并证明累积点为KKT点",
-            "location": "abstract",
-            "quote": "Under the stated regularity and reference-point cone avoidance assumptions, we establish the existence of a smooth, bounded continuation path whose set of accumulation points as the homotopy parameter approaches zero is nonempty and consists of KKT points."
-          },
-          {
-            "claim": "实现包括增强伪弧长预测-校正、自适应步长和分支重启的两种数值延拓算法",
-            "location": "abstract",
-            "quote": "The framework is implemented using two numerical continuation algorithms including an enhanced pseudo-arclength predictor--corrector strategy with adaptive step-size control and branch-restarting mechanisms to improve robustness for challenging nonconvex and degenerate problems."
-          },
-          {
-            "claim": "实验表明可从不可行点初始化并保持鲁棒性，且与标量化和进化算法进行了对比",
-            "location": "abstract",
-            "quote": "Numerical experiments demonstrate that the proposed method remains effective even when initialized from nonfeasible points, indicating practical robustness beyond the theoretical guarantees. Comparative studies evaluate the proposed framework against classical scalarization approaches and the evolutionary algorithms."
-          },
-          {
-            "claim": "结果指出初始化影响和延拓方法在恢复完整Pareto前沿覆盖方面的局限",
-            "location": "abstract",
-            "quote": "The results also highlight the effects of initialization and the limitations of continuation-based methods in recovering complete Pareto-front coverage."
-          }
-        ],
-        "experiments": [
-          "在基准问题、不连通与非凸多目标问题、可解析求解的三目标问题以及多目标IEEE 5节点最优潮流问题上进行实验",
-          "与经典标量化方法和进化算法进行对比",
-          "结果显示可从不可行点初始化并保持实用鲁棒性",
-          "结果强调初始化的影响以及延拓方法在恢复完整Pareto前沿覆盖方面的局限；具体数字未提供"
-        ],
-        "first_affiliation": "证据未提供",
-        "insight": "通过构造一个同伦映射，从容易求解的系统连续变形到原多目标问题的KKT系统，可将求解KKT点的问题转化为沿确定性延拓路径追踪，从而在给定正则性与参考点锥回避假设下获得KKT点；其有效性来自把多目标KKT条件嵌入同伦路径并利用延拓算法的路径跟踪能力。",
-        "limitations": [
-          "延拓方法在恢复完整Pareto前沿覆盖方面存在局限",
-          "初始化对结果有影响",
-          "理论保证依赖正则性与参考点锥回避假设"
-        ],
-        "method": [
-          "构造同伦映射，将易解系统连续变形为原多目标问题的KKT系统",
-          "在正则性与参考点锥回避假设下证明光滑有界延拓路径存在且累积点为KKT点",
-          "实现两种数值延拓算法，包括增强的伪弧长预测-校正策略",
-          "采用自适应步长控制与分支重启机制提升非凸和退化问题鲁棒性",
-          "允许从不可行点初始化以增强实用性"
-        ],
-        "motivation": "经典标量化方法和进化算法在约束多目标问题中常面临初始化敏感、非凸与退化问题鲁棒性不足以及难以保证KKT条件等困难，作者希望提供一种确定性的、可解释的求解Pareto临界点的同伦延拓途径。",
-        "primary_topic": "约束多目标优化的同伦延拓求解方法",
-        "relation_to_research": "该论文属于约束多目标优化的数学规划与确定性延拓求解方向，与智能优化、生产调度和AI4OR的关联较间接。其KKT同伦延拓机制可能为带复杂约束的多目标生产调度问题提供求解Pareto临界点的新思路，但推测迁移需满足问题可微或可构造KKT系统、约束满足正则性条件、并能承受连续化求解开销等条件，作者未讨论此类迁移。",
-        "relevance_score": 6,
-        "setting": "研究问题为求解带约束的多目标优化问题的KKT点，决策对象是连续变量，目标是计算Pareto临界（KKT）点，关键约束为一般等式与不等式约束，信息假设为利用问题的梯度/KKT系统结构，环境为静态确定性优化问题；是否涉及动态扰动材料未说明。",
-        "tags": [
-          "多目标优化",
-          "约束优化",
-          "同伦延拓",
-          "KKT点",
-          "Pareto前沿",
-          "预测-校正算法",
-          "确定性方法"
-        ],
-        "title_zh": "约束多目标优化的同伦框架",
-        "uncertainty": "仅基于标题与摘要，未提供全文，无法核实具体实验规模、运行时间、与基线的详细对比数值、算法伪代码细节以及理论证明的完整条件，因此对方法可复现性和实际性能的判断存在不确定性。",
-        "why_recommended": "对关注约束多目标优化、数学规划与学习辅助搜索结合的研究者，该工作提供了区别于进化算法和标量化的确定性KKT点计算方法，其延拓路径思想、自适应步长与分支重启机制或可启发混合求解器设计，且作者明确讨论了初始化敏感与Pareto前沿覆盖局限，有助于评估其在生产调度等约束优化中的潜在适用边界。"
-      },
-      "figure_gallery": {
-        "checked_at": "2026-10-18T09:56:23.437252+08:00",
-        "figures": [
-          {
-            "caption": "Example 1 : Approximation of the feasible objective-space region. Blue points in the left panel represent 200,000 200{,}000 uniformly sampled diagnostic points from the hypercube [ − 5 , 5 ] 5 [-5,5]^{5} ; while golden points denote 20,000 20{,}000 feasible candidate solutions obtained by projecting onto the constraint set. The right panel shows only the projected feasible candidates Pareto-critical solutions obtained by the different MOO methods are compared separately in Fig. 2 .",
-            "label": "Figure 1",
-            "number": 1,
-            "panels": [
-              {
-                "cached_path": "figures/arxiv/2605.00003/v2/fig1-panel1.png",
-                "original_url": "https://arxiv.org/html/2605.00003v2/Code/Example2/sampled_proj_feas_homotopy_new.png"
-              }
-            ],
-            "source": "arxiv_html",
-            "source_url": "https://arxiv.org/html/2605.00003v2#S4.F1"
-          },
-          {
-            "caption": "Example 1 : Feasible region obtained by projecting 20,000 20{,}000 randomly generated candidate points, sampled uniformly from the hypercube [ − 5 , 5 ] 5 [-5,5]^{5} , onto the constraint set. Pareto fronts generated by the weighted sum, proposed homotopy, global criterion, genetic algorithm NSGA-II, Lexicographic, and ϵ − \\epsilon- constraint method are denoted in red color. For NSGA-II, the equality constraints are imposed using the feasibility tolerance τ eq = 10 − 2 \\tau_{\\mathrm{eq}}=10^{-2} ; the sensitivity of the computed front to this tolerance is examined separately in Fig. 3 .",
-            "label": "Figure 2",
-            "number": 2,
-            "panels": [
-              {
-                "cached_path": "figures/arxiv/2605.00003/v2/fig2-panel1.png",
-                "original_url": "https://arxiv.org/html/2605.00003v2/Code20261002/Example1/figure2_six_methods_updated.png"
-              }
-            ],
-            "source": "arxiv_html",
-            "source_url": "https://arxiv.org/html/2605.00003v2#S4.F2"
-          }
-        ],
-        "html_url": "https://arxiv.org/html/2605.00003v2",
-        "status": "available"
-      },
-      "final_score": 0.4755562517672384,
-      "provenance": {
-        "analyzed_at": "2026-10-16T02:07:34.669641Z",
-        "input_hash": "cb8edf1dcfb4cbfeabcfb88182500249ec67a9a530bf19cc30e0f0cdff2a7100",
-        "model": "deepseek-v4-flash",
-        "prompt_version": "optimization-analysis-v1",
-        "reading_scope": "abstract"
-      },
-      "ranked": {
-        "paper": {
-          "abstract": "We develop a homotopy continuation framework for computing Karush--Kuhn--Tucker (KKT) points of constrained multiobjective optimization problems. The proposed homotopy map continuously deforms an easily solvable system into the KKT system associated with the original multiobjective problem, yielding a deterministic continuation path. Under the stated regularity and reference-point cone avoidance assumptions, we establish the existence of a smooth, bounded continuation path whose set of accumulation points as the homotopy parameter approaches zero is nonempty and consists of KKT points. The framework is implemented using two numerical continuation algorithms including an enhanced pseudo-arclength predictor--corrector strategy with adaptive step-size control and branch-restarting mechanisms to improve robustness for challenging nonconvex and degenerate problems. Numerical experiments demonstrate that the proposed method remains effective even when initialized from nonfeasible points, indicating practical robustness beyond the theoretical guarantees. Comparative studies evaluate the proposed framework against classical scalarization approaches and the evolutionary algorithms. Experiments on benchmark problems, disconnected and nonconvex multiobjective problems, analytically solvable three-objective problems, and a multiobjective IEEE 5-bus optimal power flow problem demonstrate the ability of the framework to compute KKT points in a variety of constrained settings. The results also highlight the effects of initialization and the limitations of continuation-based methods in recovering complete Pareto-front coverage. Overall, the proposed framework provides a deterministic and interpretable approach to computing Pareto-critical (KKT) points in constrained multiobjective optimization.",
-          "authors": [
-            "Olaoluwa Ogunleye",
-            "Guangming Yao",
-            "Jianhua Zhang",
-            "Manh Bui"
-          ],
-          "canonical_id": "2605.00003",
-          "categories": [
-            "math.OC",
-            "cs.NA",
-            "math.NA"
-          ],
-          "comment": null,
-          "pdf_url": "https://arxiv.org/pdf/2605.00003",
-          "published_at": "2026-02-16T19:16:28Z",
-          "source": "arxiv",
-          "title": "A Homotopy Framework for Constrained Multiobjective Optimization",
-          "updated_at": "2026-10-15T02:31:11Z",
-          "url": "https://arxiv.org/abs/2605.00003",
-          "version": 2
-        },
-        "rank": 23,
-        "score": {
-          "base_score": 0.3737386395767971,
-          "exploration": 0.4278018249775292,
-          "matched_terms": [
-            "multiobjective optimization"
-          ],
-          "negative_terms": [],
-          "personal": 0.0,
-          "recency": 0.47522847122707645,
-          "topic": 0.3292949204193652
-        }
-      },
-      "tier": "browse"
-    },
-    {
-      "analysis": {
-        "analysis": "作者通过系统研究LLM在VRP实例错误检测与纠正上的能力，识别出关键限制，特别是复杂实例和显著增加推理负担的错误。基于这些分析，作者提出自引导推理框架，让LLM自主生成代码以提供结构化洞察，辅助错误诊断。材料未说明其是否利用问题结构、分解、下界或图表示等具体分析手段。",
-        "challenges": [
-          "复杂VRP实例中错误诊断难度高",
-          "某些错误会显著增加LLM的推理负担",
-          "现有方法默认输入无错误，缺乏对真实数据故障的鲁棒处理"
-        ],
-        "corresponding_authors": [
-          "证据未提供"
-        ],
-        "evidence": [
-          {
-            "claim": "现有LLM求解VRP方法大多假设输入实例无错误，忽略真实数据中的故障",
-            "location": "abstract",
-            "quote": "However, most existing approaches assume that input instances are error-free, neglecting the presence of faults commonly encountered in real-world data."
-          },
-          {
-            "claim": "作者识别出LLM在错误检测上的关键限制，尤其是复杂实例或显著增加推理负担的错误",
-            "location": "abstract",
-            "quote": "and identify key limitations, particularly in handling complex instances or errors that substantially increase the LLM's reasoning burden."
-          },
-          {
-            "claim": "作者提出让LLM自主生成代码以提供结构化洞察的自引导推理框架来辅助错误诊断",
-            "location": "abstract",
-            "quote": "we propose a self-guided reasoning framework in which LLMs autonomously generate code that provides structured insights to aid in error diagnosis."
-          },
-          {
-            "claim": "实验表明该框架显著提升错误检测性能，达到接近完美的准确率",
-            "location": "abstract",
-            "quote": "Experiments across diverse problem settings and LLMs demonstrate that our framework significantly improves error detection performance, achieving near-perfect accuracy."
-          }
-        ],
-        "experiments": [
-          "在不同问题设置和多种LLM上进行实验",
-          "实验表明该框架显著提升错误检测性能，达到接近完美的准确率",
-          "具体基线、实例规模、运行时间、训练开销、消融和公平计算预算材料未说明"
-        ],
-        "first_affiliation": "证据未提供",
-        "insight": "作者的核心洞察是：让LLM自主生成代码来提供结构化洞察，可以减轻LLM直接进行错误诊断时的推理负担，从而在复杂VRP实例和复杂错误上提升检测性能。其有效性来自将部分推理外部化为可执行的程序化检查，而非单纯依赖语言模型内部的隐式推理。",
-        "limitations": [
-          "材料未说明"
-        ],
-        "method": [
-          "让LLM自主生成代码，作为结构化洞察辅助VRP实例错误诊断",
-          "采用自引导推理框架，由LLM自主引导错误检测与纠正过程",
-          "在不同问题设置和多种LLM上验证框架"
-        ],
-        "motivation": "现有基于大语言模型的VRP求解方法大多假定输入实例无错误，忽略了真实数据中常见的故障，因此需要系统研究LLM在VRP实例错误检测与纠正方面的能力，并克服其在复杂实例或推理负担大的错误上的局限。",
-        "primary_topic": "大语言模型用于车辆路径问题实例的错误检测与纠正",
-        "relation_to_research": "该论文直接研究大语言模型在车辆路径问题错误诊断中的应用，属于AI4OR与大模型智能体交叉方向。其自引导代码生成机制可能可迁移到生产调度中的约束校验、实例错误检测或模型可解性诊断，但这是推测，需要验证生成代码对调度约束和图结构表达的有效性、计算预算可控性以及对不同问题规模的泛化能力。",
-        "relevance_score": 6,
-        "setting": "研究问题为在车辆路径问题（VRP）实例中检测并纠正错误；决策对象是LLM对给定VRP实例是否含错以及错误位置的判断与修正；目标是在复杂实例和错误导致推理负担显著增加的情况下提升错误检测性能；关键约束为大多数现有方法假设输入实例无错误，而真实数据常含故障；信息假设是LLM可访问VRP实例并自主生成代码作为结构化洞察；静态或动态环境材料未说明。",
+        "setting": "论文研究医疗运营管理中的多准则决策问题：决策对象为门诊预约调度和急诊科配置方案；目标为在患者等待时间、提供者工作负荷/空闲/加班与运营成本之间进行权衡；关键约束包括各场景下的调度可行性以及急诊配置的运营约束，材料未说明具体约束形式；信息假设是由大语言模型智能体分别扮演不同利益相关者角色来提供准则权重或成对选择偏好；环境为静态决策场景，材料未说明是否存在动态扰动。",
         "tags": [
           "大语言模型",
-          "车辆路径问题",
-          "错误诊断",
-          "自引导推理",
-          "代码生成",
-          "组合优化"
+          "多智能体系统",
+          "多准则决策",
+          "偏好获取",
+          "鲁棒加权和优化",
+          "医疗运营管理",
+          "门诊调度",
+          "急诊配置"
         ],
-        "title_zh": "面向车辆路径问题错误诊断的自引导大语言模型推理",
-        "uncertainty": "仅依据标题与摘要，无法获知实验基线、问题规模、计算开销、具体错误类型、代码生成与诊断流程细节以及泛化表现；因此对其方法优越性和迁移可行性的判断存在较高不确定性。",
-        "why_recommended": "该工作关注真实数据中的错误诊断，而非理想化输入，补充了AI4OR中常被忽略的鲁棒性维度。其自引导代码生成思路为学习辅助搜索和自动建模提供了一种可借鉴的机制，尤其对处理柔性作业车间、分布式制造等场景中的实例异常和约束校验有潜在启发。"
+        "title_zh": "论基于大语言模型的多智能体系统在医疗运营管理多准则决策中的可能性与局限",
+        "uncertainty": "论文为 arXiv 预印本，全文节选不完整，部分实验细节、统计模型设定和鲁棒不确定集构造未在节选中完整呈现；第一单位依据脚注中的院系信息判断，通讯作者未在材料中明确标注；相关性评分基于偏好权重审计与优化决策的相邻性，而非生产调度核心方法。",
+        "why_recommended": "对研究AI4OR和多目标生产调度的读者而言，这篇论文提供了一个可迁移的审计视角：大语言模型智能体给出的目标权重不应默认可信，而应先检查其上下文敏感性、角色区分度和呈现顺序稳定性，再用不确定集衡量权重不确定性是否改变最终调度决策；其“偏好获取—统计诊断—鲁棒优化对比”的流程可用于设计生产调度中利益相关者偏好的获取与验证实验。"
       },
       "figure_gallery": {
-        "checked_at": "2026-10-18T09:56:23.437252+08:00",
-        "figures": [],
-        "html_url": "https://arxiv.org/html/2610.21393v1",
-        "status": "not_found"
+        "checked_at": "2026-10-19T10:13:31.534659+08:00",
+        "figures": [
+          {
+            "caption": "Paired score differences between condition HW or HO and condition B before deliberation, by agent and criterion. Values are mean differences in importance score points on the 1 1 – 9 9 scale; positive values mean higher importance in the stated condition. Error bars are 95% percentile bootstrap intervals over the ten base clinic descriptions.",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2610.23673/v1/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2610.23673v1/figure1_contextual_shifts.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2610.23673v1#S3.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2610.23673v1",
+        "status": "available"
       },
-      "final_score": 0.4500323386146179,
+      "final_score": 0.5560946059413372,
       "provenance": {
-        "analyzed_at": "2026-10-16T02:07:14.238197Z",
-        "input_hash": "bfb658fd5f408ed5564fa5293b3acaf8c58651c2777d522a9a56f9a128738522",
+        "analyzed_at": "2026-10-19T02:14:56.349010Z",
+        "input_hash": "dfeab20ae28a314ee6ca4c9de2bd9dfd9e28d482f667186fc8d893f4f7d59456",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Multi-criteria models for healthcare operations need weights that express how stakeholders trade off patient waiting time, provider workload, and operating cost, but these weights are difficult to quantify. Teams of large language model (LLM) agents, each prompted to represent a stakeholder, have been used to supply them. We propose a framework for assessing the reliability of LLM-generated preferences as inputs to multi-objective optimization and quantifying how their uncertainty affects decisions. We study explicit preferences by asking agents to rate the importance of the criteria in an outpatient appointment scheduling problem, and implicit preferences by inferring trade-offs from the agents' pairwise choices between emergency department configurations. The computational experiments show that the explicit preferences respond to the clinic's operating conditions and differ across roles, but deliberation among the agents can erase these differences, whereas simple averaging preserves them. The pairwise choices used to reveal the agents' implicit preferences depend largely on which option is presented first, and we find limited evidence that a statistical model using contextual information alongside presentation order predicts the agents' choices on new comparison pairs better than a model using presentation order alone. We then formulate robust weighted-sum optimization models to account for preference uncertainty. In most cases, these models select different schedules or configurations from those obtained using average preference weights. These results indicate that LLM-generated preferences need an audit of this kind before they are used as optimization weights in healthcare decision support.",
+          "authors": [
+            "Marco Boresta",
+            "Tommaso Giovannelli",
+            "Sepehr Namirad",
+            "Giulia Riccardi"
+          ],
+          "canonical_id": "2610.23673",
+          "categories": [
+            "math.OC",
+            "cs.AI",
+            "cs.MA"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2610.23673",
+          "published_at": "2026-10-16T16:05:15Z",
+          "source": "arxiv",
+          "title": "On the possibilities and limitations of LLM-based multi-agent systems for multi-criteria decision-making in healthcare operations management",
+          "updated_at": "2026-10-16T16:05:15Z",
+          "url": "https://arxiv.org/abs/2610.23673",
+          "version": 1
+        },
+        "rank": 7,
+        "score": {
+          "base_score": 0.5201720108024311,
+          "exploration": 0.4824837833249979,
+          "matched_terms": [
+            "multi-objective optimization",
+            "multi-agent",
+            "large language model"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.5457450253228742,
+          "topic": 0.523633500218714
+        }
+      },
+      "tier": "deep_read"
+    },
+    {
+      "analysis": {
+        "analysis": "作者将QAOA求解流程分解为固定问题到Ising哈密顿量的映射、以及昂贵且实例相关的经典角度寻优两部分，把后者替换为学习模型：以问题实例为输入、角度为输出，用离线数据训练，推理时单次前向传播；并通过比较拓扑敏感与不敏感模型分析实例结构对角度质量的影响。材料未说明具体图表示或训练信号细节。",
+        "challenges": [
+          "角度寻优为实例相关的非凸经典优化，逐例求解代价高",
+          "学习映射需在未见拓扑上保持角度质量",
+          "需在真实量子硬件上验证学习角度的采样质量不劣于求解器角度",
+          "前期数据生成与训练成本需在重复优化相似问题的场景中摊销"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "QAOA角度寻优是实例相关且计算昂贵的非凸经典优化任务",
+            "location": "abstract",
+            "quote": "finding good angles is an instance-specific and computationally expensive non-convex classical optimization task"
+          },
+          {
+            "claim": "学习模型以单次前向传播替代逐实例求解器并获得数量级加速且质量接近",
+            "location": "abstract",
+            "quote": "Our learned models replace the per-instance optimization, that we call the solver, with a single forward pass that is several orders of magnitude faster than the solver with a near identical quality."
+          },
+          {
+            "claim": "模型泛化到未见拓扑如Barabási-Albert和2D网格图",
+            "location": "abstract",
+            "quote": "Our models further generalize to unseen topologies such as Barab\\'asi-Albert and 2D grid graphs."
+          },
+          {
+            "claim": "量子硬件实验验证学习角度与求解器角度采样不可区分",
+            "location": "abstract",
+            "quote": "Experiments on quantum hardware confirm that QAOA samples with angles produced by our open-source models are indistinguishable from solver angles."
+          },
+          {
+            "claim": "拓扑敏感模型提升QAOA角度质量",
+            "location": "abstract",
+            "quote": "Crucially, models sensitive to the topology of the problem instance increase the quality of the QAOA angles."
+          },
+          {
+            "claim": "通过前期数据生成与训练成本摊销QAOA瓶颈，并可在定期优化相似问题的工业场景中长期摊销",
+            "location": "abstract",
+            "quote": "Our work amortizes a major bottleneck in QAOA by an up-front data generation and training cost."
+          }
+        ],
+        "experiments": [
+          "学习模型单次前向传播比逐实例solver快数个数量级，且质量接近相同（摘要未给出具体数字）",
+          "模型可泛化到未见拓扑，包括Barabási-Albert图与2D网格图",
+          "量子硬件实验表明，用开源模型角度得到的QAOA采样与solver角度不可区分",
+          "拓扑敏感模型相比其他模型提升QAOA角度质量",
+          "摘要未报告基线细节、实例规模、训练开销数字或消融设置"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "核心洞察是把“逐实例角度搜索”视为可从数据中学习的实例到角度映射，用前期数据生成与训练成本换取推理阶段的数量级加速；且模型对问题实例拓扑敏感时能提升角度质量，说明几何结构是学习该映射的有效归纳偏置。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "将组合优化问题映射为Ising哈密顿量，基态对应目标解",
+          "识别QAOA性能关键为变分角度集合，将逐实例经典优化称为solver",
+          "学习从问题实例到高质量QAOA角度的映射，以单次前向传播替代solver",
+          "比较不同模型对问题实例拓扑的敏感性，发现拓扑敏感模型角度质量更高",
+          "在量子硬件上用学习角度执行QAOA采样并与solver角度对比",
+          "开源模型；以离线数据生成与训练成本换取推理加速并支持长期摊销"
+        ],
+        "motivation": "QAOA性能取决于变分角度，但逐实例求解角度昂贵，构成QAOA的主要瓶颈；若能从实例直接预测高质量角度，并以一次前向传播替代逐实例求解，则可摊销重复出现的优化成本。",
+        "primary_topic": "学习实例到QAOA变分角度的映射以摊销经典优化开销",
+        "relation_to_research": "论文核心是量子组合优化的变分参数学习，并非经典生产调度或FJSP/流水车间问题；但其“学习实例到求解器参数/配置的映射以替代逐实例昂贵搜索”的范式与学习辅助搜索、自动算法配置和AI4OR中的摊还优化存在方法邻近性。推测：若迁移到生产调度，需要把调度实例编码为与拓扑敏感模型类似的图结构，构造高质量调度求解器参数或搜索策略标签，并在公平计算预算和约束可行性下验证泛化；这些均为迁移设想，非作者结论。",
+        "relevance_score": 6,
+        "setting": "研究问题是求解困难组合优化问题：QAOA将其映射为Ising哈密顿量，基态即目标解，候选解由含变分角度的参数化量子线路采样。目标是为每个问题实例获得高质量变分角度；关键难点是角度寻优是实例相关、非凸且计算昂贵的经典优化任务。信息假设、约束形式与动态环境材料未说明；应用场景为需定期优化大量相似问题的工业设定。",
+        "tags": [
+          "量子近似优化算法",
+          "组合优化",
+          "Ising哈密顿量",
+          "学习辅助优化",
+          "拓扑敏感模型",
+          "摊还推理",
+          "量子硬件验证"
+        ],
+        "title_zh": "为量子近似优化学习变分角度",
+        "uncertainty": "仅有标题与摘要，缺少模型结构、输入表示、数据规模、训练细节、基线设置与具体数值；无法判断对经典调度问题的可迁移程度，相关性评分为相邻方向而非直接目标领域。",
+        "why_recommended": "对关注学习辅助优化、以ML替代内层昂贵搜索、摊销重复求解成本和拓扑/图归纳偏置的研究者有方法借鉴价值；尤其适合思考如何将“实例到求解器超参或策略”的映射用于生产调度，但须注意其问题域为量子组合优化，不能直接等同于调度求解证据。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-19T10:13:31.534659+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2610.23296v1",
+        "status": "html_unavailable"
+      },
+      "final_score": 0.47345831969266616,
+      "provenance": {
+        "analyzed_at": "2026-10-19T02:15:04.164824Z",
+        "input_hash": "36a69f3fb4afa347423d9688fc7119405154ab93bbf63a5cb07102b45dd37c7b",
         "model": "deepseek-v4-flash",
         "prompt_version": "optimization-analysis-v1",
         "reading_scope": "abstract"
       },
       "ranked": {
         "paper": {
-          "abstract": "Vehicle Routing Problems (VRPs) are fundamental to many real-world applications. Recent advances in large language models (LLMs) have spurred progress in solving these NP-hard problems. However, most existing approaches assume that input instances are error-free, neglecting the presence of faults commonly encountered in real-world data. In this work, we systematically investigate the capability of LLMs to detect (and correct) errors in VRP instances, and identify key limitations, particularly in handling complex instances or errors that substantially increase the LLM's reasoning burden. To overcome these challenges, we propose a self-guided reasoning framework in which LLMs autonomously generate code that provides structured insights to aid in error diagnosis. Experiments across diverse problem settings and LLMs demonstrate that our framework significantly improves error detection performance, achieving near-perfect accuracy.",
+          "abstract": "The Quantum Approximate Optimization Algorithm (QAOA) and its variants are leading algorithms to help solve challenging combinatorial optimization problems. QAOA maps these problems to Ising Hamiltonians such that their ground state is the desired solution. Candidate solutions are then drawn from a variational quantum circuit. The performance of QAOA hinges on a set of variational angles. However, finding good angles is an instance-specific and computationally expensive non-convex classical optimization task. Here, we learn the mapping from the problem instance to high-quality QAOA angles. Our learned models replace the per-instance optimization, that we call the solver, with a single forward pass that is several orders of magnitude faster than the solver with a near identical quality. Our models further generalize to unseen topologies such as Barab\\'asi-Albert and 2D grid graphs. Experiments on quantum hardware confirm that QAOA samples with angles produced by our open-source models are indistinguishable from solver angles. Crucially, models sensitive to the topology of the problem instance increase the quality of the QAOA angles. Our work amortizes a major bottleneck in QAOA by an up-front data generation and training cost. Importantly, this cost can be amortized over time in settings where many similar problems are optimized on a regular basis, as is often the case in applications for industry.",
           "authors": [
-            "Ni Zhang",
-            "Jianan Zhou",
-            "Yue-Jiao Gong",
-            "Zhiguang Cao"
+            "Johannes Jakubik",
+            "Isabelle Wittmann",
+            "Zaheed Gaffoor",
+            "Gciniwe Simphiwe Baloyi",
+            "Craig Mahlasi",
+            "Etienne Vos",
+            "Thomas Brunschwiler",
+            "Daniel J. Egger"
           ],
-          "canonical_id": "2610.21393",
+          "canonical_id": "2610.23296",
           "categories": [
-            "cs.AI",
+            "quant-ph",
             "cs.LG"
           ],
           "comment": null,
-          "pdf_url": "https://arxiv.org/pdf/2610.21393",
-          "published_at": "2026-10-15T07:08:51Z",
+          "pdf_url": "https://arxiv.org/pdf/2610.23296",
+          "published_at": "2026-10-16T11:02:38Z",
           "source": "arxiv",
-          "title": "Self-Guided LLM Reasoning for Error Diagnosis in Vehicle Routing Problems",
-          "updated_at": "2026-10-15T07:08:51Z",
-          "url": "https://arxiv.org/abs/2610.21393",
+          "title": "Learning angles for quantum approximate optimization",
+          "updated_at": "2026-10-16T11:02:38Z",
+          "url": "https://arxiv.org/abs/2610.23296",
           "version": 1
         },
-        "rank": 21,
+        "rank": 14,
         "score": {
-          "base_score": 0.3273315247538506,
-          "exploration": 0.3840442935992253,
+          "base_score": 0.3699242176230293,
+          "exploration": 0.11564317660290445,
           "matched_terms": [
-            "vehicle routing"
+            "combinatorial optimization"
           ],
           "negative_terms": [],
           "personal": 0.0,
-          "recency": 0.49869849712916353,
-          "topic": 0.26216588440508265
+          "recency": 0.5178130471846389,
+          "topic": 0.4003219923254622
+        }
+      },
+      "tier": "browse"
+    },
+    {
+      "analysis": {
+        "analysis": "材料未说明作者如何具体分析问题结构；摘要仅表明通过迭代局部搜索流式产生改进解，并用分支定价切割在显式算术与搜索假设下发布计算最优性证书，二者共享同一检查器一致的引擎。",
+        "challenges": [
+          "时间依赖旅行时间使出发时间成为连续决策变量，精确建模与求解复杂",
+          "分段线性旅行时间与分支定价切割框架的结合需要处理非平凡的最短路径与标签设置",
+          "在开源实现中保证启发式与精确方法结果检查器一致",
+          "在有限计算预算下同时提供早期可行解与最优性证书",
+          "公开基准上历史声明存在错误，需要可复现的验证协议"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文研究时间依赖车辆路径问题，出发时间也是决策变量，目标为时长最小化。",
+            "location": "abstract",
+            "quote": "Time-dependent routing recognizes that the same journey can take a different time depending on when it begins. Under duration minimization, even the departure time of each vehicle becomes a decision."
+          },
+          {
+            "claim": "KAYROS 提供随时迭代局部搜索与可发布最优性证书的分支定价切割两种模式，并运行在检查器一致的引擎上。",
+            "location": "abstract",
+            "quote": "KAYROS fills this gap with two modes on one checker-consistent engine: an Iterated Local Search that streams improving solutions and a Branch-Price-and-Cut method that can issue computational optimality certificates under explicit arithmetic and search assumptions."
+          },
+          {
+            "claim": "在 Blauth2024 的 40 个实例上提供了新的已知最好解。",
+            "location": "abstract",
+            "quote": "for which KAYROS provides new best-known solutions on all 40 instances"
+          },
+          {
+            "claim": "公开 MAMUT-routing 库包含 704 个 KAYROS 证书，并导致此前无效声明的撤回与修复。",
+            "location": "abstract",
+            "quote": "The public MAMUT-routing store currently contains 704 KAYROS certificates under a four-solve publication protocol, which has also led to the retraction and repair of invalid earlier claims."
+          },
+          {
+            "claim": "提出 Poryos2026 基准，包含 1,080 个配对的静态与时间依赖实例。",
+            "location": "abstract",
+            "quote": "The second proposes Poryos2026, a new benchmark of 1,080 paired static and time-dependent instances built from OpenStreetMap road networks and controlled synthetic traffic."
+          }
+        ],
+        "experiments": [
+          "在 Blauth2024 的 40 个实例上，KAYROS 提供了新的已知最好解。",
+          "公开 MAMUT-routing 库当前包含 704 个 KAYROS 证书，采用四求解发布协议；该协议还导致此前无效声明的撤回与修复。",
+          "提出 Poryos2026 基准，包含 1,080 个配对的静态与时间依赖实例，但摘要未给出在该基准上的求解结果数字。",
+          "摘要未提供运行时间、训练开销、与其它求解器的对比基线或消融实验的具体数字。"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "将随时可用的迭代局部搜索与可证明最优的分支定价切割方法集成在同一个检查器一致的引擎上，使启发式流式改进解与精确最优性证书共享算术与搜索假设，从而在开放环境中兼顾早期可行解和可验证的最优性；公开证书与复现协议进一步支撑结果的可信度。",
+        "limitations": [
+          "材料未说明作者明确陈述的局限性；摘要仅提及最优性证书依赖于显式算术与搜索假设。"
+        ],
+        "method": [
+          "实现两种模式：迭代局部搜索（ILS）流式输出改进的可行解；分支定价切割（Branch-Price-and-Cut）在显式算术与搜索假设下给出计算最优性证书。",
+          "两种模式运行在同一个检查器一致的引擎上，以统一验证解与证书。",
+          "支持丰富的分段线性旅行时间函数。",
+          "以单命令安装、无专有依赖的方式发布开源求解器。",
+          "在 MAMUT-routing 公开库上按四求解发布协议提交 704 个 KAYROS 证书。",
+          "将 Blauth2024 基准（旅行时间源自实测 Uber 速度）集成到 MAMUT-routing，并在 40 个实例上提供新的已知最好解。",
+          "提出 Poryos2026 基准：基于 OpenStreetMap 路网和受控合成交通构建 1,080 个配对的静态与时间依赖实例。",
+          "报告背后的人机协作过程及保持输出可独立验证的验证实践。"
+        ],
+        "motivation": "文献中虽存在时间依赖路径问题的精确方法，但研究者与实践者缺乏一个可直接使用的开源求解器，能够同时支持丰富的分段线性旅行时间、尽早给出可行解并声明最优性；现有公开结果中还出现过无效声明，需要可验证的求解与发布协议。",
+        "primary_topic": "时间依赖车辆路径问题的精确与启发式求解器",
+        "relation_to_research": "该工作直接研究时间依赖车辆路径问题的精确与启发式求解，属于车辆路径与组合优化求解器方向，与生产调度中的路径规划、时间依赖调度有方法层面的邻接关系；其随时启发式与精确证书结合、开源可复现基准和发布协议，对学习辅助搜索与智能优化中的约束可行性验证、公平计算预算和可复现性有参考价值。但摘要未涉及神经网络、强化学习或智能体优化，迁移到柔性作业车间、流水车间或生产运输协同问题需要重新建模时间依赖结构与约束，这属于推测性迁移，需要验证。",
+        "relevance_score": 6,
+        "setting": "研究时间依赖车辆路径问题（TDVRP），决策对象包括车辆路径以及每辆车的出发时间，目标是最小化总时长，旅行时间为分段线性函数；需要处理出发时间决策、精确性证明与启发式可行解的结合；动态或静态环境、车队规模、时间窗等关键约束在摘要中未说明。",
+        "tags": [
+          "时间依赖车辆路径",
+          "随时算法",
+          "分支定价切割",
+          "迭代局部搜索",
+          "开源求解器",
+          "基准测试",
+          "人机协作"
+        ],
+        "title_zh": "KAYROS：一个用于时长最小化时间依赖车辆路径的随时与精确开源求解器——技术报告及人机工程案例研究",
+        "uncertainty": "仅依据标题与摘要，未提供全文，无法确认方法细节、实验数字、基线对比、计算预算和作者明确陈述的局限；相关性评分为 6 主要基于问题邻接与求解器设计思想，而非直接的学习型优化方法。",
+        "why_recommended": "对关注约束可行性验证、精确与启发式混合求解、开源基准和可复现发布协议的研究者有参考价值；其“随时可行解+计算最优性证书”的引擎设计可为生产调度中学习辅助搜索的验证环节提供思路，但不应因出现‘求解器’或‘AI’分类而高估其与神经网络辅助优化的直接相关性。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-19T10:13:31.534659+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2607.23116v3",
+        "status": "html_unavailable"
+      },
+      "final_score": 0.46318604156706045,
+      "provenance": {
+        "analyzed_at": "2026-10-19T02:15:04.734091Z",
+        "input_hash": "4f4a2449413249e0d64ef44cc775daa82795dd3dc83b882652437e61ce6bbaa5",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Time-dependent routing recognizes that the same journey can take a different time depending on when it begins. Under duration minimization, even the departure time of each vehicle becomes a decision. Exact methods for this setting exist in the literature, but researchers and practitioners have lacked a ready-to-use open solver that combines rich piecewise-linear travel times, early feasible solutions and optimality claims. KAYROS fills this gap with two modes on one checker-consistent engine: an Iterated Local Search that streams improving solutions and a Branch-Price-and-Cut method that can issue computational optimality certificates under explicit arithmetic and search assumptions. It installs with one command and has no proprietary dependency. The public MAMUT-routing store currently contains 704 KAYROS certificates under a four-solve publication protocol, which has also led to the retraction and repair of invalid earlier claims. The report presents two complementary benchmark contributions to MAMUT-routing. The first integrates Blauth2024, a benchmark from the literature whose travel times derive from measured Uber speeds, for which KAYROS provides new best-known solutions on all 40 instances. The second proposes Poryos2026, a new benchmark of 1,080 paired static and time-dependent instances built from OpenStreetMap road networks and controlled synthetic traffic. Finally, the report describes the intensive human-AI collaboration behind this work and the verification practices that kept its outputs independently verifiable.",
+          "authors": [
+            "Florian Rascoussier",
+            "Romain Billot",
+            "Lina Fahed",
+            "Christine Solnon"
+          ],
+          "canonical_id": "2607.23116",
+          "categories": [
+            "math.OC",
+            "cs.AI",
+            "cs.MS"
+          ],
+          "comment": "v3: 31 pages, 7 figures, 4 tables. Updated authorship, affiliations and acknowledgements. Clarified binary64 checker consistency and pinned KAYROS 1.6.1 with mamut-routing-lib 0.11.0. Technical report accompanying KAYROS and Poryos2026. No new experiments",
+          "pdf_url": "https://arxiv.org/pdf/2607.23116",
+          "published_at": "2026-07-25T09:16:40Z",
+          "source": "arxiv",
+          "title": "KAYROS: An Anytime and Exact Open-Source Solver for Duration-Minimization Time-Dependent Vehicle Routing. A Technical Report and a Case Study in Human-AI Engineering",
+          "updated_at": "2026-10-16T14:55:58Z",
+          "url": "https://arxiv.org/abs/2607.23116",
+          "version": 3
+        },
+        "rank": 15,
+        "score": {
+          "base_score": 0.3512473483037462,
+          "exploration": 0.10562436238404918,
+          "matched_terms": [
+            "vehicle routing",
+            "local search"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.5392199313598591,
+          "topic": 0.36771889197905594
         }
       },
       "tier": "browse"
@@ -876,21 +1024,21 @@
   ],
   "schema_version": 1,
   "stats": {
-    "cache_hits": 20,
-    "deduplicated": 789,
-    "failed": 2,
-    "fetched": 789,
-    "figure_available": 3,
-    "figure_cache_hits": 5,
+    "cache_hits": 0,
+    "deduplicated": 646,
+    "failed": 1,
+    "fetched": 646,
+    "figure_available": 2,
+    "figure_cache_hits": 0,
     "figure_failed": 0,
     "figure_panel_failed": 0,
-    "figure_requests": 6,
+    "figure_requests": 10,
     "full_text_reads": 10,
-    "input_tokens": 45538,
-    "model_calls": 5,
-    "output_tokens": 22928,
-    "preselected": 25,
-    "published": 6,
+    "input_tokens": 59405,
+    "model_calls": 16,
+    "output_tokens": 36777,
+    "preselected": 16,
+    "published": 7,
     "source_lookback_days": 3
   }
 }
