@@ -1,0 +1,1548 @@
+{
+  "dry_run": false,
+  "generated_at": "2026-10-20T10:28:18.306904+08:00",
+  "papers": [
+    {
+      "analysis": {
+        "analysis": "作者从 FJSP 序列决策的结构出发，观察到相邻决策间全局状态变化有限，把状态分解为区间级表示状态与逐步可行性状态；用可行动作集递推式 A_t=f_mask(s^{feas}_{t-1},a_{t-1}) 说明掩码更新只改变可行动作范围而不修改状态特征；在区间边界用向量化重建函数 f_recon 一次性处理大部分特征，仅对具有严格顺序依赖的工序相对完工时间做顺序更新，从而在结构上分离表示刷新与可行性维护。材料未说明更形式化的下界或图论分析。",
+        "challenges": [
+          "区间级表示复用会造成表示陈旧，影响可行动作之间的排序质量",
+          "复用的同时仍需保证每一步构造的调度连续可行，需精确维护动态约束与可行动作集",
+          "区间边界需重建完整状态，其中相对完工时间存在严格顺序依赖，难以完全批量更新",
+          "区间长度如何选取缺乏自适应机制",
+          "加速幅度依赖图编码确实是推理成本的主要部分"
+        ],
+        "corresponding_authors": [
+          "Yuan Jiang",
+          "You Zhou",
+          "Di Wang"
+        ],
+        "evidence": [
+          {
+            "claim": "论文将图表示刷新与可行性更新解耦，使编码次数由 T 降为 ⌈T/X⌉",
+            "location": "supplied_full_text",
+            "quote": "By reusing interval-level graph representations across consecutive scheduling decisions, CoRS reduces the number of graph encoding operations from T T to ⌈ T / X ⌉ \\lceil T/X\\rceil"
+          },
+          {
+            "claim": "现有神经 FJSP 求解器每步都刷新图表示，造成大量计算",
+            "location": "supplied_full_text",
+            "quote": "existing methods perform complete feature encoding for highly similar states, resulting in substantial computation and significantly degrading solution efficiency."
+          },
+          {
+            "claim": "增强静态特征用于缓解区间状态重用导致的表示陈旧",
+            "location": "abstract",
+            "quote": "to alleviate representation staleness caused by interval-level state reuse, CoRS introduces enhanced static features as a compensation mechanism."
+          },
+          {
+            "claim": "实验显示推理时间显著降低并保持有竞争力的解质量",
+            "location": "abstract",
+            "quote": "Extensive experiments on synthetic and multiple public FJSP benchmarks demonstrate that CoRS significantly reduces inference time while maintaining competitive solution quality"
+          },
+          {
+            "claim": "作者承认区间长度需人工选择且假设静态确定性 FJSP",
+            "location": "supplied_full_text",
+            "quote": "A current limitation is that the composite interval length is manually selected. The current method assumes a static deterministic FJSP and an exact stepwise feasibility tracker."
+          }
+        ],
+        "experiments": [
+          "在合成实例与多个公开 FJSP 基准上评测，报告推理时间显著降低且解质量具竞争力，在紧墙钟预算与低延迟场景下取得较好的速度—质量折中",
+          "表 2 考察区间长度 X∈{2,3,4,5} 与增强静态特征的交互：CoRS 在 G/S 两类数据上 Cmax 约 107.91–109.35 与 101.94–102.62；去掉增强静态特征后 Cmax 变差（G 约 108.89–113.56，S 约 102.34–109.63），说明复用时补偿特征重要",
+          "表 3 从 DANIEL 渐进到 DANIEL+CR 再到 CoRS：G 上 Cmax 1031.95→1044.98→1032.45，时间 0.912→0.307→0.213；S 上 Cmax 978.33→991.05→982.23，时间 3.25→1.118→0.895，显示 CR 机制大幅降时、增强特征部分挽回质量",
+          "材料未说明并行基线、训练开销与公平计算预算的具体细节"
+        ],
+        "first_affiliation": "吉林大学计算机科学与技术学院",
+        "insight": "贡献有效的关键在于把调度状态按更新代价与更新必要性解耦为两个时间尺度：只需保证可行性在每步精确，昂贵但变化缓慢的图表示可以跨多个决策复用，从而把图编码次数从 T 降到 ⌈T/X⌉，在不减少动作生成步数、不放松约束的前提下摊薄编码开销；同时用显式动态可行性掩码和区间边界的完整状态重建来控制复用带来的表示陈旧误差。",
+        "limitations": [
+          "复合区间长度需人工选择",
+          "方法假设静态确定性的 FJSP 与精确的逐步可行性跟踪器",
+          "陈旧表示仍可能影响可行动作之间的排序",
+          "可获得的加速取决于图编码在推理成本中占主要比重"
+        ],
+        "method": [
+          "两时间尺度状态演化（Composite Regressive 机制）：区间级图表示只在复合区间边界刷新，逐步可行性状态在每个动作后更新",
+          "复合区间解码算法：每步通过动态可行性掩码 f_mask 更新机器释放时间、候选工序及机器兼容关系、最早开始时间，屏蔽不可行动作",
+          "区间边界的状态同步：区间 B^τ 完成后，用 f_recon 以向量化方式重建下一输入状态，仅相对完工时间顺序更新",
+          "增强静态特征作为补偿机制，为模型提供更全面的问题结构信息，缓解表示陈旧",
+          "图编码产生机器与工序的全局表示并拼接为 h_global，供决策与价值评估",
+          "Actor–Critic 框架训练，拼接后的区间特征输入策略网络"
+        ],
+        "motivation": "现有神经 FJSP 求解器在每次“工序—机器”决策后都重新刷新完整图表示并更新可行性，但相邻决策间全局状态变化有限，而图编码远比可行性更新昂贵。作者因此质疑“每步必须刷新表示”的隐含假设，希望在放宽约束、不并行化动作生成的前提下降低推理时间，满足大规模与低延迟调度需求。",
+        "primary_topic": "神经组合优化求解柔性作业车间调度（FJSP）的推理效率优化",
+        "relation_to_research": "论文直接研究柔性作业车间的神经求解方法，属于 AI4OR 与学习辅助搜索的核心方向；其“将昂贵的表示刷新与廉价的可行性更新解耦”的机制可迁移到其他序列决策式调度求解器。推测：迁移到生产运输协同、动态扰动或分布式制造时，需引入事件触发式状态重建以应对动态事件，并在多目标场景中验证表示陈旧对 Pareto 质量的影响；迁移到其他组合优化问题时需保证存在廉价且精确的可行性增量更新结构。",
+        "relevance_score": 9,
+        "setting": "研究静态确定性柔性作业车间调度问题（FJSP）：决策对象是每步选择一道可加工工序及其加工机器，目标是最小化最大完工时间（Cmax，由实验表中Cmax列可推知），关键约束为工序优先关系、机器兼容性与释放时间等调度可行性约束；信息假设为调度状态以操作—机器图表示，需在每步决策后保持可行性精确；环境为静态确定性，不含动态扰动，且依赖精确的逐步可行性跟踪器。",
+        "tags": [
+          "柔性作业车间调度",
+          "神经求解器",
+          "状态重用",
+          "图表示编码",
+          "Actor-Critic",
+          "可行性保持解码",
+          "推理加速"
+        ],
+        "title_zh": "CoRS：通过复合区间状态重用来实现快速神经柔性作业车间调度",
+        "uncertainty": "仅获得摘要与部分全文节选，缺少完整实验设置、基线构成、训练细节与统计显著性，因此对实验结论的外部有效性判断有限；部分方法细节（如增强静态特征的具体构成）由片段推断，需核对原文。",
+        "why_recommended": "对关注神经调度求解器推理效率、公平计算预算与低延迟部署的研究者具有直接价值：它提出表示刷新频率这一被忽视的设计维度，给出可行性保持的解码与状态同步细节，并在公开 FJSP 基准上报告速度—质量折中，便于与并行自回归或非自回归方法对照，也提示了表示陈旧与区间长度自适应等可继续研究的问题。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-20T10:28:18.306904+08:00",
+        "figures": [
+          {
+            "caption": "The architecture of CoRS.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2610.26239/v1/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2610.26239v1/Figures/Architecture.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2610.26239v1#Sx3.F1"
+          },
+          {
+            "caption": "The network architecture of the CoRS.",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2610.26239/v1/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2610.26239v1/Figures/network.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2610.26239v1#Sx4.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2610.26239v1",
+        "status": "available"
+      },
+      "final_score": 0.7360535328097577,
+      "provenance": {
+        "analyzed_at": "2026-10-20T02:29:11.659384Z",
+        "input_hash": "2e6f5628a47f9a6aacdabd8438587afadb57db323a3342ec936bc2999662f5ed",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Neural solvers for the Flexible Job-Shop Scheduling Problem (FJSP) typically refresh graph representations and update feasibility after every operation--machine decision. However, only feasibility must remain exact at every step, whereas graph encoding is substantially more expensive and can potentially be refreshed less frequently. We present CoRS, which decouples them: an interval-level graph representation is reused across multiple sequential decisions, while a stepwise feasibility state is updated after every action. This two-timescale design amortizes graph encoding without parallelizing action generation or relaxing scheduling constraints. CoRS further develops a feasibility-preserving composite-interval decoding scheme with dynamic constraint tracking and boundary state synchronization, which reduces representation refresh frequency while maintaining continuous feasible schedule construction. Furthermore, to alleviate representation staleness caused by interval-level state reuse, CoRS introduces enhanced static features as a compensation mechanism. By providing more comprehensive structural information of the scheduling problem, these features improve the model's perception of overall problem characteristics. Extensive experiments on synthetic and multiple public FJSP benchmarks demonstrate that CoRS significantly reduces inference time while maintaining competitive solution quality, achieving favorable speed-quality trade-offs under tight wall-clock budgets and low-latency scenarios.",
+          "authors": [
+            "Jiang Sutong",
+            "Zhao Peng",
+            "Wu Xuan",
+            "Wang Yan",
+            "Wang Jiaqi",
+            "Zhang Rui",
+            "Jiang Yuan",
+            "Zhou You",
+            "Wang Di"
+          ],
+          "canonical_id": "2610.26239",
+          "categories": [
+            "cs.AI"
+          ],
+          "comment": "9 pages, 4 figures",
+          "pdf_url": "https://arxiv.org/pdf/2610.26239",
+          "published_at": "2026-10-19T12:01:41Z",
+          "source": "arxiv",
+          "title": "CoRS: Fast Neural Flexible Job-Shop Scheduling via Composite Interval State Reuse",
+          "updated_at": "2026-10-19T12:01:41Z",
+          "url": "https://arxiv.org/abs/2610.26239",
+          "version": 1
+        },
+        "rank": 3,
+        "score": {
+          "base_score": 0.6019155141995594,
+          "exploration": 0.45689614039633725,
+          "matched_terms": [
+            "job shop",
+            "job-shop"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.860316296744145,
+          "topic": 0.5695208259877412
+        }
+      },
+      "tier": "deep_read"
+    },
+    {
+      "analysis": {
+        "analysis": "作者将自然语言优化问题先用固定模板经 LLM 分解为逻辑组件（如 context、objective、constraints），对每个组件生成候选计划步骤并由 LLM 评估器打分，从而把建模过程结构化为可搜索的计划树；随后将其视为序贯决策问题，用 UCT 式规则在备选 RDP 之间探索与精炼，每个候选计划被展开为完整可执行 Python 程序并实际执行，由执行结果给出奖励并回传更新树上的价值估计，以此利用问题本身的求解反馈指导后续计划选择；同时提出块状 Search-then-Apply 策略，在一部分实例上搜索并将最优块内 RDP 复用于后续实例以摊销树搜索开销。",
+        "challenges": [
+          "长结构化自然语言描述下的长程多步推理难以在一次自回归生成中保持一致",
+          "约束容易被遗漏或误译，导致不可行或非凸模型",
+          "生成程序可能语法合理但逻辑不一致或与求解器不兼容",
+          "搜索空间为计划序列的组合空间，需要平衡探索与利用并控制推断成本",
+          "把执行反馈转化为可回传的奖励需要评估器同时衡量可执行性、约束满足与解质量"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文提出用蒙特卡洛树搜索在代码合成之前搜索推理分解计划，并以执行反馈作为奖励",
+            "location": "abstract",
+            "quote": "We introduce Monte Carlo Tree Search for Reasoning Decomposition Plans (MCTS-RDP), which performs pre-hoc test-time scaling by searching over decomposition plans and their resulting programs before committing to the final output."
+          },
+          {
+            "claim": "标准提示在真实优化建模任务上会遗漏约束并产生不可行、非凸或不可执行程序",
+            "location": "abstract",
+            "quote": "it struggles with long, structured task descriptions, mishandles constraints, and produces infeasible, non-convex, or non-executable programs."
+          },
+          {
+            "claim": "每个候选计划被展开为可执行代码并以可执行性、约束满足与解质量评分，反馈回传搜索树",
+            "location": "abstract",
+            "quote": "Each candidate plan is rolled out into executable code, executed, and scored with an execution-grounded evaluator measuring executability, constraint satisfaction, and solution quality; this feedback is backpropagated through the search tree to guide subsequent search."
+          },
+          {
+            "claim": "实验覆盖无线优化任务以及 NL4OPT 与 NLP4LP 基准，并优于 one-shot、CoT、Self-Refine 与 OPTIMUS 等基线",
+            "location": "abstract",
+            "quote": "Across wireless optimization tasks and the NL4OPT and NLP4LP benchmarks, MCTS-RDP consistently outperforms strong baselines, including one-shot prompting, Chain-of-Thought prompting, Self-Refine, and OPTIMUS, improving execution success, reward, stability, and optimality attainment."
+          },
+          {
+            "claim": "当前实验主要覆盖线性与凸优化，混合整数与非凸问题仍需评估",
+            "location": "supplied_full_text",
+            "quote": "The present experiments primarily cover linear and convex optimization formulations, and further evaluation is needed for mixed-integer, nonconvex, and broader domain-specific problems."
+          },
+          {
+            "claim": "Search-then-Apply 假设搜索阶段得到的计划能迁移到同一分布的后续实例",
+            "location": "supplied_full_text",
+            "quote": "the search–then–apply variant assumes that plans discovered during the search phase transfer effectively to subsequent instances from the same problem distribution."
+          }
+        ],
+        "experiments": [
+          "在修改版 NL4OPT（100 题）、NLP4LP（242 题）与 100 个无线资源分配问题共 442 个自然语言优化任务上评估",
+          "修改版 NL4OPT 通过增加决策变量与辅助参数、引入分层与相互依赖约束、丰富上下文描述来提升结构难度，同时保持凸性",
+          "无线任务建模 SINR 约束与用户干扰下的功率分配等场景",
+          "基线包括 GPT-3.5-Turbo、GPT-4、GPT-5、Gemini-2.5-Pro 的 one-shot 提示，以及 Chain-of-Thought、Self-Refine 与 OPTIMUS",
+          "摘要报告 MCTS-RDP 在可执行成功率、奖励、稳定性与最优性达成上一致优于强基线，但材料未给出具体数值",
+          "全文结论段报告成功率高 25–70 个百分点、奖励高 2∼4 倍、标准差低 3 倍、最优性达成最多提升 10 倍（该段以 MCTS-OPS 命名，与 MCTS-RDP 名称不一致）",
+          "评估指标包含执行成功率、约束满足、最优性达成、token 用量与端到端推断时间；实验在 AMD EPYC 7513 32 核 CPU 与 NVIDIA RTX A6000 GPU 的 Linux 机器上以 Python 3 实现",
+          "块状 Search-then-Apply 在 242 实例基准上块大小为 24，每块 SEARCH 实例数为 3，归档 GPT-5 运行共 32 个 SEARCH 与 210 个 APPLY 实例，实际搜索比例为 32/242=13.2%"
+        ],
+        "first_affiliation": "The George Washington University",
+        "insight": "其有效性来自把“如何分解问题并组织建模步骤”本身当作序贯决策对象，在代码合成之前先搜索计划空间，并用真实执行得到的可执行性、约束满足与解质量作为奖励回传到搜索树，从而让搜索直接以优化问题本身的求解表现为信号来区分不同分解方案，而不是把早期建模选择固定下来只做最终候选筛选。",
+        "limitations": [
+          "实验主要覆盖线性与凸优化建模，混合整数、非凸及更广领域问题仍需进一步评估",
+          "Search-then-Apply 变体假设搜索阶段得到的计划能有效迁移到同一问题分布的后续实例",
+          "搜索预算可能被花费在探索不一致的分支上（材料提到生成与执行之间存在不一致）"
+        ],
+        "method": [
+          "用固定模板和 LLM 将问题描述分解为 context、objective、constraints 等逻辑组件",
+          "对每个组件生成候选计划步骤，并用基于 LLM 的评估器进行初始打分",
+          "把 RDP 构造建模为序贯决策问题，用 MCTS 与 UCT 式选择规则在备选计划序列上平衡探索与利用",
+          "将每个候选计划 rollout 为完整可执行 Python 程序并实际执行",
+          "用执行落地评估器衡量可执行性、约束满足与解质量，并将奖励回传搜索树指导后续搜索",
+          "采用块状 Search-then-Apply 策略：在每个块内仅对部分实例执行计划搜索，并将块内最优 RDP 复用于其余实例以摊销成本",
+          "在多个 LLM 后端上评估可执行性、约束满足、最优性达成、奖励稳定性、token 用量与端到端推断时间"
+        ],
+        "motivation": "数学优化建模仍依赖专家将非正式领域描述翻译为精确的目标、约束和求解器代码，过程缓慢且易错，微小错误会导致不可行、非凸或次优模型；标准 one-shot 或 few-shot 提示在长结构化描述上容易遗漏约束、产生逻辑不一致或不可执行程序，因此需要将推理期算力投入到规划与建模阶段而非只在最终解阶段做后验筛选。",
+        "primary_topic": "大语言模型驱动的优化建模代码自动生成与搜索式测试时缩放",
+        "relation_to_research": "论文事实：该工作把 LLM 作为优化建模代码生成器，并用 MCTS 在计划层面做测试时搜索，以程序执行的可行性、约束满足与解质量作为反馈信号，属于 AI4OR 中自动建模与学习/搜索结合的方向。迁移设想（推测）：其“计划搜索 + 执行反馈评估 + 块内复用最优计划”的框架原则上可迁移到柔性作业车间、流水车间等生产调度的自然语言建模与求解器代码生成，但需要调度领域的问题描述与实例分布、能验证调度约束（工序先后、机器能力、时间窗）的评估器，以及针对更大规模与混合整数模型的可扩展搜索预算控制；论文并未验证生产调度场景，迁移有效性需另行实验。",
+        "relevance_score": 7,
+        "setting": "研究问题是由自然语言问题描述自动生成求解器可执行的优化建模代码（Python 程序），决策对象是推理分解计划 RDP，即把问题上下文、目标与约束翻译为求解代码的有序计划步骤序列；目标是使生成代码可执行、满足约束并达到较优解质量，关键约束包括约束不可遗漏或误译、保持凸性/建模假设成立、程序可执行，信息假设是仅给定自然语言描述与生成程序的执行结果作为反馈，静态单实例问题与分布内批量实例两种环境均出现（后者用于 Search-then-Apply 摊销搜索成本），其余要素材料未说明。",
+        "tags": [
+          "LLM4OR",
+          "自动建模",
+          "蒙特卡洛树搜索",
+          "测试时缩放",
+          "推理分解计划",
+          "执行反馈",
+          "约束满足",
+          "代码生成"
+        ],
+        "title_zh": "面向大语言模型优化代码生成的蒙特卡洛树搜索提示序列优化",
+        "uncertainty": "仅获得摘要与部分全文节选，缺少完整实验表格与具体数值；全文结论段使用 MCTS-OPS 命名且给出具体提升幅度，与摘要中的 MCTS-RDP 名称不一致，无法确认是否为同一实验设置的笔误；通讯作者、代码地址与完整的消融细节材料未提供。",
+        "why_recommended": "对关注 AI4OR 自动建模与学习辅助搜索的研究者而言，该文提供了一个清晰的把搜索放在建模规划阶段而非最终候选筛选阶段的范式，并给出以执行结果为奖励的评估闭环与摊销搜索成本的块状复用策略，这些机制可直接启发生产调度等约束优化问题的自然语言建模与求解流水线设计，同时其仅覆盖线性/凸问题的局限也提示了向混合整数调度模型扩展的研究空间。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-20T10:28:18.306904+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2508.05995v2",
+        "status": "not_found"
+      },
+      "final_score": 0.6721134403903879,
+      "provenance": {
+        "analyzed_at": "2026-10-20T02:29:26.321012Z",
+        "input_hash": "c293e3521ee74fa8584bb67dd1d418b042de0195613b9d50e2b39ae76f0c94b4",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Mathematical optimization is a core tool in engineering, operations research, and data science, but modeling real problems remains difficult and time-consuming. In practice, an expert must work with clients to translate informal domain descriptions into precise objectives, constraints, and solver-ready code; small mistakes in this process can lead to infeasible, nonconvex, or suboptimal formulations, and the iterative process is often slow. Large language models (LLMs) could automate this translation from natural language to optimization code, but standard prompting often fails on realistic tasks: it struggles with long, structured task descriptions, mishandles constraints, and produces infeasible, non-convex, or non-executable programs. We introduce Monte Carlo Tree Search for Reasoning Decomposition Plans (MCTS-RDP), which performs pre-hoc test-time scaling by searching over decomposition plans and their resulting programs before committing to the final output. MCTS-RDP treats plan construction as a sequential decision problem: given a problem description, it decomposes the task descriptions into logical components and generates candidate plan steps for each component. Monte Carlo Tree Search (MCTS) then explores and refines Reasoning Decomposition Plans (RDPs) prior to code synthesis, balancing exploration and exploitation across alternative plan sequences. Each candidate plan is rolled out into executable code, executed, and scored with an execution-grounded evaluator measuring executability, constraint satisfaction, and solution quality; this feedback is backpropagated through the search tree to guide subsequent search. Across wireless optimization tasks and the NL4OPT and NLP4LP benchmarks, MCTS-RDP consistently outperforms strong baselines, improving execution success, reward, stability, and optimality attainment.",
+          "authors": [
+            "Fei Xu Yu",
+            "Gina Adam",
+            "Nathaniel D. Bastian",
+            "Tian Lan"
+          ],
+          "canonical_id": "2508.05995",
+          "categories": [
+            "cs.LG"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2508.05995",
+          "published_at": "2025-08-08T04:01:24Z",
+          "source": "arxiv",
+          "title": "Optimizing Prompt Sequences using Monte Carlo Tree Search for LLM-Based Optimization",
+          "updated_at": "2026-10-18T01:59:34Z",
+          "url": "https://arxiv.org/abs/2508.05995",
+          "version": 2
+        },
+        "rank": 1,
+        "score": {
+          "base_score": 0.6492971643461598,
+          "exploration": 0.12386736389138576,
+          "matched_terms": [
+            "operations research",
+            "mathematical optimization",
+            "constraint satisfaction"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.6035120245472233,
+          "topic": 0.8125014329900772
+        }
+      },
+      "tier": "deep_read"
+    },
+    {
+      "analysis": {
+        "analysis": "作者将问题形式化为：从环境分布P采样e∈E=I×D×S，执行h得到损失ℓ(h;e)，失败设为固定惩罚ℓ_fail；总体目标为argmin_h CVaR_q(L_h)，其中CVaR_q(L)=inf_η{η+1/(1-q)E[(L-η)_+]}。作者论证均值聚合会忽略仅发生在不利评估条件子集上的失败，而CVaR通过在最差分位内取平均兼顾尾部强调与单点稳健性，并用实验验证其经验选择效果。",
+        "challenges": [
+          "平均适应度会掩盖稀有但严重的失败，使选择出的程序在分布漂移下不稳定",
+          "需在异构评估条件（实例族、规模、随机种子）上定义并公平估计尾部风险，样本有限",
+          "程序执行存在解析、编译、超时、不可行等失败模式，需统一映射为损失惩罚",
+          "如何在有限评估预算和代际预算下将尾部风险反馈给LLM提示，而不引入评估信息泄漏或过拟合",
+          "权衡量化尾部风险与保持平均性能竞争力",
+          "验证发现所得鲁棒性是否能迁移到更大未见过实例与独立整理的同域基准"
+        ],
+        "corresponding_authors": [
+          "Li Niu"
+        ],
+        "evidence": [
+          {
+            "claim": "论文提出用LLM变异可执行启发式程序、并以异构评估条件下的经验CVaR排序候选的风险敏感进化框架",
+            "location": "abstract",
+            "quote": "We propose CVaR-RMD, a risk-sensitive evolutionary framework that uses an LLM to mutate executable heuristic programs and ranks candidates by empirical conditional value-at-risk over heterogeneous evaluation conditions."
+          },
+          {
+            "claim": "动机是基于均值的候选选择会掩盖稀有但严重的失败，导致跨实例族、随机种子和规模退化",
+            "location": "abstract",
+            "quote": "candidates selected by average performance may degrade across instance families, random seeds, and problem scales because mean-based objectives can obscure rare but severe failures."
+          },
+          {
+            "claim": "在三个组合优化域上CVaR选择改善上尾性能并降低失败率，同时保持有竞争力的均值表现，且收益在更大未见实例与独立基准上持续",
+            "location": "abstract",
+            "quote": "Across three combinatorial optimization domains, CVaR-based selection improves upper-tail performance and reduces failure rates while maintaining competitive mean performance. These gains persist on larger unseen instances and independently curated within-domain benchmarks"
+          },
+          {
+            "claim": "基准包含在线装箱、CVRP与排列流水车间调度",
+            "location": "supplied_full_text",
+            "quote": "The benchmark suite covers online bin packing, capacitated vehicle routing (CVRP), and permutation flow-shop scheduling"
+          },
+          {
+            "claim": "CVaR-RMD与Mean-RMD仅在候选排序准则上不同，其余流程相同",
+            "location": "supplied_full_text",
+            "quote": "They differ only in candidate ranking: empirical CVaR for CVaR-RMD and empirical mean loss for Mean-RMD."
+          },
+          {
+            "claim": "作者明确陈述的局限包括仅三个任务与尾部水平q超参数",
+            "location": "supplied_full_text",
+            "quote": "The empirical evaluation focuses on three representative combinatorial optimization tasks, and further validation on additional problem classes would help assess the generality of the approach."
+          }
+        ],
+        "experiments": [
+          "基准覆盖在线装箱、容量约束车辆路径（CVRP）与排列流水车间调度三个组合优化域，分别对应在线决策、可行性约束和排序交互带来的脆弱性",
+          "每个方法使用15个独立发现种子{0,…,14}；发现后用各种子最佳存档程序在共享留出环境上评估，报告均值、标准差和标准化效应量，并用10,000次重采样的配对双侧bootstrap检验显著性；默认基线为Mean-RMD",
+          "发现阶段使用中等规模实例，留出测试覆盖分布内与更大规模的迁移以及独立整理的同域基准",
+          "摘要报告：CVaR选择提升上尾性能并降低失败率，同时保持有竞争力的平均性能，且收益在更大未见实例与独立整理基准上持续",
+          "消融涉及提示中是否包含累积损失与尾部记录、尾部水平q=0.80/0.95等设置；节选中表格数字不完整，无法可靠摘录具体数值，故不列举",
+          "基线、实例规模细节、约束可行性统计、运行时间、训练开销与公平计算预算的完整对比在提供的节选中材料未说明"
+        ],
+        "first_affiliation": "Qualcomm Technologies, Inc.",
+        "insight": "贡献不在于引入新搜索结构，而在于重新定义候选排序的统计对象：把每个候选在由实例、规模、种子构成的异构评估环境上的损失视为随机变量，用经验CVaR（对最差1-q分位的平均损失）替代经验均值来驱动进化保留与提示构建。这样能在不改变代码接口、验证器、变异算子和预算的情况下，系统性地惩罚依赖有利评估条件的候选，抑制尾部灾难性失败，同时由于CVaR对分位内损失取平均，不会让单个极端观测主导排序。",
+        "limitations": [
+          "实证仅覆盖三个代表性组合优化任务，需在更多问题类上验证通用性",
+          "CVaR-RMD引入尾部水平q这一鲁棒性超参数，虽然单一默认值在实验中表现稳定，但最优取值可能随应用中对平均与最差性能权衡的偏好而变化"
+        ],
+        "method": [
+          "把每个候选启发式表示为一个保持固定Python函数接口的可执行程序h；执行环境由实例i、规模d、随机种子s组成，损失为任务目标值，解析/编译/接口/超时/不可行失败统一记为ℓ_fail",
+          "采用进化式程序搜索：由LLM（GPT-4o，temperature 0.7，top-p 0.95，最大输出2048 token，格式错误至多重试3次）对父代程序做变异，生成完整Python函数",
+          "提示包含任务定义、所需函数签名、父代程序、验证约束以及其高损失案例的紧凑摘要，使搜索获得尾部失败信号",
+          "候选排序使用异构评估条件上的经验CVaR_q，而非经验均值；CVaR-RMD与Mean-RMD共享代码接口、验证器、变异算子、种群大小、代际预算、存档机制和留出评估，仅排序准则不同",
+          "流程为：生成/变异→在采样环境上执行并记录损失→按经验CVaR排序→保留存档并选择下一轮父代；LLM调用仅发生在发现阶段，测试阶段冻结最佳存档程序"
+        ],
+        "motivation": "现有LLM迭代程序搜索（如FunSearch、EoH、ReEvo、LLaMEA）主要用有限评估得到的标量平均适应度来选择候选。平均目标会掩盖罕见但严重的失败，导致生成的启发式依赖特定评估协议（窄实例生成器、少量种子、受限规模），在实例族、随机种子和问题规模变化时退化。作者希望在不为发现流程增加复杂架构组件的前提下，把选择压力移向最差分位表现，从而提升域内迁移鲁棒性。",
+        "primary_topic": "大模型驱动的元启发式自动发现中的风险敏感选择机制",
+        "relation_to_research": "论文事实：该工作直接研究LLM驱动的元启发式自动发现，并在排列流水车间调度与CVRP等生产调度/物流优化任务上验证了风险敏感选择。与当前研究画像中的“大模型智能体、自动建模、学习辅助搜索”高度对接：它不改变搜索骨架，而是替换进化选择目标。推测（非作者结论）：可迁移到柔性作业车间、分布式制造与生产运输协同等问题的启发式/规则自动发现中，把实例族、规模、随机种子乃至动态扰动场景视为评估环境维度，用CVaR排序抑制对特定基准过拟合的规则；迁移所需条件是定义统一的程序接口与可行解验证器、构建覆盖扰动与规模漂移的环境采样分布，并在相同评估预算下与均值选择基线对比。",
+        "relevance_score": 7,
+        "setting": "研究问题是在“域内迁移+基准分布漂移”条件下自动发现可执行的启发式程序：决策对象是一个满足指定调用接口的Python启发式程序h；目标是最小化损失的经验CVaR（尾部风险），而非仅最小化平均损失；关键约束包括程序需可解析、编译、满足接口、在时限内终止并返回可行解，否则记失败惩罚；信息假设是评估环境e=(i,d,s)由实例i、规模参数d、随机种子s组成，并从固定分布P采样，发现阶段仅能获得有限经验评估；环境是静态的实例分布与随机种子集合，但训练与测试之间存在实例族、规模和种子上的漂移。",
+        "tags": [
+          "LLM自动算法设计",
+          "元启发式发现",
+          "CVaR风险度量",
+          "进化程序搜索",
+          "分布漂移鲁棒性",
+          "排列流水车间调度",
+          "CVRP",
+          "装箱问题"
+        ],
+        "title_zh": "CVaR-RMD：面向鲁棒元启发式发现的CVaR选择压力",
+        "uncertainty": "提供的全文节选存在多处截断（如方法细节、表格数值、实验设置部分缺失），三个任务的具体数字、基线完整结果、运行时间与计算预算对比无法核实，因此实验结论主要依据摘要表述；作者未声称可迁移到柔性作业车间等更复杂调度场景，相关迁移为推测。",
+        "why_recommended": "对关注AI4OR与大模型自动算法设计的研究者，该文提供了一个低成本、机制清晰的改进点：在进化程序搜索中用CVaR替换均值选择，直接针对基准分布漂移下的尾部失败问题，且与现有FunSearch类流程兼容。其评估协议（多发现种子、冻结后留出测试、规模迁移、配对bootstrap检验）对生产调度中的智能算法可复现比较具有参考价值，也提示在调度规则自动发现中应关注最差场景而非平均表现。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-20T10:28:18.306904+08:00",
+        "figures": [
+          {
+            "caption": "Motivation for CVaR-RMD. Mean-based fitness in LLM-driven metaheuristic discovery rewards strong average performance while tolerating severe failures on rare instances or seeds. CVaR shifts selection pressure toward worst-quantile behavior, discouraging heuristics that depend on favorable evaluation conditions.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2610.25697/v1/fig1-panel1.jpg",
+                "original_url": "https://arxiv.org/html/2610.25697v1/img/introduction.jpg"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2610.25697v1#S1.F1"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2610.25697v1",
+        "status": "available"
+      },
+      "final_score": 0.6089127527602692,
+      "provenance": {
+        "analyzed_at": "2026-10-20T02:29:34.708600Z",
+        "input_hash": "e2dfd939f961c6e7610ee48852d2b981893ceccd48fa4db779ea06666bb51fb1",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Large language models have recently been used to discover heuristics through iterative program search, offering a promising approach to automated algorithm design. However, candidates selected by average performance may degrade across instance families, random seeds, and problem scales because mean-based objectives can obscure rare but severe failures. We propose CVaR-RMD, a risk-sensitive evolutionary framework that uses an LLM to mutate executable heuristic programs and ranks candidates by empirical conditional value-at-risk over heterogeneous evaluation conditions. Across three combinatorial optimization domains, CVaR-based selection improves upper-tail performance and reduces failure rates while maintaining competitive mean performance. These gains persist on larger unseen instances and independently curated within-domain benchmarks",
+          "authors": [
+            "Ruodai Cui",
+            "Li Niu"
+          ],
+          "canonical_id": "2610.25697",
+          "categories": [
+            "cs.AI"
+          ],
+          "comment": "Accepted to Findings of EMNLP 2026. Code: https://github.com/BeyondHeaven/CVaR-RMD",
+          "pdf_url": "https://arxiv.org/pdf/2610.25697",
+          "published_at": "2026-10-19T02:43:02Z",
+          "source": "arxiv",
+          "title": "CVaR-RMD: CVaR Selection Pressure for Robust Metaheuristic Discovery",
+          "updated_at": "2026-10-19T02:43:02Z",
+          "url": "https://arxiv.org/abs/2610.25697",
+          "version": 1
+        },
+        "rank": 7,
+        "score": {
+          "base_score": 0.5343868232004895,
+          "exploration": 0.07644332818696149,
+          "matched_terms": [
+            "combinatorial optimization",
+            "automated algorithm design"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.7807947110514396,
+          "topic": 0.594825568104083
+        }
+      },
+      "tier": "deep_read"
+    },
+    {
+      "analysis": {
+        "analysis": "作者以热电机组-only MILP最优解为参照，在不同配置下对比PPO、动作分支DQN、按边际成本排序的merit-order规则的成本与开机台数，借此把性能差距拆解到“多开机组”这一结构现象；再通过细调阶段注入探索噪声、去掉奖励塑形项、在可比噪声下比较规则与智能体等对照，检验过度开机是否由探索驱动；最后以模仿MILP解初始化策略并保守微调，并将高置信决策固定为MILP变量，测量加速比与相对最优解的偏移，从而将策略诊断转化为求解器协同机制。",
+        "challenges": [
+          "独立RL智能体在规模变大时求解代价远超MILP，难以单独作为求解器",
+          "探索噪声导致系统性过度开机与成本升高，且仅靠奖励塑形无法消除",
+          "需要在加速MILP与保证近优解质量之间取得可控权衡",
+          "基准比较对调度方法与评测范围敏感，报告的最优性比例缺乏统一口径"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "从零训练的PPO与动作分支DQN存在系统性过度开机，成本显著高于MILP最优",
+            "location": "abstract",
+            "quote": "In every configuration tested, Proximal Policy Optimisation (PPO) and an action-branching Deep Q-Network (DQN) trained from scratch committed about twice the units of a thermal-only MILP optimum, at 39-64% higher cost"
+          },
+          {
+            "claim": "作者将过度开机归因于独立采样下的探索性停机保险机制",
+            "location": "abstract",
+            "quote": "When each unit's decision is sampled independently, spare units insure against random de-commitments."
+          },
+          {
+            "claim": "模仿MILP并保守微调使PPO接近最优",
+            "location": "abstract",
+            "quote": "Imitating the MILP solutions and fine-tuning conservatively brought PPO within 2.6% of the optimum"
+          },
+          {
+            "claim": "固定高置信决策可显著加速MILP且质量损失很小",
+            "location": "abstract",
+            "quote": "Fixing the fine-tuned policy's confident decisions made the MILP 3.8-8.5 times faster within 0.10-0.25% of the best solution"
+          },
+          {
+            "claim": "评测口径本身会显著影响最优性比例，因此提出报告协议",
+            "location": "abstract",
+            "quote": "Because dispatch method and benchmark scope alone shift the reported optimality ratio by up to 3.6% and 9%, we propose a reporting protocol."
+          }
+        ],
+        "experiments": [
+          "在所有测试配置中，从零训练的PPO与动作分支DQN的开机台数约为热电机组-only MILP最优解的两倍，成本高39-64%",
+          "merit-order规则的成本仅高出1.6-7%；当未供能能量被定价时高出10-24%",
+          "模仿MILP解并保守微调后，PPO成本进入最优解2.6%以内，且受罚成本在所有评估方法中最低（约5%）",
+          "固定微调策略的置信决策后，MILP加速3.8-8.5倍，解质量在最优解0.10-0.25%以内；最坏情形优于同等固定变量数的纯模仿策略（1.1%对8.9%）",
+          "调度方法与基准范围本身可使报告的最优性比例偏移最多3.6%和9%",
+          "基线包括merit-order规则与热电机组-only MILP；训练开销、实例规模扩展与公平计算预算的细节材料未说明"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "作者将RL相对MILP的差距主要归因于智能体自身的探索行为，而非仅仅是策略表达能力不足。核心机制是：当每台机组的开停机决策被独立采样时，随机停机会导致供能不足风险，策略因此倾向于多开冗余机组来“保险”，形成过度开机（over-commitment），并推高成本。由此，控制探索、注入结构化噪声、用MILP解进行模仿与保守微调能够收缩机组集合；反过来，训练后策略的高置信决策可固定为MILP的变量，从而在极小质量损失下加速精确求解。",
+        "limitations": [
+          "材料未说明作者明确陈述的局限；仅从摘要可见结论限于51机组72小时EPRI基准与热电机组-only MILP对照，跨规模、跨系统的泛化未经验证"
+        ],
+        "method": [
+          "在51机组72小时EPRI基准上从零训练PPO与动作分支DQN，与merit-order规则及热电机组-only MILP最优解对比",
+          "以每台机组决策独立采样的方式执行策略，分析冗余开机作为随机停机保险的机制",
+          "在微调阶段注入探索噪声、移除奖励塑形项，作为过度开机成因的干预实验",
+          "用MILP解进行模仿学习并对PPO保守微调，得到接近最优的lean策略",
+          "将微调后策略的高置信开停机决策固定为MILP变量，比较加速比与解质量损失",
+          "提出考虑调度方法与基准范围的报告协议，以统一最优性比例口径"
+        ],
+        "motivation": "RL被频繁提议作为UC的快速求解器，但独立智能体的求解代价远高于MILP，且初步结果显示RL策略存在系统性偏差。作者希望定位这一差距的来源，并在不牺牲精确求解质量的前提下，让学习策略真正加速精确求解器。",
+        "primary_topic": "强化学习求解机组组合并与MILP精确求解器协同",
+        "relation_to_research": "论文直接研究机组组合这一电力生产调度核心问题，并给出“学习策略引导精确求解器”的协同范式：RL负责提供高置信的开停机决策以固定MILP变量，MILP保证可行性与近优性。这与智能优化中学习辅助搜索、神经网络与数学规划结合的路线高度一致。作者揭示的探索导致过度开机、模仿与保守微调纠偏的机制，可作为生产调度中“学习策略给组合决策、精确算法给时序与资源分配”的参考。迁移到柔性作业车间、流水车间、分布式制造或生产运输协同属于推测，需要满足：存在可固定为整数决策的高置信变量、有可用的MILP或约束规划作为精确后端、以及可重复的基准与公平计算预算口径；动态扰动与大模型智能体在本文中未被涉及。",
+        "relevance_score": 9,
+        "setting": "论文研究机组组合（unit commitment, UC）问题：在EPRI AI-ccelerating Unit Commitment竞赛的51台机组、72小时算例上，决定各机组在各时段的开停机状态与调度，目标是最小化总运行成本（含受罚成本与未供能惩罚的两种口径），需满足供需平衡与系统备用等可行性约束。信息假设、预测误差与在线动态性材料未说明；总体是在给定基准上比较独立RL策略、启发式规则与热电机组-only MILP最优解的离线求解与协同求解场景。",
+        "tags": [
+          "机组组合",
+          "强化学习",
+          "PPO",
+          "DQN",
+          "MILP加速",
+          "模仿学习",
+          "探索噪声",
+          "基准评测协议"
+        ],
+        "title_zh": "在EPRI AI加速机组组合基准上的强化学习：诊断过度开机并用以学习策略引导MILP",
+        "uncertainty": "仅依据标题与摘要，无法核实网络结构、状态动作奖励的具体设计、训练预算、随机种子与统计显著性，也无法判断结论在更大规模或含网络约束、储能等扩展UC上的适用性；单位与机构信息缺失。",
+        "why_recommended": "该文不只报告RL在某基准上的表现，而是诊断出探索造成过度开机的具体机制，并把诊断结论转化为对MILP的可控加速手段，同时给出衡量加速与质量损失的对照实验和报告口径。对研究学习辅助搜索、约束可行性、求解质量与公平基准比较的博士生具有直接的方法论价值。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-20T10:28:18.306904+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2610.25544v1",
+        "status": "html_unavailable"
+      },
+      "final_score": 0.7540517522419903,
+      "provenance": {
+        "analyzed_at": "2026-10-20T02:29:12.042299Z",
+        "input_hash": "57d4dbf0a6dda49e72805a8bfdf9612dd3df75a3e31b32bf8a104ba66f1b59c2",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Reinforcement learning (RL) is increasingly proposed as a fast solver for unit commitment (UC), but standalone agents remain far more expensive than mixed-integer linear programming (MILP). In the first study of RL on the 51-generator, 72-hour benchmark of the Electric Power Research Institute (EPRI) AI-ccelerating Unit Commitment competition, we trace this gap to the agents' own exploration, close most of it, and show that the resulting policy can accelerate an exact solver. In every configuration tested, Proximal Policy Optimisation (PPO) and an action-branching Deep Q-Network (DQN) trained from scratch committed about twice the units of a thermal-only MILP optimum, at 39-64% higher cost, whereas a merit-order rule came within 1.6-7% (10-24% when unserved energy is priced). When each unit's decision is sampled independently, spare units insure against random de-commitments. Consistent with this, injecting exploration noise during fine-tuning enlarged a lean policy's fleet, a reward without shaping terms did not remove the over-commitment, and under their training noise the agents outperformed the rule subjected to comparable noise. Imitating the MILP solutions and fine-tuning conservatively brought PPO within 2.6% of the optimum, and these policies had the lowest penalised cost of any evaluated (about 5%). Fixing the fine-tuned policy's confident decisions made the MILP 3.8-8.5 times faster within 0.10-0.25% of the best solution, with a smaller worst case than an imitation-only policy fixing as many variables (1.1% against 8.9%). Because dispatch method and benchmark scope alone shift the reported optimality ratio by up to 3.6% and 9%, we propose a reporting protocol.",
+          "authors": [
+            "Maharani Devira Pramita",
+            "Aidan O'Sullivan"
+          ],
+          "canonical_id": "2610.25544",
+          "categories": [
+            "cs.LG",
+            "stat.ML"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2610.25544",
+          "published_at": "2026-10-18T21:31:24Z",
+          "source": "arxiv",
+          "title": "Reinforcement learning on the EPRI AI-ccelerating Unit Commitment benchmark: diagnosing over-commitment and guiding MILP with learned policies",
+          "updated_at": "2026-10-18T21:31:24Z",
+          "url": "https://arxiv.org/abs/2610.25544",
+          "version": 1
+        },
+        "rank": 4,
+        "score": {
+          "base_score": 0.6346395495308914,
+          "exploration": 0.6975887722669604,
+          "matched_terms": [
+            "mixed integer",
+            "mixed-integer",
+            "reinforcement learning",
+            "deep Q"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.7396737806642488,
+          "topic": 0.5866442769967696
+        }
+      },
+      "tier": "browse"
+    },
+    {
+      "analysis": {
+        "analysis": "摘要将 MetaBBO 的双层工作流（元层可学习算法设计策略、低层优化任务）形式化为待自动化的设计回路，并指出该回路目前由人工完成；作者据此把设计回路重述为编码任务，利用编码智能体的递归自我改进能力引入开放-ended 性，并把执行中的全部信息反馈给智能体用于自我指涉改进。具体的问题分解、下界或图表示等分析未说明。",
+        "challenges": [
+          "MetaBBO 设计需逐案人工定制，难以迁移到不同优化问题",
+          "人工定制引入主观性，限制性能上界与实用性",
+          "如何在算法设计回路中引入开放-ended 性并保持递归自我改进",
+          "需要让进化出的 MetaBBO 代码库在多个优化域上快速适配"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "MetaBBO 目前需逐案人工定制，限制性能上界与实用性",
+            "location": "abstract",
+            "quote": "it is currently handcrafted and customized case by case to adapt different optimization problems, which inevitably introduces inherent subjectivity and hence restricts the performance upper bound and usability in practice."
+          },
+          {
+            "claim": "作者把 MetaBBO 设计回路视为编码任务以引入开放-ended 性",
+            "location": "abstract",
+            "quote": "we address this issue by regarding MetaBBO's design loop as coding task, where we could introduce openendedness into MetaBBO with recursive self-improvement capability of advanced coding agents."
+          },
+          {
+            "claim": "双智能体框架由任务智能体与超智能体构成，并伴随评估与信息反馈",
+            "location": "abstract",
+            "quote": "i) a task agent continuously refines the codebase of a target MetaBBO approach through code evolution; ii) a hyper agent progressively modifies the task agent and itself to provide open-ended design behavior; iii) the evolved MetaBBO codebase is evaluated and all in-execution information is fed back to the agents for recursive self-referential improvement."
+          },
+          {
+            "claim": "框架从朴素模板出发找到优于人工基线的新变体并支持跨域快速适配",
+            "location": "abstract",
+            "quote": "given a naive MetaBBO template, our framework automates a design evolution and finds novel variants superior to up-to-date human-made MetaBBO baselines."
+          }
+        ],
+        "experiments": [
+          "摘要称框架从朴素 MetaBBO 模板出发自动完成设计演化，找到优于最新人工 MetaBBO 基线的新变体",
+          "摘要称实验显示框架支持跨不同优化域的快速适配",
+          "解读性分析显示开放-ended 过程中涌现出有趣的设计原则",
+          "基线、实例规模、约束可行性、解质量数字、运行时间、训练开销、计算预算与消融设置未在摘要中说明"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "关键洞察在于把“设计 MetaBBO”本身当作可被智能体反复改写与执行的代码任务：任务智能体负责演化目标 MetaBBO 代码库，超智能体负责修改任务智能体与自身，执行结果再反馈给两者，形成自我指涉的递归改进回路，从而不必依赖人工逐案定制也能搜索出新的设计变体。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "以朴素 MetaBBO 模板为起点，将 MetaBBO 设计回路建模为编码任务",
+          "双智能体框架：任务智能体通过代码演化持续精炼目标 MetaBBO 方法的代码库",
+          "超智能体逐步修改任务智能体与自身，以提供开放-ended 设计行为",
+          "对演化出的 MetaBBO 代码库进行评估，并将全部执行中信息反馈给两个智能体，形成递归自我指涉改进",
+          "在多个优化域上测试框架的快速适配能力"
+        ],
+        "motivation": "MetaBBO 虽能提升优化系统的性能下界，却仍需针对不同优化问题逐案手工设计，带来主观性与可用性限制，因而作者希望把 MetaBBO 的设计回路视为编码任务，借助先进编码智能体的递归自我改进能力为 MetaBBO 引入开放-ended 设计。",
+        "primary_topic": "用编码智能体自动设计并进化 MetaBBO 可学习优化算法",
+        "relation_to_research": "该论文直接研究学习辅助优化的算法自动设计，属于 AI4OR 中“学习与搜索/求解器结合”的上层自动化：若迁移到柔性作业车间、流水车间、分布式制造或生产运输协同等调度问题，需要把低层优化任务定义为带约束的调度问题，并让任务智能体演化相应的 MetaBBO 或学习辅助搜索代码；这种迁移属于推测，尚需验证约束可行性、解质量与计算预算公平性。",
+        "relevance_score": 8,
+        "setting": "研究问题是 MetaBBO（元黑盒优化）的设计目前依赖人工逐案定制：元层需人工编写可学习算法设计策略，以在低层优化任务上取得性能与泛化，但人工定制引入主观性并限制性能上界与实用性。决策对象是给定一个朴素 MetaBBO 模板后，如何自动生成并迭代修改其代码库与设计智能体本身；目标是在低层优化任务上获得优于人工基线且能跨优化域快速适配的 MetaBBO 变体。约束、信息假设及静态或动态环境未说明。",
+        "tags": [
+          "MetaBBO",
+          "算法设计自动化",
+          "编码智能体",
+          "双智能体框架",
+          "开放-ended进化",
+          "学习辅助优化",
+          "递归自我改进"
+        ],
+        "title_zh": "超算法设计智能体：从零进化可学习优化器",
+        "uncertainty": "仅有标题与摘要，缺少实验数字、基线细节、计算预算、约束可行性验证与全文方法描述；第一单位与通讯作者无法确定；迁移到生产调度属于推测。",
+        "why_recommended": "对关注学习辅助搜索与进化算法结合的研究者，本文提供了把算法设计回路交给编码智能体演化、并用执行反馈递归改进的机制原型，可作为研究“自动建模/自动算法设计 + 优化求解”的上层框架参考；但其调度适用性与约束处理能力尚未验证。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-20T10:28:18.306904+08:00",
+        "figures": [
+          {
+            "caption": "Left : The general workflow of our proposed HADA framework, which allows coordination between hyper agent and task agent for automatic MetaBBO design. Right : Essential differences between human-based design in BBO/MetaBBO and fully automated design in HADA.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2609.35328/v3/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2609.35328v3/intro.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2609.35328v3#S1.F1"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2609.35328v3",
+        "status": "available"
+      },
+      "final_score": 0.6633151186548675,
+      "provenance": {
+        "analyzed_at": "2026-10-20T02:29:46.997127Z",
+        "input_hash": "aa328240c3af4831d2cd228cbcd39c681188d586b2ba0683ffcc884fac970b99",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Meta-Black-Box Optimization (MetaBBO) is one of the highlights in the recent AI for Optimization trend. This paradigm's bi-level workflow leverages the learnable algorithm design policy at meta level to ensure the performance and generalization improvement on the low-level optimization task. While MetaBBO helps advance the performance lower bound of the resulted optimization system, it is currently handcrafted and customized case by case to adapt different optimization problems, which inevitably introduces inherent subjectivity and hence restricts the performance upper bound and usability in practice. In this paper, we address this issue by regarding MetaBBO's design loop as coding task, where we could introduce openendedness into MetaBBO with recursive self-improvement capability of advanced coding agents. Specifically, we propose a dual-agent framework: i) a task agent continuously refines the codebase of a target MetaBBO approach through code evolution; ii) a hyper agent progressively modifies the task agent and itself to provide open-ended design behavior; iii) the evolved MetaBBO codebase is evaluated and all in-execution information is fed back to the agents for recursive self-referential improvement. As a result, given a naive MetaBBO template, our framework automates a design evolution and finds novel variants superior to up-to-date human-made MetaBBO baselines. Surprisingly, the experimental results also demonstrate that our framework supports fast adaption across different optimization domains. Solid interpretation analysis further reveals interesting design principles emerge in such open-ended process. This work serves as the first exploration on automating design of complex learning-assisted optimization algorithms.",
+          "authors": [
+            "Zipei Yu",
+            "Yue-Jiao Gong",
+            "Zeyuan Ma",
+            "Yuncheng Jiang",
+            "Zhiguang Cao"
+          ],
+          "canonical_id": "2609.35328",
+          "categories": [
+            "cs.AI"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2609.35328",
+          "published_at": "2026-09-28T14:53:06Z",
+          "source": "arxiv",
+          "title": "Hyper Algorithm Design Agent: Evolving Learnable Optimizer from Zero",
+          "updated_at": "2026-10-19T10:19:26Z",
+          "url": "https://arxiv.org/abs/2609.35328",
+          "version": 3
+        },
+        "rank": 11,
+        "score": {
+          "base_score": 0.5514820339179407,
+          "exploration": 0.4179825884060741,
+          "matched_terms": [
+            "black-box optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.8451789435320987,
+          "topic": 0.5057113298887146
+        }
+      },
+      "tier": "browse"
+    },
+    {
+      "analysis": {
+        "analysis": "作者把科学发现重构为双层优化：外层优化评价准则（目标函数组合），内层在该准则下搜索算法解；通过目标消融实验分离“固定专家目标”与“共识目标”的贡献，并用中位积分步数与相对加速比衡量解质量，用是否出现 reward hacking 行为评价排序稳定性。问题结构如何被进一步利用（如下界、分解或图表示）材料未说明。",
+        "challenges": [
+          "在巨大的理论与实验状态空间中高效搜索候选算法",
+          "如何生成多样化且互补的 LLM 目标函数组合",
+          "如何用相关性加权投票聚合多目标并保持排序一致性",
+          "缓解目标优化过程中的 reward hacking",
+          "在固定专家目标与演化共识目标之间做公平比较与消融"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文把研究形式化为优化目标本身也被优化的元优化问题",
+            "location": "abstract",
+            "quote": "we propose formalizing research as meta-optimization, where the optimization objective itself is also being optimized"
+          },
+          {
+            "claim": "核心方法是相关性加权投票聚合 LLM 生成的目标函数组合",
+            "location": "abstract",
+            "quote": "``consensus objective aggregation,'' where a portfolio of LLM-generated objective functions is combined via correlation-weighted voting"
+          },
+          {
+            "claim": "应用案例是 planted 3-SAT 上的数字 memcomputing 算法发现",
+            "location": "abstract",
+            "quote": "We apply this framework to algorithm discovery for planted 3-SAT problems based on digital memcomputing machines"
+          },
+          {
+            "claim": "最佳求解器在 2,560 变量下将中位积分步数降低超过 38 倍",
+            "location": "abstract",
+            "quote": "The leading solver from the consensus search reduces median integration steps by more than $38\\times$ relative to a tuned baseline at 2,560 variables"
+          },
+          {
+            "claim": "消融显示固定专家目标也能发现强求解器，共识主要提供稳定排序并缓解 reward hacking",
+            "location": "abstract",
+            "quote": "Objective ablations show that a well-chosen fixed expert objective can also discover strong solvers, while consensus supplies a stable ranking that mitigates reward hacking behaviors"
+          }
+        ],
+        "experiments": [
+          "在 planted 3-SAT 上做算法发现，变量规模达到 2,560",
+          "共识搜索得到的最佳求解器相对调优基线将中位积分步数降低超过 38 倍",
+          "目标消融显示：选取良好的固定专家目标同样能发现强求解器；共识提供稳定排序并缓解 reward hacking",
+          "基线细节、运行时间、训练或搜索开销、公平计算预算、更多规模与泛化结果材料未说明"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "其有效性来自让评价准则与候选解共同演化：用一组 LLM 生成的目标函数组成目标组合，并通过相关性加权投票把多个目标聚合成共识排序，使单一目标的偏差与可被利用的漏洞被相互抵消，从而得到更稳定、更难被 reward hacking 的排序信号；作者同时指出，良好选取的固定专家目标也能发现强求解器，共识的价值主要体现在稳定排序与抑制取巧。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "将研究形式化为元优化：优化目标本身也被优化",
+          "用 LLM 生成一组候选目标函数构成目标组合（portfolio）",
+          "以相关性加权投票实现 consensus objective aggregation，把多目标聚合成共识评价准则",
+          "在该演化准则下搜索面向 planted 3-SAT 的数字 memcomputing 求解器算法",
+          "通过目标消融对比固定专家目标与共识目标的发现效果，并观察 reward hacking 行为"
+        ],
+        "motivation": "作者认为现有 LLM 自动化探索只搜索解空间，而评价标准本身固定不变；但科学发现中“什么算好”也在演化，因此固定目标会限制发现能力并诱发针对目标的取巧行为，需要把目标工程纳入发现回路。",
+        "primary_topic": "LLM 驱动的目标函数元优化与算法发现",
+        "relation_to_research": "论文属于 AI 驱动的自动化算法发现与元优化，与 AI4OR 中的“学习辅助搜索”和“目标/模型自动构建”有方法层面的亲缘关系：它讨论的是如何用 LLM 生成并聚合评价目标来指导组合优化求解器的搜索，而非直接求解生产调度问题。若要迁移到柔性作业车间、流水车间或分布式制造调度，推测需要把目标组合替换为可计算的调度评价指标（如 makespan、能耗、拖期、可行性惩罚），并保证候选解在约束下可行、排序信号与真实调度质量一致；这属于迁移设想，不是作者结论。",
+        "relevance_score": 6,
+        "setting": "论文将科学研究本身形式化为一个元优化问题：在由理论与实验构成的巨大状态空间中搜索候选理论、实验或算法，并同时优化评价标准，该标准综合质量、新颖性与有效性。具体实例是面向 planted 3-SAT 的数字 memcomputing 机器算法发现：决策对象是求解器算法（体现为积分步骤数等行为），目标是降低求解所需的中位积分步数，关键约束与信息假设材料未说明，环境是静态的离线算法搜索而非在线动态调度。",
+        "tags": [
+          "元优化",
+          "目标函数工程",
+          "大语言模型",
+          "组合优化",
+          "3-SAT",
+          "memcomputing",
+          "自动化研究",
+          "reward hacking"
+        ],
+        "title_zh": "科学发现作为元优化：一个组合优化案例研究",
+        "uncertainty": "仅有标题与摘要，缺少基线设置、计算预算、统计显著性、目标函数生成与投票的具体机制以及局限陈述；38 倍加速的具体口径（相对何种调优基线、何种统计量）无法核实，因此相关性评分与迁移判断存在不确定性。",
+        "why_recommended": "对关注自动建模、目标工程与学习辅助搜索的研究者，本文提供了一个把“评价准则”作为可优化变量的元优化框架，其中的相关性加权投票与 reward hacking 讨论可启发多目标调度中权重/偏好设计与评价稳定性问题；但需注意其案例是 3-SAT memcomputing 算法发现，与车间调度尚有距离。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-20T10:28:18.306904+08:00",
+        "figures": [
+          {
+            "caption": "Consensus objective aggregation. (a) Kendall’s τ \\tau correlations across the 42 proxy objectives. Most objectives agree on design quality, while several outliers disagree with the majority. (b) Raw consensus weights combine median agreement with recorded-round decay ( λ = 0.9 \\lambda=0.9 ). (c) PCA of standardized objective rank vectors, colored by objective ID; larger dots carry more weight. Similar objectives cluster together, while dissenting objectives receive little weight.",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2606.26728/v2/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2606.26728v2/objective_analysis.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2606.26728v2#S2.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2606.26728v2",
+        "status": "available"
+      },
+      "final_score": 0.5539235328726235,
+      "provenance": {
+        "analyzed_at": "2026-10-20T02:30:03.099401Z",
+        "input_hash": "70e02c07d9f46f9457271bb4459d44e29b206ba1e3e19dfdec8eb7cf8b44c450",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Scientific discovery is fundamentally an optimization problem, defined by a vast ``state space'' of theories and experiments, and an evaluation criterion based on quality, novelty, and validity. Large language models (LLMs) have enabled automated exploration of this state space, but we argue that simultaneous modification of the evaluation criteria is equally important. Here, we propose formalizing research as meta-optimization, where the optimization objective itself is also being optimized. Our key contribution is ``consensus objective aggregation,'' where a portfolio of LLM-generated objective functions is combined via correlation-weighted voting, allowing the evaluation criterion to evolve alongside the solutions. We apply this framework to algorithm discovery for planted 3-SAT problems based on digital memcomputing machines. The leading solver from the consensus search reduces median integration steps by more than $38\\times$ relative to a tuned baseline at 2,560 variables. Objective ablations show that a well-chosen fixed expert objective can also discover strong solvers, while consensus supplies a stable ranking that mitigates reward hacking behaviors. By bringing objective engineering into the discovery loop, this framework offers a practical route toward more adaptable automated research.",
+          "authors": [
+            "Yuan-Hang Zhang",
+            "Chesson Sipling",
+            "Massimiliano Di Ventra"
+          ],
+          "canonical_id": "2606.26728",
+          "categories": [
+            "cs.AI",
+            "cs.LG",
+            "cs.MA"
+          ],
+          "comment": "33 pages, 4 figures",
+          "pdf_url": "https://arxiv.org/pdf/2606.26728",
+          "published_at": "2026-06-25T08:11:48Z",
+          "source": "arxiv",
+          "title": "Scientific discovery as meta-optimization: a combinatorial optimization case study",
+          "updated_at": "2026-10-17T14:10:44Z",
+          "url": "https://arxiv.org/abs/2606.26728",
+          "version": 2
+        },
+        "rank": 14,
+        "score": {
+          "base_score": 0.5162246052229518,
+          "exploration": 0.5696279405308646,
+          "matched_terms": [
+            "combinatorial optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.5336310179114729,
+          "topic": 0.495993248652542
+        }
+      },
+      "tier": "browse"
+    },
+    {
+      "analysis": {
+        "analysis": "摘要表明作者采用设计科学研究方法（Design Science Research Methodology）并以原型迭代作为开发过程，将 A*、Dijkstra、双向 A* 等经典路径搜索与约束满足问题方法结合，在操作相关子图上求解路径；对于如何具体利用问题结构进行约束过滤、分解或下界设计，材料未说明。",
+        "challenges": [
+          "城市交通的动态性使静态最短路在响应过程中迅速失效，需要低延迟的重规划机制",
+          "应急车辆存在车辆特定约束，传统导航无法兼顾路径最优性与约束可行性",
+          "在实时性要求下对操作相关子图求解最优路径并保持约束遵循率",
+          "架构需具备未来可扩展性以应对更大规模路网与更复杂约束"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文针对应急车辆在动态城市交通下的路径优化问题",
+            "location": "abstract",
+            "quote": "Emergency vehicles such as police vehicles, fire engines, and ambulances require a stable and efficient route optimization to reach life-critical events in the shortest times possible."
+          },
+          {
+            "claim": "传统导航无法同时处理实时交通变化与车辆特定约束",
+            "location": "abstract",
+            "quote": "Traditional civilian navigation systems cannot account for real-time traffic changes alongside vehicle-specific constraints, creating inadequate routing scenarios."
+          },
+          {
+            "claim": "方法将经典最短路算法与约束满足问题方法融合",
+            "location": "abstract",
+            "quote": "fuse together classical pathfinding algorithms such as A*, Dijkstra, and Bidirectional A*, with Constraint Satisfaction Problem methodologies"
+          },
+          {
+            "claim": "使用 OpenStreetMap 路网数据与模拟动态交通场景评估",
+            "location": "abstract",
+            "quote": "empirically evaluated using OpenStreetMap data for major metropolitan road networks, combined with simulated dynamic traffic scenarios"
+          },
+          {
+            "claim": "报告了低于 35 秒的最优路径生成、低于 20 秒的重规划响应和超过 90% 的约束遵循率",
+            "location": "abstract",
+            "quote": "generate optimal routes for operationally relevant subgraphs in under 35 seconds, with incremental rerouting responsiveness below 20 seconds. Furthermore, the system achieved more than 90% adherence to vehicle-specific constraints"
+          }
+        ],
+        "experiments": [
+          "使用 OpenStreetMap 大都市路网数据并结合模拟动态交通场景进行评估",
+          "评估指标包括路径最优性、约束遵循率、重规划响应性和未来可扩展性潜力",
+          "结果为：在操作相关子图上生成最优路径用时低于 35 秒，增量重规划响应低于 20 秒，车辆特定约束遵循率超过 90%",
+          "摘要未说明基线对比方法、具体实例规模、训练开销、公平计算预算、消融实验或统计显著性检验"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "作者的核心思路是将经典最短路搜索（A*、Dijkstra、双向A*）与约束满足问题（CSP）方法论融合在统一的软件架构中，使路径搜索在生成最短路径的同时处理车辆特定约束，并通过增量式重规划响应动态交通变化；其有效性来自搜索算法的高效性与约束满足机制的可行性过滤相结合，而非单一新算法。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "提出 CARRS 统一软件架构，面向应急车辆协调场景整合路径搜索与约束满足",
+          "融合 A*、Dijkstra 和双向 A* 等经典最短路算法进行路径生成",
+          "引入约束满足问题（CSP）方法论处理车辆特定约束",
+          "采用设计科学研究方法框架，通过原型迭代开发系统",
+          "支持增量式重规划以响应动态交通变化"
+        ],
+        "motivation": "传统民用导航系统无法同时考虑实时交通变化与车辆特定约束，导致应急响应出现本可避免的关键延误，因此需要一套面向应急协调的约束感知实时路径规划系统。",
+        "primary_topic": "应急车辆动态路径规划中的约束感知实时求解",
+        "relation_to_research": "该论文研究城市应急车辆的动态路径规划，属于智能优化与调度中的路径决策问题，与生产调度中的动态扰动响应、约束可行性保障有结构相似性；其将经典搜索与约束满足结合的架构思路可迁移至带车辆/资源约束的调度路径子问题。但论文未涉及神经网络、强化学习、图神经网络、大模型智能体或学习辅助搜索，也未涉及柔性作业车间、流水车间或分布式制造等生产调度设定。若迁移到生产调度，推测需要重新定义约束满足模型、将工序/资源约束映射为 CSP，并验证在更大规模与更复杂动态扰动下的实时性与可行性，迁移效果尚未被作者验证。",
+        "relevance_score": 6,
+        "setting": "研究面向城市环境中的警车、消防车和救护车等应急车辆，要求在动态交通环境下进行路径决策，目标是在尽可能短的时间内到达事件地点，同时满足车辆特定约束；摘要提及使用 OpenStreetMap 大都市路网数据和模拟动态交通场景进行评估，但事件时序、扰动分布、车辆约束的具体形式以及信息假设（如实时交通信息获取的完整性与延迟）材料未说明。",
+        "tags": [
+          "实时路径规划",
+          "约束满足问题",
+          "A*算法",
+          "Dijkstra算法",
+          "双向A*算法",
+          "动态交通",
+          "应急调度"
+        ],
+        "title_zh": "CARRS：面向城市环境应急车辆的一种约束感知实时路径规划系统",
+        "uncertainty": "仅能依据标题与摘要判断，无法确认约束满足的具体建模方式、算法实现细节、基线设置、实例规模与统计严谨性；摘要中的性能数字缺少实验条件与对比基线说明，因此结论的泛化性存在较大不确定性。",
+        "why_recommended": "对关注动态扰动下的约束感知重规划、实时性与约束可行性权衡的研究者有参考价值：论文给出了经典搜索与约束满足融合的系统架构及初步性能指标，可作为生产运输协同或动态调度中路径决策模块的设计参照；同时其未使用学习方法，也提示可进一步探索学习辅助搜索在同类约束路径问题中的位置。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-20T10:28:18.306904+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2610.26346v1",
+        "status": "html_unavailable"
+      },
+      "final_score": 0.5298845619439028,
+      "provenance": {
+        "analyzed_at": "2026-10-20T02:30:13.150122Z",
+        "input_hash": "a4963fe90c731874863ed0b1869ba1f8c4e679ecd98fa7786ec99fdf33618449",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Emergency vehicles such as police vehicles, fire engines, and ambulances require a stable and efficient route optimization to reach life-critical events in the shortest times possible. However, the dynamic nature of urban traffic makes this ideal scenario much more challenging, causing critical life-threatening delays. Traditional civilian navigation systems cannot account for real-time traffic changes alongside vehicle-specific constraints, creating inadequate routing scenarios. This research presents the Constraint-Aware Real-Time Routing System (CARRS), a unified software architecture tailored for emergency coordination. The CARRS architecture is engineered to fuse together classical pathfinding algorithms such as A*, Dijkstra, and Bidirectional A*, with Constraint Satisfaction Problem methodologies. The Design Science Research Methodology is the research framework, and prototyping is the iterative process. The artifact was empirically evaluated using OpenStreetMap data for major metropolitan road networks, combined with simulated dynamic traffic scenarios. Performance metrics focused on route optimality, constraint adherence, rerouting responsiveness, and the potential for future system scalability. Findings revealed the system's capability to generate optimal routes for operationally relevant subgraphs in under 35 seconds, with incremental rerouting responsiveness below 20 seconds. Furthermore, the system achieved more than 90% adherence to vehicle-specific constraints, making the CARRS architecture viable for real-time dynamic routing requirements. This study delivers a routing platform that bridges artificial intelligence-driven optimization with software engineering operational compliance, presenting a practical transformative step toward adaptive emergency vehicle coordination in dynamic urban environments.",
+          "authors": [
+            "Vincent Sello",
+            "Timothy Adeliyi",
+            "Ridewaan Hanslo"
+          ],
+          "canonical_id": "2610.26346",
+          "categories": [
+            "cs.AI"
+          ],
+          "comment": "10 pages, 3 figures, 3 tables",
+          "pdf_url": "https://arxiv.org/pdf/2610.26346",
+          "published_at": "2026-10-19T13:12:42Z",
+          "source": "arxiv",
+          "title": "CARRS: A Constraint-Aware, Real-Time Routing System for Emergency Vehicles in Urban Environments",
+          "updated_at": "2026-10-19T13:12:42Z",
+          "url": "https://arxiv.org/abs/2610.26346",
+          "version": 1
+        },
+        "rank": 16,
+        "score": {
+          "base_score": 0.4725173853525505,
+          "exploration": 0.4950164141971239,
+          "matched_terms": [
+            "constraint satisfaction"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.8709890377476697,
+          "topic": 0.3522400478554955
+        }
+      },
+      "tier": "browse"
+    },
+    {
+      "analysis": {
+        "analysis": "材料未说明作者如何具体分析问题结构；从摘要可见其通过持久化研究历史与层次记忆组织跨会话信息，以分支和独立评审管理多路径探索，并用固定验证器评估实验输出。",
+        "challenges": [
+          "跨模型会话维持研究连续性与上下文",
+          "从实验经验中学习并改进研究方法",
+          "探索与回访替代方法而不丢失历史",
+          "以固定验证器保证输出可核验",
+          "将研究过程迁移到可执行算法求解器开发"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "Epi 是跨会话持续研究并通过累积经验改进方法的自主研究智能体",
+            "location": "abstract",
+            "quote": "an autonomous research agent that sustains investigations across model sessions and evolves its methods through accumulated experience"
+          },
+          {
+            "claim": "Epi 结合持久化研究历史、层次记忆、分支与独立评审",
+            "location": "abstract",
+            "quote": "combines persistent research history, hierarchical memory, branching and independent review"
+          },
+          {
+            "claim": "实验跨会话边界运行并由固定验证器评估",
+            "location": "abstract",
+            "quote": "Its experiments run across session boundaries, and a fixed verifier evaluates their outputs."
+          },
+          {
+            "claim": "Epi-turbo 将研究过程扩展到算法编码并开发可执行求解器",
+            "location": "abstract",
+            "quote": "We extend this research process to algorithmic coding with \\'{E}pi-turbo, a lightweight configuration that develops executable solvers"
+          },
+          {
+            "claim": "求解任务包括车辆路径、调度与生产计划",
+            "location": "abstract",
+            "quote": "for tasks including vehicle routing, scheduling and production planning"
+          },
+          {
+            "claim": "在 30 个 FrontierOR 任务上总分比 Codex 高 5.4% 且成本为 64%",
+            "location": "abstract",
+            "quote": "On 30 FrontierOR tasks, \\'{E}pi-turbo achieves a 5.4% higher total benchmark score than Codex at 64% of its model cost"
+          }
+        ],
+        "experiments": [
+          "Epi 报告 120 项创纪录结果，包括 12 个族上的 20 项数值界记录和 8 个族上的 100 项构造记录",
+          "报告 n 皇后常数区间约收窄 84 倍，四次 Feigenbaum 吸引子维数的严格区间收窄超过 360 万倍",
+          "精确对偶证书表明 Cohn-Elkies 线性规划界在 10 维和 11 维不能取紧",
+          "给出 Tuza 猜想在八顶点团部分且至多三种三角形活跃邻域类型、任意重数下的分裂图上的计算机辅助证明",
+          "在 30 个 FrontierOR 任务上，Epi-turbo 使用相同底层模型与推理强度，总基准分数比 Codex 高 5.4%，模型成本为 Codex 的 64%"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "其有效性来自将持久化研究历史、层次记忆、分支探索与独立评审组织成一个可持续迭代的闭环：历史与记忆避免重复劳动并支撑经验积累，分支允许并行尝试和回访替代路线，固定验证器提供相对客观的筛选信号，从而使智能体能在长周期内反复改进方法而非一次性生成。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "Epi 组合持久化研究历史、层次记忆、分支与独立评审，以维持研究连续性",
+          "实验跨会话边界运行，并由固定验证器评估输出",
+          "Epi-turbo 作为轻量配置，将研究过程扩展到算法编码，开发可执行求解器",
+          "求解任务涵盖车辆路径、调度与生产计划；网络输入输出、状态动作奖励与训练细节材料未说明"
+        ],
+        "motivation": "作者希望智能体能跨越模型会话边界持续开展研究，通过累积经验自我改进方法，并让计算结果与显式方法、数学论证相连接以便人类理解和继续推进。",
+        "primary_topic": "自主研究智能体与算法编码求解器生成",
+        "relation_to_research": "论文事实是 Epi-turbo 在包含车辆路径、调度与生产计划的 FrontierOR 任务上开发可执行求解器并报告基准分数与成本对比；与智能优化、生产调度和 AI4OR 的关系主要体现在算法编码与求解器生成这一相邻方向。推测：若要把该智能体的持久记忆、分支评审与验证闭环迁移到柔性作业车间、流水车间或分布式生产运输协同等问题，需要具备可执行的约束可行性校验器、统一评价基准与可复现的实验预算控制；这些迁移条件并非作者结论。",
+        "relevance_score": 6,
+        "setting": "论文提出面向自主科学研究的智能体 Epi 及其轻量配置 Epi-turbo，决策对象是跨会话持续推进的研究方法与可执行算法求解器；目标是跨会话保持研究连续性、从实验中学习、探索并重访替代方案，并由固定验证器评估输出；关键约束与信息假设材料未说明；环境为跨会话、可迭代改进的动态研究过程。",
+        "tags": [
+          "自主研究智能体",
+          "层次记忆",
+          "持久化历史",
+          "分支与独立评审",
+          "算法编码",
+          "车辆路径",
+          "生产调度",
+          "生产计划"
+        ],
+        "title_zh": "Epi：面向自主研究的持久化自改进智能体",
+        "uncertainty": "仅提供标题与摘要，缺少方法细节、调度任务定义、约束可行性处理、训练开销与消融结果；作者机构与通讯作者未提供；相关性判断基于摘要中调度与生产计划任务的出现，具体迁移价值需全文验证。",
+        "why_recommended": "对关注大模型智能体、自动建模与学习辅助搜索的研究者，该工作提供了跨会话持久记忆、分支探索与独立评审驱动求解器开发的系统思路，并给出车辆路径、调度与生产计划任务上的基准与成本对比，可作为智能体辅助优化求解的相邻参考；但其调度实验细节未在摘要中展开。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-20T10:28:18.306904+08:00",
+        "figures": [
+          {
+            "caption": "Épi’s research architecture. The agent develops methods on versioned branches and retrieves saved history and cross-case lessons. An independent model reviews the evidence. The environment checks each candidate under a fixed ruler and gain floor. The execution infrastructure supports experiments, persistent storage and isolated verifier execution across sessions. Section 2 defines the acceptance rule.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2610.24944/v1/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2610.24944v1/architecture.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2610.24944v1#S3.F1"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2610.24944v1",
+        "status": "available"
+      },
+      "final_score": 0.4902359539198551,
+      "provenance": {
+        "analyzed_at": "2026-10-20T02:30:32.736235Z",
+        "input_hash": "c5e2dfe6bfb488e6e461030cc5b7ab766eba5a578055eae8eb6670416a3bc285",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "We present \\'{E}pi, an autonomous research agent that sustains investigations across model sessions and evolves its methods through accumulated experience. \\'{E}pi combines persistent research history, hierarchical memory, branching and independent review to maintain research continuity, learn from experiments, and explore and revisit alternative approaches. Its experiments run across session boundaries, and a fixed verifier evaluates their outputs. \\'{E}pi produced 120 record-setting results, comprising 20 numerical bound records across 12 families and 100 construction records across eight families. These include an approximately 84-fold narrower interval for the $n$-queens constant and a more than 3.6-million-fold narrower rigorous interval for the quartic Feigenbaum attractor dimension. Exact dual certificates establish that the Cohn-Elkies linear-programming bound cannot be sharp in dimensions 10 and 11. Beyond numerical improvements, \\'{E}pi gives a computer-assisted proof of Tuza's conjecture for split graphs with an eight-vertex clique part and at most three triangle-active neighborhood types, with arbitrary multiplicities. We extend this research process to algorithmic coding with \\'{E}pi-turbo, a lightweight configuration that develops executable solvers for tasks including vehicle routing, scheduling and production planning. On 30 FrontierOR tasks, \\'{E}pi-turbo achieves a 5.4% higher total benchmark score than Codex at 64% of its model cost, using the same underlying model and reasoning effort. \\'{E}pi is designed to support human understanding by connecting computational results to explicit methods and mathematical arguments that researchers can examine and build upon.",
+          "authors": [
+            "Yue Huang",
+            "Zhangchen Xu",
+            "Xiaonan Luo",
+            "Zheyuan Liu",
+            "Lichi Li",
+            "Yiping Wang",
+            "Peiyang Song",
+            "Eric Gabriel Ramos",
+            "Enze Xie",
+            "Olexandr Isayev",
+            "Paul Liang",
+            "Nouha Dziri",
+            "Huan Sun",
+            "Jianfeng Gao",
+            "Ying Liu",
+            "Misha Sra",
+            "Xiangliang Zhang",
+            "Alex Pentland",
+            "Zichen Chen"
+          ],
+          "canonical_id": "2610.24944",
+          "categories": [
+            "cs.CL",
+            "cs.AI"
+          ],
+          "comment": "23 pages, 7 figures. Technical report",
+          "pdf_url": "https://arxiv.org/pdf/2610.24944",
+          "published_at": "2026-10-18T01:30:40Z",
+          "source": "arxiv",
+          "title": "Epi: Towards a Persistent, Self-Improving Agent for Autonomous Research",
+          "updated_at": "2026-10-18T01:30:40Z",
+          "url": "https://arxiv.org/abs/2610.24944",
+          "version": 1
+        },
+        "rank": 21,
+        "score": {
+          "base_score": 0.4004290071270092,
+          "exploration": 0.24088252080793696,
+          "matched_terms": [
+            "vehicle routing"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.6004915704759543,
+          "topic": 0.388852985118474
+        }
+      },
+      "tier": "browse"
+    },
+    {
+      "analysis": {
+        "analysis": "作者从黑箱优化的计算瓶颈出发，指出 GP 与 BNN 两类主流方法在扩展性和采样成本上的结构性问题，进而把问题分解为动作网络在输入空间导航、变分 critic 估计替代信息信号以驱动探索、轻量替代模型拟合已观测数据三部分，并借助 actor-critic 结构实现端到端梯度流；摘要还说明作者进行了理论分析，证明训练目标与替代估计器的收敛性并说明近优解存在，但具体分析技术材料未说明。",
+        "challenges": [
+          "目标函数严格黑箱且仅可零阶带噪评估，无法直接反传梯度",
+          "GP 方法随观测数三次方扩展，难以应对高维与大规模观测",
+          "BNN 方法需昂贵后验采样与内层采集函数优化",
+          "需在少量真实查询预算下维持探索与利用的平衡",
+          "需为变分互信息估计与替代估计器提供收敛性理论保证"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文针对仅能通过带噪评估访问的昂贵黑箱函数优化问题",
+            "location": "abstract",
+            "quote": "Many real-world tasks require optimizing expensive black-box functions accessible only through noisy evaluations"
+          },
+          {
+            "claim": "指出现有 GP 与 BNN 方法在扩展性和后验采样上的瓶颈",
+            "location": "abstract",
+            "quote": "GP-based methods scale cubically with observations, and BNN-based approaches remain burdened by expensive posterior sampling such as Hamiltonian Monte Carlo, and inner-loop acquisition optimization in high-dimensional setting"
+          },
+          {
+            "claim": "提出无需高斯先验或变分后验族假设、完全基于梯度的 BO 框架，同时把 f 视为严格黑箱",
+            "location": "abstract",
+            "quote": "we propose VBO-MI, a fully gradient-based BO framework that requires no assumptions on a Gaussian prior or a variational posterior family over $f$."
+          },
+          {
+            "claim": "采用 actor-critic 结构，动作网络导航输入空间，变分 critic 估计替代信息信号",
+            "location": "abstract",
+            "quote": "we employ an actor-critic architecture consisting of an action-net to navigate the input space and a variational critic to estimate a surrogate information signal for exploration"
+          },
+          {
+            "claim": "轻量替代模型结合回放缓冲区，把每轮真实函数查询降为一个批次",
+            "location": "abstract",
+            "quote": "which reduces the total required real function queries to one batch per iteration"
+          },
+          {
+            "claim": "提供训练目标与替代估计器收敛、近优解存在的理论分析",
+            "location": "abstract",
+            "quote": "establishing convergence of its training objective and surrogate estimator, and showing, that near-optimal solutions exist"
+          },
+          {
+            "claim": "在高维合成函数与 Rover Trajectory planning、Lunar Lander、Pest Control 等任务上评估，性能与基线相同或更优",
+            "location": "abstract",
+            "quote": "Our experiments demonstrate that VBO-MI provides the same or superior optimization performance over the various baselines."
+          }
+        ],
+        "experiments": [
+          "摘要称在高维合成函数基准以及 Rover Trajectory planning optimization、Lunar Lander、Pest Control 等复杂真实任务上评估",
+          "摘要结论为 VBO-MI 取得与多种基线相同或更优的优化性能",
+          "摘要未给出具体基线名称、实例规模、解质量数值、运行时间、训练开销、计算预算或消融结果，材料未说明"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "核心洞察在于将黑箱优化中的“探索信号”转化为可学习的变分互信息估计，并让动作网络以端到端梯度方式生成查询点，从而避开 GP 的三次复杂度与 BNN 的后验采样开销；同时用轻量替代模型从回放缓冲区估计目标，把每轮真实函数查询压缩到一批，控制昂贵评估预算。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "采用 actor-critic 架构：action-net 负责在输入空间中产生查询动作，variational critic 估计用于探索的替代信息信号（变分互信息）",
+          "不假设 f 的高斯先验或变分后验族，内部动作网络与信息估计网络用梯度更新训练，而 f 始终保持严格黑箱、仅做零阶评估",
+          "设计轻量替代模型，利用回放缓冲区从已观测数据近似目标函数，使每轮真实函数查询降为一个批次",
+          "通过变分互信息估计构造探索信号以替代传统采集函数的内层优化",
+          "给出训练目标与替代估计器收敛、近优解存在的理论分析"
+        ],
+        "motivation": "已有贝叶斯优化方法存在明显可扩展性瓶颈：GP（高斯过程）方法随观测数量呈三次方增长，BNN（贝叶斯神经网络）方法则受制于昂贵的后验采样（如 Hamiltonian Monte Carlo）以及高维设置下的内层采集函数优化，作者希望去掉对高斯先验和变分后验族的假设，构建完全基于梯度的黑箱优化框架。",
+        "primary_topic": "面向昂贵黑箱函数的可微贝叶斯优化框架",
+        "relation_to_research": "该论文属于通用昂贵黑箱优化方法，并非直接研究生产调度或柔性作业车间等问题，但其“严格黑箱 + 零阶评估 + 少量真实查询”的设定与仿真优化、调度参数调优、含仿真器的生产系统优化有明确的形式对应，因此相关性为相邻方向的可迁移工作。推测可迁移路径为：将调度器或仿真器视为 f，用动作网络生成调度参数或优先级规则参数，用替代模型与互信息探索降低仿真调用次数；迁移前提是调度问题的决策可参数化为低维连续或可嵌入的动作空间，且约束可行性需额外处理，摘要未涉及约束满足机制。",
+        "relevance_score": 6,
+        "setting": "研究设定为：在目标函数 f 只能通过带噪声的零阶评估访问、且评估昂贵的条件下，求解黑箱函数优化问题；决策对象是每一步用于查询 f 的输入点，目标是尽量减少真实函数查询次数并找到接近最优的解，关键约束包括函数不可导且评估昂贵，信息假设为只能获得带噪观测，静态或动态环境材料未说明。",
+        "tags": [
+          "黑箱优化",
+          "贝叶斯优化",
+          "变分互信息",
+          "actor-critic",
+          "零阶优化",
+          "替代模型"
+        ],
+        "title_zh": "VBO-MI：基于变分互信息估计的可微黑箱优化框架",
+        "uncertainty": "仅有标题与摘要，缺少全文；无法核实理论分析的具体假设与证明强度、基线公平计算预算、高维合成基准的维度规模、真实任务的约束处理方式及超参数敏感性，因此对其实际效果与可迁移性的判断存在不确定性。",
+        "why_recommended": "对关注学习辅助搜索与 AI4OR 的研究者而言，该文提供了一个不依赖 GP 与后验采样的可微 BO 视角，其“每轮仅一批真实查询 + 轻量替代模型 + 互信息探索”的预算控制思路，可为仿真昂贵、评估受限的调度优化与参数调优提供参考；同时其理论收敛分析与多类真实任务基准也便于评估方法可靠性。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-20T10:28:18.306904+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2610.24491v1",
+        "status": "not_found"
+      },
+      "final_score": 0.4828333825703023,
+      "provenance": {
+        "analyzed_at": "2026-10-20T02:30:41.403076Z",
+        "input_hash": "5e6d8bc0f5d6c177076d741aeee893f3dcb1427470c6c6908ea179065d7bb173",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Many real-world tasks require optimizing expensive black-box functions accessible only through noisy evaluations, a setting commonly addressed with Bayesian optimization. While Gaussian processes(GPs) and Bayesian neural networks have driven significant progress, GP-based methods scale cubically with observations, and BNN-based approaches remain burdened by expensive posterior sampling such as Hamiltonian Monte Carlo, and inner-loop acquisition optimization in high-dimensional setting. In this work, we propose VBO-MI, a fully gradient-based BO framework that requires no assumptions on a Gaussian prior or a variational posterior family over $f$. While our framework uses gradient-based updates to train the internal action and information-estimation networks, it treats the objective function $f$ as a strict black box, requiring only zeroth-order evaluations. To enable end-to-end gradient flow, we employ an actor-critic architecture consisting of an action-net to navigate the input space and a variational critic to estimate a surrogate information signal for exploration. Additionally, we design a lightweight surrogate that approximates the objective from observed data using a replay buffer, which reduces the total required real function queries to one batch per iteration. We provide theoretical analysis for our framework, establishing convergence of its training objective and surrogate estimator, and showing, that near-optimal solutions exist. We evaluate our method on a diverse suite of benchmarks, including high-dimensional synthetic function and complex real-world tasks such as Rover Trajectory planning optimization, the Lunar Lander, and Pest Control problems. Our experiments demonstrate that VBO-MI provides the same or superior optimization performance over the various baselines.",
+          "authors": [
+            "Farhad Mirkarimi"
+          ],
+          "canonical_id": "2610.24491",
+          "categories": [
+            "cs.LG"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2610.24491",
+          "published_at": "2026-10-17T06:25:23Z",
+          "source": "arxiv",
+          "title": "VBO-MI: A Differentiable Black-Box Optimization Framework via Variational Mutual Information Estimation",
+          "updated_at": "2026-10-17T06:25:23Z",
+          "url": "https://arxiv.org/abs/2610.24491",
+          "version": 1
+        },
+        "rank": 27,
+        "score": {
+          "base_score": 0.3869697864914587,
+          "exploration": 0.12845879229274226,
+          "matched_terms": [
+            "black-box optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.4922145466537384,
+          "topic": 0.4307601390732978
+        }
+      },
+      "tier": "browse"
+    },
+    {
+      "analysis": {
+        "analysis": "材料未说明作者如何分析问题；摘要仅指出经验达到面可用于带不确定性的多次运行可视化，并据此开发 Python 包，未给出问题结构分析、分解或下界等推导。",
+        "challenges": [
+          "多目标优化结果受随机种子影响，单次 Pareto 前沿无法反映性能稳定性",
+          "经验达到面概念已有，但缺少主流的 Python 包实现，使用门槛高"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文指出多目标优化的 Pareto 前沿常在不考虑随机种子变异性的情况下展示，导致性能稳定性评估困难",
+            "location": "abstract",
+            "quote": "However, Pareto fronts of MOO methods are often shown without considering the variability caused by random seeds and this makes the performance stability evaluation difficult."
+          },
+          {
+            "claim": "经验达到面可用于多次运行下带不确定性的可视化，但缺少主流 Python 包",
+            "location": "abstract",
+            "quote": "Although there is a concept named \\emph{empirical attainment surface} to enable the visualization with uncertainty over multiple runs, there is no major Python package for empirical attainment surface."
+          },
+          {
+            "claim": "作者开发了用于该目的的 Python 包并说明用法",
+            "location": "abstract",
+            "quote": "We, therefore, develop a Python package for this purpose and describe the usage."
+          }
+        ],
+        "experiments": [
+          "摘要未提供定量实验、基线对比、实例规模、运行时间或消融结果；仅说明包可用并给出 GitHub 与 OptunaHub 链接，因此不能推断其验证充分性。"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "多次运行得到的 Pareto 前沿是带不确定性的集合而非单一曲线，直接展示单次前沿会掩盖运行间差异。以经验达到面作为聚合表示，可在可视化层面同时传达前沿位置与运行间波动，使稳定性评估有据可依；其有效性来自对多次运行分布的汇总而非某个模块名称。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "以经验达到面（empirical attainment surface）作为多次运行 Pareto 前沿不确定性的可视化表示",
+          "开发 Python 包实现该可视化功能，并在摘要中说明用法",
+          "实现已发布于 GitHub 与 OptunaHub 的可视化页面"
+        ],
+        "motivation": "作者指出，多目标优化方法的 Pareto 前沿常被直接展示而不考虑随机种子带来的变异性，导致性能稳定性评估困难；经验达到面（empirical attainment surface）虽能刻画多次运行的不确定性，但缺少主流 Python 包实现，因此需要提供可用工具。",
+        "primary_topic": "多目标优化中 Pareto 前沿的经验达到面可视化工具",
+        "relation_to_research": "论文事实：该工作面向多目标优化结果的多次运行不确定性可视化，属于多目标优化的评估与工具层，而非求解算法本身。迁移设想（推测）：对于柔性作业车间、分布式制造或多目标约束优化等研究，若需在多次随机运行（如进化算法、学习辅助搜索或强化学习策略训练）下公平比较 Pareto 前沿稳定性，可借助经验达到面可视化展示运行间波动；迁移前提是已有多次独立运行的多目标解集，且需与约束可行性处理、计算预算对齐等评估规范配合，论文本身未涉及生产调度场景。",
+        "relevance_score": 6,
+        "setting": "研究问题是在多目标优化（含深度学习超参数优化中同时考虑性能、推理时间或内存需求等准则）中，如何可视化并评估多次独立运行（不同随机种子）导致的 Pareto 前沿变异性。决策对象不是具体解，而是评估与展示方法；目标是在可视化中体现多次运行的不确定性，从而支持性能稳定性评价。约束与信息假设材料未说明；环境为多次随机运行下的静态结果集合，动态性材料未说明。",
+        "tags": [
+          "多目标优化",
+          "经验达到面",
+          "Pareto 前沿可视化",
+          "超参数优化",
+          "性能稳定性评估",
+          "Python 工具"
+        ],
+        "title_zh": "用于可视化多次运行中 Pareto 前沿变异性的 Python 工具",
+        "uncertainty": "仅有标题与摘要，未提供全文；无法确认包的具体功能边界、支持的维度与规模、是否有验证实验或与既有实现的对比，因此方法细节与实验结论均存在较大不确定性。",
+        "why_recommended": "对关注多目标约束优化与算法可复现性、公平比较的研究者有工具价值：它提供多次运行下 Pareto 前沿变异性的标准可视化手段，可辅助判断进化算法或学习辅助搜索的稳定性，避免仅凭单次前沿下结论；但它是可视化工具，不涉及调度建模或求解机制，相关性有限。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-20T10:28:18.306904+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2305.08852v2",
+        "status": "not_found"
+      },
+      "final_score": 0.48028044872898384,
+      "provenance": {
+        "analyzed_at": "2026-10-20T02:30:33.417644Z",
+        "input_hash": "44dfef5f9dcaa22ba0af8995dd8eddade1ebe1e9e4a447bd52e8c3271c7a2664",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Hyperparameter optimization is crucial to achieving high performance in deep learning. On top of the performance, other criteria such as inference time or memory requirement often need to be optimized due to some practical reasons. This motivates research on multi-objective optimization (MOO). However, Pareto fronts of MOO methods are often shown without considering the variability caused by random seeds and this makes the performance stability evaluation difficult. Although there is a concept named \\emph{empirical attainment surface} to enable the visualization with uncertainty over multiple runs, there is no major Python package for empirical attainment surface. We, therefore, develop a Python package for this purpose and describe the usage. The package is available at https://github.com/nabenabe0928/empirical-attainment-func. OptunaHub now provides our implementation at https://hub.optuna.org/visualization/plot_empirical_attainment_surface/.",
+          "authors": [
+            "Shuhei Watanabe"
+          ],
+          "canonical_id": "2305.08852",
+          "categories": [
+            "cs.AI",
+            "cs.LG"
+          ],
+          "comment": "Submitted to AutoML workshop",
+          "pdf_url": "https://arxiv.org/pdf/2305.08852",
+          "published_at": "2023-05-15T17:59:34Z",
+          "source": "arxiv",
+          "title": "Python Tool for Visualizing Variability of Pareto Fronts over Multiple Runs",
+          "updated_at": "2026-10-17T14:10:06Z",
+          "url": "https://arxiv.org/abs/2305.08852",
+          "version": 2
+        },
+        "rank": 25,
+        "score": {
+          "base_score": 0.38232808859815237,
+          "exploration": 0.3486138573001123,
+          "matched_terms": [
+            "multi-objective optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.5335723464302748,
+          "topic": 0.34874808101698584
+        }
+      },
+      "tier": "browse"
+    },
+    {
+      "analysis": {
+        "analysis": "作者从方差缩减角度分析问题：将离线辅助均值与在线成对观测结合，构造带修正系数的估计量以降低目标均值估计的方差；在此基础上推导GP的有限样本置信界，并进一步得到遗憾保证，包括针对Matérn核的显式累积遗憾率与简单遗憾率，从而把误差相关性、辅助均值噪声与算法的学习速度联系起来。摘要未说明更细的推导技术细节。",
+        "challenges": [
+          "观测噪声降低每次昂贵评估的信息量，使后验学习变慢",
+          "辅助均值不必逼近目标函数，因此不能直接把辅助数据当作目标先验",
+          "配对误差相关性可能只是中等强度，理论保证需覆盖相应情况",
+          "辅助均值本身由含噪离线数据估计，会引入额外误差来源"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文针对观测噪声使每次评估信息量下降、后验学习变慢的问题，提出利用优化前可获得的低成本辅助数据。",
+            "location": "abstract",
+            "quote": "yet observation noise makes each evaluation less informative and slows posterior learning"
+          },
+          {
+            "claim": "方法结合离线辅助均值估计与从配对在线观测中学到的修正系数，实现方差缩减。",
+            "location": "abstract",
+            "quote": "a variance-reduction method that combines an offline estimate of the auxiliary mean with a correction coefficient learned from paired online observations"
+          },
+          {
+            "claim": "方法利用配对观测误差的相关性，而不要求辅助均值近似目标函数。",
+            "location": "abstract",
+            "quote": "it exploits correlation between paired observation errors without requiring the auxiliary mean to approximate the objective"
+          },
+          {
+            "claim": "作者给出有限样本GP置信界与遗憾保证，包括Matérn核下的显式累积与简单遗憾率。",
+            "location": "abstract",
+            "quote": "We establish finite-sample GP confidence bounds and regret guarantees, including explicit cumulative and simple regret rates for Mat\\'ern kernels"
+          },
+          {
+            "claim": "实验显示在配对相关性中等、辅助均值由含噪离线数据估计时，相对vanilla GP-UCB仍一致降低累积与简单遗憾。",
+            "location": "abstract",
+            "quote": "Numerical experiments across continuous BO benchmarks with varied landscapes and dimensions show consistent reductions in cumulative and simple regret relative to vanilla GP-UCB, even when within-pair correlation is moderate and the auxiliary mean is estimated from noisy offline data."
+          }
+        ],
+        "experiments": [
+          "在多种连续BO基准上进行数值实验，测试覆盖不同地形与不同维度",
+          "以vanilla GP-UCB为基线，报告累积遗憾与简单遗憾的一致性下降",
+          "实验条件包括配对相关性为中等强度、辅助均值由含噪离线数据估计的情形",
+          "摘要未给出具体基线数值、实例规模、运行时间、训练开销或消融细节"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "方法有效的关键在于利用“成对观测误差之间的相关性”而非利用辅助均值的准确性：离线辅助均值只作为控制变量式的偏移项，其偏差由在线成对观测中学到的修正系数吸收；因此即使辅助均值来自含噪离线数据、与目标存在偏差，只要配对误差相关，方差仍可被削减，从而改善置信界与遗憾率。",
+        "limitations": [
+          "材料未说明作者明确陈述的局限"
+        ],
+        "method": [
+          "构建Auxiliary-Informed Gaussian Process Bandit（AI-GPB）框架，在GP-UCB类框架中引入辅助信息",
+          "将离线估计的辅助均值作为偏移项，与在线观测结合构造方差缩减的目标估计",
+          "从配对在线观测中学习修正系数，用于校正辅助均值与目标之间的偏差",
+          "利用配对观测误差的相关性进行方差缩减，而不要求辅助均值近似目标函数",
+          "给出有限样本GP置信界与遗憾保证，包括Matérn核下的累积遗憾率和简单遗憾率"
+        ],
+        "motivation": "标准BO仅依赖优化过程中获得的高成本观测进行后验学习，在观测噪声下每次评估的信息量被削弱，收敛与遗憾表现受限于昂贵采样次数；而许多应用中在优化之前已可获得低成本辅助数据，作者希望把这类先验可得的辅助信息纳入GP bandit，加速后验学习并降低遗憾，同时避免要求辅助均值逼近真实目标这一较强假设。",
+        "primary_topic": "利用低成本辅助数据改进高斯过程贝叶斯优化的方差缩减与bandit算法",
+        "relation_to_research": "该论文属于昂贵黑箱优化的学习辅助搜索方向，与AI4OR中“用低成本信息或学习信号降低昂贵评估成本”的思路相通。其方差缩减与成对辅助观测机制在概念上可能迁移到需要大量仿真评估的生产调度参数调优或仿真优化问题，例如以低精度仿真或代理模型作为辅助均值、以少量高精度评估作为在线成对观测；但这只是推测，迁移需要满足辅助数据与在线评估可成对、配对误差存在相关性、决策空间可连续参数化或可嵌入BO框架等条件。论文本身不涉及柔性作业车间、流水车间、分布式制造、动态扰动或多目标约束调度。",
+        "relevance_score": 6,
+        "setting": "研究昂贵黑箱函数的序贯优化问题：决策对象是每一轮查询的输入点，目标是在有限评估预算下降低累积遗憾与简单遗憾，关键挑战是观测噪声使每次昂贵评估信息量下降、后验学习变慢；信息假设是优化前可获得低成本的辅助数据，且存在与在线观测成对的离线估计，其配对误差之间具有可相关但辅助均值不必接近目标函数的性质；摘要未说明该问题是静态还是动态环境，也未说明具体约束（如无约束连续域之外的结构）。",
+        "tags": [
+          "贝叶斯优化",
+          "高斯过程bandit",
+          "辅助数据",
+          "方差缩减",
+          "regret分析",
+          "昂贵黑箱优化"
+        ],
+        "title_zh": "成对辅助观测下的高斯过程bandit方法",
+        "uncertainty": "仅有标题与摘要，缺少全文中的算法细节、实验设置与数值结果，无法核实具体遗憾提升幅度、维度规模、相关性阈值与计算开销；与生产调度的关联属于推测，作者未讨论调度应用；作者未在摘要中明确陈述局限。",
+        "why_recommended": "对关注学习辅助搜索与仿真优化的研究者，该文提供了一个明确的理论化视角：辅助信息不必准确，只需与在线观测误差相关即可用于方差缩减，并配有有限样本置信界与Matérn核遗憾率。这种“辅助均值+在线学习修正系数”的结构可作为把廉价仿真、历史调度数据或低精度代理模型接入优化器的设计参考，也提醒在公平评估预算下比较遗憾/解质量。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-20T10:28:18.306904+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2610.24737v1",
+        "status": "not_found"
+      },
+      "final_score": 0.45639184408720324,
+      "provenance": {
+        "analyzed_at": "2026-10-20T02:30:42.063819Z",
+        "input_hash": "266fba4d0f18e9b2db9ed0241f09dab9e31784c150d73e0c442e6446e8c9cdf7",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Bayesian optimization (BO) is widely used for expensive black-box optimization, yet observation noise makes each evaluation less informative and slows posterior learning. Standard BO learns from costly outcomes gathered during optimization. In many applications, however, low-cost auxiliary data are available beforehand. We introduce Auxiliary-Informed Gaussian Process Bandit (AI-GPB), a variance-reduction method that combines an offline estimate of the auxiliary mean with a correction coefficient learned from paired online observations. Notably, it exploits correlation between paired observation errors without requiring the auxiliary mean to approximate the objective. We establish finite-sample GP confidence bounds and regret guarantees, including explicit cumulative and simple regret rates for Mat\\'ern kernels. Numerical experiments across continuous BO benchmarks with varied landscapes and dimensions show consistent reductions in cumulative and simple regret relative to vanilla GP-UCB, even when within-pair correlation is moderate and the auxiliary mean is estimated from noisy offline data.",
+          "authors": [
+            "Weibo Huang",
+            "Qing Feng",
+            "Ruihao Zhu",
+            "Cheng Hua"
+          ],
+          "canonical_id": "2610.24737",
+          "categories": [
+            "cs.LG",
+            "math.OC",
+            "stat.ML"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2610.24737",
+          "published_at": "2026-10-17T15:07:43Z",
+          "source": "arxiv",
+          "title": "Gaussian Process Bandits with Paired Auxiliary Observations",
+          "updated_at": "2026-10-17T15:07:43Z",
+          "url": "https://arxiv.org/abs/2610.24737",
+          "version": 1
+        },
+        "rank": 28,
+        "score": {
+          "base_score": 0.33889426197673317,
+          "exploration": 0.12118448088578597,
+          "matched_terms": [
+            "black-box optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.5389363970835799,
+          "topic": 0.34394216082933327
+        }
+      },
+      "tier": "browse"
+    }
+  ],
+  "schema_version": 1,
+  "stats": {
+    "cache_hits": 0,
+    "deduplicated": 1374,
+    "failed": 2,
+    "fetched": 1374,
+    "figure_available": 5,
+    "figure_cache_hits": 0,
+    "figure_failed": 0,
+    "figure_panel_failed": 0,
+    "figure_requests": 17,
+    "full_text_reads": 9,
+    "input_tokens": 118575,
+    "model_calls": 32,
+    "output_tokens": 71628,
+    "preselected": 32,
+    "published": 11,
+    "source_lookback_days": 3
+  }
+}
