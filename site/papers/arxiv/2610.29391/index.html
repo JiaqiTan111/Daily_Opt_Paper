@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>先提名后裁决：LLM 辅助的一次性、逐实例 MIP 求解器调参</title>
+  <title>先提名再裁决：LLM 辅助的一次性、按实例 MIP 求解器调参</title>
   <link rel="icon" href="data:,">
   <style>
     :root {
@@ -161,7 +161,7 @@
 <main>
   <header class="page-header">
     <div class="masthead">
-      <span>PAPERDAILY · 智能优化与生产调度 · 2026-10-23 10:22</span>
+      <span>PAPERDAILY · 智能优化与生产调度 · 2026-10-24 15:18</span>
       <nav aria-label="站点导航">
         <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/">今日</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/daily/">每日日报</a>
         <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/library/">长期论文库</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/topics/">主题</a>
@@ -169,7 +169,7 @@
         <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/search/">搜索</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/feed.xml">订阅</a>
       </nav>
     </div>
-    <h1>先提名后裁决：LLM 辅助的一次性、逐实例 MIP 求解器调参</h1>
+    <h1>先提名再裁决：LLM 辅助的一次性、按实例 MIP 求解器调参</h1>
 <p class="lede">本次检索最近 3 天的论文版本，首次发表日期见各篇详情。</p><p class="lede">Nominate-then-Adjudicate: LLM-Assisted One-Pass and Per-Instance MIP Solver Tuning</p>  </header>
 
   <section class="detail-layout" aria-label="论文完整解读"><article
@@ -194,20 +194,20 @@
   <div class="paper-card__body">
     <div class="paper-card__rubric">
       <span class="topic-badge">数学规划与混合求解</span>
-      <span>摘要级</span>
+      <span>正文节选</span>
       <span>相关性 7/10</span>
       <span>v1</span>
     </div>
 
-    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2610.29391/">先提名后裁决：LLM 辅助的一次性、逐实例 MIP 求解器调参</a></h3>
+    <h3><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/papers/arxiv/2610.29391/">先提名再裁决：LLM 辅助的一次性、按实例 MIP 求解器调参</a></h3>
     <p class="original-title" lang="en">Nominate-then-Adjudicate: LLM-Assisted One-Pass and Per-Instance MIP Solver Tuning</p>
     <p class="authors">Yifan Zhao · Qianyang Zhao · Xinyu Guan · Kai Wei · Yuming Deng</p>
 
 <div class="paper-card__takeaway">
       <p class="field-label">核心洞察</p>
-      <p>核心洞察有两点。第一，与其在推理时为每个实例重新搜索配置，不如一次性采样一个固定参数组合集并反复复用；只要这个短名单仍保留可观的 oracle 提升空间，问题重心就从“生成候选配置”转为“在短名单内做选择”。第二，固定 20 维特征会丢失实例结构信息，使仅依赖特征的选配器无法区分偏好不同配置的实例；因此需要在特征之外引入能读取实例本身信息的裁决机制，也就是由大模型对提名结果做一次性裁决。</p>
+      <p>候选配置的构造可以通过一次性采样的固定的候选池复用，从而把难点从“搜索配置”转移到“在少量已测量候选之间做精细排序”；单纯依赖固定的 20 维聚合特征的选择器在结构不同但特征相同的实例上必然给出相同决策，因此必须补充一个特征通道（压缩矩阵文本）来打破这种退化，而把基础模型限制在候选集合内做有界的 k 路选择，可以避免其生成未经验证的参数值。</p>
     </div>
-    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>论文把调参的昂贵部分移到离线，在推理时只做一次模型调用，这对关注公平计算预算与部署可行性的 AI4OR 研究者有直接参考价值。它对固定特征表示信息瓶颈的分析，有助于思考“实例表示与选择器能力”之间的匹配问题；其一次性、零求解的评估协议，也对设计可复现、预算公平的调参实验有借鉴意义。</p>
+    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>该文给出的机制对生产调度与 AI4OR 研究具有参考价值：它把昂贵的求解器调用移到离线，把在线决策压缩成一次模型调用，并用“特征退化”构造说明聚合特征选择器的结构性缺陷，这一分析框架可直接用于评估调度中的实例表示与规则选择器；同时作者对计算预算匹配、延迟未测和候选覆盖不足的说明，符合严谨的求解质量与公平预算评估要求。</p>
     <ul class="paper-tags" aria-label="研究标签">
       <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/llm/" data-tag-filter="llm">大模型辅助优化</a></li>
       <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/mathematical-programming/" data-tag-filter="mathematical-programming">数学规划</a></li>
@@ -221,9 +221,9 @@
       </summary>
 
       <div class="paper-details__meta">
-        <p><strong>模型细分主题：</strong>基于大模型的一次性逐实例 MIP 求解器参数配置</p>
-        <p><strong>模型原始标签：</strong>MIP 求解器调参、算法配置、大语言模型、固定参数组合集、一次性推理、实例异质性</p>
-        <p><strong>第一单位：</strong>证据未提供</p>
+        <p><strong>模型细分主题：</strong>混合整数规划求解器的按实例参数配置与大模型辅助选择</p>
+        <p><strong>模型原始标签：</strong>混合整数规划、求解器参数调优、大语言模型、一次性推理、候选组合选择、特征退化、矩阵文本表示、AI4OR</p>
+        <p><strong>第一单位：</strong>阿里巴巴集团（Alibaba Group，杭州）</p>
         <p><strong>通讯作者：</strong>证据未提供</p>
         <p><strong>首次上传：</strong>2026-10</p>
         <p class="paper-links">
@@ -272,29 +272,29 @@
       <p class="copyright">图片来自论文官方 arXiv 页面，仅用于论文导航与学术阅读；版权归论文作者或相关权利人所有。</p>
 
       <dl class="research-note">
-        <dt>研究设定</dt><dd>研究设定是：为混合整数规划（MIP）求解器做逐实例参数调优。决策对象是每个实例所选用的求解器参数配置；目标是在推理阶段不进行逐实例搜索，也只调用一次模型、不调用求解器的协议下，尽可能选出表现好的配置。关键约束包括：固定参数组合集只采样一次并在不同实例间复用；特征表示是固定的 20 维向量，可能把结构不同的实例映射到同一向量；推理阶段只调用一次模型；整条推理流程的端到端延迟未测量。信息假设是：异构大数据优化负载由不同建模族来体现结构多样性，求解器性能结果体现决策价值；静态还是动态环境，材料未说明。</dd>
-        <dt>研究动机</dt><dd>MIP 求解器有上百甚至上千个参数，最优设置随实例而异，但逐实例搜索代价过高。作者希望在几乎不增加推理开销的前提下保留逐实例选择配置的收益，因此把问题放在异构大数据优化负载的配置场景下，用大模型替代昂贵的逐实例搜索。</dd>
-        <dt>核心洞察</dt><dd>核心洞察有两点。第一，与其在推理时为每个实例重新搜索配置，不如一次性采样一个固定参数组合集并反复复用；只要这个短名单仍保留可观的 oracle 提升空间，问题重心就从“生成候选配置”转为“在短名单内做选择”。第二，固定 20 维特征会丢失实例结构信息，使仅依赖特征的选配器无法区分偏好不同配置的实例；因此需要在特征之外引入能读取实例本身信息的裁决机制，也就是由大模型对提名结果做一次性裁决。</dd>
-        <dt>技术挑战</dt><dd><ul><li>逐实例参数搜索在推理时开销过高，难以直接部署</li><li>固定参数组合集需要在跨实例复用时仍保留足够提升空间</li><li>固定 20 维特征表示存在映射碰撞，仅靠特征的选择器难以区分结构不同但偏好不同配置的实例</li><li>在只调用一次模型、不调用求解器的严格协议下保证选择质量</li><li>端到端延迟未被测量，实际部署开销尚不明确</li></ul></dd>
-        <dt>问题分析</dt><dd>作者把问题重构为“候选提名 + 一次性裁决”的两段式配置流程：先离线一次性采样固定参数组合集作为提名池，再在推理时由大模型对提名池做选择。作者通过分析短名单的 oracle 提升空间，说明候选集质量足够，从而把经验重点放在池内选择上；同时指出固定 20 维特征会造成实例到向量的多对一映射，论证仅用特征的选择器存在结构性信息瓶颈，为引入大模型裁决提供依据。摘要未说明具体的分解下界推导或学习信号设计细节。</dd>
-        <dt>方法</dt><dd><ul><li>构建先提名后裁决的两段式流程：先离线一次性采样固定参数组合集，推理时在池内选择配置</li><li>固定参数组合集跨实例复用，取消推理阶段的逐实例配置搜索</li><li>使用固定 20 维特征表示实例，并明确指出其可能把结构不同的实例映射到同一向量</li><li>基础模型不进行任务相关权重更新，保持冻结</li><li>选择过程为一次性（one-pass）：一次模型调用、推理阶段零求解器调用</li><li>以不同建模族体现结构多样性（Variety），以求解器性能结果体现决策价值（Value）</li></ul></dd>
-        <dt>实验</dt><dd><ul><li>比较中超过 20% 实际差异阈值的样本上，完整裁决器相对最佳提名者为 538 胜、185 负</li><li>相对默认配置的胜率由 84.9% 提升至 90.2%</li><li>在匹配的一次性协议下，与逐实例配置基线比较，领先于聚类级方法和表现最好的被评估逐实例基线 ISAC+</li><li>材料未给出实例规模、运行时间、训练开销与端到端延迟的量化结果；摘要明确说明端到端延迟未测量</li></ul></dd>
-        <dt>局限</dt><dd><ul><li>端到端延迟未测量，一次性、零求解协议只界定了决策接口而非实际延迟</li><li>固定 20 维特征可能把结构不同的实例映射为同一向量，构成选择器的信息瓶颈</li><li>评估依赖固定参数组合集保留的 oracle 提升空间，摘要未说明该提升空间在其他实例族上的表现</li><li>材料未说明未通过 20% 实际差异阈值的比较如何处理</li></ul></dd>
-        <dt>与你的研究关系</dt><dd>该论文与智能优化、AI4OR 中的“学习辅助求解器配置、算法选择”方向直接相关：它把逐实例调参转化为一次性的大模型选择问题，涉及候选组合集构建、实例表示的信息瓶颈以及推理预算控制。这些机制原则上可迁移到生产调度中的求解器超参选择或启发式算子选择，例如为柔性作业车间、流水车间实例或分布式调度实例挑选参数配置。但这属于推测：迁移需要具备可离线采样的参数组合集、能表达调度实例结构的表示，以及在调度实例族上重新验证短名单提升空间和选择质量。论文本身针对 MIP 求解器参数，并未涉及调度问题。</dd>
+        <dt>研究设定</dt><dd>论文研究混合整数规划（MIP）求解器的按实例参数配置问题：决策对象是对每个实例从候选参数配置中选出一个配置，目标是在求解器性能（score 与求解时间）上取得更好的结果，关键约束是推理阶段只调用一次基础模型、不调用求解器，且基础模型不做任务相关的权重更新；信息假设包括固定的 20 维聚合特征向量、压缩后的约束矩阵文本表示，以及离线构建的候选组合与经验记忆；静态或动态环境方面，材料只给出离线构建和一次在线决策的设定，未给出动态到达或在线更新场景的说明。</dd>
+        <dt>研究动机</dt><dd>求解器暴露成百上千个参数，最优配置随实例变化，但逐实例配置搜索在推理时开销过大；已有方法分布在决策粒度（整个分布、聚类、单实例）、推理时求解器调用次数和是否需要拟合选择器三条轴上，作者希望占据“不调用求解器、不拟合选择器、仅一次模型调用”这一尚未被充分研究的设计点。</dd>
+        <dt>核心洞察</dt><dd>候选配置的构造可以通过一次性采样的固定的候选池复用，从而把难点从“搜索配置”转移到“在少量已测量候选之间做精细排序”；单纯依赖固定的 20 维聚合特征的选择器在结构不同但特征相同的实例上必然给出相同决策，因此必须补充一个特征通道（压缩矩阵文本）来打破这种退化，而把基础模型限制在候选集合内做有界的 k 路选择，可以避免其生成未经验证的参数值。</dd>
+        <dt>技术挑战</dt><dd><ul><li>固定的 20 维特征表示会把结构不同的实例映射到同一向量，只依赖特征的选择器无法区分它们（独立集与顶点覆盖在同一图上的构造即为具体碰撞）</li><li>推理时不能调用求解器，因此不能通过试解来评估候选配置</li><li>基础模型不做权重更新，只能依赖提示、上下文和离线经验记忆</li><li>候选池由随机采样一次性得到，在小候选池内选择仍然留有可观的相对完整候选集合的提升空间（oracle headroom），即候选覆盖可能不足</li><li>作者指出合成类的经验向真实无标签 MIPLIB 模型迁移只能支持较窄的结论</li></ul></dd>
+        <dt>问题分析</dt><dd>作者先分析特征映射的结构性局限：若两条实例的 20 维特征向量完全相同而它们偏好的配置不同，那么只观测该特征的确定性选择器必然失败；随后用共享同一图、仅约束方向和目标方向不同的最大权独立集与最小权顶点覆盖构造来具体展示这一碰撞，并论证裁决器额外读取压缩矩阵文本后具备区分两者的信息通道。方法上把问题分解为离线构建候选组合与经验记忆、由特征完成提名、再由基础模型基于矩阵文本进行裁决三个阶段。材料未说明作者使用了下界推导等更形式化的分析。</dd>
+        <dt>方法</dt><dd><ul><li>离线一次性采样固定的参数配置候选组合，并在所有实例上复用，从而在推理时不再做逐实例配置搜索</li><li>提名阶段（nominator）只使用固定 20 维聚合特征对候选打分，输出 top-k 候选；材料指出 nominator 对特征退化对中的两个实例给出相同候选</li><li>裁决阶段（adjudicator）把压缩后的约束矩阵文本表示与候选配置的 30 个参数一并输入基础模型，由模型在 k 个已测量的候选中做出有界选择，不生成参数值</li><li>基础模型不进行任务相关权重更新，推理时只进行一次模型调用、不进行求解器调用</li><li>离线构建 skill memory（经验记忆），把观察到的结构与已记录的类别和规则关联起来，用于跨族裁决</li><li>材料未说明具体的提示模板细节、状态动作奖励形式或强化学习训练过程</li></ul></dd>
+        <dt>实验</dt><dd><ul><li>在 16 个结构不同的生成 MIP 族以及两个特征取值范围兼容的 MIPLIB 迁移案例上评估</li><li>在差异超过 20% 实用差异阈值的比较中，完整裁决器相对 top nominee 记录 538 胜、185 负</li><li>完整裁决器相对默认配置的胜率从 84.9% 提升到 90.2%</li><li>在匹配的一次性协议下与按实例配置基线比较，作者称其领先聚类级方法和表现最好的按实例基线 ISAC+；摘要未给出与 ISAC+ 的具体数值差</li><li>作者称实验只评估了跨族结构异质性（Variety）与求解性能（Value），端到端延迟未测量</li></ul></dd>
+        <dt>局限</dt><dd><ul><li>端到端延迟未测量，部署成本核算需要包括模型调用、序列化和求解器运行时间</li><li>候选池覆盖更广范围的问题仍未解决（broader portfolio coverage remains open）</li><li>基础模型的必要性或不可替代性仍未有定论，公平比较需要维度无关的架构以及匹配的监督与训练预算</li><li>对合成类到真实无标签 MIPLIB 模型的迁移只支持较窄的结论</li><li>作者提出全系数矩阵上的二分图神经网络排序器是可能的替代读取通道，但未验证</li></ul></dd>
+        <dt>与你的研究关系</dt><dd>论文事实：这是一篇面向 MIP 求解器配置的 AI4OR 工作，把大模型作为离线候选库上的有界裁决器，并显式处理推理时求解器调用预算为零的约束，这与学习辅助搜索、约束可行性、公平计算预算的关注点直接相关。迁移设想（推测）：其“先提名、后裁决”的两阶段结构可能可迁移到柔性作业车间、流水车间或分布式制造中的调度规则与超参数选择，即先由廉价特征提名少量候选，再由结构感知模型裁决；但迁移需要满足条件，即存在可离线测量性能的候选配置库、实例的结构信息能压缩成可读文本或张量表示，并且需要重新验证调度约束的可行性与端到端耗时。</dd>
         <dt>证据与不确定性</dt>
         <dd>
-          <p>仅依据标题与摘要，方法细节（模型输入输出、提示或裁决机制、提名池大小与采样方式）未说明；分类为 cs.LG 但摘要面向 MIP 调参，具体求解器与实例族未给出；摘要数字对应的实验规模与基线集合不完整；迁移到生产调度的可行性属于推测，尚无证据。</p>
-          <blockquote><strong>研究问题为逐实例 MIP 参数配置，且逐实例搜索代价过高：</strong>Mixed-integer programming solvers expose hundreds or even thousands of parameters whose best setting varies per instance, yet per-instance search is prohibitively expensive.</blockquote>
-          <blockquote><strong>采用固定参数组合集并跨实例复用，取消推理阶段的逐实例搜索：</strong>a fixed portfolio is sampled once and reused across instances, removing per-instance configuration search at inference</blockquote>
-          <blockquote><strong>固定 20 维特征可能把结构不同实例映射到同一向量，限制仅用特征的选择器：</strong>the fixed 20-feature representation can map structurally different instances to the same vector, preventing a feature-only selector from distinguishing them even when they prefer different configurations.</blockquote>
-          <blockquote><strong>推理阶段仅一次模型调用、无求解器调用，且端到端延迟未测量：</strong>selection is one-pass: one model call and no solver calls at inference</blockquote>
-          <blockquote><strong>端到端延迟未被测量：</strong>leaves end-to-end latency unmeasured</blockquote>
-          <blockquote><strong>裁决器相对最佳提名者的胜负统计：</strong>the complete adjudicator records 538 wins and 185 losses against the top nominee</blockquote>
-          <blockquote><strong>相对默认配置胜率由 84.9% 升至 90.2%：</strong>its win rate against the default rises from 84.9% to 90.2%</blockquote>
-          <blockquote><strong>在匹配的一次性协议下领先聚类级方法与 ISAC+：</strong>it leads the cluster-level methods and the best-performing evaluated per-instance baseline, ISAC+.</blockquote>
+          <p>只能获得摘要和部分全文节选，缺少方法细节、提示设计、训练或离线构建开销、与 ISAC+ 等的具体数值以及统计显著性信息；通讯作者信息未在材料中出现；相关性评分基于该机制可向生产调度与学习辅助搜索迁移，并不代表论文直接研究车间调度问题。</p>
+          <blockquote><strong>论文研究 MIP 求解器按实例参数配置，并指出逐实例搜索在推理时开销过大：</strong>Mixed-integer programming solvers expose hundreds or even thousands of parameters whose best setting varies per instance, yet per-instance search is prohibitively expensive.</blockquote>
+          <blockquote><strong>推理阶段只进行一次模型调用、不调用求解器，且基础模型不做任务相关权重更新：</strong>The foundation model receives no task-specific weight updates, and selection is one-pass: one model call and no solver calls at inference.</blockquote>
+          <blockquote><strong>固定的 20 维特征表示会导致结构不同的实例映射到同一向量：</strong>the fixed 20-feature representation can map structurally different instances to the same vector, preventing a feature-only selector from distinguishing them even when they prefer different configurations</blockquote>
+          <blockquote><strong>完整裁决器相对 top nominee 的胜负计数：</strong>the complete adjudicator records 538 wins and 185 losses against the top nominee</blockquote>
+          <blockquote><strong>作者明确说明端到端延迟未测量：</strong>the one-call, zero-solve protocol specifies the decision interface and leaves end-to-end latency unmeasured</blockquote>
+          <blockquote><strong>作者认为更广的候选池覆盖仍未解决：</strong>the sampled pool and EPM shortlist provide useful headroom on the evaluated families, while broader portfolio coverage remains open</blockquote>
+          <blockquote><strong>作者指出基础模型的必要性或唯一性仍未解决：</strong>The necessity or uniqueness of a foundation model remains open</blockquote>
+          <blockquote><strong>作者通过独立集与顶点覆盖共图构造展示特征退化：</strong>From one shared seed our generators build a maximum-weight independent-set instance and a minimum-weight vertex-cover instance on the same graph.</blockquote>
         </dd>
       </dl>
-      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；仅依据标题与摘要。证据范围不足的内容不应视为全文结论。</p>
+      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；读取了全文节选。证据范围不足的内容不应视为全文结论。</p>
     </details>  </div>
 </article></section>
 </main>

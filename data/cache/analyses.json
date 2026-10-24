@@ -33775,6 +33775,90 @@
       "reading_scope": "abstract"
     }
   },
+  "69fc3c64dd6aef22dcbee9ec06811a58ea13b5db995d198227ae28399d09eb3a": {
+    "analysis": {
+      "analysis": "作者利用问题结构将规划问题分解为两层：内层对给定收益共享率β求解参数化MISOCP，联合优化VSC选址、定容与AC/DC系统运行（各季节场景分别优化调度与潮流，选址定容跨场景共用）；外层对β执行搜索过程。材料给出的算法片段显示，搜索以步长Δβ推进，若Δβ≤εβ则终止；若找到可行解，则将搜索区间收缩到以当前β̂为中心、半径为Δβ的邻域，并按Δβ←Δβ/γ缩小步长。作者还通过将SOCP松弛结果与NLP-based OPF结果对比，分析凸松弛对系统级潮流与VSC运行约束的近似精度，以支撑在规划模型中使用SOCP松弛的合理性。",
+      "challenges": [
+        "VSC选址为二元决策，使AC/DC潮流与投资模型成为混合整数问题，计算可处理性受限",
+        "AC潮流非线性，需采用凸松弛（SOCP）以保证可解性，同时要评估松弛精度",
+        "收益共享率与选址定容、运行调度相互耦合，激励过低或过高都会损害某一方利益，需在参数上搜索平衡点",
+        "商户投资者与TSO的目标和收益分配关系需要以数学形式表达，而材料指出该模型只是对二者交互的初步刻画"
+      ],
+      "corresponding_authors": [
+        "Haixiao Li"
+      ],
+      "evidence": [
+        {
+          "claim": "论文将收益共享率参数化，构建联合优化VSC选址定容与AC/DC运行的MISOCP模型",
+          "location": "abstract",
+          "quote": "this paper formulates a sharing-rate-parameterized mixed-integer second-order cone programming (MISOCP) model that jointly optimizes VSC siting and sizing while coordinating AC/DC system operation"
+        },
+        {
+          "claim": "论文采用直接搜索过程寻找满足投资者预期并保留TSO收益的收益共享率",
+          "location": "abstract",
+          "quote": "A straightforward search procedure is then employed to identify the benefit-sharing rate that meets the investor’s expectations while preserving sufficient benefits for the TSO."
+        },
+        {
+          "claim": "作者明确承认当前模型只是对投资者与TSO交互的初步刻画",
+          "location": "supplied_full_text",
+          "quote": "The present model provides only a preliminary representation of the interaction between the MTDC investor and the TSO."
+        },
+        {
+          "claim": "算例在定制的9节点AC/DC混合系统上验证，且仅3端MTDC参与投资",
+          "location": "supplied_full_text",
+          "quote": "A 3-terminal MTDC is considered for investment, with the AC bus connection and the capacity of each VSC determined by the proposed parametric model."
+        },
+        {
+          "claim": "SOCP与NLP的OPF结果差距很小，支持使用SOCP松弛",
+          "location": "supplied_full_text",
+          "quote": "The close agreement supports the use of the SOCP relaxation for the system-wide power flow and VSC operating constraints in the proposed planning model."
+        }
+      ],
+      "experiments": [
+        "算例为定制的AC/DC混合系统：9节点AC网络拓扑与线路阻抗基于斯洛文尼亚400kV输电系统的简化表示，其余参数（基准负荷水平、发电机成本系数、输电容量、投资成本等）经修改或合理假设；考虑3端MTDC投资，每个AC母线均为VSC候选接入点，MTDC网络拓扑及直流端子与VSC的关联固定",
+        "年度运行简化为四个季节场景，每季2190小时，负荷在季节内保持恒定；春夏秋冬负荷分别为基准负荷的0.90、1.05、0.95、1.10倍；发电机限值、成本系数与网络参数跨季节不变；VSC选址定容决策对所有季节共用，发电调度与潮流按季节分别优化",
+        "作者报告算例验证了MTDC接入带来的运行成本收益，并验证了所提出的收益共享率搜索策略",
+        "SOCP与NLP-based OPF对比：发电成本分别为23,369 $/h与23,384 $/h，差距0.0619%；总发电量分别为1315.40 MW与1316.06 MW，差距0.0496%，作者据此认为SOCP松弛与NLP结果接近，支持在规划模型中使用SOCP松弛",
+        "材料未说明与其它选址定容或激励方法的基线对比、更大规模系统的可扩展性测试、搜索过程的总求解次数与运行时间开销、以及消融实验"
+      ],
+      "first_affiliation": "代尔夫特理工大学电气可持续能源系（Department of Electrical Sustainable Energy, Delft University of Technology）",
+      "insight": "论文的核心洞察在于：收益共享率可以作为嵌入优化模型的参数，而不是事后分配的独立环节。把共享率参数化后，每一个固定的共享率取值都对应一个可求解的MISOCP，从而把“寻找合适激励”的问题转化为对单参数可行性与收益条件的搜索问题；这样，激励设计与VSC选址定容、AC/DC运行协调被放在同一优化框架内评价，避免了激励与规划脱节。参数化模型与简单搜索结合，使问题在保持MISOCP可处理性的同时，能够刻画投资者回报与TSO收益之间的权衡。",
+      "limitations": [
+        "作者明确指出，当前模型只提供了MTDC投资者与TSO之间交互的初步表示；未来工作将考察更丰富的策略行为与市场行为，将其数学化，并扩展优化框架以更好反映实际投资决策"
+      ],
+      "method": [
+        "建立AC/DC混合系统运行约束，包括AC支路潮流方程、AC支路容量约束以及MTDC与VSC相关约束（材料以表格和公式片段给出）",
+        "对AC/DC潮流约束采用凸松弛（SOCP）以提升含二元VSC选址决策问题的计算可处理性",
+        "构建以收益共享率β为参数的MISOCP模型，联合优化VSC选址与定容，并协调AC/DC系统运行；投资成本回收与投资者预期回报通过β进入模型",
+        "外层采用直接的搜索过程寻找满足投资者预期、同时为TSO保留足够收益的收益共享率：固定β求解MISOCP，依据可行性与目标更新β̂、收缩区间并缩小步长直至Δβ≤εβ",
+        "在Julia中用JuMP构建每个固定β的MISOCP，并调用Gurobi求解"
+      ],
+      "motivation": "仅靠TSO自身的利益不足以推动MTDC项目落地，商户投资者需在运行前投入大量资本，而拥堵缓解、再调度成本下降与运行灵活性提升等系统级收益主要归于电力系统；若不能将部分系统收益分配给投资者以回收投资并达到预期回报，项目可能不具备财务可行性。另一方面，激励不足无法吸引投资，激励过度又会不必要地削减TSO保留的经济收益，因此需要寻求平衡双方利益的成本有效激励。这一激励与VSC选址定容相互耦合，故作者将二者联合建模。",
+      "primary_topic": "AC/DC混合电网扩展规划中的参数化MISOCP与收益共享激励搜索",
+      "relation_to_research": "论文事实：该工作属于电力系统扩展规划中的混合整数凸优化与参数化优化，采用MISOCP建模、SOCP松弛和单参数外层搜索，不涉及神经网络、强化学习、多智能体或学习辅助搜索。与当前研究画像的关系属于相邻方向而非核心：其“参数化模型加外层搜索”的求解范式与生产调度中处理耦合参数、权衡多主体利益的分解—搜索思路有结构相似性。推测：若要将该方法思想迁移到柔性作业车间或分布式生产调度，需要满足的条件包括：存在可参数化且单调影响可行性与收益的共享或分配参数（如产能分配比例、协同收益分成），内层子问题在固定参数下可写成混合整数凸或易解形式，外层参数维度低到可用直接搜索。但这只是迁移设想，并非作者结论；论文未提供任何调度或学习型求解证据。",
+      "relevance_score": 4,
+      "setting": "研究问题是在既有交流电网中规划基于VSC的多端直流（MTDC）网络，决策对象为VSC的接入位置（二元变量）与容量，目标是在缓解输电拥堵、提升输电能力与运行经济性的同时，确定一个成本有效的收益共享率，使商户投资者能够回收MTDC投资并获得与其风险和预期相称的合理回报，同时TSO仍保留足够的经济收益；关键约束包括AC/DC潮流约束（AC侧采用凸松弛）、投资成本回收与收益分配关系；信息假设为四个季节运行场景下VSC选址定容决策共用，而发电调度与潮流按季节分别优化，材料未说明其他不确定性或信息结构；环境性质为静态规划问题，年度运行以四个季节场景近似。",
+      "tags": [
+        "MISOCP",
+        "SOCP松弛",
+        "电网扩展规划",
+        "VSC选址定容",
+        "投资激励",
+        "参数化优化",
+        "搜索过程"
+      ],
+      "title_zh": "面向交流电网中商户投资MTDC的成本有效激励：VSC选址与定容的参数化MISOCP模型",
+      "uncertainty": "本次仅获得摘要与全文节选（含部分模型公式、算法片段、表4与表8片段及结论），模型完整约束、搜索算法的完整伪代码、算例全部结果表和投资参数细节均不完整，因此对搜索过程的收敛性、计算开销、MTDC收益与激励取值的具体数值无法核实；标题与摘要未涉及学习或调度方法，相关性评分主要基于建模与求解范式的结构相似性，若完整全文包含未显示的学习型或调度相关内容，判断可能需要调整。",
+      "why_recommended": "对关注AI4OR与智能优化的研究者而言，本文提供了一个清晰的“参数化MISOCP加低维参数搜索”的工程化求解范式，可作为多主体利益分配与规划决策耦合问题的方法参照；其将SOCP松弛结果与NLP结果做精度对照的做法，也体现了对凸松弛可行性与解质量证据的重视。但需要注意，本文不涉及学习型方法、动态调度或多目标进化算法，阅读价值主要在于建模与求解框架的结构性启发，而不是方法上的直接可迁移。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-24T07:19:06.836806Z",
+      "input_hash": "5937ab3c44d4dba6345c42c1b919ab4006560f1e2eb772b49af3b5f78960dea6",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "6a4c28b7837bd2a86b1f7b1dd4f7c4bfbdc7b3e10f3b94b6560c5e7f83cdbb61": {
     "analysis": {
       "analysis": "作者利用目标的无驱动动力学和推动接触的正锥表示来分析驱动约束，将追踪机器人的推动力表示为正锥中的向量，并识别出构型依赖的稀疏驱动约束。通过CLF约束保证目标参考跟踪的稳定性，通过CBF约束保证与圆形障碍物的安全距离。将CLF和CBF约束嵌入混合整数推力分配程序中，以处理单侧推动的稀疏性和间歇性控制权限。延迟感知反馈控制架构补偿了推动接触的延迟，采用混合系统H进行模式切换，在需要重新分配推动力时切换到保守模式。",
@@ -34496,6 +34580,89 @@
     "provenance": {
       "analyzed_at": "2026-10-06T03:43:35.366506Z",
       "input_hash": "7019b4c950387f8972e1d6a53473a72202e5dd25bb155d74485bc61f811ad7a7",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
+    }
+  },
+  "6c2dda4ec40ab6292efff7b76f10348e692e808ad0e80e71eee3c157838f7336": {
+    "analysis": {
+      "analysis": "作者从偏好优化的信息损失切入：指出标准成对偏好只保留“谁更好”的二值排序，而丢弃奖励差的大小；随后利用同一实例的候选轨迹回报可计算这一结构，将归一化奖励差转为损失权重，并进一步用尺度特定的微调和奖励、似然加权的倾斜采样来适配更大与偏移的实例分布。问题分解、下界或图表示等更细的建模材料未说明。",
+      "challenges": [
+        "SCOP 需要同时做选择与排序或构造决策，解空间和回报分布更复杂",
+        "同一实例采样解的目标值差异大，二值偏好会丢失差距幅度",
+        "大规模与分布偏移实例上的策略泛化，且不依赖局部搜索后处理",
+        "偏好学习与采样策略需要协同，避免只在训练分布上有效"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文指出标准偏好优化将解比较压缩为二值排名并丢弃奖励差幅度",
+          "location": "abstract",
+          "quote": "yet standard preference optimization reduces such comparisons to binary rankings and discards the magnitude of these differences"
+        },
+        {
+          "claim": "RWPO 根据归一化奖励差为偏好损失加权",
+          "location": "abstract",
+          "quote": "RWPO weights each preference loss according to the normalized difference in their rewards"
+        },
+        {
+          "claim": "方法结合尺度特定微调与倾斜采样以适配更大和偏移实例，且不依赖局部搜索后处理",
+          "location": "abstract",
+          "quote": "We further combine RWPO with scale-specific fine-tuning and reward- and likelihood-weighted tilted sampling to adapt trained policies to larger and shifted instance distributions without relying on local-search post-processing"
+        },
+        {
+          "claim": "实验覆盖 OP、PCTSP、Stochastic PCTSP 与 KP，并称 RWPO 一致优于未加权偏好优化和策略梯度基线",
+          "location": "abstract",
+          "quote": "Experiments on the OP, PCTSP, Stochastic PCTSP, and KP show that RWPO consistently improves over unweighted preference optimization and policy-gradient baselines"
+        },
+        {
+          "claim": "在 OP 的 100 至 2000 节点规模上超过 Compass 元启发式的平均奖励",
+          "location": "abstract",
+          "quote": "On the OP, the resulting solver exceeds the mean reward of the Compass metaheuristic at scales from 100 to 2,000 nodes"
+        }
+      ],
+      "experiments": [
+        "在 OP、PCTSP、Stochastic PCTSP 和 KP 上评测，覆盖多种实例规模",
+        "摘要称 RWPO 在广泛实例规模上一致优于未加权偏好优化与策略梯度基线",
+        "在 OP 上，所得求解器在 100 至 2000 节点规模超过 Compass 元启发式的平均奖励",
+        "摘要未给出各问题的具体数值、运行时间、训练开销、公平计算预算、约束可行性统计或消融明细"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "对同一实例采样出的候选轨迹，其回报差距本身携带解质量改进幅度的信息；如果把归一化后的奖励差作为偏好损失的权重，训练会更关注代表更大质量提升的成对比较，从而在选择性决策引起的高方差回报下获得更有效的学习信号。",
+      "limitations": [
+        "材料未说明作者明确陈述的局限"
+      ],
+      "method": [
+        "构造同一实例下候选轨迹的成对比较，用其奖励差归一化后为偏好损失加权，形成 RWPO 成对训练目标",
+        "将 RWPO 与尺度特定微调结合，以适配更大和发生分布偏移的实例",
+        "采用奖励加权与似然加权的倾斜采样，使训练分布偏向高奖励或高似然区域",
+        "在推理阶段不依赖局部搜索后处理，直接由训练策略求解"
+      ],
+      "motivation": "现有强化学习求解组合优化多面向 TSP 这类必须服务全部元素的稠密问题；SCOP 需额外决定取舍，导致同一实例的采样解目标值差异很大。标准偏好优化把这种比较压成二值排名，丢弃奖励差距的大小信息，因而训练信号无法区分“略好”和“大幅更好”的解。",
+      "primary_topic": "基于强化学习或偏好优化的选择性组合优化求解",
+      "relation_to_research": "该工作直接研究用学习型偏好目标求解组合优化，属于 AI4OR 与学习辅助搜索的相邻方向，并与强化学习求解器设计相关。其奖励加权思想对生产调度中的多解比较、多目标或带选择决策具有迁移潜力，例如将“选择哪些工件或订单进入排程”的收益与调度成本组成回报；但可迁移到柔性作业车间、流水车间或分布式制造需要重新定义同实例候选解、奖励尺度与可行性惩罚，这属于推测，尚需实验验证。论文未涉及车间调度约束、机器环境或生产运输协同建模。",
+      "relevance_score": 7,
+      "setting": "论文研究选择性组合优化问题（SCOP），包括定向越野问题（OP）、带奖金的旅行商问题（PCTSP）、随机 PCTSP 与背包问题（KP）。决策对象不仅包括路径或装载的排列，还包括选择哪些元素进入解；目标是在实例上最大化带选择约束的回报。约束与信息假设的具体形式材料未说明；环境是否动态、是否使用随机需求等，论文摘要仅提到 Stochastic PCTSP，其余材料未说明。",
+      "tags": [
+        "偏好优化",
+        "强化学习",
+        "选择性组合优化",
+        "奖励差距",
+        "Orienteering Problem",
+        "Prize-Collecting TSP",
+        "Knapsack",
+        "大规模泛化"
+      ],
+      "title_zh": "奖励加权偏好优化用于选择性组合优化问题",
+      "uncertainty": "仅依据标题与摘要，无法核实网络结构、状态动作定义、训练预算、基线设置、统计显著性和消融细节；OP 上“超过 Compass 平均奖励”的具体数值与计算预算未给出，因此对结论强度与可复现性的判断有限。",
+      "why_recommended": "对关注强化学习与学习辅助优化求解的研究者，本文提供了对偏好学习信号的一个具体修正：用奖励差距给成对比较加权，而不是只做二值排序。该方法不依赖复杂网络结构，机制清晰，便于在调度类组合问题中改造奖励函数与采样候选解；同时论文涉及大规模泛化与不依赖局部搜索后处理，契合对求解质量和公平计算预算的关注。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-24T07:19:14.023656Z",
+      "input_hash": "bee633e9451421b8dfffb4ab65510f5684100d2023ddc1184f8a9735ceac7580",
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
@@ -40449,6 +40616,92 @@
     "provenance": {
       "analyzed_at": "2026-10-01T02:56:11.685454Z",
       "input_hash": "64392d69beeacc799d31170575387a605935ed889cc9d5ddded5e63b9f20a83b",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
+  "80a3ee20572c5943ccd0f91544b3e986ce1aeac1be2da6cc6707fb5d7f828667": {
+    "analysis": {
+      "analysis": "作者利用影响图的图结构（决策节点、机会节点、价值节点的依赖关系）和决策策略的条件概率表示来设计 MILP 建模：把决策策略表达为在父节点状态条件下的选择变量，并用概率流/可达性约束刻画策略与机会事件的一致性。节选中的证明部分显示，作者通过构造可行解（把策略变量取为后继状态最大值）来论证建模的有效性，并比较不同建模的根节点松弛强度。材料未说明是否使用下界分解或对偶分析。",
+      "challenges": [
+        "非周期性影响图无法直接套用 POMDP 式的序贯分解，难以获得强根松弛",
+        "机会节点与决策节点状态空间大时，变量与约束数量急剧膨胀",
+        "既要保持 MILP 的建模灵活性（CVaR、机会约束、逻辑约束），又要提升计算效率",
+        "不同问题结构下没有一种建模始终最优，需要判断何时选用哪种建模",
+        "实例规模增大时求解时间仍呈指数增长"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "现有 MILP 转换方法对非周期性结构或大状态空间影响图效率低",
+          "location": "abstract",
+          "quote": "However, they are inefficient for problems that lack this periodic structure or whose influence diagrams have large state spaces."
+        },
+        {
+          "claim": "论文提出面向 RJT 难以处理的影响图的新 MILP 建模",
+          "location": "abstract",
+          "quote": "The efficient MILP formulation presented in this paper is specifically designed for influence diagrams that are challenging for earlier MILP formulations."
+        },
+        {
+          "claim": "建模可适配 CVaR 并加入机会约束与逻辑约束",
+          "location": "abstract",
+          "quote": "Additionally, this formulation can be adapted to optimize conditional value-at-risk and to incorporate chance and logical constraints, thereby retaining the modeling flexibility of MILP-based methods."
+        },
+        {
+          "claim": "实验表明新建模比早期 MILP 建模更高效，尤其对非 POMDP 大状态空间问题",
+          "location": "abstract",
+          "quote": "the proposed formulation is much more efficient than earlier MILP formulations, particularly in problems which cannot be modeled as partially observable Markov decision processes and which lead to influence diagrams whose decision or chance nodes may have large state spaces."
+        },
+        {
+          "claim": "作者指出求解时间仍随节点数指数增长且无建模始终占优",
+          "location": "supplied_full_text",
+          "quote": "Although the solution times improve with the RDP framework, the solution times still grow exponentially as a function of the number of nodes in the influence diagram, which results in computational problems in larger instances."
+        }
+      ],
+      "experiments": [
+        "实验对象包括文献中的涡轮机检查与维护问题（将原本单状态的 FH 节点改为多状态并增加相应边）、扩展的石油野猫钻井问题（含测试组合选择与序贯测试变体）、以及 Tuusulanjärvi 湖水资源管理风险规避问题的变体",
+        "基线为 RJT 建模与 Decision Programming 建模",
+        "结论：在无法建模为 POMDP、且决策或机会节点状态空间大的问题上，RDP 建模比早期 MILP 建模高效得多；在节点多而状态少的问题上也观察到计算改进；RJT 建模在根松弛值上仍最好，但在序贯测试导致测试策略变量指数增长时 RJT 更高效；求解时间随影响图节点数呈指数增长，较大实例仍存在计算困难；没有一种建模在所有问题类型上始终占优",
+        "材料未给出具体时间数字、硬件、求解器版本或训练开销（无学习组件）"
+      ],
+      "first_affiliation": "阿尔托大学数学与系统分析系（Department of Mathematics and Systems Analysis, Aalto University）",
+      "insight": "核心洞察是：RJT 建模的效率依赖周期性决策结构和较小的状态空间，其变量与约束组织方式在非周期、大量随机变量、少量决策且节点状态空间大的图上会变得庞大。RDP 建模针对这种图结构重新组织决策策略变量和概率流的表达，使模型规模与求解难度更多地由实际可达的状态-决策组合决定，而不是强制嵌入周期性时步结构；由此在 RJT 失效的问题类上获得计算优势。该洞察是结构性的建模重构，不是引入新的学习组件。",
+      "limitations": [
+        "作者明确指出：求解时间仍随影响图节点数指数增长，较大实例会出现计算困难",
+        "作者明确指出：没有一种建模在所有问题类型上始终最优，需要更具体的建模选择指导",
+        "序贯测试情形下测试策略变量指数增长，此时 RJT 建模更高效",
+        "建模对连续变量仍需离散化，可能影响决策推荐精度（继承自既有方法的讨论）"
+      ],
+      "method": [
+        "提出 Reformulated Decision Programming（RDP）MILP 建模，专门面向 RJT 建模难以处理的非周期性、大状态空间影响图",
+        "以决策策略变量 z(s_d | s_{I(d)}) 和状态选择变量 x(s) 等刻画策略与机会事件的一致性，约束 (3b)-(3e) 为建模核心",
+        "保留 MILP 灵活性：建模可适配条件风险价值（CVaR）优化，并可加入机会约束与逻辑约束",
+        "与 RJT 建模及 Decision Programming 建模在相同问题实例上比较计算时间，并考察 Gurobi 参数设置（预处理、启发式）对根松弛和总时间的影响",
+        "材料未说明使用神经网络、强化学习或学习辅助搜索；求解完全依赖现成 MILP 求解器"
+      ],
+      "motivation": "现有最先进做法把影响图转为 MILP，用现成求解器求解，尤其是 Decision Programming 中的 RJT 建模；但这类建模只对可转化为部分可观测马尔可夫决策过程（POMDP）的周期性或序贯决策过程高效，对非周期性结构或大状态空间影响图效率很低。作者希望提出新建模来覆盖这些 RJT 难以处理的影响图，同时保留 MILP 的建模灵活性（CVaR、机会约束、逻辑约束）。",
+      "primary_topic": "影响图（决策网络）的混合整数线性规划建模与高效求解",
+      "relation_to_research": "论文事实：该工作研究影响图这一决策分析表示到 MILP 的精确建模与求解，属于数学规划与决策分析的交叉，不涉及生产调度、神经网络、强化学习或多智能体。推测：其“针对问题图结构重构 MILP 变量与约束、以改善根松弛和大状态空间可解性”的思路，可能迁移到柔性作业车间或分布式调度中基于析取图/时间索引的 MILP 建模重构，但需要满足条件：调度问题须能表达为带随机事件与决策依赖的图结构，并且离散化状态规模可控；迁移本身需要新的实验验证，不能视为作者结论。",
+      "relevance_score": 5,
+      "setting": "研究一类决策分析问题：用影响图表示随机事件、决策与后果之间的依赖关系，目标是求使期望效用最大化的决策策略。问题可能是非周期性（non-periodic）结构，机会节点和决策节点状态空间可能很大；连续变量通常需要离散化。求解环境是离线静态优化，由现成的 MILP 求解器求精确解；材料未说明在线或动态重求解设定。",
+      "tags": [
+        "影响图",
+        "决策分析",
+        "混合整数线性规划",
+        "决策编程",
+        "CVaR",
+        "大规模状态空间"
+      ],
+      "title_zh": "一种求解影响图的高效混合整数线性规划建模",
+      "uncertainty": "全文仅为节选，缺少完整的实验数据表、具体求解时间、硬件与求解器配置，也缺少 RDP 建模的完整公式（仅见约束编号 3b-3e 的证明片段）；通讯作者在节选中标注为“Corresponding author”但未明确指向具体作者，故未填写。相关性评分基于其属于精确 MILP 建模而非学习型优化方法，若研究者关注 MILP 建模重构则可上调。",
+      "why_recommended": "对关注数学规划建模质量的研究者有间接参考价值：它展示了同一决策问题在不同 MILP 建模下根松弛强度与模型规模的显著差异，以及“按问题结构选择建模”的重要性。这与生产调度中时间索引建模、析取建模、事件驱动建模的取舍问题同构，可启发对调度 MILP 建模的变量聚合与约束重构；但与当前 AI4OR 主线（学习辅助搜索、强化学习、智能体）没有直接方法关联，因此推荐度有限。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-24T07:19:17.554024Z",
+      "input_hash": "dba385d34b23d5d2c6b97b635b7369ece94943cc2a07a2b963711f0538482961",
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "full_text"
@@ -58854,6 +59107,101 @@
       "reading_scope": "abstract"
     }
   },
+  "b571dff6a84a78566e4366f40a191ebe195fdff95daa462c6a93bf8905c90cd5": {
+    "analysis": {
+      "analysis": "作者把优化建模形式化为可执行推理任务，并据此设计对照接口：直接生成、带执行反馈与持久 Python 状态的 OptiCycle，以及在 OptiCycle 基础上额外维护可修改五元组公式的 OptiState，从而在固定模型权重下隔离“执行反馈”和“显式公式状态”两种结构的作用。评测上采用九个基准、2,634 道题、11 个 Qwen 变体（0.6B–27B），以 avg@k 与跨基准宏平均作为指标，缺失计为失败，并在 Qwen3-4B 与 Qwen3.5-9B 上以共享骨干和统一评分协议对比六个适配的智能体工作流及四个后训练优化模型，同时报告 token 消耗用于成本分析。",
+      "challenges": [
+        "自然语言到数学规划公式的语义保真：需正确识别决策变量、目标与约束",
+        "生成的求解器代码需可运行且建模正确，语法错误与建模语义错误需区分处理",
+        "单模型角色下缺乏多智能体分工，如何在有限 token 预算内组织修复循环",
+        "显式公式状态的引入会提高 token 消耗，且收益随模型能力不同而不稳定",
+        "不同工作流有各自的推理预算，公平比较困难，难以分离组件贡献"
+      ],
+      "corresponding_authors": [
+        "Can Yang"
+      ],
+      "evidence": [
+        {
+          "claim": "论文提出两个轻量免训练推理框架 OptiCycle 与 OptiState",
+          "location": "abstract",
+          "quote": "We introduce OPTICYCLE and OPTISTATE, two lightweight inference harnesses for optimization modeling"
+        },
+        {
+          "claim": "执行引导修复对所有评测模型一致提升宏准确率，最大提升 49.46 个百分点",
+          "location": "abstract",
+          "quote": "execution-guided revision consistently improves macro accuracy over direct generation for all evaluated models, with gains of up to 49.46 percentage points"
+        },
+        {
+          "claim": "两个框架在相同模型对比中优于六个适配智能体工作流",
+          "location": "abstract",
+          "quote": "both harnesses outperform six adapted agentic workflows in same-model comparisons and four evaluated post-trained optimization models at comparable model sizes, without additional training"
+        },
+        {
+          "claim": "显式公式状态带来依赖模型的额外增益，结构并非普遍有益",
+          "location": "abstract",
+          "quote": "Explicit formulation state provides further but model-dependent improvements, suggesting that additional structure is not universally beneficial."
+        },
+        {
+          "claim": "OptiCycle 在 Qwen3.5-9B 上宏准确率提升 18.74 个百分点",
+          "location": "supplied_full_text",
+          "quote": "OptiCycle improves Qwen3.5-9B macro accuracy by 18.74 percentage points over Direct Generation."
+        },
+        {
+          "claim": "作者承认工作流预算不匹配，缺少等预算消融与时延测量",
+          "location": "supplied_full_text",
+          "quote": "matched-budget ablations, trajectory-level repair analysis, and latency measurements can further clarify the contributions and costs of individual components."
+        }
+      ],
+      "experiments": [
+        "九个基准共 2,634 道题，11 个 Qwen 变体（0.6B–27B），报告 avg@k 与跨基准宏平均准确率",
+        "执行引导修复对 1B 以上参数模型一致优于直接生成，最大提升达 49.46 个百分点；OptiCycle 使 Qwen3.5-9B 宏准确率相对直接生成提升 18.74 个百分点",
+        "在共享骨干对比六个适配 OR 工作流（CAFA、Reflexion、Chain-of-Experts、OptiMUS、AutoFormulation、ORMind）时，OptiCycle 在 Qwen3-4B 上达 62.74%、Qwen3.5-9B 上达 65.21%，分别超过最强基线 8.53 与 4.29 个百分点",
+        "在可比模型规模下优于四个已评测的后训练优化模型，且无需额外训练",
+        "显式公式状态带来进一步但依赖模型的增益；token 消耗随结构增加而上升",
+        "最小模型在三种方法下均表现较弱；结论还扩展到 Phi、Magistral、GPT-OSS 系列模型"
+      ],
+      "first_affiliation": "The Hong Kong University of Science and Technology",
+      "insight": "作者的洞察在于：对冻结模型而言，真正决定建模成败的往往不是模型参数本身，而是推理过程能否把“可执行性”变成学习信号。求解器程序的执行结果（成功、报错或目标值不一致）可作为无需标注的反馈，驱动模型在同一会话中反复修复代码；同时把建模公式显式化为可修改的状态，可让变量、目标与约束的语义在修复过程中保持一致。前者提供普适增益，后者则依赖模型自身的结构化表达能力，因此并非对所有模型都有益。",
+      "limitations": [
+        "实验比较的是完整工作流，各方法推理预算不同；OptiState 相对 OptiCycle 同时增加了初始公式调用与可修改表示，贡献未完全分离",
+        "作者指出缺少等预算消融、轨迹级修复分析和时延测量",
+        "主要评测 11 个 Qwen 变体，其他模型系列仅作补充实验，配置随模型代际不同而变化",
+        "报告的是点估计，没有不确定性区间，模型覆盖与不确定性量化有待加强",
+        "评测以目标值或状态一致性作为结果级度量"
+      ],
+      "method": [
+        "Direct Generation 基线：模型直接输出建模代码",
+        "OptiCycle：模型在持久 Python 状态中编写并执行求解器程序，将执行反馈（报错或运行结果）回灌给模型进行迭代修复，直至提交",
+        "OptiState：在 OptiCycle 基础上，额外要求维护一个包含五个要素的可修改公式状态，并在提交时检查其可解析性与字段完整性，使公式成为扩展的工作状态而非一次性输出",
+        "隐藏评测器只在提交后评分，推理过程中不提供任何反馈，修复信号仅来自代码执行",
+        "所有模型调用上限为 16,384 输出 token，各方法保留自身推理预算"
+      ],
+      "motivation": "已有工作沿两条路线改进 LLM 优化建模：一是多智能体或多阶段工作流（可分阶段的构思、编码、调试），二是任务特定后训练（SFT/RL）。前者流程复杂、比较口径不一，后者需修改模型参数。因此作者提出一个实践性问题：仅用单一模型角色、轻量级、免训练的推理框架能否取得有竞争力的表现。",
+      "primary_topic": "大语言模型驱动的优化建模推理框架（inference harness）",
+      "relation_to_research": "论文事实：该工作研究 LLM 作为优化建模智能体，把自然语言问题转成可执行求解器程序，并以执行反馈迭代修复，属于 AI4OR 中“自动建模 + 学习/推理辅助”的方向，与自动建模、智能体优化直接相关。迁移设想（推测）：其执行反馈修复与显式公式状态机制可迁移到生产调度场景，例如把柔性作业车间、分布式制造的生产运输协同问题自动写成 MILP/CP 模型并借助求解器报错修复；但迁移需要具备可执行求解器、可靠的正确性判定（如目标值与可行性校验）、领域约束词典，并需在公平 token 预算下重做对比，论文本身未涉及调度实例或动态扰动。",
+      "relevance_score": 7,
+      "setting": "研究问题是如何把自然语言描述的优化问题可靠地翻译成可执行的求解器程序；决策对象是冻结大语言模型在推理时的上下文组织、工具调用、状态表示与控制流，即 inference harness；目标是提高生成的优化模型与代码的正确率（宏平均准确率），同时控制 token 消耗；关键约束是不额外训练、模型权重保持冻结、所有模型调用最多 16,384 输出 token、隐藏评测器在推理时不提供反馈；信息假设是模型只能依据问题描述和自身执行结果进行修正；环境为静态的基准测试集合，不涉及在线扰动或动态重调度。",
+      "tags": [
+        "LLM优化建模",
+        "推理框架",
+        "执行反馈修复",
+        "公式状态",
+        "AI4OR",
+        "求解器程序生成",
+        "免训练推理"
+      ],
+      "title_zh": "将语言模型用作优化建模智能体",
+      "uncertainty": "全文仅为节选，缺少部分表格细节与附录中的预算配置，无法核对各基线的具体实例规模与逐基准数字；论文未覆盖调度类实例，因此向生产调度的迁移价值属于推测；作者声明各方法推理预算不同，组件贡献的因果归因仍不确定。",
+      "why_recommended": "对关注自动建模与智能体优化的研究者，本文提供了一个干净的控制变量视角：在冻结模型下，仅靠执行反馈循环即可显著提升建模正确率，而额外结构（公式状态）收益不稳定且更耗 token。这一结论直接关系到“学习辅助搜索/自动建模”中如何在有限计算预算下设计推理流程，也为把 LLM 智能体接入生产调度建模管线提供了可复用的 harness 设计与评测协议（多基准、宏平均、缺失计失败、共享骨干对比）。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-24T07:19:03.703911Z",
+      "input_hash": "5b7b326b933b0e05864964102df1970132db273efce4914632ca46a5d8fd3502",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "b590b421866d3e25151c053a232cd5abf5918677fb946be797fc5a46499449ed": {
     "analysis": {
       "analysis": "作者从视觉语言模型后训练量化的激活特性出发，识别出视觉过度表征和模态鸿沟两个内在属性，指出既有方法忽视这些属性导致量化退化。在分析层面，作者将 token 重要性刻画与损失扰动、激活误差和输出梯度建立理论联系，推导出梯度驱动的重要性因子，并将其嵌入逐层重建目标，以问题结构（token 级重要性方差、层间重建）指导校准加权。具体推导细节和理论证明在摘要中未展开，材料未说明完整分析过程。",
@@ -69163,6 +69511,101 @@
       "reading_scope": "full_text"
     }
   },
+  "d36dfbfc4f30becaaa6957bef82ba4a5cf45a5846abb6801a0838b140157101f": {
+    "analysis": {
+      "analysis": "作者将GCO视为序贯决策问题，利用GNN学习固定维、可迁移的图表示；借鉴Wolpertinger框架，把离散动作映射到与观测共享的连续潜在空间，用一次前向预测潜在动作并以最近邻解码，从而绕开逐动作打分；进一步通过语义表示单个决策分量与捕捉其交互的复合嵌入来构造结构化动作嵌入，以处理超线性决策空间；并借助自监督GNN表示（Liu et al., 2022）预先构建对齐的观测–动作空间，将表示学习与策略学习解耦，以便在共享嵌入空间下公平比较不同RL方法。",
+      "challenges": [
+        "动作空间规模超线性增长导致逐动作Q值评估推理代价高",
+        "在多样图实例上保持泛化并缩小训练-测试差距",
+        "支持多相互依赖变量的结构化动作嵌入构造",
+        "将演化的部分解编码为状态相关节点特征需反复重算GNN",
+        "潜在动作需解码回合法离散动作并保证可行性"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文提出在共享GNN潜在空间中预测潜在动作并用最近邻解码的投影智能体",
+          "location": "abstract",
+          "quote": "These agents are trained to solve GCO problems by predicting a desired latent action in a single forward pass, which is subsequently decoded into a valid discrete action in the graph using the latent space."
+        },
+        {
+          "claim": "摘要声称推理最多快6.41倍、泛化最多提升75%",
+          "location": "abstract",
+          "quote": "Across diverse benchmarks, our approach achieves up to 6.41$\\times$ faster inference and up to 75\\% better generalization than existing solutions using a simple nearest-neighbor decoding"
+        },
+        {
+          "claim": "方法基于Wolpertinger框架并适配共享潜在空间",
+          "location": "abstract",
+          "quote": "we introduce \\textit{projection agents}, a GCO methodology built on the Wolpertinger framework and adapted to a shared GNN-based latent space for observations and actions."
+        },
+        {
+          "claim": "发布LaGCO-RL库以促进可复现与新基准适配",
+          "location": "abstract",
+          "quote": "we release \\texttt{LaGCO-RL}, a Python library that automates latent action-space construction and supports existing RL-GCO solutions, promoting reproducibility and adaptation to new GCO benchmarks."
+        },
+        {
+          "claim": "作者明确列出的局限包括需反复重算GNN、简单NN解码、单一编码、未联合微调",
+          "location": "supplied_full_text",
+          "quote": "Encoding the evolving partial solution as state-dependent node features requires repeated GNN recomputation; future work could decouple graph structure from solution state to reduce this overhead."
+        },
+        {
+          "claim": "表2显示Projection在TSP与MinVertex上弱于Iterative方法",
+          "location": "supplied_full_text",
+          "quote": "Projection (ours)\n0.78\n0.76\n0.60\n0.71\n-0.13\n0.70\n0.01\n0.03\n0.02\n-0.18"
+        }
+      ],
+      "experiments": [
+        "在TSP、MinVertex、MaxCut、Placement、Cyber-Path、OSPF、Traffic等多个基准上比较P-Discrete、P-Discrete-M、G-Discrete、G-Discrete-M、Iterative与Projection等方法，按S/M/L/V训练规模和non-revisiting策略报告归一化泛化IQM（每个解–基准对20次运行），并报告测试-训练差距Δ",
+        "摘要声称相比迭代Q值方法推理最高快6.41倍，在未见实例上相对泛化最高提升75%，使用简单最近邻解码",
+        "表2显示Projection在MaxCut、Placement、OSPF等基准上泛化分数较高（如MaxCut S/M/L/V为0.93/0.94/0.91/0.93），但在TSP（0.78/0.76/0.60/0.71）与MinVertex（0.70/0.01/0.03/0.02）上明显弱于Iterative（TSP 0.90/0.79/0.97/0.99）",
+        "附录包含训练时间、学习曲线、扩展泛化结果、去掉逐环境最优选择后的指标、GAE损失变体与普通图特征/随机嵌入的对比，以及缩放与近似最近邻结果；具体数值材料未完整给出"
+      ],
+      "first_affiliation": "Université de Lorraine, CNRS, Inria, LORIA",
+      "insight": "核心洞察在于：若观测与动作共享同一个GNN潜在嵌入空间，则策略只需一次前向预测一个“期望潜在动作”，再通过在离散动作嵌入中做最近邻检索解码为合法动作，从而把逐动作评估的推理开销转化为一次推理加一次近邻搜索；同时潜在空间对齐的解码方式使同一策略更易迁移到未见实例，从而兼顾泛化与规模。该有效性来自表示与策略解耦、动作空间连续化投影，而非单靠堆叠模块。",
+      "limitations": [
+        "将演化部分解编码为状态相关节点特征需反复重算GNN，未来可解耦图结构与解状态以降低开销",
+        "采用简单最近邻解码，属保守最差设定，学习型或启发式排序或可提升性能",
+        "每种动作空间设定仅使用单一编码，未探索更丰富的多编码表示",
+        "自监督嵌入未与RL策略联合微调，虽利于公平比较但可能限制性能"
+      ],
+      "method": [
+        "提出projection agents：智能体在GNN潜在观测空间与动作空间中直接操作，一次前向预测期望潜在动作",
+        "采用最近邻（NN）检索将潜在动作解码为图中合法离散动作，替代逐动作Q值评估",
+        "设计结构化动作嵌入：由各决策分量的语义表示与其交互的复合嵌入构成，支持多相互依赖变量的超线性动作空间",
+        "使用自监督GNN表示构建对齐的观测–动作空间，表示学习与策略学习解耦",
+        "发布LaGCO-RL Python库，自动化潜在动作空间构建并支持现有RL-GCO方法",
+        "奖励/状态/智能体分工等细节材料未说明"
+      ],
+      "motivation": "现有RL+GNN的GCO求解器存在两点不足：一是跨多样图实例的泛化能力有限，二是动作空间随问题规模增长时计算不可扩展（如逐动作计算Q值）。作者希望让RL-GCO启发式能适用于更大规模、更多样的图与任务，并覆盖超线性、多相互依赖变量的现实决策空间。",
+      "primary_topic": "基于强化学习与图神经网络的图组合优化求解器（潜在动作空间投影）",
+      "relation_to_research": "论文直接研究RL+GNN求解图组合优化，与AI4OR中的学习辅助搜索、神经网络辅助求解、强化学习求解器高度相关。其共享潜在空间+一次前向+最近邻解码的机制，原则上可迁移到柔性作业车间、流水车间等需要从大规模离散决策（工序排序、机器选择、运输任务分配）中逐步构造解的问题，且超线性多依赖变量的结构化动作嵌入与生产运输协同决策在形态上相近；但这些迁移均属推测，需满足动作可嵌入为固定维语义向量的条件，并需验证解码合法性与约束可行性，以及在与调度基准相同的公平计算预算下评估解质量与训练开销。论文本身未涉及生产调度或车间调度实验。",
+      "relevance_score": 8,
+      "setting": "研究问题是一类图组合优化（GCO）问题（如TSP、MinVertex、MaxCut、Placement、Cyber-Path、OSPF、Traffic等NP难问题的图形式）；决策对象是按自回归方式逐步构造的离散解，动作空间随图规模呈超线性增长，且可能包含多个相互依赖的决策变量；目标是同时提升跨不同图实例的泛化能力和大动作空间下的推理可扩展性；关键约束是动作必须落在合法离散动作集合内；信息假设为环境以图结构及动态状态特征给出、无标签数据，属在线序贯决策场景；静态或动态环境材料未说明，仅提及存在延迟敏感的最短路/流量类基准。",
+      "tags": [
+        "图组合优化",
+        "强化学习",
+        "图神经网络",
+        "潜在动作空间",
+        "Wolpertinger架构",
+        "最近邻解码",
+        "自监督表示学习",
+        "可扩展性",
+        "泛化性"
+      ],
+      "title_zh": "投影潜在强化学习动作：面向可泛化与可扩展的图组合优化",
+      "uncertainty": "提供的全文为节选，方法细节（网络输入输出、训练目标、奖励定义、智能体协作方式）以及部分实验表格被截断，扩散性总体结论与部分数字无法核实；6.41倍推理加速与75%泛化提升仅见于摘要，缺少完整对照条件（公平计算预算、实例规模、基线配置）；作者列表中的通讯作者未明确标注；因此对方法可行性与结论稳健性的判断存在不确定性。",
+      "why_recommended": "对研究学习辅助组合优化的博士生而言，该文给出了一条清晰的“大规模离散动作如何被压入连续潜在空间并高效解码”的工程路线，直接针对动作空间可扩展性和跨实例泛化两大痛点；其自监督表示与策略解耦的设计，以及公开库LaGCO-RL与数据仓库，有利于复现与公平比较；同时表2也显示该方法在部分问题（如TSP、MinVertex）上逊于迭代方法，提示研究者需审慎评估适用边界，这对设计调度场景的学习型求解器具有方法借鉴与警示价值。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-24T07:19:04.128214Z",
+      "input_hash": "380aab65580e97dc61f07f7e4535b41d768aacf09a3335a4ab4f69c5952c01cd",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
+    }
+  },
   "d36fbe7f15705392cfe0a3a4ddac0fd9fece74eeb37f8c6dedaa9deb8c79bcf3": {
     "analysis": {
       "analysis": "作者从两个角度分析问题：经验上，他们观察学习到的隐藏状态干预空间能够覆盖语义区域并呈现支持搜索的平滑性；理论上，他们分析语义覆盖和插值如何控制该空间内可获得的最佳分数，并论证从该空间解码会导出标准随机臂观测模型，从而适配自适应搜索。材料未说明更具体的问题分解、下界构造或图表示利用方式。",
@@ -73816,6 +74259,89 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "full_text"
+    }
+  },
+  "ea664baddd658cdc663fa166a4d10711c33d1f536cec546d4b1bf02ac28cbd46": {
+    "analysis": {
+      "analysis": "作者通过问题结构分析设计并系统评估两个关键加速手段：适配的启发式函数与精细的状态等价关系，从而限制 A* 的搜索空间。对声明式方法，作者区分最优化视角与判定视角：SAT 原生求解“是否存在给定长度的解”的判定问题，求最小长度需迭代搜索；随后按最小解长度作为复杂度度量，观察各方法性能随复杂度的变化趋势与交叉点，而非仅报告单一平均指标。",
+      "challenges": [
+        "在同一谜题上公平比较搜索法与声明式方法的求解时间与可扩展性",
+        "设计有效启发式以剪枝 A* 搜索空间而不破坏最优性",
+        "识别并利用游戏状态的等价性以减少搜索空间和对称解",
+        "将最小化问题转化为 SAT 可处理的判定问题并处理迭代求解开销"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "A* 借助合适启发式与状态等价关系显著压缩搜索空间",
+          "location": "abstract",
+          "quote": "The performance of A* search is considerably improved by using an appropriate heuristic and sophisticated equivalences of game states to limit the search space."
+        },
+        {
+          "claim": "A* 在约 75 % 的测试实例上最快找到最小解",
+          "location": "abstract",
+          "quote": "the A* search is the fastest in finding a minimal solution in about 75 % of the Flood-It instances tested"
+        },
+        {
+          "claim": "SAT 方法需迭代搜索才能确定最小解长度",
+          "location": "abstract",
+          "quote": "An iterative search is required to determine a minimum solution length using a SAT-based approach."
+        },
+        {
+          "claim": "随复杂度增加 SAT 方法反超 A*",
+          "location": "abstract",
+          "quote": "with increasing complexity, quantified by the minimum solution length, the SAT-based approach outperforms A*"
+        },
+        {
+          "claim": "判定问题上 A* 仍最常最优，但 SAT 交叉点更低",
+          "location": "abstract",
+          "quote": "A* again performed best for the largest number of puzzles. Here, again, SAT supersedes A* for higher complexities, albeit with a lower crossing point."
+        }
+      ],
+      "experiments": [
+        "比较各方法的最优变体：A* 在约 75 % 的测试 Flood-It 实例上最快找到最小解",
+        "随复杂度（以最小解长度度量）增加，SAT 方法优于 A*",
+        "在判定问题上，A* 同样在最多谜题上表现最好，但 SAT 在更高复杂度上反超，且交叉点更低",
+        "摘要未给出实例规模、时间预算、具体运行时间、求解器版本或平台信息；也未报告约束可行性之外的解质量指标或训练开销"
+      ],
+      "first_affiliation": "证据未提供",
+      "insight": "A* 在最小化解上通常最快，是因为它直接以最小长度为目标，搜索方向与优化目标一致；而对 SAT 方法而言，最小化解需要外层迭代调用判定求解器，单次判定的效率会随链式调用被放大或抵消。因此两者的相对优势会随最小解长度变化，并且存在一个交叉点：超过该交叉点后，SAT 在更高复杂度上反超 A*，且该交叉点位置取决于问题形式（最优化还是判定）。这一洞察的价值在于把“哪种求解范式更好”转化为“目标类型与难度区间共同决定优势”。",
+      "limitations": [
+        "材料未说明作者明确陈述的局限"
+      ],
+      "method": [
+        "以 A* 搜索求解 Flood-It 最小移动序列，使用针对问题设计的启发式",
+        "利用游戏状态之间的等价关系合并对称或冗余状态以压缩搜索空间",
+        "将问题建模为 SAT 判定实例，通过迭代调用判定不同长度是否存在解来逼近最小解",
+        "分别构建整数规划与约束规划模型作为对比求解范式",
+        "对启发式与状态等价两个要素进行系统性评估，并比较各方法最优变体"
+      ],
+      "motivation": "作者希望系统比较手工定制的 A* 搜索与通用声明式求解器（SAT、整数规划、约束规划）在同一组合谜题上的表现，并通过消融式评估揭示启发式设计与状态等价约简各自的作用，使结论可推广到其他问题。",
+      "primary_topic": "组合谜题求解中启发式搜索与声明式求解器（SAT、整数规划、约束规划）的对比",
+      "relation_to_research": "本文属于启发式搜索与数学规划或声明式求解的对比研究，与“学习辅助搜索”“求解器结合”的方法论有相邻关系，但问题域是棋盘谜题而非生产调度，也未涉及神经网络、强化学习或智能体。可直接迁移的要素是评估范式：以问题复杂度为横轴比较搜索法与声明式求解器的交叉点，以及状态等价约简与问题特定启发式的设计思路。推测：若要迁移到柔性作业车间或流水车间调度，需要把“最小移动步数”替换为调度目标（如 makespan），把状态等价替换为调度对称性约简，并验证启发式在调度解空间上的可采纳性；这些迁移均非作者结论，需额外实验。",
+      "relevance_score": 4,
+      "setting": "研究问题是在 Flood-It 谜题上寻找最短移动序列，即在棋盘颜色扩散规则下以最少步数把整块棋盘变为同一颜色；决策对象是每一步选择哪一种颜色进行扩散。目标为最小化移动步数，同时还要回答给定长度的可行性判定问题。约束与信息假设（如棋盘规模分布、是否允许并行求解、时间预算设定）材料未说明；静态离线求解环境，不涉及在线扰动。",
+      "tags": [
+        "A*搜索",
+        "启发式",
+        "SAT",
+        "整数规划",
+        "约束规划",
+        "状态等价",
+        "组合优化"
+      ],
+      "title_zh": "求解 Flood-It 谜题：定制 A* 搜索与声明式求解器方法的比较",
+      "uncertainty": "仅有标题与摘要，缺少实例规模、时间预算、求解器配置、统计显著性以及启发式与等价关系的具体定义，因此对结论的稳健性和可复现性判断存在较大不确定性；75 % 与交叉点等结论的具体条件无法核实。",
+      "why_recommended": "对关注求解器选择与公平计算预算比较的研究者，本文提供了一个清晰的对照实验模板：何为最优目标、何为判定形式、性能如何随实例复杂度翻转。其状态等价剪枝与启发式设计思路，对设计搜索与数学规划混合求解器具有借鉴价值；但若研究方向集中于调度与学习型优化，相关性有限，仅建议作为方法论参照。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-24T07:19:15.165679Z",
+      "input_hash": "ef944a4d79faad56f44e719b76f9729302a2bc3ba7c51e22499e60b3b9f028f9",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "abstract"
     }
   },
   "ea706467903c3be56727b9e4a5118de78469e9281b2f95f9e27bec63bd6f1256": {
@@ -80839,6 +81365,112 @@
       "model": "deepseek-v4-flash",
       "prompt_version": "optimization-analysis-v1",
       "reading_scope": "abstract"
+    }
+  },
+  "fe411dd84a3010bd1ac81e28888c9aca84adcd72db7a3abb09ae22c6f579a7a8": {
+    "analysis": {
+      "analysis": "作者先分析特征映射的结构性局限：若两条实例的 20 维特征向量完全相同而它们偏好的配置不同，那么只观测该特征的确定性选择器必然失败；随后用共享同一图、仅约束方向和目标方向不同的最大权独立集与最小权顶点覆盖构造来具体展示这一碰撞，并论证裁决器额外读取压缩矩阵文本后具备区分两者的信息通道。方法上把问题分解为离线构建候选组合与经验记忆、由特征完成提名、再由基础模型基于矩阵文本进行裁决三个阶段。材料未说明作者使用了下界推导等更形式化的分析。",
+      "challenges": [
+        "固定的 20 维特征表示会把结构不同的实例映射到同一向量，只依赖特征的选择器无法区分它们（独立集与顶点覆盖在同一图上的构造即为具体碰撞）",
+        "推理时不能调用求解器，因此不能通过试解来评估候选配置",
+        "基础模型不做权重更新，只能依赖提示、上下文和离线经验记忆",
+        "候选池由随机采样一次性得到，在小候选池内选择仍然留有可观的相对完整候选集合的提升空间（oracle headroom），即候选覆盖可能不足",
+        "作者指出合成类的经验向真实无标签 MIPLIB 模型迁移只能支持较窄的结论"
+      ],
+      "corresponding_authors": [
+        "证据未提供"
+      ],
+      "evidence": [
+        {
+          "claim": "论文研究 MIP 求解器按实例参数配置，并指出逐实例搜索在推理时开销过大",
+          "location": "abstract",
+          "quote": "Mixed-integer programming solvers expose hundreds or even thousands of parameters whose best setting varies per instance, yet per-instance search is prohibitively expensive."
+        },
+        {
+          "claim": "推理阶段只进行一次模型调用、不调用求解器，且基础模型不做任务相关权重更新",
+          "location": "abstract",
+          "quote": "The foundation model receives no task-specific weight updates, and selection is one-pass: one model call and no solver calls at inference."
+        },
+        {
+          "claim": "固定的 20 维特征表示会导致结构不同的实例映射到同一向量",
+          "location": "abstract",
+          "quote": "the fixed 20-feature representation can map structurally different instances to the same vector, preventing a feature-only selector from distinguishing them even when they prefer different configurations"
+        },
+        {
+          "claim": "完整裁决器相对 top nominee 的胜负计数",
+          "location": "abstract",
+          "quote": "the complete adjudicator records 538 wins and 185 losses against the top nominee"
+        },
+        {
+          "claim": "作者明确说明端到端延迟未测量",
+          "location": "abstract",
+          "quote": "the one-call, zero-solve protocol specifies the decision interface and leaves end-to-end latency unmeasured"
+        },
+        {
+          "claim": "作者认为更广的候选池覆盖仍未解决",
+          "location": "supplied_full_text",
+          "quote": "the sampled pool and EPM shortlist provide useful headroom on the evaluated families, while broader portfolio coverage remains open"
+        },
+        {
+          "claim": "作者指出基础模型的必要性或唯一性仍未解决",
+          "location": "supplied_full_text",
+          "quote": "The necessity or uniqueness of a foundation model remains open"
+        },
+        {
+          "claim": "作者通过独立集与顶点覆盖共图构造展示特征退化",
+          "location": "supplied_full_text",
+          "quote": "From one shared seed our generators build a maximum-weight independent-set instance and a minimum-weight vertex-cover instance on the same graph."
+        }
+      ],
+      "experiments": [
+        "在 16 个结构不同的生成 MIP 族以及两个特征取值范围兼容的 MIPLIB 迁移案例上评估",
+        "在差异超过 20% 实用差异阈值的比较中，完整裁决器相对 top nominee 记录 538 胜、185 负",
+        "完整裁决器相对默认配置的胜率从 84.9% 提升到 90.2%",
+        "在匹配的一次性协议下与按实例配置基线比较，作者称其领先聚类级方法和表现最好的按实例基线 ISAC+；摘要未给出与 ISAC+ 的具体数值差",
+        "作者称实验只评估了跨族结构异质性（Variety）与求解性能（Value），端到端延迟未测量"
+      ],
+      "first_affiliation": "阿里巴巴集团（Alibaba Group，杭州）",
+      "insight": "候选配置的构造可以通过一次性采样的固定的候选池复用，从而把难点从“搜索配置”转移到“在少量已测量候选之间做精细排序”；单纯依赖固定的 20 维聚合特征的选择器在结构不同但特征相同的实例上必然给出相同决策，因此必须补充一个特征通道（压缩矩阵文本）来打破这种退化，而把基础模型限制在候选集合内做有界的 k 路选择，可以避免其生成未经验证的参数值。",
+      "limitations": [
+        "端到端延迟未测量，部署成本核算需要包括模型调用、序列化和求解器运行时间",
+        "候选池覆盖更广范围的问题仍未解决（broader portfolio coverage remains open）",
+        "基础模型的必要性或不可替代性仍未有定论，公平比较需要维度无关的架构以及匹配的监督与训练预算",
+        "对合成类到真实无标签 MIPLIB 模型的迁移只支持较窄的结论",
+        "作者提出全系数矩阵上的二分图神经网络排序器是可能的替代读取通道，但未验证"
+      ],
+      "method": [
+        "离线一次性采样固定的参数配置候选组合，并在所有实例上复用，从而在推理时不再做逐实例配置搜索",
+        "提名阶段（nominator）只使用固定 20 维聚合特征对候选打分，输出 top-k 候选；材料指出 nominator 对特征退化对中的两个实例给出相同候选",
+        "裁决阶段（adjudicator）把压缩后的约束矩阵文本表示与候选配置的 30 个参数一并输入基础模型，由模型在 k 个已测量的候选中做出有界选择，不生成参数值",
+        "基础模型不进行任务相关权重更新，推理时只进行一次模型调用、不进行求解器调用",
+        "离线构建 skill memory（经验记忆），把观察到的结构与已记录的类别和规则关联起来，用于跨族裁决",
+        "材料未说明具体的提示模板细节、状态动作奖励形式或强化学习训练过程"
+      ],
+      "motivation": "求解器暴露成百上千个参数，最优配置随实例变化，但逐实例配置搜索在推理时开销过大；已有方法分布在决策粒度（整个分布、聚类、单实例）、推理时求解器调用次数和是否需要拟合选择器三条轴上，作者希望占据“不调用求解器、不拟合选择器、仅一次模型调用”这一尚未被充分研究的设计点。",
+      "primary_topic": "混合整数规划求解器的按实例参数配置与大模型辅助选择",
+      "relation_to_research": "论文事实：这是一篇面向 MIP 求解器配置的 AI4OR 工作，把大模型作为离线候选库上的有界裁决器，并显式处理推理时求解器调用预算为零的约束，这与学习辅助搜索、约束可行性、公平计算预算的关注点直接相关。迁移设想（推测）：其“先提名、后裁决”的两阶段结构可能可迁移到柔性作业车间、流水车间或分布式制造中的调度规则与超参数选择，即先由廉价特征提名少量候选，再由结构感知模型裁决；但迁移需要满足条件，即存在可离线测量性能的候选配置库、实例的结构信息能压缩成可读文本或张量表示，并且需要重新验证调度约束的可行性与端到端耗时。",
+      "relevance_score": 7,
+      "setting": "论文研究混合整数规划（MIP）求解器的按实例参数配置问题：决策对象是对每个实例从候选参数配置中选出一个配置，目标是在求解器性能（score 与求解时间）上取得更好的结果，关键约束是推理阶段只调用一次基础模型、不调用求解器，且基础模型不做任务相关的权重更新；信息假设包括固定的 20 维聚合特征向量、压缩后的约束矩阵文本表示，以及离线构建的候选组合与经验记忆；静态或动态环境方面，材料只给出离线构建和一次在线决策的设定，未给出动态到达或在线更新场景的说明。",
+      "tags": [
+        "混合整数规划",
+        "求解器参数调优",
+        "大语言模型",
+        "一次性推理",
+        "候选组合选择",
+        "特征退化",
+        "矩阵文本表示",
+        "AI4OR"
+      ],
+      "title_zh": "先提名再裁决：LLM 辅助的一次性、按实例 MIP 求解器调参",
+      "uncertainty": "只能获得摘要和部分全文节选，缺少方法细节、提示设计、训练或离线构建开销、与 ISAC+ 等的具体数值以及统计显著性信息；通讯作者信息未在材料中出现；相关性评分基于该机制可向生产调度与学习辅助搜索迁移，并不代表论文直接研究车间调度问题。",
+      "why_recommended": "该文给出的机制对生产调度与 AI4OR 研究具有参考价值：它把昂贵的求解器调用移到离线，把在线决策压缩成一次模型调用，并用“特征退化”构造说明聚合特征选择器的结构性缺陷，这一分析框架可直接用于评估调度中的实例表示与规则选择器；同时作者对计算预算匹配、延迟未测和候选覆盖不足的说明，符合严谨的求解质量与公平预算评估要求。"
+    },
+    "provenance": {
+      "analyzed_at": "2026-10-24T07:19:04.171009Z",
+      "input_hash": "c60540153eda0432e83cc45289d729c5f058f76c6edee57b1ecfc674227cbf92",
+      "model": "deepseek-v4-flash",
+      "prompt_version": "optimization-analysis-v1",
+      "reading_scope": "full_text"
     }
   },
   "fe64287d3c54f4f5c650f204ffc8fe07ffb79e33a5d7cfaaa9424a6d2e0c19e2": {

@@ -161,7 +161,7 @@
 <main>
   <header class="page-header">
     <div class="masthead">
-      <span>PAPERDAILY · 智能优化与生产调度 · 2026-10-23 10:22</span>
+      <span>PAPERDAILY · 智能优化与生产调度 · 2026-10-24 15:18</span>
       <nav aria-label="站点导航">
         <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/">今日</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/daily/">每日日报</a>
         <a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/library/">长期论文库</a><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/topics/">主题</a>
@@ -194,7 +194,7 @@
   <div class="paper-card__body">
     <div class="paper-card__rubric">
       <span class="topic-badge">强化学习求解</span>
-      <span>正文节选</span>
+      <span>摘要级</span>
       <span>相关性 7/10</span>
       <span>v1</span>
     </div>
@@ -205,9 +205,9 @@
 
 <div class="paper-card__takeaway">
       <p class="field-label">核心洞察</p>
-      <p>SCOP中采样轨迹的奖励差本身是免费且信息量大的学习信号：将归一化的奖励差作为成对偏好损失的权重，可把有限训练重点放到质量提升更大的比较上，从而在保持成对比较稳定性的同时使梯度方向更贴近奖励最大化；再配合对全样本对的置信度对称正则，可避免小奖励差引起过强分离，从而带来更约束感知的策略和更好的分布外泛化。</p>
+      <p>对同一实例采样出的候选轨迹，其回报差距本身携带解质量改进幅度的信息；如果把归一化后的奖励差作为偏好损失的权重，训练会更关注代表更大质量提升的成对比较，从而在选择性决策引起的高方差回报下获得更有效的学习信号。</p>
     </div>
-    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>对关注学习辅助优化与约束可行性研究的读者，该文提供了一个机制清晰、可直接复用的训练信号设计思路：利用组合优化中可精确计算的奖励差替代二值偏好，并配以对称正则稳定训练，同时给出了从同分布到大规模偏移分布的无局部搜索适配流程；其按问题规模与分布外泛化的评测协议、对基线公平性与运行时测量的处理，也值得在生产调度类学习求解器实验设计中借鉴；局限中对精确奖励与多目标的讨论，为向动态、多目标调度迁移提供了明确的问题切入点。</p>
+    <p class="paper-card__recommendation"><strong>为什么值得看：</strong>对关注强化学习与学习辅助优化求解的研究者，本文提供了对偏好学习信号的一个具体修正：用奖励差距给成对比较加权，而不是只做二值排序。该方法不依赖复杂网络结构，机制清晰，便于在调度类组合问题中改造奖励函数与采样候选解；同时论文涉及大规模泛化与不依赖局部搜索后处理，契合对求解质量和公平计算预算的关注。</p>
     <ul class="paper-tags" aria-label="研究标签">
       <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/reinforcement-learning/" data-tag-filter="reinforcement-learning">强化学习</a></li>
       <li><a href="https://JiaqiTan111.github.io/Daily_Opt_Paper/tags/benchmark/" data-tag-filter="benchmark">基准与泛化</a></li>
@@ -221,9 +221,9 @@
       </summary>
 
       <div class="paper-details__meta">
-        <p><strong>模型细分主题：</strong>基于强化学习与偏好优化的选择性组合优化（OP、PCTSP、随机PCTSP、背包问题）神经求解器</p>
-        <p><strong>模型原始标签：</strong>选择性组合优化、偏好优化、奖励加权、强化学习、神经构造式求解器、规模泛化、倾斜采样、车辆路径问题</p>
-        <p><strong>第一单位：</strong>University of Twente</p>
+        <p><strong>模型细分主题：</strong>基于强化学习或偏好优化的选择性组合优化求解</p>
+        <p><strong>模型原始标签：</strong>偏好优化、强化学习、选择性组合优化、奖励差距、Orienteering Problem、Prize-Collecting TSP、Knapsack、大规模泛化</p>
+        <p><strong>第一单位：</strong>证据未提供</p>
         <p><strong>通讯作者：</strong>证据未提供</p>
         <p><strong>首次上传：</strong>2026-10</p>
         <p class="paper-links">
@@ -254,26 +254,26 @@
       <p class="copyright">图片来自论文官方 arXiv 页面，仅用于论文导航与学术阅读；版权归论文作者或相关权利人所有。</p>
 
       <dl class="research-note">
-        <dt>研究设定</dt><dd>研究选择性组合优化问题（SCOP），包括定向越野问题（OP）、带奖金TSP（PCTSP）、随机PCTSP与背包问题（KP）：决策对象是既要选择纳入解的元素子集、又要（对路由类问题）构造满足资源约束的路径；目标为最大化累计奖励（如收集奖金、负路径长度）；关键约束为资源/长度约束，通过解码掩码保证可行性；信息假设为每个采样解可精确计算目标值，实例从某分布中采样、测试含同分布与分布外（更大规模、不同随机种子、OPLib）场景；环境为静态组合优化实例，随机PCTSP含随机需求，但不是在线动态扰动环境。</dd>
-        <dt>研究动机</dt><dd>现有神经组合优化与偏好优化研究多集中于所有元素都必须服务的TSP/CVRP，而SCOP需要额外决定选择哪些元素，导致同一实例采样的候选解目标值差异巨大；标准偏好优化把解对比较压缩为二值排序，丢弃了可精确获得的目标差值幅度信息，且纯序数更新在解质量差异大时训练不稳定、泛化受限。</dd>
-        <dt>核心洞察</dt><dd>SCOP中采样轨迹的奖励差本身是免费且信息量大的学习信号：将归一化的奖励差作为成对偏好损失的权重，可把有限训练重点放到质量提升更大的比较上，从而在保持成对比较稳定性的同时使梯度方向更贴近奖励最大化；再配合对全样本对的置信度对称正则，可避免小奖励差引起过强分离，从而带来更约束感知的策略和更好的分布外泛化。</dd>
-        <dt>技术挑战</dt><dd><ul><li>选择性决策使候选解目标值差异大，二值偏好标签信息损失严重</li><li>偏好优化的训练稳定性与排序正确性之间的权衡</li><li>训练分布与大规模/偏移实例分布不一致导致的泛化问题</li><li>避免依赖推理期局部搜索后处理来实现大规模扩展</li><li>随机PCTSP中随机性带来的奖励评估与训练信号问题</li></ul></dd>
-        <dt>问题分析</dt><dd>作者从SCOP的序列构造结构出发，将问题建模为MDP，指出每个采样轨迹的精确奖励可直接计算，因此成对比较中的奖励差是可得信息；据此分析标准偏好优化仅保留序关系而丢弃差值幅度的缺陷，并对比BOPO等最佳锚定、sigmoid内奖励缩放的做法，提出在损失外部以批归一化奖励差加权、保留全部采样对的方案，并加入对称成对置信度正则；此外通过信息论熵分析刻画学习策略的表征多样性与泛化之间的关系，但作者明确称该分析为观察性的。</dd>
-        <dt>方法</dt><dd><ul><li>以Kool等（2019）的注意力编码器-自回归解码器构造式策略为基座，状态为部分解，动作为选择下一节点/物品，掩码保证可行性，奖励由完整轨迹计算</li><li>RWPO成对训练目标：对同一实例采样的候选轨迹对，以批归一化后的奖励差作为权重缩放成对对数似然差损失，保留全部采样对；共享逆温度参数α=0.05</li><li>置信度正则化的全对（all-pair）形式：加权奖励差偏好拟合加对称成对惩罚，抑制小奖励差导致的过强分离</li><li>规模适配流程：规模特定的微调（N=500为40轮，N=1000与2000为30轮）加奖励与似然加权的倾斜采样（TS，100轮），推理期不使用局部搜索后处理</li><li>超参数：奖励加权系数λ=0.5（OP、KP），λ=1.0（其余问题）；TS阶段λ_r=1、λ_s=0.25（原文片段在此截断）</li><li>与无加权偏好优化及策略梯度基线（如POMO）对比，并进行信息论熵分析</li></ul></dd>
-        <dt>实验</dt><dd><ul><li>评测协议：中等规模n=100采用与Kool等（2019）、Kwon等（2020）同分布的测试集；大规模n∈{500,1000,2000}采用Zheng等（2024）测试集；另做不同随机种子零样本测试与OPLib基准测试</li><li>指标：平均累计奖励或成本，最小化问题用相对参考解的最优性间隙；运行时间在CPU（Intel i5-14600KF）上测非神经方法、GPU（NVIDIA RTX 5060 Ti 16GB）上测神经方法</li><li>结果：在OP、PCTSP、随机PCTSP与KP上，RWPO在广泛实例规模上稳定优于无加权偏好优化与策略梯度基线；在OP上，所得求解器在100至2000节点规模下平均奖励超过Compass元启发式；RWPO全对形式在各问题设置下稳定，而纯序数更新（PO）均值表现不稳定</li><li>片段未给出具体数值表格、逐规模间隙、训练总开销与完整消融细节；公平计算预算方面仅说明按实际使用分别测CPU/GPU时间，未给出统一预算分析</li></ul></dd>
-        <dt>局限</dt><dd><ul><li>依赖精确奖励评估，在部分可观测或多目标环境中难以获得</li><li>奖励加权强度与长度归一化系数目前为固定值，未做自适应</li><li>熵分析仅为观察性结论，未通过表征干预证明多样性与泛化的因果关系</li></ul></dd>
-        <dt>与你的研究关系</dt><dd>论文直接研究基于强化学习与偏好学习的神经构造式求解器，覆盖路径类选择性组合优化（OP、PCTSP、随机PCTSP）和背包问题，属于AI4OR与学习辅助搜索范畴；其奖励差加权偏好目标、成对置信度正则与规模适配流程可作为训练机制迁移到生产调度中的序列决策构造策略（如柔性作业车间或分布式调度的工序-机器选择），推测迁移需要把调度目标（如makespan、能耗、拖期）转化为可精确评估的轨迹奖励、定义可行的掩码动作空间，并验证在动态扰动与多目标场景下奖励差是否仍可靠；论文本身未涉及车间调度、多智能体或大模型智能体。</dd>
+        <dt>研究设定</dt><dd>论文研究选择性组合优化问题（SCOP），包括定向越野问题（OP）、带奖金的旅行商问题（PCTSP）、随机 PCTSP 与背包问题（KP）。决策对象不仅包括路径或装载的排列，还包括选择哪些元素进入解；目标是在实例上最大化带选择约束的回报。约束与信息假设的具体形式材料未说明；环境是否动态、是否使用随机需求等，论文摘要仅提到 Stochastic PCTSP，其余材料未说明。</dd>
+        <dt>研究动机</dt><dd>现有强化学习求解组合优化多面向 TSP 这类必须服务全部元素的稠密问题；SCOP 需额外决定取舍，导致同一实例的采样解目标值差异很大。标准偏好优化把这种比较压成二值排名，丢弃奖励差距的大小信息，因而训练信号无法区分“略好”和“大幅更好”的解。</dd>
+        <dt>核心洞察</dt><dd>对同一实例采样出的候选轨迹，其回报差距本身携带解质量改进幅度的信息；如果把归一化后的奖励差作为偏好损失的权重，训练会更关注代表更大质量提升的成对比较，从而在选择性决策引起的高方差回报下获得更有效的学习信号。</dd>
+        <dt>技术挑战</dt><dd><ul><li>SCOP 需要同时做选择与排序或构造决策，解空间和回报分布更复杂</li><li>同一实例采样解的目标值差异大，二值偏好会丢失差距幅度</li><li>大规模与分布偏移实例上的策略泛化，且不依赖局部搜索后处理</li><li>偏好学习与采样策略需要协同，避免只在训练分布上有效</li></ul></dd>
+        <dt>问题分析</dt><dd>作者从偏好优化的信息损失切入：指出标准成对偏好只保留“谁更好”的二值排序，而丢弃奖励差的大小；随后利用同一实例的候选轨迹回报可计算这一结构，将归一化奖励差转为损失权重，并进一步用尺度特定的微调和奖励、似然加权的倾斜采样来适配更大与偏移的实例分布。问题分解、下界或图表示等更细的建模材料未说明。</dd>
+        <dt>方法</dt><dd><ul><li>构造同一实例下候选轨迹的成对比较，用其奖励差归一化后为偏好损失加权，形成 RWPO 成对训练目标</li><li>将 RWPO 与尺度特定微调结合，以适配更大和发生分布偏移的实例</li><li>采用奖励加权与似然加权的倾斜采样，使训练分布偏向高奖励或高似然区域</li><li>在推理阶段不依赖局部搜索后处理，直接由训练策略求解</li></ul></dd>
+        <dt>实验</dt><dd><ul><li>在 OP、PCTSP、Stochastic PCTSP 和 KP 上评测，覆盖多种实例规模</li><li>摘要称 RWPO 在广泛实例规模上一致优于未加权偏好优化与策略梯度基线</li><li>在 OP 上，所得求解器在 100 至 2000 节点规模超过 Compass 元启发式的平均奖励</li><li>摘要未给出各问题的具体数值、运行时间、训练开销、公平计算预算、约束可行性统计或消融明细</li></ul></dd>
+        <dt>局限</dt><dd><ul><li>材料未说明作者明确陈述的局限</li></ul></dd>
+        <dt>与你的研究关系</dt><dd>该工作直接研究用学习型偏好目标求解组合优化，属于 AI4OR 与学习辅助搜索的相邻方向，并与强化学习求解器设计相关。其奖励加权思想对生产调度中的多解比较、多目标或带选择决策具有迁移潜力，例如将“选择哪些工件或订单进入排程”的收益与调度成本组成回报；但可迁移到柔性作业车间、流水车间或分布式制造需要重新定义同实例候选解、奖励尺度与可行性惩罚，这属于推测，尚需实验验证。论文未涉及车间调度约束、机器环境或生产运输协同建模。</dd>
         <dt>证据与不确定性</dt>
         <dd>
-          <p>仅获得摘要与部分全文节选，缺少完整实验表格、逐规模数值、训练开销、消融规模与统计显著性，也缺少正文中对BOPO等基线的详细对比结果；因此对性能优势的幅度与稳健性判断有限；通讯作者与部分贡献细节未明确给出；迁移到生产调度的判断属于推测。</p>
-          <blockquote><strong>论文针对需要选择元素子集的选择性组合优化问题，并指出标准偏好优化丢弃奖励差幅度：</strong>Selective combinatorial optimization problems (SCOPs), including the Orienteering Problem (OP), Prize-Collecting TSP (PCTSP), Stochastic PCTSP and Knapsack Problem (KP), additionally require selecting which elements to include. This selection creates sampled solutions with substantially different objective values, yet standard preference optimization reduces such comparisons to binary rankings and discards the magnitude of these differences.</blockquote>
-          <blockquote><strong>RWPO以批归一化奖励差对成对偏好损失加权，并保留全部采样对、使用共享逆温度：</strong>RWPO retains all sampled rollout pairs and applies reward-dependent weights to the loss while maintaining a shared inverse temperature parameter.</blockquote>
-          <blockquote><strong>方法结合规模特定微调与倾斜采样，推理时不依赖局部搜索后处理：</strong>We further combine RWPO with scale-specific fine-tuning and reward- and likelihood-weighted tilted sampling to adapt trained policies to larger and shifted instance distributions without relying on local-search post-processing.</blockquote>
-          <blockquote><strong>在OP上所得求解器在100至2000节点规模的平均奖励超过Compass元启发式：</strong>On the OP, the resulting solver exceeds the mean reward of the Compass metaheuristic at scales from 100 to 2,000 nodes.</blockquote>
-          <blockquote><strong>作者明确陈述依赖精确奖励评估、加权系数固定、熵分析仅为观察性等局限：</strong>Although RWPO shows strong performance on SCOPs, it relies on exact reward evaluations, which could be difficult to obtain in partially observable or multi-objective environments.</blockquote>
+          <p>仅依据标题与摘要，无法核实网络结构、状态动作定义、训练预算、基线设置、统计显著性和消融细节；OP 上“超过 Compass 平均奖励”的具体数值与计算预算未给出，因此对结论强度与可复现性的判断有限。</p>
+          <blockquote><strong>论文指出标准偏好优化将解比较压缩为二值排名并丢弃奖励差幅度：</strong>yet standard preference optimization reduces such comparisons to binary rankings and discards the magnitude of these differences</blockquote>
+          <blockquote><strong>RWPO 根据归一化奖励差为偏好损失加权：</strong>RWPO weights each preference loss according to the normalized difference in their rewards</blockquote>
+          <blockquote><strong>方法结合尺度特定微调与倾斜采样以适配更大和偏移实例，且不依赖局部搜索后处理：</strong>We further combine RWPO with scale-specific fine-tuning and reward- and likelihood-weighted tilted sampling to adapt trained policies to larger and shifted instance distributions without relying on local-search post-processing</blockquote>
+          <blockquote><strong>实验覆盖 OP、PCTSP、Stochastic PCTSP 与 KP，并称 RWPO 一致优于未加权偏好优化和策略梯度基线：</strong>Experiments on the OP, PCTSP, Stochastic PCTSP, and KP show that RWPO consistently improves over unweighted preference optimization and policy-gradient baselines</blockquote>
+          <blockquote><strong>在 OP 的 100 至 2000 节点规模上超过 Compass 元启发式的平均奖励：</strong>On the OP, the resulting solver exceeds the mean reward of the Compass metaheuristic at scales from 100 to 2,000 nodes</blockquote>
         </dd>
       </dl>
-      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；读取了全文节选。证据范围不足的内容不应视为全文结论。</p>
+      <p class="analysis-scope">本条由 deepseek-v4-flash 分析；仅依据标题与摘要。证据范围不足的内容不应视为全文结论。</p>
     </details>  </div>
 </article></section>
 </main>
