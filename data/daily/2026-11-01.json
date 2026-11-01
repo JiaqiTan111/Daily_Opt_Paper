@@ -1,0 +1,1054 @@
+{
+  "dry_run": false,
+  "generated_at": "2026-11-01T17:16:24.917383+08:00",
+  "papers": [
+    {
+      "analysis": {
+        "analysis": "作者将 AOD 框架分解为固定执行脚手架和可进化决策角色，固定评估、存档和诊断接口以保证公平性；利用外部记忆文件系统持久化搜索事件，并周期性地生成摘要与停滞报告作为长期反馈；使用折扣 UCB 调度器根据下游解质量和运行时间选择要更新的模块；通过逐模块更新实现状态化框架自我进化。",
+        "challenges": [
+          "框架级自我进化需在固定评估协议下避免博弈目标",
+          "多模块顺序更新与效用变化的动态调度",
+          "跨框架状态保留并复用候选结果与诊断反馈",
+          "评估成本高且需公平计算预算",
+          "跨任务迁移时避免负迁移"
+        ],
+        "corresponding_authors": [
+          "Zhiguang Cao"
+        ],
+        "evidence": [
+          {
+            "claim": "现有方法进化算子但发现过程固定，限制适应能力",
+            "location": "abstract",
+            "quote": "Yet most methods evolve the operators while leaving the process that discovers them fixed."
+          },
+          {
+            "claim": "HEMO 将 AOD 框架本身作为自我进化优化目标",
+            "location": "abstract",
+            "quote": "We introduce HEMO, which makes the AOD harness itself a self-evolving optimization target."
+          },
+          {
+            "claim": "HEMO 维护持久框架状态并逐模块更新",
+            "location": "abstract",
+            "quote": "HEMO maintains a persistent harness state and updates one module at a time"
+          },
+          {
+            "claim": "折扣 UCB 调度器引导模块适应",
+            "location": "abstract",
+            "quote": "a discounted UCB scheduler directs adaptation toward promising modules as their utility changes"
+          },
+          {
+            "claim": "实验覆盖八个 MOCO 任务和两种进化骨干",
+            "location": "abstract",
+            "quote": "Experiments across eight MOCO tasks and two structurally distinct evolutionary backbones demonstrate strong performance against conventional evolutionary, neural, and LLM-based AOD baselines"
+          },
+          {
+            "claim": "局限性包括依赖专有语言模型和评估成本高",
+            "location": "supplied_full_text",
+            "quote": "The Proposer and Realizer currently use proprietary language models, making harness self-evolution dependent on external API access and cost."
+          },
+          {
+            "claim": "跨任务迁移的是框架而非任务特定记忆",
+            "location": "supplied_full_text",
+            "quote": "our cross-task experiments transfer the harness rather than the task-specific memory accumulated during search"
+          }
+        ],
+        "experiments": [
+          "在八个 MOCO 任务（路由、旅行商、背包和调度）上使用两种结构不同的进化骨干（SEMO 和 NSGA-II）进行实验",
+          "与传统进化、神经网络和基于 LLM 的 AOD 基线比较，HEMO 表现更强",
+          "跨任务迁移实验显示框架可有效迁移到相关任务",
+          "附录表格报告了不同 LLM 的 token 消耗、成本、运行时间、HV 和 IGD 指标",
+          "消融和公平计算预算细节材料未完整说明"
+        ],
+        "first_affiliation": "新加坡管理大学计算与信息系统学院",
+        "insight": "将 AOD 框架本身作为可自我进化的优化对象，通过持久化框架状态、逐模块更新控制逻辑，并以折扣 UCB 调度器引导适应方向，使搜索过程能够利用累积经验动态调整，从而比仅进化算子获得更好的解质量和运行时间。",
+        "limitations": [
+          "Proposer 和 Realizer 目前使用专有语言模型，依赖外部 API 访问和成本",
+          "候选评估计算量大，需在多个问题实例上执行",
+          "跨任务实验迁移的是框架而非任务特定记忆",
+          "HEMO-SEMO 在 Bi-CVRP 上不如 PMOCO，优势并非在所有问题族上一致",
+          "需研究可迁移记忆文件系统以区分可复用设计知识与任务特定记录，并防止负迁移"
+        ],
+        "method": [
+          "维护持久化框架状态，每次只更新一个模块",
+          "可进化模块包括记忆检索、目标算子选择、父代选择和搜索编排逻辑",
+          "固定执行脚手架包含评估接口、多目标存档接口和诊断/心跳接口",
+          "外部记忆文件系统存储候选设计、评估结果、父代信息、有效性/失败信息和 Pareto 状态",
+          "周期性心跳工具生成摘要报告和停滞报告作为长期反馈",
+          "折扣 UCB 调度器根据模块效用变化引导适应方向",
+          "下游解质量和运行时间作为更新信号"
+        ],
+        "motivation": "现有基于大语言模型的自动算子设计方法只进化算子本身，而发现算子的控制过程（框架）保持固定，无法适应新的 Pareto 权衡和算子交互变化，限制了搜索的适应能力。",
+        "primary_topic": "基于大语言模型的多目标组合优化自动算子设计框架自我进化",
+        "relation_to_research": "论文直接研究多目标组合优化中的自动算子设计与框架自我进化，涉及调度任务，与智能优化和生产调度方向高度相关。其框架自我进化、记忆复用和 UCB 调度机制可推测迁移到柔性作业车间、流水车间等调度问题的算子自动设计中，但需适配问题特定的评估接口和约束处理。",
+        "relevance_score": 8,
+        "setting": "研究多目标组合优化（MOCO）中的自动算子设计（AOD）问题。决策对象是 AOD 框架（harness）的控制逻辑，包括记忆检索、目标算子选择、父代选择和搜索步骤编排；目标是在给定评估预算下提升下游解的质量与运行时间；关键约束包括固定的评估接口、固定的 Pareto 存档接口、固定诊断接口和每模块单独更新；信息假设为可通过外部记忆文件系统持久保存历史搜索经验；环境为静态优化任务，但支持跨任务迁移。",
+        "tags": [
+          "多目标组合优化",
+          "自动算子设计",
+          "大语言模型",
+          "自我进化框架",
+          "多目标进化算法",
+          "调度问题"
+        ],
+        "title_zh": "HEMO：驱动自我进化的多目标组合优化框架",
+        "uncertainty": "全文节选未完整给出所有实验数字、消融细节和公平计算预算设置；跨任务迁移的具体条件和负迁移风险仅部分讨论；方法在调度问题上的直接有效性需进一步验证。",
+        "why_recommended": "该工作将大语言模型驱动的自动算子设计从进化算子推进到进化搜索过程本身，其持久记忆、逐模块更新和 UCB 调度机制对学习辅助搜索和智能体优化有直接借鉴价值；实验覆盖调度任务和两种进化骨干，并讨论了跨任务迁移与计算成本，符合对算法机制、约束可行性和公平计算预算的关注。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-11-01T17:16:24.917383+08:00",
+        "figures": [
+          {
+            "caption": "Paradigms of LLM-based AOD characterized by agent autonomy and harness adaptivity. Fixed evolutionary AOD (upper left) uses agents as role-specific tools within a predefined evolutionary loop, whereas independent AOD harness search (upper right) evaluates separately sampled but internally fixed harnesses. Agent-autonomic AOD (lower left) allows the agent to control candidate generation and feedback inspection within a fixed outer AOD loop, while stateful AOD harness self-evolution, adopted by HEMO in the lower-right quadrant, evolves the stateful harness itself through persistent module-level transitions, allowing search control and the use of accumulated experience to co-adapt over time under outer-agent guidance.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2610.40023/v1/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2610.40023v1/hemo_compare2.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2610.40023v1#S1.F1"
+          },
+          {
+            "caption": "Overview of HEMO . Along the outer state transition trajectory, a selected decision module is revised and incorporated into the parent harness to form the child harness for the next evaluation episode, while optimization experience is retained in the memory filesystem.",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2610.40023/v1/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2610.40023v1/hemo_workflow2.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2610.40023v1#S4.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2610.40023v1",
+        "status": "available"
+      },
+      "final_score": 0.6205975341871293,
+      "provenance": {
+        "analyzed_at": "2026-10-31T11:16:07.056925Z",
+        "input_hash": "f8c94616d8d6c647f3b1cf51c79ee8b4f4916e7c61be27f1c40c01c06569496a",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Automatic operator design (AOD) has increasingly adopted large language models (LLMs) to generate problem-specific search and variation operators for multi-objective combinatorial optimization (MOCO). Yet most methods evolve the operators while leaving the process that discovers them fixed. This limits adaptation as new Pareto trade-offs and operator interactions change where and how the search should proceed. We introduce HEMO, which makes the AOD harness itself a self-evolving optimization target. HEMO maintains a persistent harness state and updates one module at a time, revising the logic that determines which experience to retrieve, which operators to improve, which parents to select, and how to formulate the orchestration of search steps. Downstream solution quality and runtime guide these updates, while a discounted UCB scheduler directs adaptation toward promising modules as their utility changes. A persistent memory filesystem preserves candidate outcomes and diagnostic feedback across harness states, enabling successive states to build on accumulated optimization experience. Experiments across eight MOCO tasks and two structurally distinct evolutionary backbones demonstrate strong performance against conventional evolutionary, neural, and LLM-based AOD baselines, together with effective transfer to related tasks. HEMO extends automatic operator design beyond evolving individual operators to improving the search process that discovers them.",
+          "authors": [
+            "Jianghan Zhu",
+            "Cong Zhang",
+            "Ni Zhang",
+            "Yifan Yang",
+            "Yew Soon Ong",
+            "Zhiguang Cao"
+          ],
+          "canonical_id": "2610.40023",
+          "categories": [
+            "cs.NE",
+            "cs.AI"
+          ],
+          "comment": "48 pages, including supplementary material; 5 figures and 13 tables",
+          "pdf_url": "https://arxiv.org/pdf/2610.40023",
+          "published_at": "2026-10-29T13:32:00Z",
+          "source": "arxiv",
+          "title": "HEMO: Harness Self-Evolution for Multi-Objective Combinatorial Optimization",
+          "updated_at": "2026-10-29T13:32:00Z",
+          "url": "https://arxiv.org/abs/2610.40023",
+          "version": 1
+        },
+        "rank": 4,
+        "score": {
+          "base_score": 0.4738136985220531,
+          "exploration": 0.3184267997611199,
+          "matched_terms": [
+            "combinatorial optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.4937985421101721,
+          "topic": 0.5125
+        }
+      },
+      "tier": "deep_read"
+    },
+    {
+      "analysis": {
+        "analysis": "作者利用问题的分层结构：外层是离散通行顺序上的排列优化，内层是固定顺序下的连续最优控制。对固定顺序，用precedence约束刻画进出交叉口时间以排除碰撞，构造单个NLP同时优化全部轨迹与穿越时间；再利用该NLP的primal-dual解中precedence约束的乘子作为代价对顺序的一阶敏感度，对相邻交换做排序与筛选，把搜索限制在乘子指示的关键pair上。动态层面采用到达触发而非固定周期触发的receding-horizon机制，并维护跨重规划的已评估交换记忆集合以避免冗余计算。",
+        "challenges": [
+          "混合整数最优控制（连续轨迹与离散顺序耦合）在线求解的组合复杂性",
+          "车辆集合随到达/离开动态变化，顺序需在滚动时域中持续修正而不能简单冻结",
+          "每次候选交换都需一次完整NLP求解，求解时间随车辆数增长，需限制每到达的NLP次数",
+          "异构车辆（不同代价权重类别）下固定规则/FIFO调度性能损失大",
+          "交换搜索需避免重复评估已测交换，否则重规划开销累积"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文将协同问题建模为混合整数最优控制，并指出其在线求解困难",
+            "location": "abstract",
+            "quote": "Since the resulting mixed-integer optimal control problem is hard to solve online, we propose an arrival-triggered receding-horizon scheme built around a schedule-refinement heuristic"
+          },
+          {
+            "claim": "固定通行顺序下用单个NLP联合优化全部轨迹与穿越时间",
+            "location": "abstract",
+            "quote": "for a fixed crossing order, a single nonlinear program (NLP) optimizes all trajectories and crossing times"
+          },
+          {
+            "claim": "利用代价对车辆顺序的一阶敏感度筛选相邻交换",
+            "location": "abstract",
+            "quote": "the first-order sensitivities of the cost with respect to the vehicle schedule are used to select adjacent swaps that are likely to reduce the overall cost"
+          },
+          {
+            "claim": "仅在到达事件触发重规划，新车追加到顺序尾部",
+            "location": "abstract",
+            "quote": "Replanning is triggered only when a new vehicle arrives, the new vehicle is appended at the tail of the current crossing order"
+          },
+          {
+            "claim": "跨重规划的交换记忆避免冗余计算",
+            "location": "abstract",
+            "quote": "a memory of evaluated swaps that persists across replanning steps avoids redundant computations"
+          },
+          {
+            "claim": "仿真规模为数百辆异构车辆，且恢复FIFO最优性间隙的大部分",
+            "location": "abstract",
+            "quote": "Simulations of traffic scenarios involving streams of a few hundred heterogeneous vehicles show that the proposed scheme recovers most of the optimality gap incurred by first-in-first-out scheduling."
+          },
+          {
+            "claim": "作者明确将实时执行与每候选交换需完整NLP求解列为局限，并提出双层分解思路",
+            "location": "supplied_full_text",
+            "quote": "The present scheme assumes that each replanning terminates within the prescribed time"
+          },
+          {
+            "claim": "连续到达实验中所有车辆均完成穿越且无precedence约束违反，并给出相对FIFO的代价降低比例",
+            "location": "supplied_full_text",
+            "quote": "All\n301\n301\nand\n411\n411\nvehicles are coordinated and cross the intersection under both strategies, without any violation of the precedence constraint."
+          }
+        ],
+        "experiments": [
+          "仿真设置：四向无信号交叉口，预测时域N=200，采样时间0.1 s，进入/退出位置0 m与10 m，参考速度13.88 m/s；车辆代价为二次型，按Light/Medium/Heavy三类权重(q,r)引入异构车队行为；初始位置与速度随机生成。",
+          "随机场景：六车与九车随机实例（最大车辆数M=6、9），并对比两种启发式变体H1与H2；连续到达实验仅用H1。",
+          "连续到达实验：稀疏与密集两种到达间隔区间下，分别协调301辆与411辆异构车辆。",
+          "结果：两种策略下全部301/411辆车均完成协调并穿越交叉口，未出现precedence约束违反；平均闭环代价相对FIFO在稀疏情形降低51.1%、密集情形降低67.4%；稀疏/密集的交换接受率分别为52.4%与70.1%，接受交换数332/963，拒绝301/410；累计代价曲线自首批到达即分离并持续扩大；每到达的NLP求解次数保持较少（具体数值材料未逐项列出）。",
+          "与暴力枚举全局最优的对比：摘要与结论称所提方案在多项式规模NLP下缩小了FIFO与枚举所得全局最优之间的差距、恢复了FIFO所产生最优性间隙的大部分（摘要称平均超过85%）；未给出运行时间的公平计算预算对比细节。"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "核心洞察在于：对固定通行顺序，全部车辆轨迹与穿越时间可由单个非线性规划（NLP）联合优化；而NLP中最优性条件给出的precedence约束乘子可直接度量“放松/交换该相邻车辆顺序”对总代价的一阶影响，因此无需枚举全排列，只需按乘子大小挑选少量最可能获益的相邻交换逐一评估。把这一静态机制嵌入到达触发的滚动时域回路后，新车辆追加到当前顺序尾部并以之前解热启动，被评估过的交换记录在被重规划之间持久保留，从而在动态到达场景中仍保持少量NLP求解并获得接近最优的调度。",
+        "limitations": [
+          "方案假设每次重规划在给定时间t_alg内完成，但每个候选交换仍需一次完整NLP求解，其时间随车辆数增长，因此实时执行受限。",
+          "作者指出计算高效实现超出本文范围，另见姊妹论文[37]。",
+          "材料中未报告与枚举基线的详细运行时间/计算预算对比，也未给出训练或在线开销的系统性统计。"
+        ],
+        "method": [
+          "外层循环（Algorithm 1）：按采样时间推进，用到达与离开时刻确定当前协调集合；若无新车到达则直接施加上一最优解的首个控制量并前向仿真；若有新车到达，则先将新车追加到当前交换顺序尾部（并热启动自上一NLP解），再调用内层重规划与交换过程。",
+          "内层循环 ReplanAndSwap（Algorithm 2）：在当前顺序下求解一个联合所有车辆轨迹与穿越时间的NLP，得到最优顺序S*、primal-dual解Z*与代价J*，以及precedence乘子λ*。",
+          "候选交换选择：对每个可交换的相邻位置c，用swap(S,c)生成候选顺序，依据乘子信息（参数α∈{1,2}选择启发式变体）排序，只评估最可能降低总代价的相邻交换。",
+          "记忆机制：集合𝒯记录已评估过的交换对，跨重规划步骤持久保留，避免重复求解NLP。",
+          "执行方式：按MPC方式将最优控制序列的首个控制量施加给各车并推进状态；重新规划仅在到达事件触发。",
+          "NLP求解使用现成非线性规划求解器获得primal-dual解与约束乘子（具体求解器材料未说明）。"
+        ],
+        "motivation": "无信号交叉口协同可同时带来通行时间、能耗与吞吐收益，但其本质是混合整数最优控制问题：连续轨迹规划与离散通行顺序耦合，且交通持续演化、车辆集合不断变化。既有工作分处两端：混合整数精确建模随车辆数组合爆炸、难以在线求解；规则型或预约型策略虽易于应对到达，却对车辆动力学与个体目标不敏感，在异构车队下性能损失大。作者希望在前作静态乘子引导重排序的基础上，给出可在线运行、能随到达动态更新调度且计算量可控的框架。",
+        "primary_topic": "无信号交叉口自动驾驶车辆轨迹优化与通行顺序协同的滚动时域启发式求解",
+        "relation_to_research": "论文事实：该工作研究的是交通交叉口场景下的混合整数最优控制，采用“固定顺序NLP + 约束乘子一阶敏感度引导的相邻交换邻域搜索 + 到达触发滚动时域”的求解架构，本质上属于学习/敏感度信息辅助的启发式搜索与MPC结合，而非神经网络或强化学习方法；论文未使用神经网络、图神经网络或学习型智能体。推测：其“用约束乘子/对偶敏感度筛选邻域动作、只评估少量候选、并跨步维护已评估集合”的机制，可迁移到柔性作业车间或分布式生产调度中“机器排序+工序时间连续优化”的两层结构，例如以固定排序下的调度NLP乘子筛选关键工序交换；迁移条件包括问题能写成带precedence约束的连续优化、能获得可靠对偶乘子、且相邻交换邻域足以表达有效改进。此迁移为推测，并非作者结论。",
+        "relevance_score": 7,
+        "setting": "研究四向无信号交叉口处多辆自动驾驶车辆的在线协同问题。决策对象是每辆车的连续轨迹（加速度控制、速度与位置）与离散通行顺序（crossing order）。目标是最小化各车二次型代价（加速度惩罚与速度偏离参考速度的跟踪惩罚）之和，关键约束是通过对相邻车辆进出交叉口时间的precedence约束排除碰撞，车辆沿固定直线路径行驶、进入/退出位置固定（entry 0 m、exit 10 m）。信息假设为车辆以随机时刻异步到达、到达后加入系统、离开后退出协调集合，因此协调车辆集合随交通流动态变化，属于动态在线决策环境。",
+        "tags": [
+          "混合整数最优控制",
+          "滚动时域MPC",
+          "调度精化启发式",
+          "拉格朗日乘子敏感度",
+          "相邻交换邻域搜索",
+          "动态到达",
+          "交通协同",
+          "NLP"
+        ],
+        "title_zh": "自动驾驶车辆最优协同的启发式方法：动态问题",
+        "uncertainty": "仅见全文节选，部分实验表格（Table III–VI等）与Algorithm 2细节、NLP求解器与运行时间数据未完整呈现；“恢复超过85%最优性间隙”的具体统计口径与计算预算公平性无法从节选完全核实；材料未给出作者单位与通讯作者信息；与生产调度的关联为本文分析员的迁移推测，需进一步验证。",
+        "why_recommended": "对研究学习辅助搜索与数学规划结合的读者，本文提供了一个清晰的“对偶敏感度即搜索启发式”的范例：不训练网络，而是从NLP的primal-dual解中提取一阶信息来剪枝离散邻域，并在动态到达下用事件触发滚动时域与跨步记忆控制求解次数。这与生产调度中“排序+连续时间优化”的分解思路高度同构，可作为构建敏感度引导邻域搜索、评估计算预算与解质量折中的参考；同时其对FIFO与枚举最优的对比范式也值得在调度基准上借鉴。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-31T19:14:57.947136+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2610.37288v2",
+        "status": "not_found"
+      },
+      "final_score": 0.5882995701984501,
+      "provenance": {
+        "analyzed_at": "2026-11-01T09:17:16.640936Z",
+        "input_hash": "4a82a0da88b4151a34d1ec00109cd17e1e96406228b784e7830bb236d8567ffc",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "The coordination of autonomous vehicles at unsignalized intersections requires deciding both the trajectories of the vehicles and their crossing order, with the additional difficulty that the set of vehicles to be coordinated changes as traffic flows through the intersection. Since the resulting mixed-integer optimal control problem is hard to solve online, we propose an arrival-triggered receding-horizon scheme built around a schedule-refinement heuristic: for a fixed crossing order, a single nonlinear program (NLP) optimizes all trajectories and crossing times, and the first-order sensitivities of the cost with respect to the vehicle schedule are used to select adjacent swaps that are likely to reduce the overall cost. Replanning is triggered only when a new vehicle arrives, the new vehicle is appended at the tail of the current crossing order, and a memory of evaluated swaps that persists across replanning steps avoids redundant computations. Simulations of traffic scenarios involving streams of a few hundred heterogeneous vehicles show that the proposed scheme recovers most of the optimality gap incurred by first-in-first-out scheduling.",
+          "authors": [
+            "Saugat Shahi",
+            "Filippo Fabiani",
+            "Mario Zanon"
+          ],
+          "canonical_id": "2610.37288",
+          "categories": [
+            "eess.SY",
+            "cs.SY"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2610.37288",
+          "published_at": "2026-10-27T14:12:37Z",
+          "source": "arxiv",
+          "title": "A heuristic for optimal coordination of autonomous vehicles: dynamic problems",
+          "updated_at": "2026-10-29T14:21:40Z",
+          "url": "https://arxiv.org/abs/2610.37288",
+          "version": 2
+        },
+        "rank": 6,
+        "score": {
+          "base_score": 0.49690830945172737,
+          "exploration": 0.7615916850176009,
+          "matched_terms": [
+            "mixed integer",
+            "mixed-integer"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.49807482149380516,
+          "topic": 0.42095119870659836
+        }
+      },
+      "tier": "deep_read"
+    },
+    {
+      "analysis": {
+        "analysis": "作者利用随机二次型关于不确定矩阵 Q̃ 的线性结构，将 Wasserstein 球上的最坏情形期望写成支撑函数，从而把分布鲁棒机会约束转化为有限个线性约束加 0-1 指示变量的形式；通过选取 entrywise maximum norm 使对偶范数下的最坏情形分布有闭式描述，保证重构精确；再通过与 VaR 的等价关系把 DRCCStQP 纳入统一框架，并分析参数取值使问题退化为确定性 StQP 或出现可行性上限。材料未说明作者使用了下界、图表示或学习信号等其他分析工具。",
+        "challenges": [
+          "StQP 本身在 Q 不定时 NP-hard，叠加分布鲁棒机会约束后非凸性更强",
+          "Wasserstein 球下最坏情形分布需要显式构造，否则无法得到有限维重构",
+          "矩阵范数的选择直接决定重构是否精确、对偶是否可解析",
+          "机会约束的指示变量与大 M 常数会带来数值与求解时间代价，尤其对不定矩阵",
+          "Wasserstein 半径存在硬可行性上限，参数选择影响模型可行性与保守性"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文研究 Wasserstein 球模糊集下的分布鲁棒机会约束标准二次优化，并利用对不确定矩阵的线性依赖重构为混合整数二次优化",
+            "location": "abstract",
+            "quote": "we exploit its linear dependence on the uncertain matrix to reduce the problem to a mixed-integer quadratic optimization problem"
+          },
+          {
+            "claim": "选择 entrywise maximum norm 使重构既精确又可处理，并给出最坏情形分布",
+            "location": "abstract",
+            "quote": "a judicious choice of matrix norm---the entrywise maximum norm---makes this reformulation both exact and tractable, and we describe the induced worst-case distribution"
+          },
+          {
+            "claim": "该模型按构造等价于最坏情形 VaR 的最小化，并统一已有不确定 StQP 框架",
+            "location": "abstract",
+            "quote": "our formulation is, by construction, the minimization of the worst-case Value-at-Risk of the random quadratic form; this unifies it with existing frameworks for uncertain standard quadratic optimization problems"
+          },
+          {
+            "claim": "作者在正定与不定实例上开展数值实验，考察参数对最优值与求解时间的影响",
+            "location": "abstract",
+            "quote": "we report numerical experiments on positive-definite and indefinite instances which quantify how the model parameters drive the optimal value and solution time, and expose the computational cost of indefiniteness"
+          },
+          {
+            "claim": "结论指出经验发现包括正定实例允许更多不安全点、名义矩阵非零时运行时间更短",
+            "location": "supplied_full_text",
+            "quote": "surprisingly, positive-definite instances allow for more unsafe points than indefinite instances, and running times are shorter when the nominal matrix is nonzero"
+          }
+        ],
+        "experiments": [
+          "在正定与不定 StQP 实例上报告数值实验，量化模型参数（如 Wasserstein 半径、置信水平等）对最优值与求解时间的影响",
+          "通过正定与不定实例对比，暴露不定性带来的计算代价",
+          "给出最小方差投资组合实例：取 S&P 500 市值前 10 公司，2015–2024 日收盘价，2015–2022 训练（2013 个观测）、2023–2024 测试（502 个观测），收缩强度约 0.8%，比较名义解 x_nom 与 DRCC 解 x_DRCC 在不同矩阵下的二次型取值",
+          "报告了正定实例反而允许更多不安全点、名义矩阵非零时求解时间更短等与理论部分不一致的经验发现；材料未说明与启发式或学习型基线的对比、也未说明公平计算预算或消融实验的完整设置"
+        ],
+        "first_affiliation": "维也纳大学数学系与数据科学研究网络（Research Network Data Science and Faculty of Mathematics, University of Vienna）",
+        "insight": "核心洞察在于问题对不确定矩阵 Q̃ 是线性的：目标与机会约束中的随机二次型 x^T Q̃ x 关于 Q̃ 线性，而关于决策变量 x 是非凸二次的。利用这种“对不确定性线性、对决策非线性”的结构，可以在 Wasserstein 球下把最坏情形期望/分位数显式刻画为对 Q̃ 的线性支撑函数，从而将分布鲁棒机会约束等价改写为含大 M 型指示变量的混合整数二次约束；进一步选择 entrywise maximum norm（逐元素最大范数）作为矩阵范数，使对偶范数下的最坏情形分布可解析构造，重构既精确又可处理。作者还指出该模型按构造等价于最坏情形 VaR 的最小化，从而统一了已有不确定 StQP 与机会约束 StQP 框架，并识别出模型退化为单个确定性实例的自然参数区间。",
+        "limitations": [
+          "材料未以专门小节明确陈述局限；仅可从结论中看到经验发现与理论预期存在偏差（正定实例允许更多不安全点、名义矩阵非零时运行时间更短），作者称这些为 surprising 但未展开为其局限"
+        ],
+        "method": [
+          "将机会约束中的随机二次型 x^T Q̃ x 视为关于 Q̃ 线性的函数，利用 1-Wasserstein 球的最坏情形分布支撑函数进行重构",
+          "选取 entrywise maximum norm 作为矩阵范数，使对偶问题可解析求解并给出最坏情形分布",
+          "引入 0-1 指示变量与大 M 约束，把分布鲁棒机会约束改写为混合整数二次优化（MIQP）",
+          "证明该重构是精确的，并说明其等价于最坏情形 Value-at-Risk 的最小化",
+          "识别使 DRCCStQP 退化为确定性 StQP 的参数设定，并分析 Wasserstein 半径的可行性上限",
+          "在正定与不定实例上进行数值实验，考察模型参数对最优值与求解时间的影响"
+        ],
+        "motivation": "StQP 在 Q 非凸非凹时是 NP-hard（最大团问题可归约到它），而实际应用中数据矩阵 Q 往往只能通过采样估计，直接使用样本均值会忽略分布不确定性。作者希望在保留 StQP 简洁结构的同时引入分布鲁棒机会约束，使模型对采样误差稳健，并把非凸的鲁棒机会约束问题转化为可求解的混合整数二次优化。",
+        "primary_topic": "分布鲁棒机会约束标准二次优化（DRCC-StQP）的精确混合整数重构",
+        "relation_to_research": "该论文属于数学规划与分布鲁棒优化的基础方法研究，并非直接面向生产调度或 AI4OR 的学习型求解。它与智能优化的关联在于：MIQP 精确重构为含不确定数据的组合优化问题提供了可证明的建模路径，其“对不确定性线性 + 范数选择使对偶可解析”的思路可推测迁移到生产调度中处理加工时间、需求或成本矩阵不确定的鲁棒机会约束建模；但迁移需要调度问题具备类似的线性不确定性结构、可构造的 Wasserstein 球与可处理的范数选择，且需要额外的分解或割平面来应对调度规模，这些均为推测而非作者结论。论文未涉及神经网络、强化学习、多智能体或大模型智能体，与学习辅助搜索无直接联系。",
+        "relevance_score": 6,
+        "setting": "研究标准单纯形上最小化二次型 x^T Q x 的标准二次优化问题（StQP）；当数据矩阵 Q 不确定、仅能获得样本分布时，作者考虑以样本经验分布为中心的 1-Wasserstein 球作为模糊集、以随机二次型 x^T Q̃ x 不超过阈值的机会约束为可行性条件的分布鲁棒机会约束变体（DRCCStQP）。决策对象是单纯形上的分配向量 x，目标是在最坏情形分布下最小化二次型；环境是静态的样本驱动不确定性设定，约束包含单纯形、机会约束、Wasserstein 半径等参数；材料未说明动态或在线扰动设定。",
+        "tags": [
+          "标准二次优化",
+          "分布鲁棒优化",
+          "机会约束",
+          "Wasserstein 模糊集",
+          "混合整数二次优化",
+          "最坏情形 VaR",
+          "投资组合优化"
+        ],
+        "title_zh": "Wasserstein 模糊集下分布鲁棒机会约束标准二次优化",
+        "uncertainty": "全文仅为节选，方法细节（如大 M 约束的具体形式、最坏情形分布的完整构造、实验参数扫描范围与基线设置）未能完整获取；通讯作者信息在提供的材料中未明确标注；实验部分的表格只给出零散数值，无法判断规模、运行时间与公平预算的完整结论，因此对方法可迁移性与实验充分性的判断存在不确定性。",
+        "why_recommended": "对关注约束可行性、鲁棒建模和精确重构的研究者有参考价值：它展示了如何利用问题结构把非凸分布鲁棒机会约束转化为可求解的 MIQP，并讨论范数选择对精确性与可处理性的决定性作用。若研究者希望把机会约束与分布鲁棒思想引入生产调度或生产运输协同的不确定参数建模，该文的 VaR 统一视角与可行性上限分析可作为建模与保守性分析的参照；但其不含学习组件，对神经网络辅助求解或强化学习的直接启发有限。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-11-01T17:16:24.917383+08:00",
+        "figures": [
+          {
+            "caption": "Wishart Ensemble perturbation model with 𝖰 nom = 𝖮 {\\mathsf{Q}}_{\\mathrm{nom}}={\\mathsf{O}} . Optimal value t ∗ t^{*} and running time in seconds for different choices of ε \\varepsilon , for fixed θ = 0.05 \\theta=0.05 , β = 5 \\beta=5 , M = 5 M=5 , n = 10 n=10 , N = 20 N=20 .",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2610.39823/v1/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2610.39823v1/figures/epsilon_seed_sweep_mode_Qnom=zeros_mode_Qhat=Wishart.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2610.39823v1#S4.F1"
+          },
+          {
+            "caption": "Wishart Ensemble perturbation model with 𝖰 nom = 𝖮 {\\mathsf{Q}}_{\\mathrm{nom}}={\\mathsf{O}} . Optimal value t ∗ t^{*} and running time in seconds for different choices of θ \\theta , for fixed ε = 0.1 \\varepsilon=0.1 , β = 5 \\beta=5 , M = 5 M=5 , n = 10 n=10 , N = 20 N=20 .",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2610.39823/v1/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2610.39823v1/figures/theta_seed_sweep_mode_Qnom=zeros_mode_Qhat=Wishart.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2610.39823v1#S4.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2610.39823v1",
+        "status": "available"
+      },
+      "final_score": 0.5689758344600905,
+      "provenance": {
+        "analyzed_at": "2026-10-31T11:15:58.626403Z",
+        "input_hash": "3a6ca39bca44810497565bbd967313637d950b86518805f5fb6798c74efa941a",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "The standard quadratic optimization problem consists of minimizing a quadratic form over the standard simplex. It has highly relevant applications ranging from portfolio optimization to machine learning. However, if the quadratic form is neither convex nor concave, this problem is NP-hard. We study a distributionally robust chance-constrained variant whose ambiguity set is a Wasserstein ball around the sampled distribution and make four contributions. First, although the problem is nonconvex in the decision variable, we exploit its linear dependence on the uncertain matrix to reduce the problem to a mixed-integer quadratic optimization problem. Second, we show that a judicious choice of matrix norm---the entrywise maximum norm---makes this reformulation both exact and tractable, and we describe the induced worst-case distribution. Third, our formulation is, by construction, the minimization of the worst-case Value-at-Risk of the random quadratic form; this unifies it with existing frameworks for uncertain standard quadratic optimization problems, in particular under chance constraints, and we identify natural settings in which it collapses to a single deterministic instance. Finally, we report numerical experiments on positive-definite and indefinite instances which quantify how the model parameters drive the optimal value and solution time, and expose the computational cost of indefiniteness.",
+          "authors": [
+            "Immanuel M. Bomze",
+            "Daniel De Vicente",
+            "Simge K\\\"u\\c{c}\\\"ukyavuz"
+          ],
+          "canonical_id": "2610.39823",
+          "categories": [
+            "math.OC"
+          ],
+          "comment": "29 pages",
+          "pdf_url": "https://arxiv.org/pdf/2610.39823",
+          "published_at": "2026-10-29T11:07:14Z",
+          "source": "arxiv",
+          "title": "Distributionally robust chance-constrained standard quadratic optimization with Wasserstein ambiguity",
+          "updated_at": "2026-10-29T11:07:14Z",
+          "url": "https://arxiv.org/abs/2610.39823",
+          "version": 1
+        },
+        "rank": 1,
+        "score": {
+          "base_score": 0.5435924262910735,
+          "exploration": 0.5634572065868755,
+          "matched_terms": [
+            "mixed integer",
+            "mixed-integer"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.481542514199088,
+          "topic": 0.555645321089983
+        }
+      },
+      "tier": "deep_read"
+    },
+    {
+      "analysis": {
+        "analysis": "作者先论证集群协同设计的特殊性：结构选择与硬件、行为、合作关系耦合，固定分解的 CCEA 不适用；随后借用 NEAT 的兼容性物种形成思想，但明确指出其原本用于保护新拓扑、维持多峰搜索多样性，本文将其改造为 CCEA 中“协作的子种群”而非“竞争的搜索区域”；进而把协作组织拆成三个可分离、可独立进化的要素（动态物种形成、伙伴选择性、相对优势度），并设计以成对 focal/baseline 评估估计个体边际贡献的方式，使个体适应度反映其对合作团队的边际价值。",
+        "challenges": [
+          "设计空间高度非直观，某一机器人的改动对群体性能的影响难以预测",
+          "物理与行为设计、合作关系、部署构型相互耦合，且含混合连续/离散变量与多目标",
+          "合适物种数未知且可能随任务与制造约束变化，不能预先固定分解",
+          "集群规模（数百智能体）远超可承受的进化种群规模，评估成本与可扩展性矛盾",
+          "仿真评估难以刻画碰撞动力学与涌现协作行为"
+        ],
+        "corresponding_authors": [
+          "Andrew Wilhelm"
+        ],
+        "evidence": [
+          {
+            "claim": "论文把集群异构结构作为设计变量与机器人本身联合优化，且物种数无需预先指定",
+            "location": "abstract",
+            "quote": "Robot swarm co-design requires optimizing not only individual robot designs and behaviors, but also the heterogeneous swarm structure"
+          },
+          {
+            "claim": "SwarmCoDe 是结合动态物种形成、遗传标签、伙伴选择性与相对优势度的合作协同进化算法",
+            "location": "abstract",
+            "quote": "SwarmCoDe combines dynamic speciation with evolved genetic tags, partner selectivity, and relative dominance"
+          },
+          {
+            "claim": "固定 K 的 CCEA 对预定义分解敏感，而 SwarmCoDe 能发现并适应依赖任务的分解",
+            "location": "abstract",
+            "quote": "in contrast to fixed-K CCEAs which are sensitive to their pre-defined decomposition"
+          },
+          {
+            "claim": "仅用 50 个进化个体协同设计 200 个智能体的集群，部署规模为进化种群的 4 倍",
+            "location": "abstract",
+            "quote": "SwarmCoDe co-designs 200-agent swarms using only 50 evolutionary individuals, demonstrating deployment at four times the evolutionary population size"
+          },
+          {
+            "claim": "相对优势度基因决定个体在部署集群中的相对频率，最终集群按优势度加权随机采样生成",
+            "location": "supplied_full_text",
+            "quote": "a dominance gene (a continuous value between 0 and 1) within the genome of each individual that determines its relative frequency within the swarm. The final swarm is then populated through random sampling weighted by these dominance values"
+          },
+          {
+            "claim": "评估仅限于仿真二维觅食任务，尚未验证物理集群迁移",
+            "location": "supplied_full_text",
+            "quote": "Our evaluation remains limited to simulated 2D foraging tasks"
+          }
+        ],
+        "experiments": [
+          "在重复的仿真觅食实验中，SwarmCoDe 发现依赖任务的集群分解，并在任务需求变化时调整分解；固定 K 的 CCEA 对其预定义分解敏感",
+          "静态对比中，其性能与测试中最好的固定 K CCEA 配置相当，且无需预先指定 K",
+          "制造预算会改变偏好的集群组成与机器人设计，SwarmCoDe 能在资源约束下调整协同设计",
+          "用一个 200 智能体的任务（两个末端执行器、对称需求）展示可扩展性：仅用 50 个进化个体协同设计 200 个部署机器人，进化出的优势度使两种设计各约 100 台；摘要称部署规模为进化种群的 4 倍",
+          "材料未给出解质量指标的具体数值、运行时间、训练开销、公平计算预算对比与系统消融的量化结果"
+        ],
+        "first_affiliation": "洛桑联邦理工学院机械工程系",
+        "insight": "作者的关键洞察是把集群的“结构”而非仅机器人“个体”纳入进化搜索：用基于基因组兼容性的动态物种形成让物种数量与边界在进化中自然涌现，用可进化的遗传标签与伙伴选择性基因决定哪些物种在实际评估时协作，用相对优势度基因决定各设计在部署集群中的采样频率，从而把进化种群结构与实际部署规模解耦——小种群即可表达大集群，因为部署时的抽样权重由基因决定而非由种群个体数决定；同时物种内竞争繁殖、物种间竞争后代名额，任务评估时又必须跨物种协作，形成竞争与合作耦合的多层选择压力。",
+        "limitations": [
+          "评估仅限于仿真二维觅食任务",
+          "尚未验证向真实物理集群及更广泛任务族的迁移",
+          "未来需扩展到与形态强耦合的低层动力学与控制等领域"
+        ],
+        "method": [
+          "基因组含四类组件：机器人协同设计变量（物理与行为设计）、遗传标签（决定兼容性/物种归属）、伙伴选择性基因（决定评估时与哪些物种协作）、相对优势度基因（0 到 1 连续值，决定部署占比）",
+          "动态物种形成：按基因组兼容性在进化中分配并建立物种，物种数不预先给定",
+          "评估流程：先对种群做动态物种形成；再为每个个体确定协作伙伴物种、按优势度加权随机采样构造部署团队；用成对 focal 与 baseline 评估估计该个体的边际贡献",
+          "多层选择压力：物种间按总调整适应度竞争后代名额，物种内用锦标赛选择竞争繁殖",
+          "部署规模与进化种群解耦：按进化出的优势度随机采样生成最终集群，因此部署智能体数可大于进化个体数"
+        ],
+        "motivation": "集群协同比单体协同设计更重要也更困难：单价与制造时间的微小改进在数百上千台规模上会被放大，而集群结构（应有多少机器人类型、如何分工协作、各类型部署比例）通常被人为预先指定而非被优化；固定分解的合作协同进化算法在合适物种数未知或随任务与工程约束变化时受限，因此需要把异构结构本身作为设计变量来联合优化。",
+        "primary_topic": "异构机器人集群的协同设计（硬件、行为、协作结构与部署构型的联合进化优化）",
+        "relation_to_research": "论文事实：这是一项进化协同进化算法工作，研究如何在不预设子问题数量的情况下自动分解协作子种群，并在资源约束与大规模部署下联合优化设计变量与结构变量。与智能优化和 AI4OR 的关联在于其机制——自适应分解、物种间后代名额分配、边际贡献评估、按基因加权采样扩展部署规模——可作为“结构变量与决策变量联合优化”的通用模板。推测：迁移到生产调度需满足的条件包括——把“物种”映射为可自动涌现的工序/资源/策略分组或子问题分解，把“优势度采样”映射为部署规模与进化规模不一致时的解构/采样生成，把“伙伴选择性”映射为子问题间的协作耦合选择；同时需重新定义适应度以体现约束可行性（如交期、产能），并在动态扰动下验证分解的自适应性。该文并未涉及调度问题、强化学习或神经网络求解器。",
+        "relevance_score": 6,
+        "setting": "研究异构机器人集群的协同设计问题：决策对象包括每个机器人个体的硬件设计变量与任务规划行为变量、集群应分成多少种机器人类型（物种）、各物种间的合作关系，以及各设计在最终部署集群中的占比；目标是让多种机器人协作完成共享任务，并满足物理与制造成本等资源约束；变量兼有连续与离散、多领域耦合且多目标；问题规模可达数百个智能体；信息假设与环境为仿真二维觅食任务，动态性来自任务需求在进化过程中改变，材料未说明更具体的约束形式。",
+        "tags": [
+          "协同设计",
+          "合作协同进化算法",
+          "动态物种形成",
+          "异构集群",
+          "遗传标签",
+          "资源约束",
+          "可扩展种群"
+        ],
+        "title_zh": "SwarmCoDe：通过动态物种形成实现异构机器人集群的可扩展协同设计框架",
+        "uncertainty": "全文为节选，缺少实验表格、基线细节与消融数据，无法核对解质量、运行时间与公平计算预算；论文属于机器人集群协同设计而非生产调度，相关性判定为相邻方向的可迁移工作（6 分），迁移可行性与收益均未由作者验证；标题与部分正文段落存在截断，个别方法细节（如兼容性阈值、锦标赛规模）材料未完整给出。",
+        "why_recommended": "对关注“优化过程中自动确定子问题分解与结构变量”的博士生有方法论借鉴价值：它展示了如何把分解本身作为进化变量、如何用兼容性物种形成替代固定分组、如何用小种群表达大部署规模，以及如何在资源约束变化下保持适应性；这些机制与分布式制造中“分群/分组策略与配置共同优化”、动态扰动下分解自适应等议题在结构上同构，但需读者自行完成向调度问题的映射与验证。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-11-01T17:16:24.917383+08:00",
+        "figures": [
+          {
+            "caption": "Overview of the SwarmCoDe framework for heterogeneous robot swarm co-design. SwarmCoDe evolves task-planning and hardware-design variables alongside genetic tags, partner selectivity, and relative dominance. Dynamic speciation allows distinct robot species to emerge during optimization, while the tags and partner-selectivity gene govern which species cooperate. Relative dominance determines the representation of selected robot designs in the deployed swarm, decoupling swarm size from the evolutionary population. Together, these mechanisms allow the robot designs and heterogeneous structure of the swarm to be determined jointly through co-design.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2603.26240/v3/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2603.26240v3/figures/swarm_overview_figure.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2603.26240v3#S1.F1"
+          },
+          {
+            "caption": "Evaluation pipeline for calculating marginal contribution. Swarms are stochastically assembled using the evolved dominance gene to determine swarm composition ratios. By comparing the performance of a swarm containing the focal individual against a baseline swarm where that individual is replaced by selected partner representatives in an identical environment, the paired evaluation estimates the focal individual’s marginal contribution under the defined team-construction and environment distribution.",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2603.26240/v3/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2603.26240v3/figures/evaluation_figure.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2603.26240v3#S3.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2603.26240v3",
+        "status": "available"
+      },
+      "final_score": 0.5385965904941448,
+      "provenance": {
+        "analyzed_at": "2026-10-31T11:15:44.765628Z",
+        "input_hash": "59149cc9563e0c0c4b7cec02a6931a23b8b3e281665cc0f8411f0966b6d03a52",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Robot swarm co-design requires optimizing not only individual robot designs and behaviors, but also the heterogeneous swarm structure: how many robot types should exist, how they specialize and cooperate, and in what proportions they are deployed. However, these structural choices are often specified in advance rather than optimized. We present SwarmCoDe, a Cooperative Co-Evolutionary Algorithm (CCEA) that incorporates swarm decomposition into the optimization process without requiring the number of species to be specified in advance. SwarmCoDe combines dynamic speciation with evolved genetic tags, partner selectivity, and relative dominance to jointly optimize robot hardware, task-planning behavior, cooperative relationships, and deployed swarm composition. Across replicated simulated foraging experiments, SwarmCoDe discovers task-dependent swarm decompositions and adapts them when task requirements change, in contrast to fixed-K CCEAs which are sensitive to their pre-defined decomposition. We further show that fabrication budgets can change the preferred swarm composition and robot designs, and that SwarmCoDe can adapt its co-design under these resource constraints. Finally, SwarmCoDe co-designs 200-agent swarms using only 50 evolutionary individuals, demonstrating deployment at four times the evolutionary population size. Together, these results demonstrate that the heterogeneous structure of a robot swarm can be incorporated as a design variable and optimized alongside the robots themselves.",
+          "authors": [
+            "Andrew Wilhelm",
+            "Josie Hughes"
+          ],
+          "canonical_id": "2603.26240",
+          "categories": [
+            "cs.RO",
+            "cs.MA",
+            "cs.NE"
+          ],
+          "comment": "Revised and expanded version. 13 pages, 8 figures",
+          "pdf_url": "https://arxiv.org/pdf/2603.26240",
+          "published_at": "2026-03-27T10:03:38Z",
+          "source": "arxiv",
+          "title": "SwarmCoDe: A Scalable Co-Design Framework for Heterogeneous Robot Swarms via Dynamic Speciation",
+          "updated_at": "2026-10-29T14:42:10Z",
+          "url": "https://arxiv.org/abs/2603.26240",
+          "version": 3
+        },
+        "rank": 2,
+        "score": {
+          "base_score": 0.4883574372620814,
+          "exploration": 0.821147971186748,
+          "matched_terms": [
+            "evolutionary algorithm"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.4998506418414076,
+          "topic": 0.3899906548323691
+        }
+      },
+      "tier": "deep_read"
+    },
+    {
+      "analysis": {
+        "analysis": "作者将问题建模为约束马尔可夫决策过程，以时间平均和SINR为目标、以移动性/障碍区域规避/发射功率为约束，从而把长期耦合决策纳入统一序列决策框架；为降低对真实环境交互的依赖，采用基于世界模型的结构：先从经验中学习潜空间系统动力学，再在潜空间中展开想象轨迹来优化联合策略；约束处理通过两条路径实现：可行动作映射保证动作在物理与几何约束下可执行，代价信号则作为安全代价进入策略学习。",
+        "challenges": [
+          "轨迹与波束成形是强耦合的高维连续动作，且动作影响未来状态，属于长时程规划问题",
+          "时变信道与移动性导致难以获得精确解析模型",
+          "在满足移动性、障碍规避和功率约束的同时最大化时间平均和SINR",
+          "无模型强化学习方法样本效率低、约束满足不稳定",
+          "潜空间动力学预测误差可能影响想象轨迹上的策略优化"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文研究移动基站联合轨迹与波束成形的安全约束强化学习问题",
+            "location": "supplied_full_text",
+            "quote": "In this paper, we investigated the joint optimization of MBS trajectories and digital beamforming to maximize the time-averaged sum SINR under mobility, OR avoidance, and transmit-power constraints."
+          },
+          {
+            "claim": "论文使用基于 SafeDreamer 的世界模型，通过想象轨迹优化策略并结合可行性动作映射与安全代价信号",
+            "location": "supplied_full_text",
+            "quote": "We developed a SafeDreamer-based WMBRL framework that learns system dynamics and optimizes the control policy through imagined trajectories while handling constraints using feasibility-preserving action mappings and safety-cost signals."
+          },
+          {
+            "claim": "所提方法在时间平均和SINR、样本效率与约束满足方面优于对比基线",
+            "location": "supplied_full_text",
+            "quote": "Simulation results demonstrated that the proposed framework outperforms the considered benchmarks in terms of time-averaged sum SINR, while achieving higher sample efficiency and more reliable constraint satisfaction than the MFRL baselines."
+          },
+          {
+            "claim": "问题被建模为约束马尔可夫决策过程，并采用世界模型减少无模型强化学习的环境交互",
+            "location": "abstract",
+            "quote": "To support long-term planning and reduce the extensive environment interactions required by model-free reinforcement learning, we develop a SafeDreamer-based world model framework that learns latent system dynamics from experience and optimizes a joint trajectory and beamforming policy through imagined trajectories."
+          }
+        ],
+        "experiments": [
+          "仿真中与 PPO 和 DQN（均带基于拉格朗日乘子的约束处理）、move-stop-move（MSM）和 straight-line（SL）轨迹基线比较，并给出忽略用户间干扰、假设用户由正上方以全发射功率服务的上界（UB）作为参照",
+          "结果显示所提 WMBRL 框架的时间平均和SINR高于 PPO 和 DQN，且收敛更快；DQN 需要更多环境交互才收敛，PPO 收敛更慢且达到的 SINR 更低",
+          "违约代价方面，WMBRL 快速降至接近零并保持，DQN 波动更大，PPO 收敛更慢",
+          "训练损失方面，世界模型总损失快速下降并趋于稳定，解码器、奖励、代价和延续预测损失呈类似趋势；奖励与代价评论家损失总体下降",
+          "轨迹对比中，WMBRL 沿自适应轨迹避开障碍区域并到达规定终点；DQN 有非必要绕行；PPO、DQN 与 MSM 均避开障碍区域，SL 轨迹与障碍区域相交而违反规避约束",
+          "给出了训练超参数描述（如批量大小、世界模型与演员/评论家学习率、评论家分箱、熵系数等），但摘要与节选未给出可比的运行时间或训练总开销数字"
+        ],
+        "first_affiliation": "Centre for Wireless Communications (CWC), University of Oulu, Finland",
+        "insight": "该方法有效性的核心在于把长时程决策的代价从真实环境中转移到学到的潜空间动力学上：世界模型提供对位置演化、信道/干扰变化与未来通信性能的短期预测，使策略可以在“想象轨迹”上回传梯度或评估价值，从而大幅减少昂贵且受限的真实交互；同时，可行性保持的动作映射在动作生成阶段就过滤/纠正不可行动作，安全代价信号则把障碍规避和功率约束显式纳入策略优化目标，二者将约束从“事后惩罚”前移为“生成时可行、学习中约束”的双重机制。",
+        "limitations": [
+          "材料未说明"
+        ],
+        "method": [
+          "将联合轨迹与波束成形问题表述为约束马尔可夫决策过程，目标为最大化时间平均和SINR，约束为移动性、障碍区域规避和发射功率",
+          "构建基于 SafeDreamer 的世界模型框架，从交互经验中学习潜空间系统动力学",
+          "在学到的世界模型中通过想象轨迹优化联合轨迹与波束成形策略，以支持长期规划并减少真实环境交互",
+          "采用可行性保持的动作映射，将移动性与障碍规避等约束纳入动作生成过程",
+          "引入安全代价信号，将运行约束纳入策略学习与约束满足机制",
+          "奖励与代价分别评估，策略同时考虑通信性能与违约成本"
+        ],
+        "motivation": "传统优化方法通常需要精确无线环境模型且计算复杂度高，难以适应时变信道与移动基站的实时求解；启发式方法在动态大规模环境中可扩展性与鲁棒性有限；现有无模型强化学习方法样本效率低，需要大量环境交互来探索高维动作空间。因此作者希望借助世界模型在潜空间中学习系统动力学、通过想象轨迹做长期规划，同时可靠满足安全与运行约束。",
+        "primary_topic": "基于世界模型的安全约束强化学习用于移动基站轨迹与波束成形联合优化",
+        "relation_to_research": "该论文属于强化学习与约束决策交叉的相邻工作，而非直接面向生产调度或车间优化：其问题对象是移动基站的连续轨迹与波束成形，不是离散作业排序或资源分配。可迁移的机制有两点：一是用世界模型在潜空间中进行长时程想象以减少真实仿真/环境交互，这对仿真代价高的生产调度或生产运输协同问题有参考价值；二是可行性保持动作映射与安全代价信号相结合的约束处理方式，可对应调度中的可行性修复与约束违反惩罚。若要迁移到柔性作业车间或分布式调度，需要重新定义状态（工序、机器、AGV 位置与队列）、动作（派工/路径决策）和约束映射的结构，并重新学习动力学模型；这些属于推测，需要实验验证，并非作者结论。",
+        "relevance_score": 6,
+        "setting": "研究对象是无人机与地面平台等移动基站（MBS）的联合轨迹与数字波束成形决策；目标是在时间平均意义下最大化用户和SINR，约束包括移动性约束、障碍区域（OR）规避和发射功率约束；决策之间存在耦合：移动改变信道与干扰条件，波束成形决定信号与干扰功率，且当前移动影响未来位置与通信性能；环境为动态时变信道，信息假设与信道模型细节材料未说明。",
+        "tags": [
+          "安全强化学习",
+          "世界模型",
+          "约束马尔可夫决策过程",
+          "轨迹优化",
+          "波束成形",
+          "移动基站",
+          "样本效率",
+          "SafeDreamer"
+        ],
+        "title_zh": "面向移动基站联合轨迹与波束成形设计的安全世界模型",
+        "uncertainty": "论文属于无线通信资源分配方向，与生产调度的目标函数、约束结构和动作空间差异较大，因此相关性评为 6 而非更高；节选未给出完整问题建模公式、网络结构细节、训练总时长和公平计算预算对比，无法确认世界模型预测精度对最终策略的影响程度；通讯作者与代码地址材料未明确提供。",
+        "why_recommended": "对关注学习辅助优化与约束可行性的研究者，本文提供了一个具体示例：将长期耦合决策建模为 CMDP，用世界模型降低样本需求，并通过动作映射与安全代价双通道保证约束满足。其“潜空间想象 + 可行动作生成 + 安全代价信号”的组合可作为设计约束强化学习调度求解器的参考，其与 PPO/DQN 在约束违反与样本效率上的对比也提示：在调度问题中评估学习型方法时，应同时报告解质量、约束可行性与交互/训练预算。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-31T19:14:57.947136+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2610.29534v2",
+        "status": "not_found"
+      },
+      "final_score": 0.5380463983850023,
+      "provenance": {
+        "analyzed_at": "2026-10-31T11:16:12.657994Z",
+        "input_hash": "afc1f93cafd463cd6c5f4c837c828e3b693edbef86be9c5972218c13cc8c765b",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "Mobile base stations (MBSs), including aerial and ground-based platforms, provide flexible wireless coverage through adaptive positioning. However, jointly optimizing their trajectories and digital beamforming is challenging because movement changes channel conditions and interference, while beamforming determines the resulting signal and interference powers. These coupled decisions also account for how current movements affect future positions and communication performance under mobility and safety constraints. We formulate this problem as a constrained Markov decision process that maximizes the time-averaged sum signal-to-interference-plus-noise ratio (SINR), subject to mobility, obstacle region avoidance, and transmit-power constraints. To support long-term planning and reduce the extensive environment interactions required by model-free reinforcement learning, we develop a SafeDreamer-based world model framework that learns latent system dynamics from experience and optimizes a joint trajectory and beamforming policy through imagined trajectories. Feasibility-preserving action mappings and safety cost signals incorporate operational constraints into policy learning. Simulation results demonstrate that the proposed framework achieves higher time-averaged sum SINR than the proximal policy optimization and deep Q-network baselines, while exhibiting improved sample efficiency and more reliable constraint satisfaction.",
+          "authors": [
+            "Abdolrasoul Sakhaei Gharagezlou",
+            "Zeinab Askari Donbeh",
+            "Mehdi Monemi",
+            "Matti Latva-aho",
+            "Mehdi Rasti"
+          ],
+          "canonical_id": "2610.29534",
+          "categories": [
+            "eess.SY",
+            "cs.SY"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2610.29534",
+          "published_at": "2026-10-21T10:23:56Z",
+          "source": "arxiv",
+          "title": "Safe World Model for Joint Trajectory and Beamforming Design of Mobile Base Stations",
+          "updated_at": "2026-10-29T10:07:39Z",
+          "url": "https://arxiv.org/abs/2610.29534",
+          "version": 2
+        },
+        "rank": 3,
+        "score": {
+          "base_score": 0.48735708797273136,
+          "exploration": 0.18820349317648558,
+          "matched_terms": [
+            "constraint satisfaction",
+            "reinforcement learning",
+            "deep Q",
+            "policy optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.476586955301587,
+          "topic": 0.5759067243919855
+        }
+      },
+      "tier": "deep_read"
+    },
+    {
+      "analysis": {
+        "analysis": "作者通过相位约化（iPRC、伴随方法、平均化）将高维振荡器网络降维到相位偏差动力学，并利用带符号图与拉普拉斯谱分析稳定性和解质量的关系；对无阻挫网络给出精确稳定性结果，对阻挫网络建立概率关系，并分析异质网络对低能量自旋构型的稳定作用。",
+        "challenges": [
+          "NP-hard组合优化在数字计算机上大规模实例不可解",
+          "数字计算能耗与AI模型规模增长带来的能效压力",
+          "在振荡器网络上实现联想记忆与注意力等AI基元的机制设计"
+        ],
+        "corresponding_authors": [
+          "Ahmed Allibhoy",
+          "Fabio Pasqualetti"
+        ],
+        "evidence": [
+          {
+            "claim": "论文核心是将耦合振荡器网络用于组合优化、联想记忆和注意力三类计算基元。",
+            "location": "abstract",
+            "quote": "First, oscillator networks as specialized hardware solvers of NP-hard combinatorial optimization problems, with the solution encoded in the synchrony patterns."
+          },
+          {
+            "claim": "Ising模型是连接振荡器动力学与计算基元的桥梁。",
+            "location": "abstract",
+            "quote": "The bridge between the dynamics of coupled oscillator networks and computational primitives they implement is the Ising model"
+          },
+          {
+            "claim": "数字计算面临NP-hard问题的复杂性与AI能耗增长的限制，是振荡器计算的动机之一。",
+            "location": "supplied_full_text",
+            "quote": "Many of the problems relevant to cryptography, operations research, and data analysis are NP-hard and thus large instances of these problems remain intractable on digital computers."
+          },
+          {
+            "claim": "作者用带符号图和拉普拉斯谱分析稳定性与最优性。",
+            "location": "supplied_full_text",
+            "quote": "where both stability and optimality of\nϕ\n∗\n​\n(\ns\n)\n\\phi^{*}(s)\nare encoded in the eigenvalues of its corresponding Laplacian matrix."
+          }
+        ],
+        "experiments": [
+          "材料未说明具体实验数字、基线、实例规模和运行时间；正文仅提到引用文献中已有基于耦合振荡器的Max-Cut实验演示和约瑟夫森参量振荡器Ising机等工作，但本文未报告其自身的数值结果。"
+        ],
+        "first_affiliation": "加州大学欧文分校电气工程与计算机科学系",
+        "insight": "Ising模型将振荡器网络的局部相互作用与全局复杂同步模式联系起来，使同一动力学框架可统一承担三类计算基元：同步模式编码组合优化解、相位模式承载联想记忆、同步实现键-查询对齐；这种统一性来自振荡网络的物理动力学本身而非某个特定模块。",
+        "limitations": [
+          "材料未明确陈述本文自身的局限性；仅指出数字计算的复杂度与物理限制，以及振荡器计算作为替代范式的动因。"
+        ],
+        "method": [
+          "用Ising模型作为耦合振荡器网络动力学与计算基元之间的桥梁，自旋由振荡相位表示",
+          "通过相位约化、iPRC与平均化得到相位偏差的约化动力学",
+          "用带符号图和拉普拉斯谱分析同步构型的稳定性与最优性",
+          "组合优化解由同步相位模式编码；联想记忆以振荡相位表示数据；注意力以同步对齐键与查询"
+        ],
+        "motivation": "数字计算面临NP-hard问题可扩展性限制、摩尔定律饱和以及大规模AI模型能耗增长的压力；耦合振荡器网络具有多样物理实现且有望更高效，受神经振荡启发，可成为替代数字计算机的模拟计算范式。",
+        "primary_topic": "耦合振荡器网络作为模拟计算基元：组合优化、联想记忆与注意力机制",
+        "relation_to_research": "论文事实：将组合优化映射为Ising模型并在耦合振荡器网络上以同步模式求解，属于学习/物理启发的优化求解硬件范式，与智能优化和AI4OR中“学习辅助搜索”和“非传统计算基元”方向相邻。推测：若要迁移到生产调度（如柔性作业车间、流水车间、分布式制造），需要将调度问题编码为Ising/QUBO形式并处理约束可行性；其相位同步求解器能否在公平计算预算下保证约束满足与解质量尚需验证。",
+        "relevance_score": 6,
+        "setting": "论文研究以耦合振荡器网络（模拟电路、自旋电子器件等物理基底）的同步动力学实现三类计算任务：求解NP-hard组合优化问题（解编码为同步相位模式）、基于振荡相位的联想记忆存储与检索、以及以同步机制实现注意力中键与查询的对齐；目标是用类Ising统计物理模型桥接网络动力学与计算基元。关键约束与信息假设材料未明确给出，动态环境指网络相位随时间的连续演化。",
+        "tags": [
+          "耦合振荡器网络",
+          "Ising模型",
+          "组合优化硬件求解器",
+          "联想记忆",
+          "注意力机制",
+          "模拟计算"
+        ],
+        "title_zh": "耦合振荡器网络计算：优化、记忆与现代人工智能基元",
+        "uncertainty": "相关性判断基于摘要与全文节选；全文节选未包含具体实验数字与完整方法细节，因此对方法有效性和迁移可行性的评估有限，部分结论依赖材料中引用文献的间接证据。",
+        "why_recommended": "该文提供了将组合优化与Ising模型、物理动力学统一的视角，并讨论联想记忆与注意力基元，对关注非传统计算基底、图表示和优化求解机制的研究者有启发；但并非直接面向生产调度或强化学习调度，需谨慎评估迁移条件。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-10-31T19:14:57.947136+08:00",
+        "figures": [],
+        "html_url": "https://arxiv.org/html/2610.39703v1",
+        "status": "not_found"
+      },
+      "final_score": 0.5092303668701306,
+      "provenance": {
+        "analyzed_at": "2026-11-01T09:17:19.428020Z",
+        "input_hash": "954db654cf9cb98c65fce3f4e48c5ae5d179d25fda503302a22c65bffde9d83d",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "full_text"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "We explore how synchronization in coupled oscillator networks may be employed to perform a variety of computing tasks. These systems are becoming more attractive as an alternative to conventional digital computers due to the increasing energy demands of the latter, particularly for large-scale problems in machine learning and artificial intelligence. The ubiquity of coupled oscillator networks means that oscillator-based computing can be thought of as a universal computing paradigm encompassing systems with a diversity of physical realizations, e.g. as analog circuits, neurological systems, spintronic systems. The bridge between the dynamics of coupled oscillator networks and computational primitives they implement is the Ising model, which originates in statistical physics, and when applied to oscillator networks, explains the emergence of globally complex and disordered synchronization patterns from local interactions in the network. We discuss the application of coupled oscillator networks to three fundamental computing operations. First, oscillator networks as specialized hardware solvers of NP-hard combinatorial optimization problems, with the solution encoded in the synchrony patterns. Second, oscillator networks as associative memory systems, enabling storage and retrieval of data represented through phases of oscillations. Finally, oscillator networks as a dynamical implementation of attention, with synchronization providing the mechanism for the alignment of keys to queries. The ability of oscillator networks to implement these computational primitives paves the way for novel realizations of intelligent systems through a variety of physical substrates.",
+          "authors": [
+            "Ahmed Allibhoy",
+            "Fabio Pasqualetti"
+          ],
+          "canonical_id": "2610.39703",
+          "categories": [
+            "eess.SY",
+            "cond-mat.dis-nn",
+            "cs.SY",
+            "nlin.AO"
+          ],
+          "comment": null,
+          "pdf_url": "https://arxiv.org/pdf/2610.39703",
+          "published_at": "2026-10-29T09:37:37Z",
+          "source": "arxiv",
+          "title": "Computing with Coupled Oscillator Networks: Optimization, Memory, and Modern AI Primitives",
+          "updated_at": "2026-10-29T09:37:37Z",
+          "url": "https://arxiv.org/abs/2610.39703",
+          "version": 1
+        },
+        "rank": 9,
+        "score": {
+          "base_score": 0.4349643034002374,
+          "exploration": 0.8529842622684212,
+          "matched_terms": [
+            "combinatorial optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.4741084408014571,
+          "topic": 0.30434599018040775
+        }
+      },
+      "tier": "deep_read"
+    },
+    {
+      "analysis": {
+        "analysis": "作者将系统运行建模为离散时间随机控制问题：以天气和环境不确定性驱动的发电与需求为随机因素，以电池与燃料箱容量、燃料一次性加注为状态约束，以燃料发电成本、系统运行成本与未满足需求的不适成本构成期望累计目标，再转化为马尔可夫决策过程并采用该理论中的数值方法求解。摘要未说明具体的状态空间离散化、转移概率估计或数值算法细节。",
+        "challenges": [
+          "天气与环境不确定性同时影响可再生能源发电和用电需求",
+          "电池容量与燃料箱容量有限，且燃料只能在规划期开始时一次性加注",
+          "需求允许不被满足，需要在不满足需求的惩罚与燃料发电成本之间权衡",
+          "离网条件下无电网支撑，必须依靠本地发电机和储能平衡供需"
+        ],
+        "corresponding_authors": [
+          "证据未提供"
+        ],
+        "evidence": [
+          {
+            "claim": "论文研究离网微电网的成本最优管理随机最优控制问题",
+            "location": "abstract",
+            "quote": "we consider a domestic standalone microgrid equipped with local renewable energy generation such as photovoltaic panels, consumption units, and battery storage to balance supply and demand and investigate the stochastic optimal control problem for its cost-optimal management"
+          },
+          {
+            "claim": "燃料箱只能在规划期初加注一次，形成有限燃料问题",
+            "location": "abstract",
+            "quote": "we assume that the battery and the fuel tank have limited capacities and that the fuel tank can only be filled once at the beginning of the planning period. This leads us to the so-called finite fuel problem"
+          },
+          {
+            "claim": "允许需求不被满足并施加不适成本惩罚",
+            "location": "abstract",
+            "quote": "we allow the energy demand to not always be satisfied, and we impose penalties on unsatisfied demand, the so-called discomfort cost"
+          },
+          {
+            "claim": "问题被表述为离散时间随机控制并用马尔可夫决策过程方法数值求解",
+            "location": "abstract",
+            "quote": "The problem is formulated as a discrete-time stochastic control problem and solved numerically using methods from the theory of Markov decision processes"
+          }
+        ],
+        "experiments": [
+          "摘要未给出具体实验设置、基线、实例规模、求解质量或运行时间，也未报告任何数值结果；材料未说明。"
+        ],
+        "first_affiliation": "证据未提供",
+        "insight": "把离网微电网的运行管理刻画为离散时间随机控制问题，并将“燃料只能初始加注一次”的有限燃料约束与“需求可不满足但计惩罚”的不适成本统一纳入期望累计成本目标，从而可用马尔可夫决策过程理论进行数值求解，而不是依赖确定性的日前调度或简单规则控制。",
+        "limitations": [
+          "摘要未明确陈述作者自述的局限；材料未说明。"
+        ],
+        "method": [
+          "将离网微电网的成本最优管理表述为离散时间随机控制问题",
+          "在模型中纳入光伏发电、用电单元、电池储能与本地燃料发电机",
+          "以期望累计的燃料发电成本与系统运行成本为目标，并加入未满足需求的不适成本惩罚",
+          "引入电池与燃料箱容量约束以及燃料箱仅在规划期初加注一次的有限燃料约束",
+          "允许需求不被完全满足，将需求削减作为可控决策的一部分",
+          "将问题表述为马尔可夫决策过程，并使用 MDP 理论中的数值方法求解"
+        ],
+        "motivation": "此类离网系统对发展中国家农村电气化很重要，但天气与环境不确定性使发电和需求难以预测，再叠加电池容量有限、燃料只能初始一次性加注以及需求可被削减并带惩罚，使运行管理成为一个需要显式处理不确定性与容量约束的成本优化问题。",
+        "primary_topic": "独立微电网的随机最优控制与成本最优能量管理",
+        "relation_to_research": "论文核心是离网微电网在不确定性下的随机最优控制与能量管理，属于随机动态决策与序贯资源调度，与生产调度中的动态扰动下重调度、储能与产能约束下的成本权衡有结构相似性。但它不涉及作业车间或流水车间的机器与工序排序，也未使用神经网络、图神经网络、强化学习或多智能体方法；若要把其 MDP 建模思路迁移到柔性作业车间或生产运输协同，需要重新定义状态（如工序进度、机器可用性、库存与在途状态）、动作（派工与运输决策）和随机转移，并处理远大于微电网规模的离散状态空间，这属于推测，尚需验证可扩展性。",
+        "relevance_score": 6,
+        "setting": "研究一个离网家用微电网的成本最优运行问题：系统由光伏等本地可再生能源发电、用电单元、电池储能和一台本地燃料发电机组成，与电网不可连接。决策对象是离散时间下的发电、储能与需求满足策略；目标是最小化燃料发电与系统运行的期望累计成本，并对未满足的用电需求施加不适成本惩罚。关键约束包括电池与燃料箱容量有限、燃料箱只能在规划期开始时加注一次（有限燃料问题），且用电需求允许不被完全满足。不确定性来自天气与环境条件对发电和需求的影响；摘要未说明需求、光伏出力或价格的具体随机过程形式。",
+        "tags": [
+          "随机最优控制",
+          "马尔可夫决策过程",
+          "能量管理",
+          "有限燃料问题",
+          "需求惩罚",
+          "储能调度"
+        ],
+        "title_zh": "独立微电网成本最优管理的随机最优控制问题",
+        "uncertainty": "仅有标题与摘要，缺少状态空间定义、随机过程假设、数值求解算法、实验规模与结果，无法判断其计算可扩展性与相对基线规则控制的优势；作者单位与通讯作者信息未提供。",
+        "why_recommended": "对研究动态不确定环境下序贯决策与约束可行性权衡的读者，该文提供了一个把容量约束、一次性资源补给和需求惩罚统一进随机控制目标的建模范例，可作为生产调度中“可违约需求与有限资源”问题建模的参考；但因其应用领域和方法工具与 AI4OR 主流学习型求解差距较大，只宜作为相邻方向的建模参考而非核心方法文献。"
+      },
+      "figure_gallery": {
+        "checked_at": "2026-11-01T17:16:24.917383+08:00",
+        "figures": [
+          {
+            "caption": "Simplified model of a microgrid that uses solar panels, a battery and fuel driven generator to satisfy the electricity demand of a building.",
+            "label": "Figure 1",
+            "number": 1,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2511.00167/v2/fig1-panel1.png",
+                "original_url": "https://arxiv.org/html/2511.00167v2/Figures11/Microgrid_model.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2511.00167v2#S1.F1"
+          },
+          {
+            "caption": "Residual demand with daily and yearly seasonal patterns over a period of one year (left) and a zoom into a week (right) with illustrative parameters β R = 0.2 , σ R = 0.45 , κ 1 R = 1 , κ 2 R = 0.4 , μ 0 R = 0.1 , δ 1 = 365 , and ​ δ 2 = 1 \\beta_{R}=0.2,\\sigma_{R}=0.45,\\kappa_{1}^{R}=1,\\kappa_{2}^{R}=0.4,\\mu_{0}^{R}=0.1,\\delta_{1}=365,\\text{ and }\\delta_{2}=1 .",
+            "label": "Figure 2",
+            "number": 2,
+            "panels": [
+              {
+                "cached_path": "figures/arxiv/2511.00167/v2/fig2-panel1.png",
+                "original_url": "https://arxiv.org/html/2511.00167v2/Figures11/Residual1Year67.png"
+              }
+            ],
+            "source": "arxiv_html",
+            "source_url": "https://arxiv.org/html/2511.00167v2#S2.F2"
+          }
+        ],
+        "html_url": "https://arxiv.org/html/2511.00167v2",
+        "status": "available"
+      },
+      "final_score": 0.43688109816403087,
+      "provenance": {
+        "analyzed_at": "2026-10-31T11:16:39.519271Z",
+        "input_hash": "fc93362a5789461cfb7fd52c9d132d7c4ef24c56249158ba2edaa102fee9acba",
+        "model": "deepseek-v4-flash",
+        "prompt_version": "optimization-analysis-v1",
+        "reading_scope": "abstract"
+      },
+      "ranked": {
+        "paper": {
+          "abstract": "In this paper, we consider a domestic standalone microgrid equipped with local renewable energy generation such as photovoltaic panels, consumption units, and battery storage to balance supply and demand and investigate the stochastic optimal control problem for its cost-optimal management. As a special feature, the manager does not have access to the power grid but has a local generator, making it possible to produce energy using fuel when needed. Such systems are very important for rural electrification, particularly in developing countries. However, these systems are very complex to control due to uncertainties in the weather and environmental conditions, which affect the energy generation and the energy demand. In addition, we assume that the battery and the fuel tank have limited capacities and that the fuel tank can only be filled once at the beginning of the planning period. This leads us to the so-called finite fuel problem. In addition, we allow the energy demand to not always be satisfied, and we impose penalties on unsatisfied demand, the so-called discomfort cost. The main goal is to minimize the expected aggregated cost of generating power using the generator and operating the system. This leads to a mathematical optimization problem. The problem is formulated as a discrete-time stochastic control problem and solved numerically using methods from the theory of Markov decision processes.",
+          "authors": [
+            "Paul Honore Takam",
+            "Nathalie Fruiba"
+          ],
+          "canonical_id": "2511.00167",
+          "categories": [
+            "math.OC"
+          ],
+          "comment": "revised version, 58 pages",
+          "pdf_url": "https://arxiv.org/pdf/2511.00167",
+          "published_at": "2025-10-31T18:13:55Z",
+          "source": "arxiv",
+          "title": "Stochastic Optimal Control Problems for the Cost-Optimal Management of a Standalone Microgrid",
+          "updated_at": "2026-10-29T12:00:40Z",
+          "url": "https://arxiv.org/abs/2511.00167",
+          "version": 2
+        },
+        "rank": 13,
+        "score": {
+          "base_score": 0.3034201784800561,
+          "exploration": 0.070920476012983,
+          "matched_terms": [
+            "mathematical optimization"
+          ],
+          "negative_terms": [],
+          "personal": 0.0,
+          "recency": 0.4860303852496548,
+          "topic": 0.31767432010790586
+        }
+      },
+      "tier": "browse"
+    }
+  ],
+  "schema_version": 1,
+  "stats": {
+    "cache_hits": 8,
+    "deduplicated": 460,
+    "failed": 0,
+    "fetched": 460,
+    "figure_available": 4,
+    "figure_cache_hits": 7,
+    "figure_failed": 0,
+    "figure_panel_failed": 0,
+    "figure_requests": 8,
+    "full_text_reads": 10,
+    "input_tokens": 35260,
+    "model_calls": 5,
+    "output_tokens": 14255,
+    "preselected": 13,
+    "published": 7,
+    "source_lookback_days": 3
+  }
+}
